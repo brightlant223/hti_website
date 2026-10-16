@@ -75,6 +75,14 @@ class BlogCreateUpdate(BaseModel):
     is_published: Optional[bool] = True
     slug: Optional[str] = None
 
+class ClientCreateUpdate(BaseModel):
+    name: str = Field(..., min_length=2, max_length=150)
+    sector: str = Field(..., min_length=2, max_length=150)
+
+class AdminLoginRequest(BaseModel):
+    username: str = Field(..., min_length=2)
+    password: str = Field(..., min_length=3)
+
 # --- Helper Formatters ---
 
 def format_product_row(row: sqlite3.Row) -> Dict[str, Any]:
@@ -494,10 +502,86 @@ def get_partners():
 def get_clients():
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM clients ORDER BY id ASC")
+    cursor.execute("SELECT * FROM clients ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
     return [{"id": r["id"], "name": r["name"], "sector": r["sector"]} for r in rows]
+
+@app.post("/api/clients", status_code=status.HTTP_201_CREATED)
+def create_client(payload: ClientCreateUpdate):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO clients (name, sector) VALUES (?, ?)", (payload.name, payload.sector))
+    new_id = cursor.lastrowid
+    conn.commit()
+    cursor.execute("SELECT * FROM clients WHERE id = ?", (new_id,))
+    row = cursor.fetchone()
+    conn.close()
+    return {
+        "success": True,
+        "message": f"Client '{payload.name}' added successfully",
+        "client": {"id": row["id"], "name": row["name"], "sector": row["sector"]}
+    }
+
+@app.put("/api/clients/{client_id}")
+def update_client(client_id: int, payload: ClientCreateUpdate):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM clients WHERE id = ?", (client_id,))
+    if not cursor.fetchone():
+        conn.close()
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    cursor.execute("UPDATE clients SET name = ?, sector = ? WHERE id = ?", (payload.name, payload.sector, client_id))
+    conn.commit()
+    cursor.execute("SELECT * FROM clients WHERE id = ?", (client_id,))
+    row = cursor.fetchone()
+    conn.close()
+    return {
+        "success": True,
+        "message": f"Client '{payload.name}' updated successfully",
+        "client": {"id": row["id"], "name": row["name"], "sector": row["sector"]}
+    }
+
+@app.delete("/api/clients/{client_id}")
+def delete_client(client_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM clients WHERE id = ?", (client_id,))
+    row = cursor.fetchone()
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    name = row["name"]
+    cursor.execute("DELETE FROM clients WHERE id = ?", (client_id,))
+    conn.commit()
+    conn.close()
+    return {"success": True, "message": f"Client '{name}' removed successfully"}
+
+# --- Admin Authentication Endpoint ---
+
+@app.post("/api/admin/login")
+def admin_login(creds: AdminLoginRequest):
+    valid_users = {
+        "admin": "admin123",
+        "htiadmin": "hti@2026"
+    }
+    username = creds.username.strip().lower()
+    expected_pass = valid_users.get(username)
+    if not expected_pass or creds.password != expected_pass:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid admin credentials. Please verify username and password."
+        )
+
+    return {
+        "success": True,
+        "token": f"hti_sec_token_{username}_auth",
+        "username": username,
+        "role": "Chief Administrator",
+        "message": "Authentication successful"
+    }
 
 # --- Inquiries Endpoints ---
 
@@ -603,3 +687,43 @@ def delete_inquiry(inquiry_id: int):
     conn.close()
 
     return {"success": True, "message": f"Inquiry #{inquiry_id} removed"}
+
+# --- Global Stats & Overview Endpoint ---
+
+@app.get("/api/stats")
+def get_stats():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) as count FROM products")
+    total_products = cursor.fetchone()["count"]
+
+    cursor.execute("SELECT COUNT(DISTINCT category) as count FROM products")
+    total_categories = cursor.fetchone()["count"]
+
+    cursor.execute("SELECT COUNT(*) as count FROM blogs")
+    total_blogs = cursor.fetchone()["count"]
+
+    cursor.execute("SELECT COUNT(*) as count FROM clients")
+    total_clients = cursor.fetchone()["count"]
+
+    cursor.execute("SELECT COUNT(*) as count FROM partners")
+    total_partners = cursor.fetchone()["count"]
+
+    cursor.execute("SELECT COUNT(*) as count FROM inquiries")
+    total_inquiries = cursor.fetchone()["count"]
+
+    cursor.execute("SELECT COUNT(*) as count FROM inquiries WHERE LOWER(status) = 'new'")
+    new_inquiries = cursor.fetchone()["count"]
+
+    conn.close()
+
+    return {
+        "total_products": total_products,
+        "total_categories": total_categories,
+        "total_blogs": total_blogs,
+        "total_clients": total_clients,
+        "total_partners": total_partners,
+        "total_inquiries": total_inquiries,
+        "new_inquiries": new_inquiries
+    }

@@ -92,11 +92,8 @@ def seed_db():
     cursor = conn.cursor()
 
     cursor.execute("SELECT COUNT(*) as count FROM products")
-    if cursor.fetchone()["count"] > 0:
-        conn.close()
-        return
-
-    products = [
+    if cursor.fetchone()["count"] == 0:
+        products = [
         # AUTOMATION
         {
             "slug": "door-interlock-system",
@@ -977,65 +974,71 @@ def seed_db():
         }
     ]
 
-    for p in products:
-        cursor.execute("""
-        INSERT INTO products (slug, name, category, subcategory, tagline, description, features, specs, applications, badge, is_featured)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            p["slug"], p["name"], p["category"], p["subcategory"], p["tagline"],
-            p["description"], p["features"], p["specs"], p["applications"],
-            p["badge"], p["is_featured"]
-        ))
+        for p in products:
+            cursor.execute("""
+            INSERT INTO products (slug, name, category, subcategory, tagline, description, features, specs, applications, badge, is_featured)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                p["slug"], p["name"], p["category"], p["subcategory"], p["tagline"],
+                p["description"], p["features"], p["specs"], p["applications"],
+                p["badge"], p["is_featured"]
+            ))
 
     # Technology Partners from Page 4 of PDF
-    partners = [
-        ("Honeywell", "Fire & Automation", "Global leader in building controls and fire systems"),
-        ("Bosch", "Security & Surveillance", "German precision CCTV, PA and access solutions"),
-        ("Metaflex", "Doors & Cleanrooms", "Specialized airtight and medical door systems"),
-        ("Cisco", "Networking & IP telephony", "Industry benchmark enterprise telecommunications"),
-        ("Eaton", "Power & Safety", "Mission-critical electrical and safety management"),
-        ("Hikvision", "CCTV & Video Analytics", "World leading smart video surveillance equipment"),
-        ("L&T", "Electrical & Automation", "Trusted Indian engineering and switchgear giant"),
-        ("FAAC", "Gate & Barrier Automation", "Italian high-speed hydraulic gate automation"),
-        ("Ravel", "Fire Detection Systems", "Reliable micro-processed fire alarm control panels"),
-        ("Dorma", "Door Hardware & Access", "Premium architectural door closers and operators"),
-        ("Nice", "Gate Automation", "Italian smart home and gate automation technology"),
-        ("Avtech", "Environment Monitoring", "Server room Room Alert environmental monitoring"),
-        ("Johnson Controls", "HVAC & Building Security", "Enterprise building automation controls"),
-        ("Siemens", "Industrial Automation & Fire", "German engineering excellence in safety & automation"),
-        ("Zoloto Valves", "Fire Hydrant & Piping", "Standard certified brass & cast steel fire valves")
-    ]
-    for name, cat, tagline in partners:
-        cursor.execute("INSERT INTO partners (name, category, tagline) VALUES (?, ?, ?)", (name, cat, tagline))
+    cursor.execute("SELECT COUNT(*) as count FROM partners")
+    if cursor.fetchone()["count"] == 0:
+        partners = [
+            ("Honeywell", "Fire & Automation", "Global leader in building controls and fire systems"),
+            ("Bosch", "Security & Surveillance", "German precision CCTV, PA and access solutions"),
+            ("Metaflex", "Doors & Cleanrooms", "Specialized airtight and medical door systems"),
+            ("Cisco", "Networking & IP telephony", "Industry benchmark enterprise telecommunications"),
+            ("Eaton", "Power & Safety", "Mission-critical electrical and safety management"),
+            ("Hikvision", "CCTV & Video Analytics", "World leading smart video surveillance equipment"),
+            ("L&T", "Electrical & Automation", "Trusted Indian engineering and switchgear giant"),
+            ("FAAC", "Gate & Barrier Automation", "Italian high-speed hydraulic gate automation"),
+            ("Ravel", "Fire Detection Systems", "Reliable micro-processed fire alarm control panels"),
+            ("Dorma", "Door Hardware & Access", "Premium architectural door closers and operators"),
+            ("Nice", "Gate Automation", "Italian smart home and gate automation technology"),
+            ("Avtech", "Environment Monitoring", "Server room Room Alert environmental monitoring"),
+            ("Johnson Controls", "HVAC & Building Security", "Enterprise building automation controls"),
+            ("Siemens", "Industrial Automation & Fire", "German engineering excellence in safety & automation"),
+            ("Zoloto Valves", "Fire Hydrant & Piping", "Standard certified brass & cast steel fire valves")
+        ]
+        for name, cat, tagline in partners:
+            cursor.execute("INSERT INTO partners (name, category, tagline) VALUES (?, ?, ?)", (name, cat, tagline))
 
     # Prestigious Clients from Page 5 of PDF
-    clients = [
-        ("Glenmark", "Pharmaceuticals"),
-        ("Indoco Remedies", "Pharmaceuticals"),
-        ("Venus Remedies", "Pharmaceuticals"),
-        ("Cadila Pharmaceuticals", "Pharmaceuticals"),
-        ("Shreya Life Sciences", "Pharmaceuticals"),
-        ("Pidilite", "Chemicals & Adhesives"),
-        ("P&G", "Consumer Goods (FMCG)"),
-        ("Alkem", "Pharmaceuticals"),
-        ("FSC", "Supply Chain & Logistics"),
-        ("IIT Bombay", "Premier Educational & Research Institution"),
-        ("Alembic", "Pharmaceuticals (Touching Lives Over 100 Years)"),
-        ("Ferrero", "Global Food & Confectionery")
-    ]
-    for name, sector in clients:
-        cursor.execute("INSERT INTO clients (name, sector) VALUES (?, ?)", (name, sector))
+    cursor.execute("SELECT COUNT(*) as count FROM clients")
+    if cursor.fetchone()["count"] == 0:
+        clients = [
+            ("Glenmark", "Pharmaceuticals"),
+            ("Indoco Remedies", "Pharmaceuticals"),
+            ("Venus Remedies", "Pharmaceuticals"),
+            ("Cadila Pharmaceuticals", "Pharmaceuticals"),
+            ("Shreya Life Sciences", "Pharmaceuticals"),
+            ("Pidilite", "Chemicals & Adhesives"),
+            ("P&G", "Consumer Goods (FMCG)"),
+            ("Alkem", "Pharmaceuticals"),
+            ("FSC", "Supply Chain & Logistics"),
+            ("IIT Bombay", "Premier Educational & Research Institution"),
+            ("Alembic", "Pharmaceuticals (Touching Lives Over 100 Years)"),
+            ("Ferrero", "Global Food & Confectionery")
+        ]
+        for name, sector in clients:
+            cursor.execute("INSERT INTO clients (name, sector) VALUES (?, ?)", (name, sector))
 
     # Add initial sample inquiry
-    cursor.execute("""
-    INSERT INTO inquiries (full_name, email, phone, company, category, product_name, message, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        "Rajesh Sharma", "rajesh.s@glenmarkpharma.example.com", "+91 98201 12345",
-        "Glenmark Pharmaceuticals", "Automation", "Door Interlock System",
-        "Looking for 8-door flameproof clean room interlocking system with pressure monitoring for our new formulation facility in Navi Mumbai.",
-        "In Review"
-    ))
+    cursor.execute("SELECT COUNT(*) as count FROM inquiries")
+    if cursor.fetchone()["count"] == 0:
+        cursor.execute("""
+        INSERT INTO inquiries (full_name, email, phone, company, category, product_name, message, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            "Rajesh Sharma", "rajesh.s@glenmarkpharma.example.com", "+91 98201 12345",
+            "Glenmark Pharmaceuticals", "Automation", "Door Interlock System",
+            "Looking for 8-door flameproof clean room interlocking system with pressure monitoring for our new formulation facility in Navi Mumbai.",
+            "In Review"
+        ))
 
     # Seed initial blogs if empty
     cursor.execute("SELECT COUNT(*) as count FROM blogs")

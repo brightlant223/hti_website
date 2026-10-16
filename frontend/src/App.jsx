@@ -129,6 +129,23 @@ export default function App() {
     fetchStats();
   };
 
+  const fetchClients = async () => {
+    try {
+      const clientRes = await fetch('/api/clients');
+      if (clientRes.ok) {
+        const clientData = await clientRes.json();
+        if (Array.isArray(clientData)) setClients(clientData);
+      }
+    } catch (err) {
+      console.warn('Note: Could not refresh clients from API', err);
+    }
+  };
+
+  const handleRefreshClients = () => {
+    fetchClients();
+    fetchStats();
+  };
+
   const handleSelectSegment = (segmentId) => {
     setSelectedCategory(segmentId);
     const catalogEl = document.getElementById('catalog');
@@ -234,12 +251,13 @@ export default function App() {
         />
       )}
 
-      {/* Admin Panel (Full CMS for Services, Blogs & Inquiries) */}
+      {/* Admin Panel (Full CMS Dashboard for Products, Blogs, Clients & Inquiries) */}
       <AdminPanel
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
         onProductsChanged={handleRefreshProducts}
         onBlogsChanged={handleRefreshBlogs}
+        onClientsChanged={handleRefreshClients}
       />
 
       {/* Footer */}

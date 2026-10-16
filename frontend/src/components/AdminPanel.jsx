@@ -2,27 +2,57 @@ import React, { useState, useEffect } from 'react';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
   FileText, Package, MessageSquare, Search, AlertCircle,
-  Check, Eye, ExternalLink, Calendar, Clock, Tag
+  Check, Eye, ExternalLink, Calendar, Clock, Tag,
+  LayoutDashboard, Users, Building2, Lock, LogOut, LogIn,
+  TrendingUp, Layers, ChevronRight, CheckCircle2
 } from 'lucide-react';
 
-export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogsChanged }) {
-  const [activeTab, setActiveTab] = useState('services'); // 'services' | 'blogs' | 'inquiries'
+export default function AdminPanel({
+  isOpen,
+  onClose,
+  onProductsChanged,
+  onBlogsChanged,
+  onClientsChanged
+}) {
+  // Authentication states
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return Boolean(localStorage.getItem('hti_admin_token'));
+  });
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(() => {
+    return localStorage.getItem('hti_admin_user') || 'admin';
+  });
+
+  // Active view: 'dashboard' | 'products' | 'blogs' | 'clients' | 'inquiries'
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
 
   // Data states
   const [products, setProducts] = useState([]);
   const [blogs, setBlogs] = useState([]);
+  const [clients, setClients] = useState([]);
   const [inquiries, setInquiries] = useState([]);
+  const [stats, setStats] = useState({
+    total_products: 0,
+    total_categories: 0,
+    total_blogs: 0,
+    total_clients: 0,
+    total_inquiries: 0,
+    new_inquiries: 0
+  });
 
   // Search & filter states
   const [productSearch, setProductSearch] = useState('');
   const [productCategoryFilter, setProductCategoryFilter] = useState('All');
   const [blogSearch, setBlogSearch] = useState('');
+  const [clientSearch, setClientSearch] = useState('');
   const [inquiryStatusFilter, setInquiryStatusFilter] = useState('All');
 
-  // Modals for Add/Edit
-  const [editingProduct, setEditingProduct] = useState(null); // null = modal closed, 'new' = add, object = edit
+  // Product Add / Edit modal
+  const [editingProduct, setEditingProduct] = useState(null); // null = closed, 'new' = add, object = edit
   const [productForm, setProductForm] = useState({
     name: '',
     category: 'Access Control',
@@ -36,7 +66,8 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
     is_featured: false
   });
 
-  const [editingBlog, setEditingBlog] = useState(null); // null = modal closed, 'new' = add, object = edit
+  // Blog Add / Edit modal
+  const [editingBlog, setEditingBlog] = useState(null);
   const [blogForm, setBlogForm] = useState({
     title: '',
     category: 'Clean Room Automation',
@@ -47,13 +78,31 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
     is_published: true
   });
 
-  // Show auto-dismiss feedback
+  // Client Add / Edit modal
+  const [editingClient, setEditingClient] = useState(null);
+  const [clientForm, setClientForm] = useState({
+    name: '',
+    sector: 'Pharmaceutical & Cleanroom'
+  });
+
   const showFeedback = (type, message) => {
     setFeedback({ type, message });
     setTimeout(() => setFeedback({ type: '', message: '' }), 4000);
   };
 
   // Fetch functions
+  const fetchStats = async () => {
+    try {
+      const res = await fetch('/api/stats');
+      if (res.ok) {
+        const data = await res.json();
+        setStats(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch stats:', err);
+    }
+  };
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -84,6 +133,21 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
     }
   };
 
+  const fetchClients = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/clients');
+      if (res.ok) {
+        const data = await res.json();
+        setClients(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch clients:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchInquiries = async () => {
     try {
       setLoading(true);
@@ -100,15 +164,81 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
     }
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      if (activeTab === 'services') fetchProducts();
-      else if (activeTab === 'blogs') fetchBlogs();
-      else if (activeTab === 'inquiries') fetchInquiries();
-    }
-  }, [isOpen, activeTab, inquiryStatusFilter]);
+  const refreshAllData = () => {
+    fetchStats();
+    if (activeTab === 'dashboard') {
+      fetchProducts();
+      fetchBlogs();
+      fetchClients();
+      fetchInquiries();
+    } else if (activeTab === 'products') fetchProducts();
+    else if (activeTab === 'blogs') fetchBlogs();
+    else if (activeTab === 'clients') fetchClients();
+    else if (activeTab === 'inquiries') fetchInquiries();
+  };
 
-  // ===================== PRODUCT / SERVICE ACTIONS =====================
+  useEffect(() => {
+    if (isOpen && isAuthenticated) {
+      refreshAllData();
+    }
+  }, [isOpen, isAuthenticated, activeTab, inquiryStatusFilter]);
+
+  // ===================== AUTHENTICATION ACTIONS =====================
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    setLoginLoading(true);
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: loginForm.username,
+          password: loginForm.password
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('hti_admin_token', data.token);
+        localStorage.setItem('hti_admin_user', data.username);
+        setCurrentUser(data.username);
+        setIsAuthenticated(true);
+        setLoginForm({ username: '', password: '' });
+        showFeedback('success', 'Logged in successfully as Administrator.');
+      } else {
+        const err = await res.json();
+        setLoginError(err.detail || 'Invalid username or password.');
+      }
+    } catch (err) {
+      // Local fallback for offline/direct access
+      if (
+        loginForm.username.trim().toLowerCase() === 'admin' &&
+        loginForm.password === 'admin123'
+      ) {
+        localStorage.setItem('hti_admin_token', 'local_token_admin');
+        localStorage.setItem('hti_admin_user', 'admin');
+        setCurrentUser('admin');
+        setIsAuthenticated(true);
+        setLoginForm({ username: '', password: '' });
+      } else {
+        setLoginError('Authentication failed. Check your credentials.');
+      }
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('hti_admin_token');
+    localStorage.removeItem('hti_admin_user');
+    setIsAuthenticated(false);
+    setActiveTab('dashboard');
+    showFeedback('success', 'Logged out safely.');
+  };
+
+  // ===================== PRODUCT ACTIONS =====================
   const handleOpenAddProduct = () => {
     setProductForm({
       name: '',
@@ -150,13 +280,7 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
       return;
     }
 
-    // Parse features (newline separated)
-    const features = productForm.featuresText
-      .split('\n')
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    // Parse specs ("Key: Value" per line)
+    const features = productForm.featuresText.split('\n').map(s => s.trim()).filter(Boolean);
     const specs = {};
     productForm.specsText.split('\n').forEach(line => {
       const idx = line.indexOf(':');
@@ -166,12 +290,7 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
         if (key && val) specs[key] = val;
       }
     });
-
-    // Parse applications (newline separated)
-    const applications = productForm.applicationsText
-      .split('\n')
-      .map(s => s.trim())
-      .filter(Boolean);
+    const applications = productForm.applicationsText.split('\n').map(s => s.trim()).filter(Boolean);
 
     const payload = {
       name: productForm.name,
@@ -187,57 +306,49 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
     };
 
     try {
-      let res;
-      if (editingProduct === 'new') {
-        res = await fetch('/api/products', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } else {
-        res = await fetch(`/api/products/${editingProduct.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      }
+      const url = editingProduct === 'new' ? '/api/products' : `/api/products/${editingProduct.id}`;
+      const method = editingProduct === 'new' ? 'POST' : 'PUT';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
       if (res.ok) {
-        showFeedback('success', editingProduct === 'new' ? 'Service added successfully!' : 'Service updated successfully!');
+        showFeedback('success', editingProduct === 'new' ? 'Product added successfully!' : 'Product updated successfully!');
         setEditingProduct(null);
         await fetchProducts();
+        await fetchStats();
         if (onProductsChanged) onProductsChanged();
       } else {
-        const errData = await res.json();
-        showFeedback('error', errData.detail || 'Failed to save service.');
+        const err = await res.json();
+        showFeedback('error', err.detail || 'Failed to save product.');
       }
     } catch (err) {
-      console.error('Error saving product:', err);
-      showFeedback('error', 'Network error while saving service.');
+      showFeedback('error', 'Network error while saving product.');
     }
   };
 
   const handleDeleteProduct = async (prod) => {
-    if (!window.confirm(`Are you sure you want to permanently delete service "${prod.name}"?`)) {
-      return;
-    }
+    if (!window.confirm(`Are you sure you want to permanently delete product "${prod.name}"?`)) return;
 
     try {
       const res = await fetch(`/api/products/${prod.id}`, { method: 'DELETE' });
       if (res.ok) {
-        showFeedback('success', `Service "${prod.name}" deleted.`);
+        showFeedback('success', `Product "${prod.name}" deleted.`);
         await fetchProducts();
+        await fetchStats();
         if (onProductsChanged) onProductsChanged();
       } else {
-        showFeedback('error', 'Failed to delete service.');
+        showFeedback('error', 'Failed to delete product.');
       }
     } catch (err) {
-      console.error('Error deleting product:', err);
-      showFeedback('error', 'Network error deleting service.');
+      showFeedback('error', 'Network error deleting product.');
     }
   };
 
-  // ===================== BLOG / ARTICLE ACTIONS =====================
+  // ===================== BLOG ACTIONS =====================
   const handleOpenAddBlog = () => {
     setBlogForm({
       title: '',
@@ -282,53 +393,112 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
     };
 
     try {
-      let res;
-      if (editingBlog === 'new') {
-        res = await fetch('/api/blogs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } else {
-        res = await fetch(`/api/blogs/${editingBlog.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      }
+      const url = editingBlog === 'new' ? '/api/blogs' : `/api/blogs/${editingBlog.id}`;
+      const method = editingBlog === 'new' ? 'POST' : 'PUT';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
       if (res.ok) {
         showFeedback('success', editingBlog === 'new' ? 'Article published successfully!' : 'Article updated successfully!');
         setEditingBlog(null);
         await fetchBlogs();
+        await fetchStats();
         if (onBlogsChanged) onBlogsChanged();
       } else {
-        const errData = await res.json();
-        showFeedback('error', errData.detail || 'Failed to save blog.');
+        const err = await res.json();
+        showFeedback('error', err.detail || 'Failed to save blog.');
       }
     } catch (err) {
-      console.error('Error saving blog:', err);
       showFeedback('error', 'Network error while saving blog.');
     }
   };
 
   const handleDeleteBlog = async (blog) => {
-    if (!window.confirm(`Are you sure you want to permanently delete article "${blog.title}"?`)) {
-      return;
-    }
+    if (!window.confirm(`Are you sure you want to permanently delete article "${blog.title}"?`)) return;
 
     try {
       const res = await fetch(`/api/blogs/${blog.id}`, { method: 'DELETE' });
       if (res.ok) {
         showFeedback('success', `Article "${blog.title}" deleted.`);
         await fetchBlogs();
+        await fetchStats();
         if (onBlogsChanged) onBlogsChanged();
       } else {
         showFeedback('error', 'Failed to delete blog.');
       }
     } catch (err) {
-      console.error('Error deleting blog:', err);
       showFeedback('error', 'Network error deleting blog.');
+    }
+  };
+
+  // ===================== CLIENT ACTIONS =====================
+  const handleOpenAddClient = () => {
+    setClientForm({
+      name: '',
+      sector: 'Pharmaceutical & Cleanroom'
+    });
+    setEditingClient('new');
+  };
+
+  const handleOpenEditClient = (client) => {
+    setClientForm({
+      name: client.name,
+      sector: client.sector
+    });
+    setEditingClient(client);
+  };
+
+  const handleSaveClient = async (e) => {
+    e.preventDefault();
+    if (!clientForm.name || !clientForm.sector) {
+      showFeedback('error', 'Please fill in Client Name and Sector.');
+      return;
+    }
+
+    try {
+      const url = editingClient === 'new' ? '/api/clients' : `/api/clients/${editingClient.id}`;
+      const method = editingClient === 'new' ? 'POST' : 'PUT';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(clientForm)
+      });
+
+      if (res.ok) {
+        showFeedback('success', editingClient === 'new' ? 'Client added successfully!' : 'Client updated successfully!');
+        setEditingClient(null);
+        await fetchClients();
+        await fetchStats();
+        if (onClientsChanged) onClientsChanged();
+      } else {
+        const err = await res.json();
+        showFeedback('error', err.detail || 'Failed to save client.');
+      }
+    } catch (err) {
+      showFeedback('error', 'Network error while saving client.');
+    }
+  };
+
+  const handleDeleteClient = async (client) => {
+    if (!window.confirm(`Are you sure you want to delete client "${client.name}"?`)) return;
+
+    try {
+      const res = await fetch(`/api/clients/${client.id}`, { method: 'DELETE' });
+      if (res.ok) {
+        showFeedback('success', `Client "${client.name}" removed.`);
+        await fetchClients();
+        await fetchStats();
+        if (onClientsChanged) onClientsChanged();
+      } else {
+        showFeedback('error', 'Failed to delete client.');
+      }
+    } catch (err) {
+      showFeedback('error', 'Network error deleting client.');
     }
   };
 
@@ -343,6 +513,7 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
       if (res.ok) {
         setInquiries(prev => prev.map(item => item.id === id ? { ...item, status: newStatus } : item));
         showFeedback('success', `Inquiry #${id} marked as ${newStatus}`);
+        await fetchStats();
       }
     } catch (err) {
       showFeedback('error', 'Failed to update inquiry status.');
@@ -356,6 +527,7 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
       if (res.ok) {
         setInquiries(prev => prev.filter(item => item.id !== id));
         showFeedback('success', `Inquiry #${id} removed.`);
+        await fetchStats();
       }
     } catch (err) {
       showFeedback('error', 'Failed to remove inquiry.');
@@ -381,341 +553,674 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
       b.excerpt.toLowerCase().includes(blogSearch.toLowerCase());
   });
 
+  const filteredClients = clients.filter(c => {
+    return clientSearch === '' ||
+      c.name.toLowerCase().includes(clientSearch.toLowerCase()) ||
+      c.sector.toLowerCase().includes(clientSearch.toLowerCase());
+  });
+
+  // =========================================================================
+  // VIEW 1: AUTHENTICATION LOGIN SCREEN
+  // =========================================================================
+  if (!isAuthenticated) {
+    return (
+      <div className="admin-overlay" onClick={onClose}>
+        <div className="admin-login-card glass-card" onClick={e => e.stopPropagation()}>
+          <button className="btn-icon login-close-btn" onClick={onClose} aria-label="Close Login">
+            <X size={20} />
+          </button>
+
+          <div className="login-card-header">
+            <div className="login-icon-box">
+              <Lock size={28} className="text-red" />
+            </div>
+            <div className="login-badge-pill">RESTRICTED ACCESS</div>
+            <h2 className="login-title">HTI Admin Authentication</h2>
+            <p className="login-sub">Enter administrator credentials to manage products, blogs, and client systems.</p>
+          </div>
+
+          {loginError && (
+            <div className="login-error-alert">
+              <AlertCircle size={18} />
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleLoginSubmit} className="login-form">
+            <div className="form-group">
+              <label>Administrator Username</label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. admin"
+                value={loginForm.username}
+                onChange={e => setLoginForm({ ...loginForm, username: e.target.value })}
+                autoFocus
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Security Password</label>
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                value={loginForm.password}
+                onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
+              />
+            </div>
+
+            <button type="submit" className="btn btn-red w-full justify-center login-submit-btn" disabled={loginLoading}>
+              <LogIn size={18} />
+              <span>{loginLoading ? 'Verifying Security Token...' : 'Access Admin Dashboard'}</span>
+            </button>
+          </form>
+
+          <div className="login-demo-hint">
+            <Shield size={14} className="text-cyan inline mr-1" />
+            <span>Default Access: <strong>admin</strong> / <strong>admin123</strong></span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // VIEW 2: AUTHENTICATED ADMIN DASHBOARD WITH SIDEBAR
+  // =========================================================================
   return (
     <div className="admin-overlay" onClick={onClose}>
-      <div className="admin-modal glass-card" onClick={e => e.stopPropagation()}>
-        {/* Admin Header */}
-        <div className="admin-header">
-          <div className="admin-brand-info">
-            <div className="admin-icon-box">
-              <Shield size={24} className="text-cyan" />
+      <div className="admin-dashboard-container" onClick={e => e.stopPropagation()}>
+        {/* SIDEBAR */}
+        <aside className="admin-sidebar">
+          {/* Brand Box */}
+          <div className="sidebar-brand">
+            <div className="sidebar-logo-icon">
+              <Shield size={20} className="text-cyan" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="admin-title">HTI Administration CMS</h2>
-                <span className="admin-badge-live">LIVE DATABASE</span>
+              <div className="sidebar-brand-title">HTI ADMIN</div>
+              <div className="sidebar-brand-status">
+                <span className="live-dot"></span>
+                <span>SYSTEM ONLINE</span>
               </div>
-              <p className="admin-sub">Full control to Add, Edit, and Delete Services, Technical Blogs & Inquiries without modifying source code.</p>
             </div>
           </div>
 
-          <div className="admin-header-actions">
-            <button className="btn-icon" onClick={() => {
-              if (activeTab === 'services') fetchProducts();
-              else if (activeTab === 'blogs') fetchBlogs();
-              else if (activeTab === 'inquiries') fetchInquiries();
-            }} title="Refresh Database Data">
-              <RefreshCw size={18} className={loading ? 'spinning' : ''} />
+          {/* Navigation Links */}
+          <nav className="sidebar-nav">
+            <div className="sidebar-section-label">MAIN NAVIGATION</div>
+
+            <button
+              className={`sidebar-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
+              onClick={() => setActiveTab('dashboard')}
+            >
+              <LayoutDashboard size={18} />
+              <span>Dashboard</span>
             </button>
-            <button className="btn-icon close-btn" onClick={onClose} aria-label="Close Admin Panel">
-              <X size={20} />
+
+            <button
+              className={`sidebar-nav-item ${activeTab === 'products' ? 'active' : ''}`}
+              onClick={() => setActiveTab('products')}
+            >
+              <Package size={18} />
+              <span>Products</span>
+              <span className="sidebar-counter">{products.length}</span>
             </button>
-          </div>
-        </div>
 
-        {/* Global Feedback Banner */}
-        {feedback.message && (
-          <div className={`admin-toast ${feedback.type === 'error' ? 'toast-error' : 'toast-success'}`}>
-            {feedback.type === 'error' ? <AlertCircle size={18} /> : <CheckCircle size={18} />}
-            <span>{feedback.message}</span>
-          </div>
-        )}
+            <button
+              className={`sidebar-nav-item ${activeTab === 'blogs' ? 'active' : ''}`}
+              onClick={() => setActiveTab('blogs')}
+            >
+              <FileText size={18} />
+              <span>Blogs</span>
+              <span className="sidebar-counter">{blogs.length}</span>
+            </button>
 
-        {/* Navigation Tabs */}
-        <div className="admin-tabs">
-          <button
-            className={`admin-tab-btn ${activeTab === 'services' ? 'active' : ''}`}
-            onClick={() => setActiveTab('services')}
-          >
-            <Package size={17} />
-            <span>Services & Products ({products.length})</span>
-          </button>
+            <button
+              className={`sidebar-nav-item ${activeTab === 'clients' ? 'active' : ''}`}
+              onClick={() => setActiveTab('clients')}
+            >
+              <Building2 size={18} />
+              <span>Clients</span>
+              <span className="sidebar-counter">{clients.length}</span>
+            </button>
 
-          <button
-            className={`admin-tab-btn ${activeTab === 'blogs' ? 'active' : ''}`}
-            onClick={() => setActiveTab('blogs')}
-          >
-            <FileText size={17} />
-            <span>Articles & Blogs ({blogs.length})</span>
-          </button>
+            <div className="sidebar-section-label mt-4">LEADS & INQUIRIES</div>
 
-          <button
-            className={`admin-tab-btn ${activeTab === 'inquiries' ? 'active' : ''}`}
-            onClick={() => setActiveTab('inquiries')}
-          >
-            <MessageSquare size={17} />
-            <span>Customer Inquiries ({inquiries.length})</span>
-          </button>
-        </div>
-
-        {/* TAB 1: SERVICES & PRODUCTS MANAGEMENT */}
-        {activeTab === 'services' && (
-          <div className="admin-tab-content">
-            {/* Toolbar */}
-            <div className="admin-toolbar">
-              <div className="toolbar-search-box">
-                <Search size={16} className="text-muted" />
-                <input
-                  type="text"
-                  placeholder="Search services by title, spec or tag..."
-                  value={productSearch}
-                  onChange={e => setProductSearch(e.target.value)}
-                />
-              </div>
-
-              <div className="toolbar-filters">
-                <select
-                  value={productCategoryFilter}
-                  onChange={e => setProductCategoryFilter(e.target.value)}
-                  className="admin-select"
-                >
-                  <option value="All">All Categories</option>
-                  <option value="Access Control">Access Control</option>
-                  <option value="Building Automation">Building Automation</option>
-                  <option value="Security Surveillance">Security Surveillance</option>
-                  <option value="Fire Detection & Alarm">Fire Detection & Alarm</option>
-                  <option value="Cleanroom Engineering">Cleanroom Engineering</option>
-                </select>
-
-                <button className="btn btn-red btn-sm flex items-center gap-2" onClick={handleOpenAddProduct}>
-                  <Plus size={16} />
-                  <span>Add New Service</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Services Table */}
-            <div className="admin-table-wrap">
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Service / Product</th>
-                    <th>Category</th>
-                    <th>Subcategory</th>
-                    <th>Badge / Highlights</th>
-                    <th className="text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.length === 0 ? (
-                    <tr>
-                      <td colSpan="5" className="text-center py-8 text-muted">
-                        No services found matching current filters.
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredProducts.map(prod => (
-                      <tr key={prod.id}>
-                        <td>
-                          <div className="font-semibold text-slate-900">{prod.name}</div>
-                          <div className="text-xs text-muted truncate max-w-md">{prod.tagline || prod.description}</div>
-                        </td>
-                        <td>
-                          <span className="table-cat-badge">{prod.category}</span>
-                        </td>
-                        <td>
-                          <span className="text-xs text-slate-600">{prod.subcategory || 'Standard'}</span>
-                        </td>
-                        <td>
-                          {prod.badge && <span className="table-tag-badge">{prod.badge}</span>}
-                          {prod.is_featured && <span className="table-featured-badge">Featured</span>}
-                        </td>
-                        <td className="text-right">
-                          <div className="action-buttons-inline">
-                            <button
-                              className="btn-action edit"
-                              onClick={() => handleOpenEditProduct(prod)}
-                              title="Edit this service"
-                            >
-                              <Edit3 size={15} />
-                              <span>Edit</span>
-                            </button>
-                            <button
-                              className="btn-action delete"
-                              onClick={() => handleDeleteProduct(prod)}
-                              title="Delete this service"
-                            >
-                              <Trash2 size={15} />
-                              <span>Delete</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 2: BLOGS & ARTICLES MANAGEMENT */}
-        {activeTab === 'blogs' && (
-          <div className="admin-tab-content">
-            {/* Toolbar */}
-            <div className="admin-toolbar">
-              <div className="toolbar-search-box">
-                <Search size={16} className="text-muted" />
-                <input
-                  type="text"
-                  placeholder="Search articles by title, category, excerpt..."
-                  value={blogSearch}
-                  onChange={e => setBlogSearch(e.target.value)}
-                />
-              </div>
-
-              <div className="toolbar-filters">
-                <button className="btn btn-red btn-sm flex items-center gap-2" onClick={handleOpenAddBlog}>
-                  <Plus size={16} />
-                  <span>Add New Blog / Article</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Blogs Table */}
-            <div className="admin-table-wrap">
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Article Title</th>
-                    <th>Category</th>
-                    <th>Author & Read Time</th>
-                    <th>Status</th>
-                    <th className="text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredBlogs.length === 0 ? (
-                    <tr>
-                      <td colSpan="5" className="text-center py-8 text-muted">
-                        No articles found. Click "Add New Blog / Article" to create one.
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredBlogs.map(b => (
-                      <tr key={b.id}>
-                        <td>
-                          <div className="font-semibold text-slate-900">{b.title}</div>
-                          <div className="text-xs text-muted truncate max-w-md">{b.excerpt}</div>
-                        </td>
-                        <td>
-                          <span className="table-cat-badge">{b.category}</span>
-                        </td>
-                        <td>
-                          <div className="text-xs font-medium text-slate-700">{b.author}</div>
-                          <div className="text-xs text-muted">{b.read_time}</div>
-                        </td>
-                        <td>
-                          <span className={`status-badge ${b.is_published ? 'published' : 'draft'}`}>
-                            {b.is_published ? 'Published' : 'Draft'}
-                          </span>
-                        </td>
-                        <td className="text-right">
-                          <div className="action-buttons-inline">
-                            <button
-                              className="btn-action edit"
-                              onClick={() => handleOpenEditBlog(b)}
-                              title="Edit this article"
-                            >
-                              <Edit3 size={15} />
-                              <span>Edit</span>
-                            </button>
-                            <button
-                              className="btn-action delete"
-                              onClick={() => handleDeleteBlog(b)}
-                              title="Delete this article"
-                            >
-                              <Trash2 size={15} />
-                              <span>Delete</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: CUSTOMER INQUIRIES & LEADS */}
-        {activeTab === 'inquiries' && (
-          <div className="admin-tab-content">
-            <div className="admin-toolbar">
-              <div className="status-filter-pills">
-                {['All', 'New', 'In Review', 'Contacted', 'Resolved'].map(st => (
-                  <button
-                    key={st}
-                    className={`filter-pill-btn ${inquiryStatusFilter === st ? 'pill-active' : ''}`}
-                    onClick={() => setInquiryStatusFilter(st)}
-                  >
-                    {st}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="inquiries-card-list">
-              {inquiries.length === 0 ? (
-                <div className="text-center py-10 text-muted">No inquiries found in this status.</div>
-              ) : (
-                inquiries.map(inq => (
-                  <div key={inq.id} className="inquiry-card-admin">
-                    <div className="inquiry-card-top">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="inquiry-client-name">{inq.full_name}</h4>
-                          <span className={`status-badge inq-${inq.status.toLowerCase().replace(/\s+/g, '-')}`}>
-                            {inq.status}
-                          </span>
-                        </div>
-                        <div className="inquiry-client-meta">
-                          <span>{inq.email}</span> • <span>{inq.phone}</span> {inq.company && `• ${inq.company}`}
-                        </div>
-                      </div>
-                      <div className="inquiry-time-stamp">
-                        {new Date(inq.created_at).toLocaleDateString()}
-                      </div>
-                    </div>
-
-                    <div className="inquiry-interest-tag">
-                      <strong>Product of Interest:</strong> {inq.product_name} ({inq.category})
-                    </div>
-
-                    <div className="inquiry-message-box">
-                      "{inq.message}"
-                    </div>
-
-                    <div className="inquiry-card-bottom">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-slate-500">Update Status:</span>
-                        {['New', 'Contacted', 'Resolved'].map(st => (
-                          <button
-                            key={st}
-                            className={`status-chip-btn ${inq.status === st ? 'active' : ''}`}
-                            onClick={() => handleUpdateInquiryStatus(inq.id, st)}
-                          >
-                            {st}
-                          </button>
-                        ))}
-                      </div>
-
-                      <button
-                        className="btn-action delete"
-                        onClick={() => handleDeleteInquiry(inq.id)}
-                        title="Delete Inquiry"
-                      >
-                        <Trash2 size={14} />
-                        <span>Delete</span>
-                      </button>
-                    </div>
-                  </div>
-                ))
+            <button
+              className={`sidebar-nav-item ${activeTab === 'inquiries' ? 'active' : ''}`}
+              onClick={() => setActiveTab('inquiries')}
+            >
+              <MessageSquare size={18} />
+              <span>Inquiries</span>
+              {stats.new_inquiries > 0 && (
+                <span className="sidebar-badge-new">{stats.new_inquiries} New</span>
               )}
+            </button>
+          </nav>
+
+          {/* Sidebar User Footer */}
+          <div className="sidebar-footer">
+            <div className="sidebar-user-info">
+              <div className="sidebar-user-avatar">
+                <Users size={16} />
+              </div>
+              <div className="sidebar-user-details">
+                <div className="user-name">{currentUser}</div>
+                <div className="user-role">Super Admin</div>
+              </div>
+            </div>
+
+            <button className="sidebar-logout-btn" onClick={handleLogout} title="Log Out">
+              <LogOut size={16} />
+            </button>
+          </div>
+        </aside>
+
+        {/* MAIN WORKSPACE */}
+        <div className="admin-main-area">
+          {/* Top Bar */}
+          <div className="admin-topbar">
+            <div className="admin-topbar-title-wrap">
+              <h2 className="admin-topbar-title">
+                {activeTab === 'dashboard' && 'Dashboard Overview'}
+                {activeTab === 'products' && 'Products Management'}
+                {activeTab === 'blogs' && 'Articles & Technical Blogs'}
+                {activeTab === 'clients' && 'Enterprise Clients & Logos'}
+                {activeTab === 'inquiries' && 'Commercial Inquiries & Leads'}
+              </h2>
+              <span className="topbar-live-tag">SQLite Live: backend/hti.db</span>
+            </div>
+
+            <div className="admin-topbar-actions">
+              <button className="btn-icon" onClick={refreshAllData} title="Refresh Database Data">
+                <RefreshCw size={17} className={loading ? 'spinning' : ''} />
+              </button>
+
+              <button className="btn-icon close-btn" onClick={onClose} aria-label="Close Admin Panel">
+                <X size={20} />
+              </button>
             </div>
           </div>
-        )}
+
+          {/* Global Feedback Banner */}
+          {feedback.message && (
+            <div className={`admin-toast ${feedback.type === 'error' ? 'toast-error' : 'toast-success'}`}>
+              {feedback.type === 'error' ? <AlertCircle size={18} /> : <CheckCircle size={18} />}
+              <span>{feedback.message}</span>
+            </div>
+          )}
+
+          {/* TAB 1: DASHBOARD OVERVIEW */}
+          {activeTab === 'dashboard' && (
+            <div className="admin-body-content">
+              {/* Metric Cards Grid */}
+              <div className="dashboard-stats-grid">
+                <div className="dash-card">
+                  <div className="dash-card-icon bg-blue">
+                    <Package size={22} className="text-cyan" />
+                  </div>
+                  <div>
+                    <div className="dash-card-number">{products.length}</div>
+                    <div className="dash-card-label">Active Products</div>
+                  </div>
+                  <button className="dash-card-btn" onClick={() => setActiveTab('products')}>
+                    Manage Products <ChevronRight size={14} />
+                  </button>
+                </div>
+
+                <div className="dash-card">
+                  <div className="dash-card-icon bg-purple">
+                    <FileText size={22} className="text-purple" />
+                  </div>
+                  <div>
+                    <div className="dash-card-number">{blogs.length}</div>
+                    <div className="dash-card-label">Technical Articles</div>
+                  </div>
+                  <button className="dash-card-btn" onClick={() => setActiveTab('blogs')}>
+                    Manage Blogs <ChevronRight size={14} />
+                  </button>
+                </div>
+
+                <div className="dash-card">
+                  <div className="dash-card-icon bg-emerald">
+                    <Building2 size={22} className="text-emerald" />
+                  </div>
+                  <div>
+                    <div className="dash-card-number">{clients.length}</div>
+                    <div className="dash-card-label">Corporate Clients</div>
+                  </div>
+                  <button className="dash-card-btn" onClick={() => setActiveTab('clients')}>
+                    Manage Clients <ChevronRight size={14} />
+                  </button>
+                </div>
+
+                <div className="dash-card">
+                  <div className="dash-card-icon bg-red">
+                    <MessageSquare size={22} className="text-red" />
+                  </div>
+                  <div>
+                    <div className="dash-card-number">{inquiries.length}</div>
+                    <div className="dash-card-label">Client Inquiries</div>
+                  </div>
+                  <button className="dash-card-btn" onClick={() => setActiveTab('inquiries')}>
+                    View Inquiries <ChevronRight size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Actions Bar */}
+              <div className="dashboard-quick-actions">
+                <h4 className="quick-actions-title">Instant Management Actions</h4>
+                <div className="quick-actions-row">
+                  <button className="btn btn-red btn-sm flex items-center gap-2" onClick={handleOpenAddProduct}>
+                    <Plus size={16} />
+                    <span>Add New Product</span>
+                  </button>
+
+                  <button className="btn btn-outline btn-sm flex items-center gap-2" onClick={handleOpenAddBlog}>
+                    <Plus size={16} />
+                    <span>Publish New Article</span>
+                  </button>
+
+                  <button className="btn btn-outline btn-sm flex items-center gap-2" onClick={handleOpenAddClient}>
+                    <Plus size={16} />
+                    <span>Add New Client</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Recent Activity Split */}
+              <div className="dashboard-columns-split">
+                {/* Recent Products */}
+                <div className="dash-panel">
+                  <div className="dash-panel-header">
+                    <h4>Recent Products</h4>
+                    <button className="dash-panel-link" onClick={() => setActiveTab('products')}>View All</button>
+                  </div>
+                  <div className="dash-panel-list">
+                    {products.slice(0, 4).map(p => (
+                      <div key={p.id} className="dash-item-row">
+                        <div>
+                          <div className="font-semibold text-slate-800 text-sm">{p.name}</div>
+                          <div className="text-xs text-muted">{p.category} • {p.subcategory}</div>
+                        </div>
+                        <button className="btn-action edit" onClick={() => handleOpenEditProduct(p)}>
+                          <Edit3 size={13} /> Edit
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Recent Blogs */}
+                <div className="dash-panel">
+                  <div className="dash-panel-header">
+                    <h4>Recent Articles</h4>
+                    <button className="dash-panel-link" onClick={() => setActiveTab('blogs')}>View All</button>
+                  </div>
+                  <div className="dash-panel-list">
+                    {blogs.slice(0, 3).map(b => (
+                      <div key={b.id} className="dash-item-row">
+                        <div>
+                          <div className="font-semibold text-slate-800 text-sm">{b.title}</div>
+                          <div className="text-xs text-muted">{b.category} • {b.read_time}</div>
+                        </div>
+                        <button className="btn-action edit" onClick={() => handleOpenEditBlog(b)}>
+                          <Edit3 size={13} /> Edit
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: PRODUCTS MANAGEMENT */}
+          {activeTab === 'products' && (
+            <div className="admin-body-content">
+              <div className="admin-toolbar">
+                <div className="toolbar-search-box">
+                  <Search size={16} className="text-muted" />
+                  <input
+                    type="text"
+                    placeholder="Search products by name, specs or tags..."
+                    value={productSearch}
+                    onChange={e => setProductSearch(e.target.value)}
+                  />
+                </div>
+
+                <div className="toolbar-filters">
+                  <select
+                    value={productCategoryFilter}
+                    onChange={e => setProductCategoryFilter(e.target.value)}
+                    className="admin-select"
+                  >
+                    <option value="All">All Categories</option>
+                    <option value="Access Control">Access Control</option>
+                    <option value="Building Automation">Building Automation</option>
+                    <option value="Security Surveillance">Security Surveillance</option>
+                    <option value="Fire Detection & Alarm">Fire Detection & Alarm</option>
+                    <option value="Cleanroom Engineering">Cleanroom Engineering</option>
+                  </select>
+
+                  <button className="btn btn-red btn-sm flex items-center gap-2" onClick={handleOpenAddProduct}>
+                    <Plus size={16} />
+                    <span>Add New Product</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Product Name</th>
+                      <th>Category</th>
+                      <th>Subcategory</th>
+                      <th>Badges / Flags</th>
+                      <th className="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredProducts.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" className="text-center py-8 text-muted">
+                          No products found matching current filters.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredProducts.map(prod => (
+                        <tr key={prod.id}>
+                          <td>
+                            <div className="font-semibold text-slate-900">{prod.name}</div>
+                            <div className="text-xs text-muted truncate max-w-md">{prod.tagline || prod.description}</div>
+                          </td>
+                          <td>
+                            <span className="table-cat-badge">{prod.category}</span>
+                          </td>
+                          <td>
+                            <span className="text-xs text-slate-600">{prod.subcategory || 'Standard'}</span>
+                          </td>
+                          <td>
+                            {prod.badge && <span className="table-tag-badge">{prod.badge}</span>}
+                            {prod.is_featured && <span className="table-featured-badge">Featured</span>}
+                          </td>
+                          <td className="text-right">
+                            <div className="action-buttons-inline">
+                              <button
+                                className="btn-action edit"
+                                onClick={() => handleOpenEditProduct(prod)}
+                                title="Edit this product"
+                              >
+                                <Edit3 size={15} />
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                className="btn-action delete"
+                                onClick={() => handleDeleteProduct(prod)}
+                                title="Delete this product"
+                              >
+                                <Trash2 size={15} />
+                                <span>Delete</span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: BLOGS & ARTICLES */}
+          {activeTab === 'blogs' && (
+            <div className="admin-body-content">
+              <div className="admin-toolbar">
+                <div className="toolbar-search-box">
+                  <Search size={16} className="text-muted" />
+                  <input
+                    type="text"
+                    placeholder="Search articles by title, category, excerpt..."
+                    value={blogSearch}
+                    onChange={e => setBlogSearch(e.target.value)}
+                  />
+                </div>
+
+                <div className="toolbar-filters">
+                  <button className="btn btn-red btn-sm flex items-center gap-2" onClick={handleOpenAddBlog}>
+                    <Plus size={16} />
+                    <span>Publish New Blog Article</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Article Title</th>
+                      <th>Category</th>
+                      <th>Author & Read Time</th>
+                      <th>Status</th>
+                      <th className="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredBlogs.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" className="text-center py-8 text-muted">
+                          No articles found. Click "Publish New Blog Article" to create one.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredBlogs.map(b => (
+                        <tr key={b.id}>
+                          <td>
+                            <div className="font-semibold text-slate-900">{b.title}</div>
+                            <div className="text-xs text-muted truncate max-w-md">{b.excerpt}</div>
+                          </td>
+                          <td>
+                            <span className="table-cat-badge">{b.category}</span>
+                          </td>
+                          <td>
+                            <div className="text-xs font-medium text-slate-700">{b.author}</div>
+                            <div className="text-xs text-muted">{b.read_time}</div>
+                          </td>
+                          <td>
+                            <span className={`status-badge ${b.is_published ? 'published' : 'draft'}`}>
+                              {b.is_published ? 'Published' : 'Draft'}
+                            </span>
+                          </td>
+                          <td className="text-right">
+                            <div className="action-buttons-inline">
+                              <button
+                                className="btn-action edit"
+                                onClick={() => handleOpenEditBlog(b)}
+                                title="Edit this article"
+                              >
+                                <Edit3 size={15} />
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                className="btn-action delete"
+                                onClick={() => handleDeleteBlog(b)}
+                                title="Delete this article"
+                              >
+                                <Trash2 size={15} />
+                                <span>Delete</span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: CLIENTS MANAGEMENT */}
+          {activeTab === 'clients' && (
+            <div className="admin-body-content">
+              <div className="admin-toolbar">
+                <div className="toolbar-search-box">
+                  <Search size={16} className="text-muted" />
+                  <input
+                    type="text"
+                    placeholder="Search clients by company name or sector..."
+                    value={clientSearch}
+                    onChange={e => setClientSearch(e.target.value)}
+                  />
+                </div>
+
+                <div className="toolbar-filters">
+                  <button className="btn btn-red btn-sm flex items-center gap-2" onClick={handleOpenAddClient}>
+                    <Plus size={16} />
+                    <span>Add New Enterprise Client</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th># ID</th>
+                      <th>Client Organization</th>
+                      <th>Industry Sector</th>
+                      <th className="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredClients.length === 0 ? (
+                      <tr>
+                        <td colSpan="4" className="text-center py-8 text-muted">
+                          No clients found.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredClients.map(c => (
+                        <tr key={c.id}>
+                          <td className="font-mono text-xs text-muted">#{c.id}</td>
+                          <td>
+                            <div className="font-semibold text-slate-900">{c.name}</div>
+                          </td>
+                          <td>
+                            <span className="table-cat-badge">{c.sector}</span>
+                          </td>
+                          <td className="text-right">
+                            <div className="action-buttons-inline">
+                              <button
+                                className="btn-action edit"
+                                onClick={() => handleOpenEditClient(c)}
+                                title="Edit this client"
+                              >
+                                <Edit3 size={15} />
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                className="btn-action delete"
+                                onClick={() => handleDeleteClient(c)}
+                                title="Delete this client"
+                              >
+                                <Trash2 size={15} />
+                                <span>Delete</span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: INQUIRIES & LEADS */}
+          {activeTab === 'inquiries' && (
+            <div className="admin-body-content">
+              <div className="admin-toolbar">
+                <div className="status-filter-pills">
+                  {['All', 'New', 'In Review', 'Contacted', 'Resolved'].map(st => (
+                    <button
+                      key={st}
+                      className={`filter-pill-btn ${inquiryStatusFilter === st ? 'pill-active' : ''}`}
+                      onClick={() => setInquiryStatusFilter(st)}
+                    >
+                      {st}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="inquiries-card-list">
+                {inquiries.length === 0 ? (
+                  <div className="text-center py-10 text-muted">No inquiries found in this status.</div>
+                ) : (
+                  inquiries.map(inq => (
+                    <div key={inq.id} className="inquiry-card-admin">
+                      <div className="inquiry-card-top">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="inquiry-client-name">{inq.full_name}</h4>
+                            <span className={`status-badge inq-${inq.status.toLowerCase().replace(/\s+/g, '-')}`}>
+                              {inq.status}
+                            </span>
+                          </div>
+                          <div className="inquiry-client-meta">
+                            <span>{inq.email}</span> • <span>{inq.phone}</span> {inq.company && `• ${inq.company}`}
+                          </div>
+                        </div>
+                        <div className="inquiry-time-stamp">
+                          {new Date(inq.created_at).toLocaleDateString()}
+                        </div>
+                      </div>
+
+                      <div className="inquiry-interest-tag">
+                        <strong>Product of Interest:</strong> {inq.product_name} ({inq.category})
+                      </div>
+
+                      <div className="inquiry-message-box">
+                        "{inq.message}"
+                      </div>
+
+                      <div className="inquiry-card-bottom">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-semibold text-slate-500">Update Status:</span>
+                          {['New', 'Contacted', 'Resolved'].map(st => (
+                            <button
+                              key={st}
+                              className={`status-chip-btn ${inq.status === st ? 'active' : ''}`}
+                              onClick={() => handleUpdateInquiryStatus(inq.id, st)}
+                            >
+                              {st}
+                            </button>
+                          ))}
+                        </div>
+
+                        <button
+                          className="btn-action delete"
+                          onClick={() => handleDeleteInquiry(inq.id)}
+                          title="Delete Inquiry"
+                        >
+                          <Trash2 size={14} />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* ===================== ADD / EDIT PRODUCT MODAL ===================== */}
         {editingProduct && (
@@ -724,9 +1229,9 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
               <div className="submodal-header">
                 <div>
                   <h3 className="submodal-title">
-                    {editingProduct === 'new' ? 'Add New Service / Product' : `Edit: ${editingProduct.name}`}
+                    {editingProduct === 'new' ? 'Add New Product' : `Edit: ${editingProduct.name}`}
                   </h3>
-                  <p className="submodal-sub">Changes are stored directly in SQLite and immediately reflected live on the site.</p>
+                  <p className="submodal-sub">Stored in SQLite database and reflected instantly on the website.</p>
                 </div>
                 <button className="btn-icon" onClick={() => setEditingProduct(null)}>
                   <X size={18} />
@@ -736,18 +1241,18 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
               <form onSubmit={handleSaveProduct} className="submodal-form">
                 <div className="form-row-2">
                   <div className="form-group">
-                    <label>Service / Product Name *</label>
+                    <label>Product Name *</label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g., Smart Cleanroom Door Interlock Controller"
+                      placeholder="e.g. Smart Cleanroom Door Interlock Controller"
                       value={productForm.name}
                       onChange={e => setProductForm({ ...productForm, name: e.target.value })}
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>Core Segment / Category *</label>
+                    <label>Product Category *</label>
                     <select
                       value={productForm.category}
                       onChange={e => setProductForm({ ...productForm, category: e.target.value })}
@@ -766,17 +1271,17 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
                     <label>Subcategory</label>
                     <input
                       type="text"
-                      placeholder="e.g., Clean Room Interlocks, Turnstiles, Controllers"
+                      placeholder="e.g. Clean Room Interlocks, Turnstiles, Controllers"
                       value={productForm.subcategory}
                       onChange={e => setProductForm({ ...productForm, subcategory: e.target.value })}
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>Badge / Highlight</label>
+                    <label>Badge / Feature Highlight</label>
                     <input
                       type="text"
-                      placeholder="e.g., Enterprise Grade, Bestseller, Patented"
+                      placeholder="e.g. Enterprise Grade, Bestseller, Patented"
                       value={productForm.badge}
                       onChange={e => setProductForm({ ...productForm, badge: e.target.value })}
                     />
@@ -787,18 +1292,18 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
                   <label>Tagline / One-Liner</label>
                   <input
                     type="text"
-                    placeholder="e.g., Fail-safe pneumatic and magnetic interlocking system for sterile suites"
+                    placeholder="e.g. Fail-safe pneumatic and magnetic interlocking system for sterile suites"
                     value={productForm.tagline}
                     onChange={e => setProductForm({ ...productForm, tagline: e.target.value })}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Full Description *</label>
+                  <label>Full Product Description *</label>
                   <textarea
                     rows="3"
                     required
-                    placeholder="Detailed technical overview of the service or product solution..."
+                    placeholder="Detailed technical overview of the product solution..."
                     value={productForm.description}
                     onChange={e => setProductForm({ ...productForm, description: e.target.value })}
                   />
@@ -827,7 +1332,7 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
                 </div>
 
                 <div className="form-group">
-                  <label>Target Applications & Industries (One per line)</label>
+                  <label>Target Applications & Industries</label>
                   <input
                     type="text"
                     placeholder="Pharmaceutical Cleanrooms, Semiconductor Fabs, Hospital ICUs, Research Labs"
@@ -843,7 +1348,7 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
                       checked={productForm.is_featured}
                       onChange={e => setProductForm({ ...productForm, is_featured: e.target.checked })}
                     />
-                    <span className="font-semibold text-slate-800">Pin as Featured Service on Homepage</span>
+                    <span className="font-semibold text-slate-800">Pin as Featured Product on Homepage</span>
                   </label>
                 </div>
 
@@ -852,7 +1357,7 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
                     Cancel
                   </button>
                   <button type="submit" className="btn btn-red">
-                    {editingProduct === 'new' ? 'Add Service to Live Site' : 'Save Changes'}
+                    {editingProduct === 'new' ? 'Add Product to Live Site' : 'Save Changes'}
                   </button>
                 </div>
               </form>
@@ -882,7 +1387,7 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
                   <input
                     type="text"
                     required
-                    placeholder="e.g., Cleanroom Interlock Controller Design Guidelines for ISO 14644 Compliance"
+                    placeholder="e.g. Cleanroom Interlock Controller Design Guidelines for ISO 14644 Compliance"
                     value={blogForm.title}
                     onChange={e => setBlogForm({ ...blogForm, title: e.target.value })}
                   />
@@ -917,7 +1422,7 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
                     <label>Estimated Read Time</label>
                     <input
                       type="text"
-                      placeholder="e.g., 5 min read"
+                      placeholder="e.g. 5 min read"
                       value={blogForm.read_time}
                       onChange={e => setBlogForm({ ...blogForm, read_time: e.target.value })}
                     />
@@ -963,6 +1468,62 @@ export default function AdminPanel({ isOpen, onClose, onProductsChanged, onBlogs
                   </button>
                   <button type="submit" className="btn btn-red">
                     {editingBlog === 'new' ? 'Publish Article Now' : 'Save Article Changes'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* ===================== ADD / EDIT CLIENT MODAL ===================== */}
+        {editingClient && (
+          <div className="submodal-overlay" onClick={() => setEditingClient(null)}>
+            <div className="submodal-dialog glass-card" onClick={e => e.stopPropagation()}>
+              <div className="submodal-header">
+                <div>
+                  <h3 className="submodal-title">
+                    {editingClient === 'new' ? 'Add New Enterprise Client' : `Edit: ${editingClient.name}`}
+                  </h3>
+                  <p className="submodal-sub">Changes will update the Clients and Partners section on the homepage.</p>
+                </div>
+                <button className="btn-icon" onClick={() => setEditingClient(null)}>
+                  <X size={18} />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveClient} className="submodal-form">
+                <div className="form-group">
+                  <label>Client Organization Name *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Sun Pharmaceutical Industries Ltd."
+                    value={clientForm.name}
+                    onChange={e => setClientForm({ ...clientForm, name: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Industry Sector *</label>
+                  <select
+                    value={clientForm.sector}
+                    onChange={e => setClientForm({ ...clientForm, sector: e.target.value })}
+                  >
+                    <option value="Pharmaceutical & Cleanroom">Pharmaceutical & Cleanroom</option>
+                    <option value="Semiconductors & Electronics">Semiconductors & Electronics</option>
+                    <option value="Healthcare & Hospitals">Healthcare & Hospitals</option>
+                    <option value="Automotive & Heavy Industry">Automotive & Heavy Industry</option>
+                    <option value="Financial & Corporate Parks">Financial & Corporate Parks</option>
+                    <option value="Government & Defense">Government & Defense</option>
+                  </select>
+                </div>
+
+                <div className="submodal-actions">
+                  <button type="button" className="btn btn-outline" onClick={() => setEditingClient(null)}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-red">
+                    {editingClient === 'new' ? 'Add Client to Roster' : 'Save Client Details'}
                   </button>
                 </div>
               </form>
