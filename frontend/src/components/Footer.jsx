@@ -22,12 +22,12 @@ export default function Footer({ onCategoryClick, onNavigate }) {
           {/* Company Column */}
           <div className="footer-col col-brand">
             <div className="brand-logo footer-logo">
-              <div className="logo-symbol">
-                <div className="logo-bars">
-                  <span className="bar red-bar"></span>
-                  <span className="bar red-bar"></span>
-                  <span className="bar red-bar"></span>
-                </div>
+              <div className="brand-logo-wrap">
+                <img
+                  src="/hti-logo.png"
+                  alt="HTI Logo"
+                  className="brand-logo-img"
+                />
               </div>
               <div className="logo-text">
                 <div className="brand-name">

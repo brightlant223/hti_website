@@ -72,12 +72,12 @@ export default function Navbar({ currentPage = 'home', onNavigate, onOpenAdmin }
               handleNavClick('home', 'hero');
             }}
           >
-            <div className="logo-symbol">
-              <div className="logo-bars">
-                <span className="bar red-bar"></span>
-                <span className="bar red-bar"></span>
-                <span className="bar red-bar"></span>
-              </div>
+            <div className="brand-logo-wrap">
+              <img
+                src="/hti-logo.png"
+                alt="HTI Logo"
+                className="brand-logo-img"
+              />
             </div>
             <div className="logo-text">
               <div className="brand-name">

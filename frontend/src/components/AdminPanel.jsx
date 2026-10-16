@@ -730,7 +730,7 @@ export default function AdminPanel({
           <div className="login-card-header">
             <div className="login-emblem-wrap">
               <div className="login-icon-box">
-                <Lock size={30} className="text-red" />
+                <img src="/hti-logo.png" alt="HTI Logo" className="login-hti-logo-img" />
               </div>
               <div className="login-pulse-ring" />
             </div>
@@ -862,7 +862,7 @@ export default function AdminPanel({
           {/* Brand Box */}
           <div className="sidebar-brand">
             <div className="sidebar-logo-icon">
-              <Shield size={22} className="text-cyan" />
+              <img src="/hti-logo.png" alt="HTI Logo" className="sidebar-hti-logo-img" />
             </div>
             <div>
               <div className="sidebar-brand-title">HTI CONTROL</div>
