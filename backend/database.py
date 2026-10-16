@@ -1,0 +1,1029 @@
+import sqlite3
+import json
+import os
+from pathlib import Path
+
+DB_PATH = Path(__file__).parent / "hti.db"
+
+def get_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Create products table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS products (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        slug TEXT UNIQUE NOT NULL,
+        name TEXT NOT NULL,
+        category TEXT NOT NULL,
+        subcategory TEXT NOT NULL,
+        tagline TEXT,
+        description TEXT NOT NULL,
+        features TEXT NOT NULL, -- JSON array
+        specs TEXT NOT NULL,    -- JSON object
+        applications TEXT,     -- JSON array
+        badge TEXT,
+        is_featured INTEGER DEFAULT 0
+    );
+    """)
+
+    # Create inquiries table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS inquiries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        full_name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        company TEXT,
+        category TEXT,
+        product_name TEXT,
+        message TEXT NOT NULL,
+        status TEXT DEFAULT 'New',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    # Create partners table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS partners (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        category TEXT NOT NULL,
+        tagline TEXT
+    );
+    """)
+
+    # Create clients table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS clients (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        sector TEXT NOT NULL
+    );
+    """)
+
+    conn.commit()
+    conn.close()
+
+def seed_db():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) as count FROM products")
+    if cursor.fetchone()["count"] > 0:
+        conn.close()
+        return
+
+    products = [
+        # AUTOMATION
+        {
+            "slug": "door-interlock-system",
+            "name": "Door Interlock System",
+            "category": "Automation",
+            "subcategory": "Clean Room & Controlled Access",
+            "tagline": "Multi-door airlock management for cleanrooms & critical laboratories",
+            "description": "The door interlocking system is engineered to control personnel entry into sensitive, controlled environments such as pharmaceutical clean rooms, biotechnology labs, and healthcare suites where air pressure and contamination prevention are paramount. Composed of 2 to 12 electrically interlocked doors, it ensures that adjacent doors cannot be opened simultaneously, safeguarding clean air balance.",
+            "features": json.dumps([
+                "Supports 2 to 12 doors electrically interlocked",
+                "Available in Flameproof and Non-Flameproof variants",
+                "Programmable delay timer between door openings to preserve differential pressure",
+                "Emergency override key switch / push button module for instant evacuation",
+                "Multi-credential triggering: Biometric, RFID Proximity, Push Button or Sensor",
+                "Audible and visual LED status indicators on each door station"
+            ]),
+            "specs": json.dumps({
+                "Door Support": "2 to 12 Doors per Controller",
+                "Enclosure Options": "Flameproof Ex-d / Non-Flameproof MS Powder Coated",
+                "Operating Voltage": "12V / 24V DC Internal Linear Power Supply",
+                "Interlocking Logic": "Sequential / First-Come-First-Serve",
+                "Emergency Modes": "Fire Alarm Trigger Auto-Release & Key Switch"
+            }),
+            "applications": json.dumps([
+                "Pharma Clean Rooms (ISO 5 - ISO 8)",
+                "Bio-safety Labs & Containment Zones",
+                "Hospitals & Surgical Theatres",
+                "Semiconductor & Electronic Manufacturing"
+            ]),
+            "badge": "Flagship Product",
+            "is_featured": 1
+        },
+        {
+            "slug": "automatic-sliding-swing-door",
+            "name": "Automatic Sliding & Swing Doors",
+            "category": "Automation",
+            "subcategory": "Pedestrian Access",
+            "tagline": "Architectural grade touchless automatic entrance solutions",
+            "description": "Precision engineered automatic sliding and swing doors providing hands-free, energy-efficient access for corporate headquarters, pharmaceutical entryways, hospitals, and commercial facilities. Available with micro-processed brushless DC motors, safety sensors, and silent operation.",
+            "features": json.dumps([
+                "Heavy-duty brushless DC motor with high-efficiency gearbox",
+                "Microwave motion sensors and active infrared safety presence detection",
+                "Options for frameless toughened glass or insulated hollow metal frames",
+                "Battery backup for emergency fail-safe opening during power outage",
+                "Programmable opening/closing speeds and hold-open durations"
+            ]),
+            "specs": json.dumps({
+                "Door Weight Capacity": "Up to 150 kg per leaf (Single) / 120 kg x 2 (Bi-parting)",
+                "Opening Speed": "100 - 550 mm/sec (Adjustable)",
+                "Power Supply": "230V AC ± 10%, 50Hz",
+                "Activation": "Microwave Radar, Foot Sensor, Push Button, Access Control"
+            }),
+            "applications": json.dumps([
+                "Corporate Offices & IT Parks",
+                "Pharma Entry Airlocks",
+                "Hospitals & Healthcare Facilities",
+                "Airports & Retail Complexes"
+            ]),
+            "badge": "High Demand",
+            "is_featured": 1
+        },
+        {
+            "slug": "automatic-sliding-swing-gate",
+            "name": "Automatic Sliding & Swing Gates",
+            "category": "Automation",
+            "subcategory": "Perimeter Security",
+            "tagline": "Rugged, high-torque motorized gates for corporate and industrial perimeters",
+            "description": "Heavy-duty perimeter security entrance gates manufactured with high-tensile steel and automated with oil-bath electro-mechanical or hydraulic operators. Engineered to resist unauthorized forced entry while providing seamless vehicle throughput.",
+            "features": json.dumps([
+                "High-torque oil bath gear motor designed for continuous duty cycles",
+                "Obstacle detection with safety photocells and mechanical safety edges",
+                "Remote control, RFID tag, and automatic loop detector integration",
+                "Manual release mechanism with personalized key in case of power loss",
+                "Hot-dip galvanized, rust-resistant powder-coated construction"
+            ]),
+            "specs": json.dumps({
+                "Gate Weight": "500 kg to 3000 kg capacity options",
+                "Operating Speed": "12 to 20 meters per minute",
+                "Duty Cycle": "Heavy-Duty 100% Continuous rating",
+                "Weather Protection": "IP55 / IP65 weather-sealed enclosures"
+            }),
+            "applications": json.dumps([
+                "Industrial Plants & Manufacturing Hubs",
+                "Corporate Campuses & Tech Parks",
+                "Warehousing & Logistics Parks",
+                "Gated Communities & Defense Premises"
+            ]),
+            "badge": "Heavy Duty",
+            "is_featured": 0
+        },
+        {
+            "slug": "telescopic-cantilever-gate",
+            "name": "Telescopic & Cantilever Gates",
+            "category": "Automation",
+            "subcategory": "Perimeter Security",
+            "tagline": "Trackless and space-saving solutions for extra-wide openings",
+            "description": "Telescopic gates utilize overlapping leafs that move synchronously, reducing the required back-run parking area by up to 50%. Cantilever gates eliminate ground tracks entirely, floating over uneven, sloping, or debris-prone ground without track maintenance.",
+            "features": json.dumps([
+                "Telescopic sliding gate saves critical back-run area on tight site boundaries",
+                "Cantilever system requires zero track on the driveway—no debris clogging",
+                "Smooth synchronous multi-panel cable/chain drive system",
+                "Heavy-duty internal roller carriage assemblies for silent traversal",
+                "Integrated optical safety beams and soft stop electronics"
+            ]),
+            "specs": json.dumps({
+                "Clear Opening": "Up to 25 meters clear span",
+                "Drive Type": "Trackless Cantilever / Multi-leaf Telescopic Wire Drive",
+                "Leaf Thickness": "High grade structural tubular steel",
+                "Controls": "PLC / Microprocessor based with soft start and soft stop"
+            }),
+            "applications": json.dumps([
+                "Railway crossings and intermodal hubs",
+                "Sites with sloping driveways or heavy sediment",
+                "Wide logistic yard access points",
+                "Security sensitive restricted areas"
+            ]),
+            "badge": "Engineered Solution",
+            "is_featured": 1
+        },
+        {
+            "slug": "pvc-rapid-roll-up-door",
+            "name": "PVC Rapid Roll Up Door",
+            "category": "Automation",
+            "subcategory": "Industrial Doors",
+            "tagline": "High-speed flexible curtains for climate control, hygiene & dust isolation",
+            "description": "PVC Rapid Roll Up Doors provide rapid opening and closing cycles (up to 1.5 m/s) to isolate temperature, humidity, and airborne contaminants between different zones. Fitted with high-tech rust-proof frames, self-repairing zipper guides, and transparent vision windows.",
+            "features": json.dumps([
+                "Rapid operating cycle up to 1.5 m/s minimizes air exchange",
+                "High-tech rust proof galvanized or stainless steel frame",
+                "Heavy-duty reinforced polyester PVC fabric with high tensile strength",
+                "Anti-wind aluminum reinforcement profiles and transparent vision window",
+                "Safety bottom wireless edge and dual infrared curtain safety"
+            ]),
+            "specs": json.dumps({
+                "Opening Speed": "Up to 1.5 m/sec (Frequency inverter controlled)",
+                "Curtain Material": "900 g/m² PVC polyester fabric (Flame retardant DIN 4102 B1)",
+                "Wind Resistance": "Class 2 (EN 12424)",
+                "Vision Panel": "Transparent PVC window 2mm thick at eye level"
+            }),
+            "applications": json.dumps([
+                "Pharma Packaging & Formulation Halls",
+                "Cold Storage & Food Processing Plants",
+                "Clean Manufacturing & Electronics",
+                "High Traffic Logistics Warehouses"
+            ]),
+            "badge": "Energy Saving",
+            "is_featured": 1
+        },
+        {
+            "slug": "sectional-overhead-door",
+            "name": "Sectional Overhead Door",
+            "category": "Automation",
+            "subcategory": "Industrial Doors",
+            "tagline": "Robust insulated panels sliding under the roof to maximize bay space",
+            "description": "Automated industrial overhead doors crafted from double-skinned insulated polyurethane sandwich panels. Designed to glide upward and tuck under the ceiling structure, leaving the entire loading threshold and exterior roadway unobstructed.",
+            "features": json.dumps([
+                "Double-wall insulated steel sandwich panels filled with CFC-free PU foam",
+                "Exceptional thermal and acoustic insulation (thermal break seals)",
+                "Heavy-duty torsion spring balancing system with cable break safety devices",
+                "Available with acrylic double-glazed viewing windows and pass doors",
+                "Motorized with chain hoist manual override"
+            ]),
+            "specs": json.dumps({
+                "Panel Thickness": "40 mm / 50 mm Polyurethane insulated steel",
+                "Balancing": "High cycle torsion springs (up to 50,000 cycles)",
+                "Operating Speed": "0.25 m/sec with soft-start inverter motor",
+                "Safety Features": "Spring break device, cable failure brake, bottom safety edge"
+            }),
+            "applications": json.dumps([
+                "Dock Loading Bays",
+                "Automotive Assembly Plants",
+                "Distribution Centers",
+                "Aircraft & Transit Maintenance Hangars"
+            ]),
+            "badge": "Space Maximizer",
+            "is_featured": 0
+        },
+        {
+            "slug": "fire-rated-door-shutter",
+            "name": "Fire Rated Doors & Shutters",
+            "category": "Automation",
+            "subcategory": "Industrial Doors",
+            "tagline": "Certified life-safety barrier preventing the spread of fire and toxic smoke",
+            "description": "Constructed from heavy gauge hollow metal steel with specialized fire-resistant mineral core insulation. Tested and certified to resist flames for 60, 120, or 240 minutes, conforming to national and international building fire codes.",
+            "features": json.dumps([
+                "Certified 1-hour, 2-hour, and 4-hour fire ratings (IS 3614 / BS 476)",
+                "High density ceramic wool / mineral core insulation",
+                "Intumescent fire seals that expand under heat to block smoke",
+                "Automatic gravity-drop or motorized release upon fire alarm trigger",
+                "Heavy-duty fire-rated hardware, panic exit bars, and door closers"
+            ]),
+            "specs": json.dumps({
+                "Fire Ratings": "60 min / 120 min / 240 min certified",
+                "Sheet Gauge": "1.2 mm / 1.6 mm Galvanized Steel",
+                "Infill Material": "Honeycomb core / Rockwool insulation (96 kg/m³)",
+                "Integration": "Direct link to Building Fire Alarm Control Panel (FACP)"
+            }),
+            "applications": json.dumps([
+                "Fire Exit Stairwells & Corridors",
+                "Electrical Sub-stations & Transformer Rooms",
+                "Industrial Chemical Storage",
+                "Commercial High-Rises & IT Parks"
+            ]),
+            "badge": "Life Safety Certified",
+            "is_featured": 0
+        },
+        {
+            "slug": "boom-barrier",
+            "name": "Automatic Boom Barrier",
+            "category": "Automation",
+            "subcategory": "Vehicle Access Control",
+            "tagline": "Electromechanical & hydraulic barriers for heavy-duty traffic toll & parking control",
+            "description": "High-frequency automatic boom barriers offering rapid and dependable vehicle access restriction. Engineered for high cycle rates at factory gates, corporate houses, toll plazas, and commercial parking complexes.",
+            "features": json.dumps([
+                "Available in precision electro-mechanical and high-cycle hydraulic drives",
+                "Boom lengths from 3 meters up to 8 meters (telescopic / folding options)",
+                "High speed opening from 1.5 to 6 seconds depending on boom length",
+                "Integrated LED boom illumination strips for maximum night visibility",
+                "Seamless integration with RFID long-range readers, ANPR, and loop detectors"
+            ]),
+            "specs": json.dumps({
+                "Boom Length": "3m to 8m (Round, Octagonal or Articulated)",
+                "Operating Time": "1.5s to 6.0s (Adjustable speed)",
+                "Duty Cycle": "100% Continuous (Brushless DC / Hydraulic)",
+                "Housing": "2mm cold-rolled steel with epoxy polyester powder coating"
+            }),
+            "applications": json.dumps([
+                "Corporate Office Campuses",
+                "Highway Toll Plazas & Weighbridges",
+                "Residential Gated Enclaves",
+                "Logistics Yard Entry / Exit"
+            ]),
+            "badge": "High Speed",
+            "is_featured": 1
+        },
+        {
+            "slug": "dock-levellers-dock-shelter",
+            "name": "Dock Levellers & Dock Shelters",
+            "category": "Automation",
+            "subcategory": "Material Handling",
+            "tagline": "Heavy-duty hydraulic bridge systems for seamless loading bay logistics",
+            "description": "Bridges the physical gap and elevation difference between the warehouse loading dock floor and the truck trailer bed. Handles forklifts up to 8000 kg capacity smoothly, reducing shocks, tire wear, and cargo damage.",
+            "features": json.dumps([
+                "Heavy-duty capacity options: 4,000 kg, 6,000 kg, and 8,000 kg dynamic loads",
+                "Hydraulic lip with smooth tapered transition to truck bed",
+                "Twin hydraulic cylinders with emergency velocity fuses against truck drive-away",
+                "Lateral soft PVC front single and double frame dock shelter",
+                "Strong aluminum profile mounting, weather sealing against dust and rain"
+            ]),
+            "specs": json.dumps({
+                "Load Capacity": "4000 kg, 6000 kg, 8000 kg Dynamic",
+                "Lip Length": "400 mm / 500 mm Telescopic or Hinged Lip",
+                "Platform Sheet": "Chequered tear-drop anti-skid high-tensile steel",
+                "Shelter Material": "3mm lateral tear-proof PVC curtains with aluminum extrusion"
+            }),
+            "applications": json.dumps([
+                "FMCG & Retail Distribution Centers",
+                "Cold Chain Warehouses",
+                "Manufacturing Export Depots",
+                "Container Freight Stations"
+            ]),
+            "badge": "Industrial Grade",
+            "is_featured": 0
+        },
+        {
+            "slug": "flap-barrier-turnstile",
+            "name": "Turnstiles & Flap Barriers",
+            "category": "Automation",
+            "subcategory": "Pedestrian Access",
+            "tagline": "High-throughput pedestrian access control with biometric & RFID compatibility",
+            "description": "Compact and sleek pedestrian speed gates engineered to regulate high-density foot traffic into secured zones. Provides fast throughput of up to 45 people per minute with anti-tailgating infrared sensor arrays.",
+            "features": json.dumps([
+                "High passage frequency up to 45 people per minute",
+                "Precision optical anti-tailgating sensors prevent unauthorized following",
+                "Compatible with Biometric Fingerprint, Facial Recognition, and RFID Readers",
+                "Automatic opening upon fire alarm activation for rapid safe evacuation",
+                "Brushed SUS304 stainless steel cabinet with LED directional indicators"
+            ]),
+            "specs": json.dumps({
+                "Throughput": "35 - 45 persons per minute",
+                "Passage Width": "550 mm standard / 900 mm ADA handicap lane",
+                "Material": "SUS304 Stainless Steel (1.5mm / 2.0mm thickness)",
+                "Flap Wings": "Toughened Acrylic / Polyurethane soft wings"
+            }),
+            "applications": json.dumps([
+                "Corporate Lobby Entrances",
+                "Metro & Transit Stations",
+                "Pharma Plant Floor Entry",
+                "Educational Campuses & Research Labs"
+            ]),
+            "badge": "Smart Access",
+            "is_featured": 1
+        },
+        {
+            "slug": "automatic-bollard-tyre-killer-car-lift",
+            "name": "Bollards, Tyre Killers & Car Lifts",
+            "category": "Automation",
+            "subcategory": "Vehicle Security",
+            "tagline": "High-security anti-ram vehicle defense and hydraulic parking lifts",
+            "description": "Crash-rated rising hydraulic bollards, electro-mechanical tyre killer spike barriers, and heavy-duty hydraulic car lifts for multi-level parking efficiency. Provides physical protection against hostile vehicle attacks.",
+            "features": json.dumps([
+                "Hydraulic automatic rising bollards with built-in LED warning crowns",
+                "Heavy-duty hardened steel tyre killers shred pneumatic tires instantly",
+                "Bi-directional or single directional access barrier configurations",
+                "Scissor car lifts for underground vehicle storage and workshop elevation",
+                "Sub-second emergency fast operation (EFO) available on anti-terror bollards"
+            ]),
+            "specs": json.dumps({
+                "Bollard Impact Resistance": "K4 / K8 / K12 Crash-test equivalent ratings",
+                "Bollard Rise Time": "2.5 to 4 seconds (1.5s with EFO)",
+                "Tyre Killer Spike Height": "150 mm high-strength alloy spikes",
+                "Car Lift Capacity": "3000 kg - 5000 kg electro-hydraulic scissor platform"
+            }),
+            "applications": json.dumps([
+                "High Commission & Government Embassies",
+                "Corporate Headquarters & IT Hubs",
+                "Bank Vaults & Currency Chests",
+                "Automotive Dealerships & Luxury Garages"
+            ]),
+            "badge": "Anti-Ram Defense",
+            "is_featured": 0
+        },
+        {
+            "slug": "rfid-long-range-barcode-reader",
+            "name": "RFID Long Range Readers & Barcode Scanners",
+            "category": "Automation",
+            "subcategory": "Identification & Tracking",
+            "tagline": "Ultra-high frequency identification for vehicles and industrial inventory",
+            "description": "UHF long-range RFID readers for hands-free vehicle toll and parking access up to 12 meters, paired with high-durability 1D/2D QR/barcode scanners for material management in industrial assembly lines.",
+            "features": json.dumps([
+                "Long reading distance up to 12 meters for automatic boom barrier opening",
+                "Multi-tag reading capability with anti-collision algorithms",
+                "Wiegand 26/34, RS485, and TCP/IP Ethernet interfaces",
+                "Rugged IP67 waterproof antenna enclosure for outdoor mounting",
+                "Industrial handheld and fixed barcode / 2D QR scanners"
+            ]),
+            "specs": json.dumps({
+                "Operating Frequency": "UHF 865-867 MHz (India / ETSI) / 902-928 MHz",
+                "Read Distance": "6m to 12m (Dependent on windshield RFID tag)",
+                "Interface": "Wiegand, RS232/485, RJ45 Ethernet",
+                "Protection Rating": "IP67 Weatherproof outdoor grade"
+            }),
+            "applications": json.dumps([
+                "Automated Parking Gates & Tolls",
+                "Fleet Management & Logistics Yards",
+                "Pharma Raw Material Tracking",
+                "Cleanroom Inventory Verification"
+            ]),
+            "badge": "High Accuracy",
+            "is_featured": 0
+        },
+
+        # SECURITY SYSTEMS
+        {
+            "slug": "cctv-surveillance-system",
+            "name": "CCTV Surveillance System",
+            "category": "Security System",
+            "subcategory": "Video Surveillance",
+            "tagline": "Full spectrum HD, IP, PTZ, intrusion, and intrinsically safe cameras",
+            "description": "Comprehensive video surveillance systems ranging from crystal clear 4K Ultra HD IP cameras, optical zoom PTZ speed domes, thermal intrusion cameras, through to intrinsically safe explosion-proof cameras for hazardous chemical zones.",
+            "features": json.dumps([
+                "IP Cameras, Analogue HD, PTZ, and IP Speed Domes with optical zoom",
+                "Audio-based IP cameras with two-way intercom and sound detection",
+                "Intrinsically safe camera housings for chemical and explosive atmospheres",
+                "AI powered video analytics: perimeter intrusion, line cross, and face capture",
+                "Centralized Network Video Recorder (NVR) with remote cloud live streaming"
+            ]),
+            "specs": json.dumps({
+                "Resolution Options": "2MP, 4MP, 8MP (4K) Ultra HD with WDR",
+                "Sensors": "Sony Starvis low-light color night vision",
+                "PTZ Zoom": "25x to 42x Optical Zoom with 360° endless pan",
+                "Certifications": "ATEX / IECEx for Intrinsically Safe models"
+            }),
+            "applications": json.dumps([
+                "Manufacturing Plants & Perimeter Fencing",
+                "Pharma Clean Areas & Packaging Lines",
+                "Refineries & Hazardous Chemical Zones",
+                "Commercial Towers & Retail Centers"
+            ]),
+            "badge": "AI Powered",
+            "is_featured": 1
+        },
+        {
+            "slug": "biometric-access-control-time-attendance",
+            "name": "Biometric Access Control & Time Attendance",
+            "category": "Security System",
+            "subcategory": "Access & Identity",
+            "tagline": "Seamless fingerprint, RFID proximity, and multi-factor biometric systems",
+            "description": "High-accuracy biometric identification and time-attendance terminals designed to work seamlessly with electric strikes, magnetic door locks, and HR payroll software. Provides verifiable audit trails of personnel movement.",
+            "features": json.dumps([
+                "Advanced optical and capacitive fingerprint sensors with anti-spoofing",
+                "Integrated RFID / Proximity card reader (125kHz EM / 13.56MHz Mifare)",
+                "Touchless facial recognition with live temperature screening options",
+                "Direct connection to automated door strikes, electro-magnetic locks, and barriers",
+                "Comprehensive software for shifts, overtime, and centralized payroll sync"
+            ]),
+            "specs": json.dumps({
+                "User Capacity": "Up to 50,000 users / 500,000 transaction log storage",
+                "Authentication Speed": "< 0.5 seconds",
+                "Communication": "TCP/IP, Wi-Fi, RS485, USB, Wiegand Out",
+                "Lock Relay": "Built-in door sensor and alarm output relay"
+            }),
+            "applications": json.dumps([
+                "Corporate Offices & IT Parks",
+                "Pharma R&D and Production Cleanrooms",
+                "Educational Institutions",
+                "Government and Defense Offices"
+            ]),
+            "badge": "High Accuracy",
+            "is_featured": 1
+        },
+        {
+            "slug": "fire-alarm-system",
+            "name": "Fire Alarm System (Conventional & Addressable)",
+            "category": "Security System",
+            "subcategory": "Life Safety & Detection",
+            "tagline": "Advanced fire detection panels, multi-sensors, hooters & AHU integration",
+            "description": "A complete range of advanced conventional and addressable fire alarm systems, smoke/heat/multi detectors, manual call points, and signalling devices. Engineered for new installations or turnkey retrofits, with intelligent integration to door interlocks and AHU dampers.",
+            "features": json.dumps([
+                "Conventional and Addressable fire control panels with multi-loop scalability",
+                "Full detector suite: Optical Smoke, Thermal Heat, Multi-Sensor, and Beam detectors",
+                "Intrinsically safe detectors for hazardous and flame-risk areas",
+                "Audio-visual electronic sounders, hooters, and flash strobe indicators",
+                "Auto-trip integration with Door Interlock Systems, AHU dampers, and FAS relays"
+            ]),
+            "specs": json.dumps({
+                "Loop Capacity": "1 to 8 Loops (Up to 254 devices per loop on Addressable)",
+                "Compliance": "UL Listed / EN 54 / IS 2189 certified",
+                "Detector Types": "Photoelectric Smoke, Rate-of-Rise Heat, Multi-Criteria",
+                "Display": "Backlit LCD graphics display with zone mimic LEDs"
+            }),
+            "applications": json.dumps([
+                "Pharmaceutical Complexes",
+                "High-Rise Commercial Buildings",
+                "Industrial Warehouses & Factories",
+                "Hospitals & Hospitality Resorts"
+            ]),
+            "badge": "Life Safety",
+            "is_featured": 1
+        },
+        {
+            "slug": "fire-fighting-system",
+            "name": "Turnkey Fire Fighting Systems",
+            "category": "Security System",
+            "subcategory": "Fire Protection",
+            "tagline": "High-pressure fire hydrant infrastructure, pumps, landing valves & piping",
+            "description": "A fire hydrant system is a critical component of a building's fire protection infrastructure. It enables prompt and effective firefighting by delivering high-pressure water to extinguish fires rapidly. HTI delivers end-to-end turnkey design, supply, installation, and commissioning.",
+            "features": json.dumps([
+                "Complete fire pump set: Main Electric Motor, Diesel Engine Standby, and Jockey Pump",
+                "Heavy-duty ISI certified hydrant valves, landing valves, and branch pipes",
+                "Reinforced canvas hose reels with instantaneous couplings and drum cabinets",
+                "Dedicated underground / overhead water storage tank design and fire brigade inlets",
+                "Calibrated industrial pressure gauges, flow meters, and air release valves"
+            ]),
+            "specs": json.dumps({
+                "Pump Capacities": "450 GPM to 2500 GPM (Electric / Diesel / Jockey)",
+                "Working Pressure": "7 kg/cm² to 14 kg/cm² operating range",
+                "Piping Standard": "MS Heavy Class ERW pipes with anti-corrosion red coating",
+                "Certifications": "Compliant with NBC 2016, TAC, and local CFO norms"
+            }),
+            "applications": json.dumps([
+                "Industrial Manufacturing Facilities",
+                "Pharma Formulation & API Plants",
+                "Commercial Malls & Multiplexes",
+                "Logistics Depots & Container Terminals"
+            ]),
+            "badge": "Turnkey Solution",
+            "is_featured": 1
+        },
+        {
+            "slug": "gas-detection-system",
+            "name": "Gas Detection System",
+            "category": "Security System",
+            "subcategory": "Environmental Safety",
+            "tagline": "Flameproof & non-flameproof monitoring for toxic, combustible & VOC gases",
+            "description": "Continuous real-time gas monitoring instruments providing early detection of toxic, oxygen-depleting, and combustible gas leaks in industrial clean rooms, chemical plants, and manufacturing floors.",
+            "features": json.dumps([
+                "Certified Flameproof (Ex-d) and Non-Flameproof sensor enclosures",
+                "Detects LEL combustible gases, CO, CO2, NH3, H2S, O2, and VOC solvents",
+                "Bright local digital OLED/LCD display with dual-level audible/visual alarms",
+                "Standard 4-20mA current loop and RS485 Modbus RTU communications",
+                "Direct relay interlock with industrial exhaust blowers and gas shut-off valves"
+            ]),
+            "specs": json.dumps({
+                "Gas Coverage": "Toxic, Combustible (% LEL), Oxygen, Refrigerants",
+                "Sensor Principle": "Catalytic Pellistor, Electrochemical, NDIR Infrared",
+                "Enclosure": "Cast Aluminum / Stainless Steel SS316 Flameproof",
+                "Output": "4-20 mA Analog, RS485 Modbus, SPDT Relay Contacts"
+            }),
+            "applications": json.dumps([
+                "Pharma Solvent Storage & Synthesis",
+                "Chemical Processing Plants",
+                "Gas Cylinder Manifolds & Boiler Rooms",
+                "Underground Utility Basements"
+            ]),
+            "badge": "Flameproof Ex-d",
+            "is_featured": 0
+        },
+        {
+            "slug": "gps-digital-clock",
+            "name": "Digital & GPS Synchronized Clocks",
+            "category": "Security System",
+            "subcategory": "Precision Timing",
+            "tagline": "Master-slave synchronized digital clocks for pharma audit compliance",
+            "description": "High-visibility master-slave digital clocks synchronized automatically via GPS satellite receiver or NTP Ethernet server. Essential for USFDA 21 CFR Part 11 and WHO-GMP compliance across pharmaceutical manufacturing batches.",
+            "features": json.dumps([
+                "GPS satellite wireless synchronization or Ethernet NTP network sync",
+                "Available in Flameproof (Ex-d) cast enclosure and Non-Flameproof SS flush mount",
+                "High-intensity 7-segment red/green LED digits visible from 30+ meters",
+                "Standardized time across all clean room production blocks and QA/QC labs",
+                "Internal RTC backup battery retains accurate time during power outages"
+            ]),
+            "specs": json.dumps({
+                "Digit Height": "2-inch / 4-inch / 6-inch high-visibility LEDs",
+                "Display Format": "HH:MM:SS (24-Hour / 12-Hour format)",
+                "Time Source": "GPS Antenna (outdoor) / NTP Server via RJ45",
+                "Enclosure": "Stainless Steel SS304 Flush Mount / Flameproof IIA, IIB"
+            }),
+            "applications": json.dumps([
+                "Pharma Batch Manufacturing Cleanrooms",
+                "Quality Assurance & Analytical Labs",
+                "Hospital OT Suites & ICUs",
+                "Corporate Dispatch and Board Rooms"
+            ]),
+            "badge": "USFDA Compliant",
+            "is_featured": 0
+        },
+        {
+            "slug": "public-address-system",
+            "name": "Public Address (PA) System",
+            "category": "Security System",
+            "subcategory": "Acoustics & Mass Notification",
+            "tagline": "Turnkey audio packages for paging, announcements & voice evacuation",
+            "description": "PA systems engineered to reinforce voice and emergency notifications across expansive industrial plants, corporate auditoriums, and commercial complexes. HTI provides complete packages from ceiling speakers, horn speakers, amplifiers to multi-zone mixing consoles.",
+            "features": json.dumps([
+                "Turnkey packages: speakers, mixer amplifiers, stands, microphones, and cabling",
+                "Zoned audio distribution allowing targeted announcements per floor or sector",
+                "Integration with Fire Alarm Systems for automatic voice evacuation overrides",
+                "High-clarity ceiling speakers, wall-mount cabinets, and IP-rated horn speakers",
+                "Paging microphones with chime tones and priority override"
+            ]),
+            "specs": json.dumps({
+                "Amplifier Power": "120W to 1000W multi-channel zone amplifiers",
+                "Speaker Line": "70V / 100V distributed constant voltage line",
+                "Frequency Response": "80 Hz - 18 kHz with low harmonic distortion",
+                "Emergency Override": "Automatic 24V fire alarm trigger contact"
+            }),
+            "applications": json.dumps([
+                "Plant Floor Announcements",
+                "Corporate Auditoriums & Town Halls",
+                "Hospital Emergency Voice Notification",
+                "Malls & Commercial Buildings"
+            ]),
+            "badge": "Turnkey Audio",
+            "is_featured": 0
+        },
+        {
+            "slug": "ip-pbx-epabx",
+            "name": "IP-PBX & EPABX Unified Communications",
+            "category": "Security System",
+            "subcategory": "Telephony",
+            "tagline": "Enterprise VoIP and hybrid telephone exchanges for corporate connectivity",
+            "description": "Next-generation IP-PBX communication platforms supporting SIP extensions, remote branch interconnection, multi-party conference calling, and unified mobile apps for modern enterprise collaboration.",
+            "features": json.dumps([
+                "Hybrid architecture supporting SIP VoIP, analog extensions, and PRI/ISDN trunks",
+                "Scalable from 10 extensions up to 2000+ enterprise extensions",
+                "Integrated IVR auto-attendant, voice mail to email, and call recording",
+                "Seamless inter-branch calling across geographically dispersed offices",
+                "Compatible with IP executive desk phones, video phones, and softphones"
+            ]),
+            "specs": json.dumps({
+                "Protocols": "SIP (RFC3261), IAX2, H.323",
+                "Concurrent Calls": "Up to 500 concurrent VoIP calls",
+                "Network": "Gigabit Ethernet with PoE and redundant power supply",
+                "Management": "Intuitive web GUI for user extension provisioning"
+            }),
+            "applications": json.dumps([
+                "Corporate Headquarters & IT Centers",
+                "Multi-location Pharma Factories",
+                "Hospital Nurse Call & Doctor Paging",
+                "Hotels & Residential Towers"
+            ]),
+            "badge": "Enterprise VoIP",
+            "is_featured": 0
+        },
+        {
+            "slug": "server-room-monitoring-system",
+            "name": "Server Room Environmental Monitoring",
+            "category": "Security System",
+            "subcategory": "IT Infrastructure Protection",
+            "tagline": "Room Alert multi-sensor protection against heat, water leak, power & smoke",
+            "description": "Real-time continuous environmental monitoring hardware for data centers and server rooms. Tracks temperature, humidity, water flooding under raised floors, power loss, and airflow, instantly alerting network administrators via SMS, email, and mobile apps.",
+            "features": json.dumps([
+                "Tracks temperature, humidity, power failure, fluid leaks, and airflow",
+                "Water leak detection sensor ropes installed beneath raised access floors",
+                "Real-time SMS, email, and push notification alerts before hardware damage occurs",
+                "Web-browser dashboard with historical logging, graph charts, and SNMP traps",
+                "Relay outputs to trigger auxiliary fans, air conditioners, or siren beacons"
+            ]),
+            "specs": json.dumps({
+                "Sensors Supported": "Up to 32 digital sensors + switch contact inputs",
+                "Alert Channels": "Email, SMS, SNMP Traps, Audio-Visual Tower Light",
+                "Power": "Power-over-Ethernet (PoE) with internal battery backup",
+                "Compatibility": "Nagios, PRTG, Zabbix, Room Alert Manager"
+            }),
+            "applications": json.dumps([
+                "Enterprise Data Centers",
+                "Server Closets & Network Racks",
+                "Pharma Temperature-controlled Cold Rooms",
+                "Telecom Switching Rooms"
+            ]),
+            "badge": "24/7 Monitoring",
+            "is_featured": 1
+        },
+
+        # HYGIENE PRODUCTS
+        {
+            "slug": "hand-dryers",
+            "name": "Automatic High Speed Hand Dryers",
+            "category": "Hygiene",
+            "subcategory": "Washroom Automation",
+            "tagline": "Dual-blower high-speed hygienic hand drying with thermal overload protection",
+            "description": "Fully automatic high-speed touchless hand dryers available in single-blower and double-blower configurations. Equipped with Thermal Overload Protection (T.O.P.), automatic 1-minute safety cutoff, and a specialized spectrum of designer shades.",
+            "features": json.dumps([
+                "Available in powerful Single Blower and high-velocity Double Blower models",
+                "Fully automatic touch-free optical sensor operation",
+                "Internal motor protected by T.O.P. (Thermal Overload Protection)",
+                "Heater element safeguarded by internal thermostat and thermo fuse",
+                "Designer color range: White, Ivory, Royal Blue, Dark Brown, and Matte Black",
+                "Automatic 1-minute safety auto-cutoff timer prevents energy waste"
+            ]),
+            "specs": json.dumps({
+                "Air Velocity": "Up to 90 m/sec dual blade air curtain",
+                "Drying Time": "8 to 12 seconds rapid dry",
+                "Casing Material": "Impact resistant ABS / Stainless Steel Grade 304",
+                "Power Rating": "1200W - 1800W with auto-heating element switch"
+            }),
+            "applications": json.dumps([
+                "Pharma Personnel Entry Washrooms",
+                "Corporate Office Restrooms",
+                "Malls, Theatres & Food Courts",
+                "Airports & Metro Restrooms"
+            ]),
+            "badge": "Fast Dry",
+            "is_featured": 1
+        },
+        {
+            "slug": "air-curtain",
+            "name": "Industrial & Commercial Air Curtains",
+            "category": "Hygiene",
+            "subcategory": "Air Barriers",
+            "tagline": "Flameproof & non-flameproof thermo-zone barriers keeping insects and dust out",
+            "description": "Engineered air curtains that create an efficient, invisible aerodynamic barrier over doorways. Keeps conditioned air inside while blocking external heat, dust, fumes, and insects. Available in Flameproof and Non-Flameproof specifications specially designed for pharma and malls.",
+            "features": json.dumps([
+                "Low noise operation with dynamically balanced multi-blade blowers",
+                "Available in Flameproof (Ex-d) and Non-Flameproof configurations",
+                "Thermo zone technology with precisely calibrated air velocity for even protection",
+                "Drastically cuts HVAC air conditioning energy loss at frequently opened doors",
+                "Specially engineered for pharmaceutical facilities, CPG plants, and commercial malls"
+            ]),
+            "specs": json.dumps({
+                "Sizes Available": "1 meter, 1.2 meter, 1.5 meter, 1.8 meter, 2.0 meter lengths",
+                "Air Velocity": "18 m/sec to 24 m/sec at nozzle",
+                "Motor Protection": "High insulation grade continuous rating motor",
+                "Noise Level": "< 58 dBA low vibration acoustic dampening"
+            }),
+            "applications": json.dumps([
+                "Pharma Formulation & Packaging Entrances",
+                "CPG Food Processing Bays",
+                "Cold Storage & Air Conditioned Malls",
+                "Restaurant Entrances & Kitchen Pass-throughs"
+            ]),
+            "badge": "Thermo Zone",
+            "is_featured": 1
+        },
+        {
+            "slug": "auto-tap",
+            "name": "Automatic Sensor Taps",
+            "category": "Hygiene",
+            "subcategory": "Touchless Water Management",
+            "tagline": "Solid-cast brass touchless sensor taps avoiding water wastage",
+            "description": "Heavy-duty, stylish touch-free sensor taps featuring solid-cast brass outer shell construction. Activated instantly upon detecting hands under the spout, eliminating cross-contamination and saving up to 70% in water usage.",
+            "features": json.dumps([
+                "Infrared proximity sensor delivers touchless, germ-free operation",
+                "Solid-cast brass heavy outer body with multi-layer chrome electroplating",
+                "Dual power supply support: Battery operated (4x AA) or AC electrical adapter",
+                "Mounting variations: Pillar mounted, Basin mounted, and Wall mounted options",
+                "Built-in ceramic cartridge and water-saving aerator reducing water consumption"
+            ]),
+            "specs": json.dumps({
+                "Sensing Range": "10 to 18 cm (Factory calibrated with auto-adjustment)",
+                "Water Pressure": "0.05 MPa to 0.7 MPa",
+                "Power Source": "DC 6V (4x AA alkaline) or AC 220V 50Hz",
+                "Shut-off Delay": "< 1 second after hands leave sensing zone"
+            }),
+            "applications": json.dumps([
+                "Pharma Hand Scrub Cleanrooms",
+                "Hospitals & Surgical Scrub Areas",
+                "Corporate Restrooms & Luxury Hotels",
+                "Food Preparation & Kitchen Counters"
+            ]),
+            "badge": "Water Saving",
+            "is_featured": 0
+        },
+        {
+            "slug": "auto-urinal-flush",
+            "name": "Automatic Urinal Flush Valves",
+            "category": "Hygiene",
+            "subcategory": "Touchless Water Management",
+            "tagline": "Smart infrared flushers in concealed and exposed brass configurations",
+            "description": "Touchless sensor-driven urinal flushing systems engineered for pristine hygiene in corporate and commercial washrooms. Automatically performs a pre-flush and post-flush, keeping urinals sanitary and odor-free.",
+            "features": json.dumps([
+                "Dual flushing sequence: hygienic pre-rinse and thorough post-flush",
+                "Available in both Concealed (flush wall box) and Exposed installation models",
+                "Internal valve as well as External valve options to match plumbing architecture",
+                "Battery operated (long-life alkaline) and AC mains electrical power options",
+                "24-hour automatic trap freshener cycle if left unused"
+            ]),
+            "specs": json.dumps({
+                "Installation Style": "Concealed Wall Box / Exposed Top Mount",
+                "Sensor Technology": "Digital Active Infrared with anti-interference filter",
+                "Valve Mechanism": "High reliability latching solenoid valve",
+                "Operating Pressure": "0.5 bar to 6.0 bar dynamic water pressure"
+            }),
+            "applications": json.dumps([
+                "Commercial Office Restrooms",
+                "Pharma Staff Facilities",
+                "Airports & Railway Terminals",
+                "Cinemas, Malls & Stadiums"
+            ]),
+            "badge": "Odor Free",
+            "is_featured": 0
+        },
+        {
+            "slug": "auto-soap-dispenser",
+            "name": "Automatic Liquid Soap & Sanitizer Dispenser",
+            "category": "Hygiene",
+            "subcategory": "Washroom Automation",
+            "tagline": "Touchless sensor dispensers avoiding wastage with precise dosage",
+            "description": "Precision infrared touch-free soap and sanitizer dispensers. Available in battery operated and self-closing electric models in pillar mounted, basin mounted, and wall mounted configurations.",
+            "features": json.dumps([
+                "Touch-free sensor actuation eliminates contact cross-infection",
+                "Heavy-duty solid outer construction for high-traffic environments",
+                "Adjustable liquid dosage volume per dispense to minimize soap wastage",
+                "Compatible with liquid hand soap, antibacterial gel, and alcohol sanitizer",
+                "Clear viewing reservoir window for quick fluid level check"
+            ]),
+            "specs": json.dumps({
+                "Reservoir Capacity": "800 ml to 1200 ml bulk refill tank",
+                "Dispense Volume": "0.8 ml to 1.5 ml (Adjustable dosage)",
+                "Power Source": "4x AA batteries (up to 30,000 cycles) / DC adapter",
+                "Mounting": "Wall Mounted / Countertop Basin Mounted"
+            }),
+            "applications": json.dumps([
+                "Pharma Personnel Entry Airlocks",
+                "Corporate Dining & Pantry Rooms",
+                "Hospital Intensive Care Scrub Sinks",
+                "Public Commercial Restrooms"
+            ]),
+            "badge": "Touchless",
+            "is_featured": 0
+        },
+        {
+            "slug": "auto-tissue-dispenser",
+            "name": "Automatic Paper Tissue Dispenser",
+            "category": "Hygiene",
+            "subcategory": "Washroom Automation",
+            "tagline": "Hygienic touch-free paper towel dispensing with lockable key housing",
+            "description": "Touchless automatic roll paper towel dispensers manufactured in impact-resistant ABS and premium stainless steel. Delivers pre-measured single sheets upon sensor waving, reducing paper waste dramatically.",
+            "features": json.dumps([
+                "Touch-free infrared sensor dispenses clean paper on wave",
+                "Constructed from high-grade ABS engineering plastic and Stainless Steel",
+                "Lockable enclosure with safety key to prevent vandalism and pilferage",
+                "Adjustable sheet length setting (20cm / 25cm / 30cm) for cost control",
+                "Emergency manual tear bar ensures continuous availability"
+            ]),
+            "specs": json.dumps({
+                "Paper Roll Size": "Up to 200 mm width x 200 mm diameter",
+                "Casing Finish": "Impact-resistant ABS White / SS304 Brushed Satin",
+                "Power Supply": "4x D-Cell batteries or AC 230V adapter",
+                "Security": "Double-tumbler mechanical key lock"
+            }),
+            "applications": json.dumps([
+                "Cleanroom Entry Antechambers",
+                "Executive Washrooms",
+                "Hospital Scrub Stations",
+                "Five-star Hotel Restrooms"
+            ]),
+            "badge": "Waste Reducing",
+            "is_featured": 0
+        },
+        {
+            "slug": "shoe-shine-machine",
+            "name": "Automatic Shoe Shine Machine",
+            "category": "Hygiene",
+            "subcategory": "Corporate Hospitality",
+            "tagline": "Two-brush polishing machine with neutral cream canister and auto start/off",
+            "description": "Automated electric shoe polishing machine providing rapid, effortless shoe cleaning. Features dual rotating polishing/cleaning brushes and an internal neutral polish dispenser that gives a brilliant shine to any colored leather shoe.",
+            "features": json.dumps([
+                "Two dedicated brushes: Stiff cleaning brush + Soft wool polishing brush",
+                "Internal cream dispenser with neutral wax polish suitable for any leather color",
+                "Touchless infrared foot sensor: automatic start on foot insertion, automatic stop",
+                "Heavy-duty low-noise motor with rubber matting base for dust collection",
+                "Compact, stylish finish ideal for hotel lobbies and executive offices"
+            ]),
+            "specs": json.dumps({
+                "Polish Canister": "200 ml refillable neutral cream canister with roll-on ball",
+                "Brush Speed": "1400 RPM silent motor",
+                "Operation": "Optical Sensor Auto Start / Auto Stop (15 sec timer)",
+                "Housing": "Wood Grain / Stainless Steel / MS Powder Coated"
+            }),
+            "applications": json.dumps([
+                "Corporate Office Reception Areas",
+                "Hotel Lobbies & VIP Lounges",
+                "Boardrooms & Executive Suites",
+                "Clubs & Commercial Towers"
+            ]),
+            "badge": "Executive Grade",
+            "is_featured": 0
+        },
+        {
+            "slug": "pvc-strip-curtain",
+            "name": "PVC Strip Curtains (Grade A+)",
+            "category": "Hygiene",
+            "subcategory": "Thermal & Dust Barriers",
+            "tagline": "UV stabilized 3mm Grade A+ transparent curtains with 99.2% clarity",
+            "description": "High-clarity flexible PVC strip doors offering high chemical resistance to acids, alkalies, and harsh industrial environments. Prevents thermal leakage, airborne dust, insects, and noise between industrial zones while maintaining 99.2% visual transparency.",
+            "features": json.dumps([
+                "UV stabilized formulation preventing discoloration, yellowing, or brittleness",
+                "High chemical resistance against corrosive acids, alkalies, and alcohols",
+                "Superior 99.2% transparency index for complete driver and forklift safety",
+                "Standard 3mm thickness Grade A+ with 200 mm individual strip width",
+                "Stainless steel suspension hanger track with 50% or 100% overlap"
+            ]),
+            "specs": json.dumps({
+                "Thickness": "3 mm quality Grade A+",
+                "Width": "200 mm strip width",
+                "Transparency Index": "99.2% optical transmission",
+                "Temperature Range": "-15°C to +50°C (Polar freezer grade available to -40°C)"
+            }),
+            "applications": json.dumps([
+                "Pharma Raw Material Warehouses",
+                "Cold Storage & Deep Freezers",
+                "Manufacturing Loading Docks",
+                "Food Processing & Dairy Plants"
+            ]),
+            "badge": "Grade A+ Quality",
+            "is_featured": 0
+        },
+        {
+            "slug": "spot-fume-extractor-industrial-blower",
+            "name": "Spot Extractor & Industrial Blowers",
+            "category": "Hygiene",
+            "subcategory": "Air Quality & Extraction",
+            "tagline": "Flexible articulated arms and high-volume industrial air extraction blowers",
+            "description": "Engineered spot extractors and industrial ventilation blowers designed to capture hazardous fumes, toxic solvent vapors, and fine dust particulates directly at their source before dispersing across the clean work environment.",
+            "features": json.dumps([
+                "360° rotating flexible articulated extraction arm with transparent capture hood",
+                "Equipped with internal airflow regulation damper for calibrated suction",
+                "Heavy-duty industrial centrifugal blower with spark-proof impeller options",
+                "Chemical-resistant polypropylene joints and aluminum alloy duct tubes",
+                "Ceiling, wall, or bench mounting versatility"
+            ]),
+            "specs": json.dumps({
+                "Arm Reach": "1.5m to 3.0m articulated radius",
+                "Airflow Capacity": "250 to 1200 m³/h per extraction point",
+                "Blower Motor": "TEFC IP55 motor with flameproof Ex-d option",
+                "Hood Material": "Chemical resistant Polypropylene / Polycarbonate"
+            }),
+            "applications": json.dumps([
+                "Pharma QC Testing Labs",
+                "Soldering and Electronics Assembly",
+                "Chemical Sampling & Dispensing Booths",
+                "Welding and Laser Cutting Stations"
+            ]),
+            "badge": "Clean Air Tech",
+            "is_featured": 0
+        }
+    ]
+
+    for p in products:
+        cursor.execute("""
+        INSERT INTO products (slug, name, category, subcategory, tagline, description, features, specs, applications, badge, is_featured)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            p["slug"], p["name"], p["category"], p["subcategory"], p["tagline"],
+            p["description"], p["features"], p["specs"], p["applications"],
+            p["badge"], p["is_featured"]
+        ))
+
+    # Technology Partners from Page 4 of PDF
+    partners = [
+        ("Honeywell", "Fire & Automation", "Global leader in building controls and fire systems"),
+        ("Bosch", "Security & Surveillance", "German precision CCTV, PA and access solutions"),
+        ("Metaflex", "Doors & Cleanrooms", "Specialized airtight and medical door systems"),
+        ("Cisco", "Networking & IP telephony", "Industry benchmark enterprise telecommunications"),
+        ("Eaton", "Power & Safety", "Mission-critical electrical and safety management"),
+        ("Hikvision", "CCTV & Video Analytics", "World leading smart video surveillance equipment"),
+        ("L&T", "Electrical & Automation", "Trusted Indian engineering and switchgear giant"),
+        ("FAAC", "Gate & Barrier Automation", "Italian high-speed hydraulic gate automation"),
+        ("Ravel", "Fire Detection Systems", "Reliable micro-processed fire alarm control panels"),
+        ("Dorma", "Door Hardware & Access", "Premium architectural door closers and operators"),
+        ("Nice", "Gate Automation", "Italian smart home and gate automation technology"),
+        ("Avtech", "Environment Monitoring", "Server room Room Alert environmental monitoring"),
+        ("Johnson Controls", "HVAC & Building Security", "Enterprise building automation controls"),
+        ("Siemens", "Industrial Automation & Fire", "German engineering excellence in safety & automation"),
+        ("Zoloto Valves", "Fire Hydrant & Piping", "Standard certified brass & cast steel fire valves")
+    ]
+    for name, cat, tagline in partners:
+        cursor.execute("INSERT INTO partners (name, category, tagline) VALUES (?, ?, ?)", (name, cat, tagline))
+
+    # Prestigious Clients from Page 5 of PDF
+    clients = [
+        ("Glenmark", "Pharmaceuticals"),
+        ("Indoco Remedies", "Pharmaceuticals"),
+        ("Venus Remedies", "Pharmaceuticals"),
+        ("Cadila Pharmaceuticals", "Pharmaceuticals"),
+        ("Shreya Life Sciences", "Pharmaceuticals"),
+        ("Pidilite", "Chemicals & Adhesives"),
+        ("P&G", "Consumer Goods (FMCG)"),
+        ("Alkem", "Pharmaceuticals"),
+        ("FSC", "Supply Chain & Logistics"),
+        ("IIT Bombay", "Premier Educational & Research Institution"),
+        ("Alembic", "Pharmaceuticals (Touching Lives Over 100 Years)"),
+        ("Ferrero", "Global Food & Confectionery")
+    ]
+    for name, sector in clients:
+        cursor.execute("INSERT INTO clients (name, sector) VALUES (?, ?)", (name, sector))
+
+    # Add initial sample inquiry
+    cursor.execute("""
+    INSERT INTO inquiries (full_name, email, phone, company, category, product_name, message, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        "Rajesh Sharma", "rajesh.s@glenmarkpharma.example.com", "+91 98201 12345",
+        "Glenmark Pharmaceuticals", "Automation", "Door Interlock System",
+        "Looking for 8-door flameproof clean room interlocking system with pressure monitoring for our new formulation facility in Navi Mumbai.",
+        "In Review"
+    ))
+
+    conn.commit()
+    conn.close()
+
+if __name__ == "__main__":
+    init_db()
+    seed_db()
+    print("Database initialized and seeded successfully!")

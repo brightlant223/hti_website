@@ -1,0 +1,133 @@
+import React, { useState, useEffect } from 'react';
+import { Phone, Mail, MapPin, Shield, Menu, X, Clock, ExternalLink } from 'lucide-react';
+
+export default function Navbar({ onOpenAdmin, inquiryCount, onSelectCategory }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollTo = (id) => {
+    setMobileMenuOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <header className="navbar-wrapper">
+      {/* Top Quick Bar */}
+      <div className="top-bar">
+        <div className="container top-bar-content">
+          <div className="top-bar-left">
+            <span className="top-item">
+              <MapPin size={13} className="text-cyan" />
+              <span>Goregaon (West), Mumbai - 400104</span>
+            </span>
+            <span className="top-divider">|</span>
+            <span className="top-item">
+              <Clock size={13} className="text-cyan" />
+              <span>Serving Clients Since 2014</span>
+            </span>
+          </div>
+
+          <div className="top-bar-right">
+            <a href="tel:+919892756077" className="top-item hover-cyan">
+              <Phone size={13} className="text-red" />
+              <span>+91 9892756077</span>
+            </a>
+            <span className="top-divider">|</span>
+            <a href="tel:+919594917010" className="top-item hover-cyan">
+              <span>+91 9594917010</span>
+            </a>
+            <span className="top-divider">|</span>
+            <a href="mailto:hti@htisystems.in" className="top-item hover-cyan">
+              <Mail size={13} className="text-cyan" />
+              <span>hti@htisystems.in</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Nav */}
+      <nav className={`main-nav ${isScrolled ? 'nav-scrolled' : ''}`}>
+        <div className="container main-nav-content">
+          {/* Brand Logo */}
+          <a href="#" className="brand-logo" onClick={(e) => { e.preventDefault(); scrollTo('hero'); }}>
+            <div className="logo-symbol">
+              <div className="logo-bars">
+                <span className="bar red-bar"></span>
+                <span className="bar red-bar"></span>
+                <span className="bar red-bar"></span>
+              </div>
+            </div>
+            <div className="logo-text">
+              <div className="brand-name">
+                <span className="text-white font-bold">HTI</span>
+                <span className="text-red font-semibold"> AUTOMATION</span>
+              </div>
+              <div className="brand-sub">& SECURITY SYSTEMS PVT. LTD.</div>
+            </div>
+          </a>
+
+          {/* Desktop Nav Links */}
+          <div className="nav-links desktop-only">
+            <button className="nav-link-btn" onClick={() => scrollTo('hero')}>Home</button>
+            <button className="nav-link-btn" onClick={() => scrollTo('segments')}>Segments</button>
+            <button className="nav-link-btn" onClick={() => scrollTo('catalog')}>Products</button>
+            <button className="nav-link-btn" onClick={() => scrollTo('interlock-demo')}>
+              <span className="highlight-pill">Interactive</span> Interlock Demo
+            </button>
+            <button className="nav-link-btn" onClick={() => scrollTo('partners')}>Partners</button>
+            <button className="nav-link-btn" onClick={() => scrollTo('clients')}>Clients</button>
+            <button className="nav-link-btn" onClick={() => scrollTo('about')}>About Us</button>
+          </div>
+
+          {/* Action CTAs */}
+          <div className="nav-actions desktop-only">
+            <button className="admin-btn" onClick={onOpenAdmin} title="View Saved Inquiries in SQLite">
+              <Shield size={16} />
+              <span>Inquiry Portal</span>
+              {inquiryCount > 0 && <span className="counter-badge">{inquiryCount}</span>}
+            </button>
+
+            <button className="btn-primary quote-btn" onClick={() => scrollTo('contact')}>
+              Request Quote
+            </button>
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button className="mobile-toggle mobile-only" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile Dropdown */}
+        {mobileMenuOpen && (
+          <div className="mobile-dropdown">
+            <button className="mobile-link" onClick={() => scrollTo('hero')}>Home</button>
+            <button className="mobile-link" onClick={() => scrollTo('segments')}>Product Segments</button>
+            <button className="mobile-link" onClick={() => scrollTo('catalog')}>Full Product Catalog</button>
+            <button className="mobile-link" onClick={() => scrollTo('interlock-demo')}>Clean Room Interlock Demo</button>
+            <button className="mobile-link" onClick={() => scrollTo('partners')}>Technology Partners</button>
+            <button className="mobile-link" onClick={() => scrollTo('clients')}>Our Clients</button>
+            <button className="mobile-link" onClick={() => scrollTo('about')}>About HTI</button>
+            <div className="mobile-cta-group">
+              <button className="btn-primary w-full" onClick={() => scrollTo('contact')}>Request a Quote</button>
+              <button className="btn-secondary w-full" onClick={() => { setMobileMenuOpen(false); onOpenAdmin(); }}>
+                Admin Inquiries Portal ({inquiryCount})
+              </button>
+            </div>
+          </div>
+        )}
+      </nav>
+    </header>
+  );
+}
