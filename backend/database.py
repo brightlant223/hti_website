@@ -67,6 +67,23 @@ def init_db():
     );
     """)
 
+    # Create blogs table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS blogs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        slug TEXT UNIQUE NOT NULL,
+        title TEXT NOT NULL,
+        category TEXT NOT NULL,
+        author TEXT NOT NULL DEFAULT 'HTI Engineering Team',
+        read_time TEXT DEFAULT '5 min read',
+        excerpt TEXT NOT NULL,
+        content TEXT NOT NULL,
+        image_url TEXT,
+        is_published INTEGER DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
     conn.commit()
     conn.close()
 
@@ -1019,6 +1036,50 @@ def seed_db():
         "Looking for 8-door flameproof clean room interlocking system with pressure monitoring for our new formulation facility in Navi Mumbai.",
         "In Review"
     ))
+
+    # Seed initial blogs if empty
+    cursor.execute("SELECT COUNT(*) as count FROM blogs")
+    if cursor.fetchone()["count"] == 0:
+        blogs = [
+            (
+                "optimizing-cleanroom-differential-pressure",
+                "Optimizing Cleanroom Differential Pressure with Multi-Door Interlock Systems",
+                "Cleanroom Engineering",
+                "Er. H. Mishra, Lead Systems Engineer",
+                "6 min read",
+                "Understanding the role of 2-to-12 door electrical interlocking and programmable delay timers in maintaining air classification under USFDA and ISO 14644-1 guidelines.",
+                "In sterile pharmaceutical manufacturing, preventing cross-contamination between adjacent processing blocks is the primary objective of facility engineering. When personnel move between grey areas and Grade A/B cleanrooms, opening a door creates an instantaneous pressure drop. Without an automated interlock controller, simultaneous opening of adjoining airlock doors causes turbulent particulate ingress.\n\nHTI's multi-door interlocking architecture incorporates programmable delays between door activations. This engineered pause gives the HVAC air handling unit (AHU) the requisite 3 to 5 seconds to re-establish the critical differential pressure barrier (+15 to +30 Pascals) before allowing the secondary door strike to release.\n\nFurthermore, for hazardous solvent storage areas, intrinsically safe and flameproof (Ex-d) door stations provide explosion protection while maintaining full integration with emergency evacuation override switches.",
+                "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+                1
+            ),
+            (
+                "turnkey-fire-hydrant-nbc-compliance",
+                "Turnkey Fire Hydrant & FAS Compliance under National Building Code (NBC 2016)",
+                "Fire & Life Safety",
+                "HTI Technical Projects Directorate",
+                "5 min read",
+                "Key technical considerations for designing, installing, and commissioning high-pressure fire hydrant piping networks and addressable fire panels for industrial plants.",
+                "A robust fire protection infrastructure is non-negotiable for industrial warehouses, corporate campuses, and pharmaceutical API synthesis blocks. Under Part 4 of NBC 2016, industrial occupancies require a dedicated fire water storage capacity coupled with electric main, diesel standby, and pressure-sustaining jockey pumps capable of delivering 7 to 14 kg/cm² pressure.\n\nHTI provides turnkey execution—from hydraulic pipe sizing calculations, installation of ISI-certified landing valves and canvas hose reels, to linking addressable fire alarm control panels (FACP) with automatic AHU trip dampers and emergency door releases.\n\nIntegrating the fire alarm system directly with door interlocks ensures that upon a validated smoke or heat detector trip, all electromagnetic access locks immediately drop power to enable unhindered personnel evacuation.",
+                "https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=800&q=80",
+                1
+            ),
+            (
+                "thermo-zone-air-curtains-energy-savings",
+                "Thermo-Zone Air Curtains: Slashing HVAC Energy Losses in Pharmaceutical Facilities",
+                "Hygiene & Energy Efficiency",
+                "HTI Clean Environment Division",
+                "4 min read",
+                "How calibrated laminar air curtains prevent cold air escape, block flying insect ingress, and reduce corporate energy expenditures by up to 35%.",
+                "Loading bays, staff entrances, and packaging corridors experience hundreds of door cycles daily. In air-conditioned and humidity-regulated spaces, each door opening allows chilled air to cascade out while humid, dusty outside air rushes in.\n\nHTI's industrial air curtains utilize precision Thermo-Zone aerodynamic nozzles with balanced centrifugal blowers generating an air velocity of 18 to 24 m/sec. This creates an invisible, impermeable pressure curtain that stops flying insects, outdoor particulate matter, and ambient summer heat from entering.\n\nAvailable in flameproof configurations for chemical atmospheres and whisper-quiet designs for corporate lobbies, air curtains typically pay for themselves within 8 to 14 months through HVAC electricity reduction alone.",
+                "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
+                1
+            )
+        ]
+        for b in blogs:
+            cursor.execute("""
+            INSERT INTO blogs (slug, title, category, author, read_time, excerpt, content, image_url, is_published)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, b)
 
     conn.commit()
     conn.close()

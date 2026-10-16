@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, MapPin, Shield, Menu, X, Clock, ExternalLink } from 'lucide-react';
+import { Phone, Mail, MapPin, ShieldCheck, Menu, X, Clock, Settings, BookOpen } from 'lucide-react';
 
-export default function Navbar({ onOpenAdmin, inquiryCount, onSelectCategory }) {
+export default function Navbar({ onOpenAdmin, onSelectCategory }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -82,24 +82,18 @@ export default function Navbar({ onOpenAdmin, inquiryCount, onSelectCategory }) 
             <button className="nav-link-btn" onClick={() => scrollTo('hero')}>Home</button>
             <button className="nav-link-btn" onClick={() => scrollTo('segments')}>Segments</button>
             <button className="nav-link-btn" onClick={() => scrollTo('catalog')}>Products</button>
-            <button className="nav-link-btn" onClick={() => scrollTo('interlock-demo')}>
-              <span className="highlight-pill">Interactive</span> Interlock Demo
-            </button>
+            <button className="nav-link-btn" onClick={() => scrollTo('interlock-demo')}>Interlock Demo</button>
             <button className="nav-link-btn" onClick={() => scrollTo('partners')}>Partners</button>
             <button className="nav-link-btn" onClick={() => scrollTo('clients')}>Clients</button>
+            <button className="nav-link-btn" onClick={() => scrollTo('blogs')}>Blogs</button>
             <button className="nav-link-btn" onClick={() => scrollTo('about')}>About Us</button>
           </div>
 
-          {/* Action CTAs */}
+          {/* Action CTAs - Admin Panel */}
           <div className="nav-actions desktop-only">
-            <button className="admin-btn" onClick={onOpenAdmin} title="View Saved Inquiries in SQLite">
-              <Shield size={16} />
-              <span>Inquiry Portal</span>
-              {inquiryCount > 0 && <span className="counter-badge">{inquiryCount}</span>}
-            </button>
-
-            <button className="btn-primary quote-btn" onClick={() => scrollTo('contact')}>
-              Request Quote
+            <button className="admin-btn" onClick={onOpenAdmin} title="Open CMS Admin Panel">
+              <Settings size={16} />
+              <span>Admin Panel</span>
             </button>
           </div>
 
@@ -118,11 +112,12 @@ export default function Navbar({ onOpenAdmin, inquiryCount, onSelectCategory }) 
             <button className="mobile-link" onClick={() => scrollTo('interlock-demo')}>Clean Room Interlock Demo</button>
             <button className="mobile-link" onClick={() => scrollTo('partners')}>Technology Partners</button>
             <button className="mobile-link" onClick={() => scrollTo('clients')}>Our Clients</button>
+            <button className="mobile-link" onClick={() => scrollTo('blogs')}>Technical Blogs</button>
             <button className="mobile-link" onClick={() => scrollTo('about')}>About HTI</button>
             <div className="mobile-cta-group">
-              <button className="btn-primary w-full" onClick={() => scrollTo('contact')}>Request a Quote</button>
-              <button className="btn-secondary w-full" onClick={() => { setMobileMenuOpen(false); onOpenAdmin(); }}>
-                Admin Inquiries Portal ({inquiryCount})
+              <button className="admin-btn w-full justify-center" onClick={() => { setMobileMenuOpen(false); onOpenAdmin(); }}>
+                <Settings size={16} />
+                <span>Open Admin Panel (CMS)</span>
               </button>
             </div>
           </div>

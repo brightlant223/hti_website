@@ -8,20 +8,23 @@ import ProductsCatalog from './components/ProductsCatalog';
 import ProductModal from './components/ProductModal';
 import DoorInterlockSimulator from './components/DoorInterlockSimulator';
 import PartnersClients from './components/PartnersClients';
+import BlogsSection from './components/BlogsSection';
 import AboutUs from './components/AboutUs';
 import ContactInquiry from './components/ContactInquiry';
-import AdminInquiryDrawer from './components/AdminInquiryDrawer';
+import AdminPanel from './components/AdminPanel';
 import Footer from './components/Footer';
 
 export default function App() {
   const [products, setProducts] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     total_products: 30,
     total_categories: 3,
     total_partners: 15,
     total_clients: 100,
-    total_inquiries: 1
+    total_inquiries: 1,
+    total_blogs: 3
   });
   const [partners, setPartners] = useState([]);
   const [clients, setClients] = useState([]);
@@ -35,48 +38,77 @@ export default function App() {
 
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
+  // Fetch product list from SQLite backend
+  const fetchProducts = async () => {
+    try {
+      const prodRes = await fetch('/api/products');
+      if (prodRes.ok) {
+        const prodData = await prodRes.json();
+        if (Array.isArray(prodData) && prodData.length > 0) {
+          setProducts(prodData);
+        }
+      }
+    } catch (err) {
+      console.warn('Note: Could not refresh products from API', err);
+    }
+  };
+
+  // Fetch blogs list from SQLite backend
+  const fetchBlogs = async () => {
+    try {
+      const blogRes = await fetch('/api/blogs');
+      if (blogRes.ok) {
+        const blogData = await blogRes.json();
+        if (Array.isArray(blogData)) {
+          setBlogs(blogData);
+        }
+      }
+    } catch (err) {
+      console.warn('Note: Could not refresh blogs from API', err);
+    }
+  };
+
+  // Fetch stats from SQLite backend
+  const fetchStats = async () => {
+    try {
+      const statsRes = await fetch('/api/stats');
+      if (statsRes.ok) {
+        const statsData = await statsRes.json();
+        setStats(statsData);
+        if (statsData.total_inquiries !== undefined) {
+          setInquiryCount(statsData.total_inquiries);
+        }
+      }
+    } catch (err) {
+      console.warn('Note: Could not refresh stats from API', err);
+    }
+  };
+
   // Load initial data from SQLite backend
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchInitialData = async () => {
       try {
         setLoading(true);
 
-        // Fetch products
-        const prodRes = await fetch('/api/products');
-        if (prodRes.ok) {
-          const prodData = await prodRes.json();
-          if (Array.isArray(prodData) && prodData.length > 0) {
-            setProducts(prodData);
-          }
-        }
-
-        // Fetch stats
-        const statsRes = await fetch('/api/stats');
-        if (statsRes.ok) {
-          const statsData = await statsRes.json();
-          setStats(statsData);
-          if (statsData.total_inquiries !== undefined) {
-            setInquiryCount(statsData.total_inquiries);
-          }
-        }
-
-        // Fetch partners
-        const partRes = await fetch('/api/partners');
-        if (partRes.ok) {
-          const partData = await partRes.json();
-          if (Array.isArray(partData) && partData.length > 0) {
-            setPartners(partData);
-          }
-        }
-
-        // Fetch clients
-        const clientRes = await fetch('/api/clients');
-        if (clientRes.ok) {
-          const clientData = await clientRes.json();
-          if (Array.isArray(clientData) && clientData.length > 0) {
-            setClients(clientData);
-          }
-        }
+        await Promise.allSettled([
+          fetchProducts(),
+          fetchBlogs(),
+          fetchStats(),
+          (async () => {
+            const partRes = await fetch('/api/partners');
+            if (partRes.ok) {
+              const partData = await partRes.json();
+              if (Array.isArray(partData) && partData.length > 0) setPartners(partData);
+            }
+          })(),
+          (async () => {
+            const clientRes = await fetch('/api/clients');
+            if (clientRes.ok) {
+              const clientData = await clientRes.json();
+              if (Array.isArray(clientData) && clientData.length > 0) setClients(clientData);
+            }
+          })()
+        ]);
       } catch (err) {
         console.warn('Backend API connection note: Using integrated state fallback', err);
       } finally {
@@ -84,8 +116,18 @@ export default function App() {
       }
     };
 
-    fetchData();
+    fetchInitialData();
   }, []);
+
+  const handleRefreshProducts = () => {
+    fetchProducts();
+    fetchStats();
+  };
+
+  const handleRefreshBlogs = () => {
+    fetchBlogs();
+    fetchStats();
+  };
 
   const handleSelectSegment = (segmentId) => {
     setSelectedCategory(segmentId);
@@ -127,6 +169,7 @@ export default function App() {
 
   const handleInquirySubmitted = () => {
     setInquiryCount((prev) => prev + 1);
+    fetchStats();
   };
 
   return (
@@ -147,7 +190,7 @@ export default function App() {
           onQuoteClick={scrollToContact}
         />
 
-        {/* 3 Core Product Segments from Page 3 */}
+        {/* 3 Core Product Segments */}
         <Segments onSelectSegment={handleSelectSegment} />
 
         {/* Product Catalog with Realtime Search & Category Tabs */}
@@ -160,18 +203,21 @@ export default function App() {
           onQuickQuote={handleQuickQuote}
         />
 
-        {/* Interactive Cleanroom Interlock Simulator from Page 6 */}
+        {/* Interactive Cleanroom Interlock Simulator */}
         <DoorInterlockSimulator
           onInquireInterlock={(name) => handleQuickQuote(name, 'Automation')}
         />
 
-        {/* Technology Partners & Clients from Pages 4 & 5 */}
+        {/* Technology Partners & Clients */}
         <PartnersClients partners={partners} clients={clients} />
 
-        {/* Corporate Heritage & Core Values from Page 2 */}
+        {/* Technical Blogs & Industry Insights */}
+        <BlogsSection blogs={blogs} />
+
+        {/* Corporate Heritage & Core Values */}
         <AboutUs />
 
-        {/* Quote Request Form & Mumbai Contact from Pages 1 & 22 */}
+        {/* Quote Request Form & Mumbai Contact */}
         <ContactInquiry
           selectedProduct={prefilledProduct}
           selectedCategory={prefilledCategory}
@@ -188,11 +234,12 @@ export default function App() {
         />
       )}
 
-      {/* Admin Inquiry Drawer (SQLite live inspector) */}
-      <AdminInquiryDrawer
+      {/* Admin Panel (Full CMS for Services, Blogs & Inquiries) */}
+      <AdminPanel
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
-        onCountUpdate={(cnt) => setInquiryCount(cnt)}
+        onProductsChanged={handleRefreshProducts}
+        onBlogsChanged={handleRefreshBlogs}
       />
 
       {/* Footer */}
