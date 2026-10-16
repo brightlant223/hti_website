@@ -14,11 +14,16 @@ export default function Segments({ onSelectSegment }) {
         'Automatic Sliding & Swing Doors',
         'Automatic Sliding & Swing Gates',
         'Telescopic & Cantilever Trackless Gates',
-        'Fire Rated Doors & High-Speed PVC Roll Up Doors',
-        'Sectional Overhead Doors & Dock Levellers',
+        'Fire Rated Doors & Fire Rated Shutters',
+        'High Speed Roll Up & Sectional Overhead Doors',
         'Boom Barriers (Electromechanical / Hydraulic)',
-        'Turnstiles, Flap Barriers & Bollards',
-        'RFID Long Range Vehicle Readers & Car Lifts'
+        'Dock Levellers & Dock Shelters',
+        'Turnstiles, Flap Barriers & Speed Gates',
+        'Motorized Rolling Shutters',
+        'Bollards, Tyre Killers & Car Lifts',
+        'Chiller Doors & Clean Room Doors',
+        'Sound Proof Acoustic Doors',
+        'Fire Hydrant & Sprinkler Networks'
       ],
       description: 'Engineered for high-throughput traffic control, energy retention, and perimeter security across corporate campuses, manufacturing bays, and logistics warehouses.'
     },
@@ -30,14 +35,19 @@ export default function Segments({ onSelectSegment }) {
       accentClass: 'segment-card-cyan',
       badge: 'Life Safety & Control',
       items: [
-        'Cleanroom Door Interlock & Pass Box Systems (Ex-d & Safe)',
+        'CCTV Surveillance Systems (Analogue & IP 4K)',
         'Biometric Access Control & Time Attendance',
-        'CCTV Surveillance (Analogue HD, IP 4K, PTZ, Intrinsically Safe)',
-        'Fire Alarm Systems (Conventional & Addressable Panels)',
-        'Turnkey Fire Fighting & Hydrant Pump Infrastructure',
+        'Door Interlock Systems (Flameproof & Non-Flameproof)',
+        'Pass Box Systems (Flameproof & Non-Flameproof)',
+        'Fire Alarm Systems (Conventional & Addressable)',
         'Gas Detection Systems (Toxic, Combustible & VOC)',
-        'GPS Master-Slave Digital Clocks (USFDA Compliant)',
-        'Server Room Environmental Alert & Monitoring Systems'
+        'Digital Clocks (Flameproof & Non-Flameproof GPS Sync)',
+        'Video Door Phones (IP & Non-IP Intercom)',
+        'Public Address (PA) & Voice Evacuation Systems',
+        'Visitor Management & Digital Badging Systems',
+        'Parking Management & Intrusion Alarm Systems',
+        'Fault Alarm & Annunciator Systems',
+        'Server Room Environmental Alert Monitoring'
       ],
       description: 'Comprehensive defense, life-safety, and audit-grade monitoring systems protecting critical assets, personnel, and compliance in pharmaceutical and industrial setups.'
     },

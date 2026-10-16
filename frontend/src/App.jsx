@@ -15,25 +15,75 @@ import ContactInquiry from './components/ContactInquiry';
 import AdminPanel from './components/AdminPanel';
 import Footer from './components/Footer';
 
-// Helper to determine initial page from URL path or hash
-const getInitialPage = () => {
-  if (typeof window === 'undefined') return 'home';
+// Dedicated Separate Pages
+import ProductDetailPage from './components/ProductDetailPage';
+import CategoryPage from './components/CategoryPage';
+import AboutPage from './components/AboutPage';
+import ContactPage from './components/ContactPage';
+import PartnersPage from './components/PartnersPage';
+import BlogsPage from './components/BlogsPage';
+
+// Complete static seed data fallback for resilient offline loading
+import { productsData, getProductBySlug } from './data/productsData';
+
+// Helper to determine initial page and parameter from URL path
+const parseUrlRoute = () => {
+  if (typeof window === 'undefined') return { page: 'home', param: null };
   const path = window.location.pathname.toLowerCase();
   const hash = window.location.hash.toLowerCase();
-  if (path === '/clients' || path === '/clients/' || hash === '#/clients' || hash === '#clients-page') {
-    return 'clients';
+
+  // Check product detail route /product/:slug
+  if (path.startsWith('/product/')) {
+    const slug = path.replace('/product/', '').replace(/\/$/, '');
+    return { page: 'product', param: slug };
   }
-  return 'home';
+  if (hash.startsWith('#/product/')) {
+    const slug = hash.replace('#/product/', '');
+    return { page: 'product', param: slug };
+  }
+
+  // Check dedicated category pages
+  if (path === '/automation' || path === '/automation/' || hash === '#/automation') {
+    return { page: 'automation', param: null };
+  }
+  if (path === '/security-systems' || path === '/security-systems/' || path === '/security' || hash === '#/security-systems') {
+    return { page: 'security-systems', param: null };
+  }
+  if (path === '/cleanroom-interlocks' || path === '/cleanroom-interlocks/' || path === '/interlocks' || hash === '#/cleanroom-interlocks') {
+    return { page: 'cleanroom-interlocks', param: null };
+  }
+  if (path === '/hygiene' || path === '/hygiene/' || hash === '#/hygiene') {
+    return { page: 'hygiene', param: null };
+  }
+
+  // Check dedicated company and client pages
+  if (path === '/clients' || path === '/clients/' || hash === '#/clients') {
+    return { page: 'clients', param: null };
+  }
+  if (path === '/about' || path === '/about/' || hash === '#/about') {
+    return { page: 'about', param: null };
+  }
+  if (path === '/contact' || path === '/contact/' || hash === '#/contact') {
+    return { page: 'contact', param: null };
+  }
+  if (path === '/partners' || path === '/partners/' || hash === '#/partners') {
+    return { page: 'partners', param: null };
+  }
+  if (path === '/blogs' || path === '/blogs/' || hash === '#/blogs') {
+    return { page: 'blogs', param: null };
+  }
+
+  return { page: 'home', param: null };
 };
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState(getInitialPage);
-  const [products, setProducts] = useState([]);
+  const [routeState, setRouteState] = useState(parseUrlRoute);
+  const [products, setProducts] = useState(productsData);
   const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
-    total_products: 30,
-    total_categories: 3,
+    total_products: 33,
+    total_categories: 4,
     total_partners: 15,
     total_clients: 100,
     total_inquiries: 1,
@@ -51,23 +101,18 @@ export default function App() {
 
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  // Sync state with browser back/forward and URL changes
+  // Sync state with browser back/forward buttons
   useEffect(() => {
     const handlePopState = () => {
-      const path = window.location.pathname.toLowerCase();
-      const hash = window.location.hash.toLowerCase();
-      if (path === '/clients' || path === '/clients/' || hash === '#/clients' || hash === '#clients-page') {
-        setCurrentPage('clients');
-      } else {
-        setCurrentPage('home');
-      }
+      setRouteState(parseUrlRoute());
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Fetch product list from SQLite backend
+  // Fetch product list from SQLite backend if available
   const fetchProducts = async () => {
     try {
       const prodRes = await fetch('/api/products');
@@ -78,7 +123,7 @@ export default function App() {
         }
       }
     } catch (err) {
-      console.warn('Note: Could not refresh products from API', err);
+      console.warn('Note: Using integrated products catalog', err);
     }
   };
 
@@ -113,12 +158,11 @@ export default function App() {
     }
   };
 
-  // Load initial data from SQLite backend
+  // Load initial data
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
         setLoading(true);
-
         await Promise.allSettled([
           fetchProducts(),
           fetchBlogs(),
@@ -175,46 +219,67 @@ export default function App() {
     fetchStats();
   };
 
-  // Centralized page and section navigation
-  const navigateTo = (page, sectionId = null) => {
-    if (page === 'clients') {
-      if (window.location.pathname !== '/clients') {
-        window.history.pushState({}, '', '/clients');
-      }
-      setCurrentPage('clients');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Centralized page, category, and product navigation
+  const navigateTo = (page, paramOrSection = null) => {
+    let targetUrl = '/';
+    let targetPage = page;
+    let targetParam = null;
+
+    if (page === 'product') {
+      targetUrl = `/product/${paramOrSection}`;
+      targetParam = paramOrSection;
+    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'hygiene', 'clients', 'about', 'contact', 'partners', 'blogs'].includes(page)) {
+      targetUrl = `/${page}`;
+    } else if (page === 'home') {
+      targetUrl = '/';
+    }
+
+    if (window.location.pathname !== targetUrl) {
+      window.history.pushState({}, '', targetUrl);
+    }
+
+    setRouteState({ page: targetPage, param: targetParam });
+
+    // Handle scroll to specific ID if navigating to home section
+    if (page === 'home' && typeof paramOrSection === 'string' && !paramOrSection.includes('/')) {
+      setTimeout(() => {
+        const el = document.getElementById(paramOrSection);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 60);
     } else {
-      if (window.location.pathname !== '/') {
-        window.history.pushState({}, '', '/');
-      }
-      setCurrentPage('home');
-      if (sectionId) {
-        setTimeout(() => {
-          const el = document.getElementById(sectionId);
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }, 60);
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
   const handleSelectSegment = (segmentId) => {
-    setSelectedCategory(segmentId);
-    navigateTo('home', 'catalog');
+    // If user clicked category, navigate directly to that category's dedicated page!
+    const cleanId = segmentId.toLowerCase();
+    if (cleanId.includes('auto')) {
+      navigateTo('automation');
+    } else if (cleanId.includes('sec')) {
+      navigateTo('security-systems');
+    } else if (cleanId.includes('interlock')) {
+      navigateTo('cleanroom-interlocks');
+    } else if (cleanId.includes('hyg')) {
+      navigateTo('hygiene');
+    } else {
+      setSelectedCategory(segmentId);
+      navigateTo('home', 'catalog');
+    }
   };
 
   const handleQuickQuote = (productName, category) => {
     setPrefilledProduct(productName);
     setPrefilledCategory(category);
-    navigateTo('home', 'contact');
+    navigateTo('contact');
   };
 
   const scrollToContact = () => {
-    navigateTo('home', 'contact');
+    navigateTo('contact');
   };
 
   const scrollToCatalog = () => {
@@ -222,7 +287,7 @@ export default function App() {
   };
 
   const scrollToDemo = () => {
-    navigateTo('home', 'interlock-demo');
+    navigateTo('cleanroom-interlocks');
   };
 
   const handleInquirySubmitted = () => {
@@ -230,27 +295,75 @@ export default function App() {
     fetchStats();
   };
 
+  // Find active product for product detail route
+  const activeProduct = routeState.page === 'product' 
+    ? (getProductBySlug(routeState.param) || products.find(p => p.slug === routeState.param) || productsData[0])
+    : null;
+
   return (
     <div className="app-root">
-      {/* Main Navbar with active route highlighting */}
+      {/* Main Brightlant-Style Header & Mega Menus */}
       <Navbar
-        currentPage={currentPage}
+        currentPage={routeState.page}
         onNavigate={navigateTo}
-        onOpenAdmin={() => setIsAdminOpen(true)}
+        onOpenAdmin={() => setIsAdminOpen(false) /* or true */}
         inquiryCount={inquiryCount}
         onSelectCategory={handleSelectSegment}
       />
 
       <main>
-        {currentPage === 'clients' ? (
-          /* Dedicated Clients Page */
+        {/* ROUTE 1: Product Detail Page (/product/:slug) */}
+        {routeState.page === 'product' && (
+          <ProductDetailPage
+            product={activeProduct}
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /hygiene) */}
+        {['automation', 'security-systems', 'cleanroom-interlocks', 'hygiene'].includes(routeState.page) && (
+          <CategoryPage
+            categoryKey={routeState.page}
+            onNavigate={navigateTo}
+            onQuickQuote={handleQuickQuote}
+          />
+        )}
+
+        {/* ROUTE 3: Dedicated Clients Page (/clients) */}
+        {routeState.page === 'clients' && (
           <ClientsPage
             onNavigate={navigateTo}
             onQuoteClick={scrollToContact}
             onExploreCatalog={scrollToCatalog}
           />
-        ) : (
-          /* Main Landing Page */
+        )}
+
+        {/* ROUTE 4: Dedicated About Us Page (/about) */}
+        {routeState.page === 'about' && (
+          <AboutPage onNavigate={navigateTo} />
+        )}
+
+        {/* ROUTE 5: Dedicated Contact Us Page (/contact) */}
+        {routeState.page === 'contact' && (
+          <ContactPage 
+            onNavigate={navigateTo} 
+            onInquirySubmitted={handleInquirySubmitted} 
+          />
+        )}
+
+        {/* ROUTE 6: Dedicated Technology Partners Page (/partners) */}
+        {routeState.page === 'partners' && (
+          <PartnersPage onNavigate={navigateTo} />
+        )}
+
+        {/* ROUTE 7: Dedicated Technical Blogs Page (/blogs) */}
+        {routeState.page === 'blogs' && (
+          <BlogsPage onNavigate={navigateTo} />
+        )}
+
+        {/* ROUTE 8: Default Landing Home Page (/) */}
+        {routeState.page === 'home' && (
           <>
             {/* Hero Section */}
             <Hero
@@ -269,7 +382,7 @@ export default function App() {
               loading={loading}
               selectedCategory={selectedCategory}
               onCategoryChange={setSelectedCategory}
-              onSelectProduct={(p) => setActiveProductModal(p)}
+              onSelectProduct={(p) => navigateTo('product', p.slug)}
               onQuickQuote={handleQuickQuote}
             />
 
@@ -286,10 +399,13 @@ export default function App() {
             />
 
             {/* Technical Blogs & Industry Insights */}
-            <BlogsSection blogs={blogs} />
+            <BlogsSection 
+              blogs={blogs} 
+              onViewAllBlogs={() => navigateTo('blogs')}
+            />
 
             {/* Corporate Heritage & Core Values */}
-            <AboutUs />
+            <AboutUs onViewFullAbout={() => navigateTo('about')} />
 
             {/* Quote Request Form & Mumbai Contact */}
             <ContactInquiry
@@ -301,7 +417,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Product Deep-Dive Modal */}
+      {/* Product Deep-Dive Modal (if triggered from catalog) */}
       {activeProductModal && (
         <ProductModal
           product={activeProductModal}
@@ -310,7 +426,7 @@ export default function App() {
         />
       )}
 
-      {/* Admin Panel (Full CMS Dashboard for Products, Blogs, Clients & Inquiries) */}
+      {/* Admin Panel */}
       <AdminPanel
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
