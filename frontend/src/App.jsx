@@ -9,12 +9,25 @@ import ProductModal from './components/ProductModal';
 import DoorInterlockSimulator from './components/DoorInterlockSimulator';
 import PartnersClients from './components/PartnersClients';
 import BlogsSection from './components/BlogsSection';
+import ClientsPage from './components/ClientsPage';
 import AboutUs from './components/AboutUs';
 import ContactInquiry from './components/ContactInquiry';
 import AdminPanel from './components/AdminPanel';
 import Footer from './components/Footer';
 
+// Helper to determine initial page from URL path or hash
+const getInitialPage = () => {
+  if (typeof window === 'undefined') return 'home';
+  const path = window.location.pathname.toLowerCase();
+  const hash = window.location.hash.toLowerCase();
+  if (path === '/clients' || path === '/clients/' || hash === '#/clients' || hash === '#clients-page') {
+    return 'clients';
+  }
+  return 'home';
+};
+
 export default function App() {
+  const [currentPage, setCurrentPage] = useState(getInitialPage);
   const [products, setProducts] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +50,22 @@ export default function App() {
   const [prefilledCategory, setPrefilledCategory] = useState('');
 
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+
+  // Sync state with browser back/forward and URL changes
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      if (path === '/clients' || path === '/clients/' || hash === '#/clients' || hash === '#clients-page') {
+        setCurrentPage('clients');
+      } else {
+        setCurrentPage('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Fetch product list from SQLite backend
   const fetchProducts = async () => {
@@ -146,42 +175,54 @@ export default function App() {
     fetchStats();
   };
 
+  // Centralized page and section navigation
+  const navigateTo = (page, sectionId = null) => {
+    if (page === 'clients') {
+      if (window.location.pathname !== '/clients') {
+        window.history.pushState({}, '', '/clients');
+      }
+      setCurrentPage('clients');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      if (window.location.pathname !== '/') {
+        window.history.pushState({}, '', '/');
+      }
+      setCurrentPage('home');
+      if (sectionId) {
+        setTimeout(() => {
+          const el = document.getElementById(sectionId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }, 60);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  };
   const handleSelectSegment = (segmentId) => {
     setSelectedCategory(segmentId);
-    const catalogEl = document.getElementById('catalog');
-    if (catalogEl) {
-      catalogEl.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigateTo('home', 'catalog');
   };
 
   const handleQuickQuote = (productName, category) => {
     setPrefilledProduct(productName);
     setPrefilledCategory(category);
-    const contactEl = document.getElementById('contact');
-    if (contactEl) {
-      contactEl.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigateTo('home', 'contact');
   };
 
   const scrollToContact = () => {
-    const contactEl = document.getElementById('contact');
-    if (contactEl) {
-      contactEl.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigateTo('home', 'contact');
   };
 
   const scrollToCatalog = () => {
-    const catalogEl = document.getElementById('catalog');
-    if (catalogEl) {
-      catalogEl.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigateTo('home', 'catalog');
   };
 
   const scrollToDemo = () => {
-    const demoEl = document.getElementById('interlock-demo');
-    if (demoEl) {
-      demoEl.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigateTo('home', 'interlock-demo');
   };
 
   const handleInquirySubmitted = () => {
@@ -191,55 +232,73 @@ export default function App() {
 
   return (
     <div className="app-root">
-      {/* Main Navbar */}
+      {/* Main Navbar with active route highlighting */}
       <Navbar
+        currentPage={currentPage}
+        onNavigate={navigateTo}
         onOpenAdmin={() => setIsAdminOpen(true)}
         inquiryCount={inquiryCount}
         onSelectCategory={handleSelectSegment}
       />
 
       <main>
-        {/* Hero Section */}
-        <Hero
-          stats={stats}
-          onExploreClick={scrollToCatalog}
-          onDemoClick={scrollToDemo}
-          onQuoteClick={scrollToContact}
-        />
+        {currentPage === 'clients' ? (
+          /* Dedicated Clients Page */
+          <ClientsPage
+            onNavigate={navigateTo}
+            onQuoteClick={scrollToContact}
+            onExploreCatalog={scrollToCatalog}
+          />
+        ) : (
+          /* Main Landing Page */
+          <>
+            {/* Hero Section */}
+            <Hero
+              stats={stats}
+              onExploreClick={scrollToCatalog}
+              onDemoClick={scrollToDemo}
+              onQuoteClick={scrollToContact}
+            />
 
-        {/* 3 Core Product Segments */}
-        <Segments onSelectSegment={handleSelectSegment} />
+            {/* 3 Core Product Segments */}
+            <Segments onSelectSegment={handleSelectSegment} />
 
-        {/* Product Catalog with Realtime Search & Category Tabs */}
-        <ProductsCatalog
-          products={products}
-          loading={loading}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          onSelectProduct={(p) => setActiveProductModal(p)}
-          onQuickQuote={handleQuickQuote}
-        />
+            {/* Product Catalog with Realtime Search & Category Tabs */}
+            <ProductsCatalog
+              products={products}
+              loading={loading}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              onSelectProduct={(p) => setActiveProductModal(p)}
+              onQuickQuote={handleQuickQuote}
+            />
 
-        {/* Interactive Cleanroom Interlock Simulator */}
-        <DoorInterlockSimulator
-          onInquireInterlock={(name) => handleQuickQuote(name, 'Automation')}
-        />
+            {/* Interactive Cleanroom Interlock Simulator */}
+            <DoorInterlockSimulator
+              onInquireInterlock={(name) => handleQuickQuote(name, 'Automation')}
+            />
 
-        {/* Technology Partners & Clients */}
-        <PartnersClients partners={partners} clients={clients} />
+            {/* Technology Partners & Clients */}
+            <PartnersClients 
+              partners={partners} 
+              clients={clients} 
+              onViewAllClients={() => navigateTo('clients')}
+            />
 
-        {/* Technical Blogs & Industry Insights */}
-        <BlogsSection blogs={blogs} />
+            {/* Technical Blogs & Industry Insights */}
+            <BlogsSection blogs={blogs} />
 
-        {/* Corporate Heritage & Core Values */}
-        <AboutUs />
+            {/* Corporate Heritage & Core Values */}
+            <AboutUs />
 
-        {/* Quote Request Form & Mumbai Contact */}
-        <ContactInquiry
-          selectedProduct={prefilledProduct}
-          selectedCategory={prefilledCategory}
-          onInquirySubmitted={handleInquirySubmitted}
-        />
+            {/* Quote Request Form & Mumbai Contact */}
+            <ContactInquiry
+              selectedProduct={prefilledProduct}
+              selectedCategory={prefilledCategory}
+              onInquirySubmitted={handleInquirySubmitted}
+            />
+          </>
+        )}
       </main>
 
       {/* Product Deep-Dive Modal */}
@@ -261,7 +320,10 @@ export default function App() {
       />
 
       {/* Footer */}
-      <Footer onCategoryClick={handleSelectSegment} />
+      <Footer 
+        onCategoryClick={handleSelectSegment} 
+        onNavigate={navigateTo}
+      />
     </div>
   );
 }

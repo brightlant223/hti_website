@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, MapPin, ShieldCheck, Menu, X, Clock, Settings, BookOpen } from 'lucide-react';
+import { Phone, Mail, MapPin, Menu, X, Clock, Settings } from 'lucide-react';
 
-export default function Navbar({ onOpenAdmin, onSelectCategory }) {
+export default function Navbar({ currentPage = 'home', onNavigate, onOpenAdmin }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -13,11 +13,15 @@ export default function Navbar({ onOpenAdmin, onSelectCategory }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollTo = (id) => {
+  const handleNavClick = (page, sectionId = null) => {
     setMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (onNavigate) {
+      onNavigate(page, sectionId);
+    } else if (sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -60,7 +64,14 @@ export default function Navbar({ onOpenAdmin, onSelectCategory }) {
       <nav className={`main-nav ${isScrolled ? 'nav-scrolled' : ''}`}>
         <div className="container main-nav-content">
           {/* Brand Logo */}
-          <a href="#" className="brand-logo" onClick={(e) => { e.preventDefault(); scrollTo('hero'); }}>
+          <a
+            href="/"
+            className="brand-logo"
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavClick('home', 'hero');
+            }}
+          >
             <div className="logo-symbol">
               <div className="logo-bars">
                 <span className="bar red-bar"></span>
@@ -79,14 +90,54 @@ export default function Navbar({ onOpenAdmin, onSelectCategory }) {
 
           {/* Desktop Nav Links */}
           <div className="nav-links desktop-only">
-            <button className="nav-link-btn" onClick={() => scrollTo('hero')}>Home</button>
-            <button className="nav-link-btn" onClick={() => scrollTo('segments')}>Segments</button>
-            <button className="nav-link-btn" onClick={() => scrollTo('catalog')}>Products</button>
-            <button className="nav-link-btn" onClick={() => scrollTo('interlock-demo')}>Interlock Demo</button>
-            <button className="nav-link-btn" onClick={() => scrollTo('partners')}>Partners</button>
-            <button className="nav-link-btn" onClick={() => scrollTo('clients')}>Clients</button>
-            <button className="nav-link-btn" onClick={() => scrollTo('blogs')}>Blogs</button>
-            <button className="nav-link-btn" onClick={() => scrollTo('about')}>About Us</button>
+            <button
+              className={`nav-link-btn ${currentPage === 'home' ? 'active-nav-link' : ''}`}
+              onClick={() => handleNavClick('home', 'hero')}
+            >
+              Home
+            </button>
+            <button
+              className="nav-link-btn"
+              onClick={() => handleNavClick('home', 'segments')}
+            >
+              Segments
+            </button>
+            <button
+              className="nav-link-btn"
+              onClick={() => handleNavClick('home', 'catalog')}
+            >
+              Products
+            </button>
+            <button
+              className="nav-link-btn"
+              onClick={() => handleNavClick('home', 'interlock-demo')}
+            >
+              Interlock Demo
+            </button>
+            <button
+              className="nav-link-btn"
+              onClick={() => handleNavClick('home', 'partners')}
+            >
+              Partners
+            </button>
+            <button
+              className={`nav-link-btn ${currentPage === 'clients' ? 'active-nav-link active-clients-btn' : ''}`}
+              onClick={() => handleNavClick('clients')}
+            >
+              Clients
+            </button>
+            <button
+              className="nav-link-btn"
+              onClick={() => handleNavClick('home', 'blogs')}
+            >
+              Blogs
+            </button>
+            <button
+              className="nav-link-btn"
+              onClick={() => handleNavClick('home', 'about')}
+            >
+              About Us
+            </button>
           </div>
 
           {/* Action CTAs - Admin Panel */}
@@ -98,7 +149,11 @@ export default function Navbar({ onOpenAdmin, onSelectCategory }) {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button className="mobile-toggle mobile-only" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button
+            className="mobile-toggle mobile-only"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+          >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -106,16 +161,62 @@ export default function Navbar({ onOpenAdmin, onSelectCategory }) {
         {/* Mobile Dropdown */}
         {mobileMenuOpen && (
           <div className="mobile-dropdown">
-            <button className="mobile-link" onClick={() => scrollTo('hero')}>Home</button>
-            <button className="mobile-link" onClick={() => scrollTo('segments')}>Product Segments</button>
-            <button className="mobile-link" onClick={() => scrollTo('catalog')}>Full Product Catalog</button>
-            <button className="mobile-link" onClick={() => scrollTo('interlock-demo')}>Clean Room Interlock Demo</button>
-            <button className="mobile-link" onClick={() => scrollTo('partners')}>Technology Partners</button>
-            <button className="mobile-link" onClick={() => scrollTo('clients')}>Our Clients</button>
-            <button className="mobile-link" onClick={() => scrollTo('blogs')}>Technical Blogs</button>
-            <button className="mobile-link" onClick={() => scrollTo('about')}>About HTI</button>
+            <button
+              className={`mobile-link ${currentPage === 'home' ? 'active-mobile-link' : ''}`}
+              onClick={() => handleNavClick('home', 'hero')}
+            >
+              Home
+            </button>
+            <button
+              className="mobile-link"
+              onClick={() => handleNavClick('home', 'segments')}
+            >
+              Product Segments
+            </button>
+            <button
+              className="mobile-link"
+              onClick={() => handleNavClick('home', 'catalog')}
+            >
+              Full Product Catalog
+            </button>
+            <button
+              className="mobile-link"
+              onClick={() => handleNavClick('home', 'interlock-demo')}
+            >
+              Clean Room Interlock Demo
+            </button>
+            <button
+              className="mobile-link"
+              onClick={() => handleNavClick('home', 'partners')}
+            >
+              Technology Partners
+            </button>
+            <button
+              className={`mobile-link ${currentPage === 'clients' ? 'active-mobile-link' : ''}`}
+              onClick={() => handleNavClick('clients')}
+            >
+              Our Clients
+            </button>
+            <button
+              className="mobile-link"
+              onClick={() => handleNavClick('home', 'blogs')}
+            >
+              Technical Blogs
+            </button>
+            <button
+              className="mobile-link"
+              onClick={() => handleNavClick('home', 'about')}
+            >
+              About HTI
+            </button>
             <div className="mobile-cta-group">
-              <button className="admin-btn w-full justify-center" onClick={() => { setMobileMenuOpen(false); onOpenAdmin(); }}>
+              <button
+                className="admin-btn w-full justify-center"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenAdmin();
+                }}
+              >
                 <Settings size={16} />
                 <span>Open Admin Panel (CMS)</span>
               </button>

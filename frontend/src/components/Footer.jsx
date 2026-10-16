@@ -1,14 +1,18 @@
 import React from 'react';
 import { Phone, Mail, MapPin, ArrowUp, ShieldCheck } from 'lucide-react';
 
-export default function Footer({ onCategoryClick }) {
+export default function Footer({ onCategoryClick, onNavigate }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  const handleLinkClick = (page, sectionId = null) => {
+    if (onNavigate) {
+      onNavigate(page, sectionId);
+    } else if (sectionId) {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -48,14 +52,14 @@ export default function Footer({ onCategoryClick }) {
           <div className="footer-col">
             <h4 className="footer-heading">Quick Links</h4>
             <ul className="footer-links-list">
-              <li><button onClick={() => scrollTo('hero')}>Home</button></li>
-              <li><button onClick={() => scrollTo('segments')}>Product Segments</button></li>
-              <li><button onClick={() => scrollTo('catalog')}>Full Catalog</button></li>
-              <li><button onClick={() => scrollTo('interlock-demo')}>Interlock Simulator</button></li>
-              <li><button onClick={() => scrollTo('partners')}>Technology Partners</button></li>
-              <li><button onClick={() => scrollTo('clients')}>Client Segment</button></li>
-              <li><button onClick={() => scrollTo('about')}>About Us</button></li>
-              <li><button onClick={() => scrollTo('contact')}>Contact & Inquiries</button></li>
+              <li><button onClick={() => handleLinkClick('home', 'hero')}>Home</button></li>
+              <li><button onClick={() => handleLinkClick('home', 'segments')}>Product Segments</button></li>
+              <li><button onClick={() => handleLinkClick('home', 'catalog')}>Full Catalog</button></li>
+              <li><button onClick={() => handleLinkClick('home', 'interlock-demo')}>Interlock Simulator</button></li>
+              <li><button onClick={() => handleLinkClick('home', 'partners')}>Technology Partners</button></li>
+              <li><button onClick={() => handleLinkClick('clients')}>Our Clients</button></li>
+              <li><button onClick={() => handleLinkClick('home', 'about')}>About Us</button></li>
+              <li><button onClick={() => handleLinkClick('home', 'contact')}>Contact & Inquiries</button></li>
             </ul>
           </div>
 

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Handshake, Building2, Shield } from 'lucide-react';
+import { Handshake, Building2, Shield, ArrowRight } from 'lucide-react';
+import { clientsData } from '../data/clientsData';
 
-export default function PartnersClients({ partners, clients }) {
+export default function PartnersClients({ partners, clients, onViewAllClients }) {
   const defaultPartners = [
     { name: 'Honeywell', category: 'Fire & Automation' },
     { name: 'BOSCH', category: 'Security & PA Systems' },
@@ -18,123 +19,6 @@ export default function PartnersClients({ partners, clients }) {
     { name: 'Johnson Controls', category: 'Building Controls & BMS' },
     { name: 'SIEMENS', category: 'Industrial Safety & Sensors' },
     { name: 'ZOLOTO', category: 'Fire Hydrant & Pipeline Valves' }
-  ];
-
-  const defaultClients = [
-    { name: 'Glenmark', sector: 'Pharmaceuticals & Healthcare' },
-    { name: 'Indoco Remedies', sector: 'Pharmaceuticals' },
-    { name: 'Venus Remedies', sector: 'Pharmaceuticals & Injectables' },
-    { name: 'Cadila Pharmaceuticals', sector: 'Pharmaceuticals' },
-    { name: 'Shreya Life Sciences', sector: 'Pharmaceuticals' },
-    { name: 'Pidilite', sector: 'Industrial Adhesives & Chemicals' },
-    { name: 'P&G (Procter & Gamble)', sector: 'Global FMCG & Consumer Goods' },
-    { name: 'Alkem Laboratories', sector: 'Pharmaceuticals' },
-    { name: 'FSC (Future Supply Chain)', sector: 'Contract Logistics & Warehousing' },
-    { name: 'IIT Bombay', sector: 'Premier National Research & Technology' },
-    { name: 'Alembic Pharmaceuticals', sector: 'Healthcare (Touching Lives 100+ Years)' },
-    { name: 'FERRERO', sector: 'Global Confectionery & Food Manufacturing' }
-  ];
-
-  const clientMetaMap = {
-    'glenmark': {
-      name: 'Glenmark',
-      sector: 'Pharmaceuticals & Healthcare',
-      logo: '/clients/glenmark.png',
-      alt: 'Glenmark Pharmaceuticals authentic logo'
-    },
-    'indoco remedies': {
-      name: 'Indoco Remedies',
-      sector: 'Pharmaceuticals',
-      logo: '/clients/indoco.png',
-      alt: 'Indoco Remedies Limited authentic logo'
-    },
-    'venus remedies': {
-      name: 'Venus Remedies',
-      sector: 'Pharmaceuticals & Injectables',
-      logo: '/clients/venus.png',
-      alt: 'Venus Remedies authentic logo'
-    },
-    'cadila pharmaceuticals': {
-      name: 'Cadila Pharmaceuticals',
-      sector: 'Pharmaceuticals',
-      logo: '/clients/cadila.png',
-      alt: 'Cadila Pharmaceuticals Limited authentic logo'
-    },
-    'shreya life sciences': {
-      name: 'Shreya Life Sciences',
-      sector: 'Pharmaceuticals',
-      logo: '/clients/shreya.png',
-      alt: 'Shreya Life Sciences authentic logo'
-    },
-    'pidilite': {
-      name: 'Pidilite',
-      sector: 'Industrial Adhesives & Chemicals',
-      logo: '/clients/pidilite.png',
-      alt: 'Pidilite Industries authentic logo'
-    },
-    'p&g (procter & gamble)': {
-      name: 'P&G (Procter & Gamble)',
-      sector: 'Global FMCG & Consumer Goods',
-      logo: '/clients/pg.png',
-      alt: 'Procter & Gamble (P&G) authentic logo'
-    },
-    'p&g': {
-      name: 'P&G (Procter & Gamble)',
-      sector: 'Global FMCG & Consumer Goods',
-      logo: '/clients/pg.png',
-      alt: 'Procter & Gamble (P&G) authentic logo'
-    },
-    'alkem laboratories': {
-      name: 'Alkem Laboratories',
-      sector: 'Pharmaceuticals',
-      logo: '/clients/alkem.png',
-      alt: 'Alkem Laboratories authentic logo'
-    },
-    'fsc (future supply chain)': {
-      name: 'FSC (Future Supply Chain)',
-      sector: 'Contract Logistics & Warehousing',
-      logo: '/clients/fsc.png',
-      alt: 'FSC (Future Supply Chain) authentic logo'
-    },
-    'fsc': {
-      name: 'FSC (Future Supply Chain)',
-      sector: 'Contract Logistics & Warehousing',
-      logo: '/clients/fsc.png',
-      alt: 'FSC (Future Supply Chain) authentic logo'
-    },
-    'iit bombay': {
-      name: 'IIT Bombay',
-      sector: 'Premier National Research & Technology',
-      logo: '/clients/iit-bombay.png',
-      alt: 'IIT Bombay authentic seal logo'
-    },
-    'alembic pharmaceuticals': {
-      name: 'Alembic Pharmaceuticals',
-      sector: 'Healthcare (Touching Lives 100+ Years)',
-      logo: '/clients/alembic.png',
-      alt: 'Alembic Pharmaceuticals authentic logo'
-    },
-    'ferrero': {
-      name: 'Ferrero',
-      sector: 'Global Confectionery & Food Manufacturing',
-      logo: '/clients/ferrero.png',
-      alt: 'Ferrero authentic logo'
-    }
-  };
-
-  const canonicalClients = [
-    { name: 'Glenmark', sector: 'Pharmaceuticals & Healthcare', logo: '/clients/glenmark.png', alt: 'Glenmark Pharmaceuticals authentic logo' },
-    { name: 'Indoco Remedies', sector: 'Pharmaceuticals', logo: '/clients/indoco.png', alt: 'Indoco Remedies Limited authentic logo' },
-    { name: 'Venus Remedies', sector: 'Pharmaceuticals & Injectables', logo: '/clients/venus.png', alt: 'Venus Remedies authentic logo' },
-    { name: 'Cadila Pharmaceuticals', sector: 'Pharmaceuticals', logo: '/clients/cadila.png', alt: 'Cadila Pharmaceuticals Limited authentic logo' },
-    { name: 'Shreya Life Sciences', sector: 'Pharmaceuticals', logo: '/clients/shreya.png', alt: 'Shreya Life Sciences authentic logo' },
-    { name: 'Pidilite', sector: 'Industrial Adhesives & Chemicals', logo: '/clients/pidilite.png', alt: 'Pidilite Industries authentic logo' },
-    { name: 'P&G (Procter & Gamble)', sector: 'Global FMCG & Consumer Goods', logo: '/clients/pg.png', alt: 'Procter & Gamble (P&G) authentic logo' },
-    { name: 'Alkem Laboratories', sector: 'Pharmaceuticals', logo: '/clients/alkem.png', alt: 'Alkem Laboratories authentic logo' },
-    { name: 'FSC (Future Supply Chain)', sector: 'Contract Logistics & Warehousing', logo: '/clients/fsc.png', alt: 'FSC (Future Supply Chain) authentic logo' },
-    { name: 'IIT Bombay', sector: 'Premier National Research & Technology', logo: '/clients/iit-bombay.png', alt: 'IIT Bombay authentic seal logo' },
-    { name: 'Alembic Pharmaceuticals', sector: 'Healthcare (Touching Lives 100+ Years)', logo: '/clients/alembic.png', alt: 'Alembic Pharmaceuticals authentic logo' },
-    { name: 'Ferrero', sector: 'Global Confectionery & Food Manufacturing', logo: '/clients/ferrero.png', alt: 'Ferrero authentic logo' }
   ];
 
   const partnerLogos = {
@@ -155,11 +39,21 @@ export default function PartnersClients({ partners, clients }) {
     'Zoloto Valves': '/logos/zoloto.jpg'
   };
 
-  const displayPartners =
-    partners && partners.length > 0 ? partners : defaultPartners;
+  const displayPartners = partners && partners.length > 0 ? partners : defaultPartners;
 
-  const displayClients =
-    clients && clients.length > 0 ? clients : defaultClients;
+  // Format clients ensuring authentic logos and names from Image 2
+  const displayClients = clientsData.map(canon => {
+    if (clients && clients.length > 0) {
+      const match = clients.find(c => (c.name || '').trim().toLowerCase() === canon.name.toLowerCase());
+      if (match) {
+        return {
+          ...canon,
+          sector: match.sector || canon.sector
+        };
+      }
+    }
+    return canon;
+  });
 
   return (
     <section id="partners" className="section partners-clients-section">
@@ -200,7 +94,9 @@ export default function PartnersClients({ partners, clients }) {
                         }}
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
-                          e.currentTarget.nextElementSibling.style.display = 'block';
+                          if (e.currentTarget.nextElementSibling) {
+                            e.currentTarget.nextElementSibling.style.display = 'block';
+                          }
                         }}
                       />
                     ) : null}
@@ -208,12 +104,6 @@ export default function PartnersClients({ partners, clients }) {
                     <span style={{ display: logo ? 'none' : 'block' }}>
                       {p.name}
                     </span>
-
-                    {logo && (
-                      <span style={{ display: 'none' }}>
-                        {p.name}
-                      </span>
-                    )}
                   </div>
 
                   <div className="partner-cat">
@@ -258,7 +148,6 @@ export default function PartnersClients({ partners, clients }) {
               </div>
             </div>
 
-
             {/* Responsive 4-column authentic logo grid */}
             <div className="client-logo-gallery-grid">
               {displayClients.map((client, idx) => (
@@ -282,6 +171,10 @@ export default function PartnersClients({ partners, clients }) {
               ))}
             </div>
 
+            {/* Closing text */}
+            <div className="client-gallery-footer">
+              <p className="client-closing-text">And many more satisfied clients...</p>
+            </div>
           </div>
 
           {/* Trust Banner */}
