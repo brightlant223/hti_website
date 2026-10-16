@@ -35,8 +35,123 @@ export default function PartnersClients({ partners, clients }) {
     { name: 'FERRERO', sector: 'Global Confectionery & Food Manufacturing' }
   ];
 
+  const clientMetaMap = {
+    'glenmark': {
+      name: 'Glenmark',
+      sector: 'Pharmaceuticals & Healthcare',
+      logo: '/clients/glenmark.png',
+      alt: 'Glenmark Pharmaceuticals authentic logo'
+    },
+    'indoco remedies': {
+      name: 'Indoco Remedies',
+      sector: 'Pharmaceuticals',
+      logo: '/clients/indoco.png',
+      alt: 'Indoco Remedies Limited authentic logo'
+    },
+    'venus remedies': {
+      name: 'Venus Remedies',
+      sector: 'Pharmaceuticals & Injectables',
+      logo: '/clients/venus.png',
+      alt: 'Venus Remedies authentic logo'
+    },
+    'cadila pharmaceuticals': {
+      name: 'Cadila Pharmaceuticals',
+      sector: 'Pharmaceuticals',
+      logo: '/clients/cadila.png',
+      alt: 'Cadila Pharmaceuticals Limited authentic logo'
+    },
+    'shreya life sciences': {
+      name: 'Shreya Life Sciences',
+      sector: 'Pharmaceuticals',
+      logo: '/clients/shreya.png',
+      alt: 'Shreya Life Sciences authentic logo'
+    },
+    'pidilite': {
+      name: 'Pidilite',
+      sector: 'Industrial Adhesives & Chemicals',
+      logo: '/clients/pidilite.png',
+      alt: 'Pidilite Industries authentic logo'
+    },
+    'p&g (procter & gamble)': {
+      name: 'P&G (Procter & Gamble)',
+      sector: 'Global FMCG & Consumer Goods',
+      logo: '/clients/pg.png',
+      alt: 'Procter & Gamble (P&G) authentic logo'
+    },
+    'p&g': {
+      name: 'P&G (Procter & Gamble)',
+      sector: 'Global FMCG & Consumer Goods',
+      logo: '/clients/pg.png',
+      alt: 'Procter & Gamble (P&G) authentic logo'
+    },
+    'alkem laboratories': {
+      name: 'Alkem Laboratories',
+      sector: 'Pharmaceuticals',
+      logo: '/clients/alkem.png',
+      alt: 'Alkem Laboratories authentic logo'
+    },
+    'fsc (future supply chain)': {
+      name: 'FSC (Future Supply Chain)',
+      sector: 'Contract Logistics & Warehousing',
+      logo: '/clients/fsc.png',
+      alt: 'FSC (Future Supply Chain) authentic logo'
+    },
+    'fsc': {
+      name: 'FSC (Future Supply Chain)',
+      sector: 'Contract Logistics & Warehousing',
+      logo: '/clients/fsc.png',
+      alt: 'FSC (Future Supply Chain) authentic logo'
+    },
+    'iit bombay': {
+      name: 'IIT Bombay',
+      sector: 'Premier National Research & Technology',
+      logo: '/clients/iit-bombay.png',
+      alt: 'IIT Bombay authentic seal logo'
+    },
+    'alembic pharmaceuticals': {
+      name: 'Alembic Pharmaceuticals',
+      sector: 'Healthcare (Touching Lives 100+ Years)',
+      logo: '/clients/alembic.png',
+      alt: 'Alembic Pharmaceuticals authentic logo'
+    },
+    'ferrero': {
+      name: 'Ferrero',
+      sector: 'Global Confectionery & Food Manufacturing',
+      logo: '/clients/ferrero.png',
+      alt: 'Ferrero authentic logo'
+    }
+  };
+
+  const canonicalClients = [
+    { name: 'Glenmark', sector: 'Pharmaceuticals & Healthcare', logo: '/clients/glenmark.png', alt: 'Glenmark Pharmaceuticals authentic logo' },
+    { name: 'Indoco Remedies', sector: 'Pharmaceuticals', logo: '/clients/indoco.png', alt: 'Indoco Remedies Limited authentic logo' },
+    { name: 'Venus Remedies', sector: 'Pharmaceuticals & Injectables', logo: '/clients/venus.png', alt: 'Venus Remedies authentic logo' },
+    { name: 'Cadila Pharmaceuticals', sector: 'Pharmaceuticals', logo: '/clients/cadila.png', alt: 'Cadila Pharmaceuticals Limited authentic logo' },
+    { name: 'Shreya Life Sciences', sector: 'Pharmaceuticals', logo: '/clients/shreya.png', alt: 'Shreya Life Sciences authentic logo' },
+    { name: 'Pidilite', sector: 'Industrial Adhesives & Chemicals', logo: '/clients/pidilite.png', alt: 'Pidilite Industries authentic logo' },
+    { name: 'P&G (Procter & Gamble)', sector: 'Global FMCG & Consumer Goods', logo: '/clients/pg.png', alt: 'Procter & Gamble (P&G) authentic logo' },
+    { name: 'Alkem Laboratories', sector: 'Pharmaceuticals', logo: '/clients/alkem.png', alt: 'Alkem Laboratories authentic logo' },
+    { name: 'FSC (Future Supply Chain)', sector: 'Contract Logistics & Warehousing', logo: '/clients/fsc.png', alt: 'FSC (Future Supply Chain) authentic logo' },
+    { name: 'IIT Bombay', sector: 'Premier National Research & Technology', logo: '/clients/iit-bombay.png', alt: 'IIT Bombay authentic seal logo' },
+    { name: 'Alembic Pharmaceuticals', sector: 'Healthcare (Touching Lives 100+ Years)', logo: '/clients/alembic.png', alt: 'Alembic Pharmaceuticals authentic logo' },
+    { name: 'Ferrero', sector: 'Global Confectionery & Food Manufacturing', logo: '/clients/ferrero.png', alt: 'Ferrero authentic logo' }
+  ];
+
   const displayPartners = partners && partners.length > 0 ? partners : defaultPartners;
-  const displayClients = clients && clients.length > 0 ? clients : defaultClients;
+  
+  // Format clients ensuring authentic logos and names from Image 2
+  const displayClients = canonicalClients.map(canon => {
+    if (clients && clients.length > 0) {
+      const match = clients.find(c => (c.name || '').trim().toLowerCase() === canon.name.toLowerCase());
+      if (match) {
+        return {
+          ...canon,
+          sector: match.sector || canon.sector
+        };
+      }
+    }
+    return canon;
+  });
 
   return (
     <section id="partners" className="section partners-clients-section">
@@ -78,28 +193,48 @@ export default function PartnersClients({ partners, clients }) {
               <Building2 size={14} />
               <span>Proven Track Record</span>
             </div>
-            <h2 className="section-heading">
-              Our Esteemed <span className="gradient-text-cyan">Client Segment</span>
-            </h2>
             <p className="section-desc">
               Trusted by multinational pharmaceutical formulation hubs, FMCG manufacturing facilities, and premier institutions across India.
             </p>
           </div>
 
-          <div className="clients-grid">
-            {displayClients.map((client, idx) => (
-              <div key={idx} className="glass-card client-card">
-                <div className="client-avatar">
-                  <span>{client.name.charAt(0)}</span>
-                </div>
-                <div className="client-info">
-                  <h4 className="client-name">{client.name}</h4>
-                  <span className="client-sector">{client.sector}</span>
-                </div>
+          {/* White/Light-Gray Client Gallery Matching Image 2 */}
+          <div className="client-gallery-container">
+            {/* Prominent speech-bubble heading from Image 2 */}
+            <div className="client-segment-speech-wrap">
+              <div className="client-segment-bubble">
+                <h2 className="client-segment-heading">Our Client Segment...</h2>
+                <div className="bubble-tail" aria-hidden="true"></div>
               </div>
-            ))}
+            </div>
+
+            {/* Responsive 4-column authentic logo grid */}
+            <div className="client-logo-gallery-grid">
+              {displayClients.map((client, idx) => (
+                <div key={idx} className="client-gallery-card">
+                  <div className="client-logo-box">
+                    <img
+                      src={client.logo}
+                      alt={client.alt}
+                      className="client-logo-img"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="client-meta-box">
+                    <h4 className="client-name-title">{client.name}</h4>
+                    {client.sector && <span className="client-sector-text">{client.sector}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Closing text from Image 2 */}
+            <div className="client-gallery-footer">
+              <p className="client-closing-text">And many more satisfied clients...</p>
+            </div>
           </div>
 
+          {/* Trust Banner */}
           <div className="client-trust-banner glass-card mt-12">
             <div className="trust-icon-box">
               <Shield size={28} className="text-cyan" />

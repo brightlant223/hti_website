@@ -1484,44 +1484,193 @@
   color: var(--accent-cyan);
 }
 
-.clients-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
+/* Client Segment Gallery - Matching Image 2 */
+.client-gallery-container {
+  background: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 40px 36px 32px;
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.45);
+  margin-top: 24px;
+  position: relative;
 }
 
-.client-card {
+.client-segment-speech-wrap {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 18px 20px;
+  justify-content: flex-start;
+  margin-bottom: 36px;
 }
 
-.client-avatar {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(6, 182, 212, 0.4);
-  border-radius: 12px;
+.client-segment-bubble {
+  position: relative;
+  display: inline-block;
+  background: #ffffff;
+  border: 4px solid #00bcbc;
+  border-radius: 4px;
+  padding: 10px 28px;
+  box-shadow: 0 4px 14px rgba(0, 188, 188, 0.15);
+}
+
+.client-segment-heading {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: #00bcbc;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.bubble-tail {
+  position: absolute;
+  bottom: -18px;
+  left: 28px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 18px 18px 0 0;
+  border-color: #00bcbc transparent transparent transparent;
+}
+
+.bubble-tail::after {
+  content: '';
+  position: absolute;
+  top: -18px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 13px 13px 0 0;
+  border-color: #ffffff transparent transparent transparent;
+}
+
+.client-logo-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+.client-gallery-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 175px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.client-gallery-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.12);
+  border-color: #00bcbc;
+}
+
+.client-logo-box {
+  height: 82px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4px;
+}
+
+.client-logo-img {
+  max-height: 70px;
+  max-width: 88%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.client-meta-box {
+  text-align: center;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.client-name-title {
   font-family: var(--font-heading);
-  font-weight: 800;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.client-sector-text {
+  font-size: 0.74rem;
+  color: #64748b;
+  font-weight: 500;
+  display: block;
+  line-height: 1.35;
+}
+
+.client-gallery-footer {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.client-closing-text {
+  font-family: var(--font-heading);
   font-size: 1.2rem;
-  color: var(--accent-cyan);
-  flex-shrink: 0;
+  font-weight: 800;
+  font-style: italic;
+  color: #1e3a8a;
+  letter-spacing: -0.01em;
+  margin: 0;
 }
 
-.client-name {
-  font-size: 1rem;
-  color: #fff;
-  margin-bottom: 2px;
+@media (max-width: 1024px) {
+  .client-logo-gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
 }
 
-.client-sector {
-  font-size: 0.78rem;
-  color: var(--text-muted);
+@media (max-width: 768px) {
+  .client-gallery-container {
+    padding: 30px 20px 24px;
+    border-radius: 16px;
+  }
+  .client-segment-heading {
+    font-size: 1.6rem;
+  }
+  .client-logo-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .client-gallery-card {
+    padding: 18px 12px 14px;
+    min-height: 155px;
+  }
+  .client-logo-box {
+    height: 70px;
+  }
+  .client-logo-img {
+    max-height: 58px;
+  }
+  .client-closing-text {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .client-logo-gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .client-gallery-footer {
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 .client-trust-banner {
