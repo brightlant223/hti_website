@@ -133,8 +133,10 @@ export default function Navbar({ currentPage = 'home', onNavigate, onOpenAdmin }
               Blogs
             </button>
             <button
-              className="nav-link-btn"
-              onClick={() => handleNavClick('home', 'about')}
+              type="button"
+              className={`nav-link-btn ${currentPage === 'about' ? 'active-nav-link' : ''
+                }`}
+              onClick={() => onNavigate('about')}
             >
               About Us
             </button>

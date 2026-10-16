@@ -15,6 +15,7 @@ import ContactInquiry from './components/ContactInquiry';
 import AdminPanel from './components/AdminPanel';
 import Footer from './components/Footer';
 
+
 // Helper to determine initial page from URL path or hash
 const getInitialPage = () => {
   if (typeof window === 'undefined') return 'home';
@@ -23,6 +24,10 @@ const getInitialPage = () => {
   if (path === '/clients' || path === '/clients/' || hash === '#/clients' || hash === '#clients-page') {
     return 'clients';
   }
+  if (path === '/about-us' || path === '/about-us/') {
+    return 'about';
+  }
+
   return 'home';
 };
 
@@ -58,6 +63,8 @@ export default function App() {
       const hash = window.location.hash.toLowerCase();
       if (path === '/clients' || path === '/clients/' || hash === '#/clients' || hash === '#clients-page') {
         setCurrentPage('clients');
+      } else if (path === '/about-us' || path === '/about-us/') {
+        setCurrentPage('about');
       } else {
         setCurrentPage('home');
       }
@@ -177,30 +184,34 @@ export default function App() {
 
   // Centralized page and section navigation
   const navigateTo = (page, sectionId = null) => {
-    if (page === 'clients') {
-      if (window.location.pathname !== '/clients') {
-        window.history.pushState({}, '', '/clients');
-      }
-      setCurrentPage('clients');
+    const routes = {
+      home: '/',
+      clients: '/clients',
+      about: '/about-us',
+    };
+
+    const targetPath = routes[page] || '/';
+
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({}, '', targetPath);
+    }
+
+    setCurrentPage(page);
+
+    if (page !== 'home' || !sectionId) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      if (window.location.pathname !== '/') {
-        window.history.pushState({}, '', '/');
-      }
-      setCurrentPage('home');
-      if (sectionId) {
-        setTimeout(() => {
-          const el = document.getElementById(sectionId);
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }, 60);
+      return;
+    }
+
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    }
+    }, 60);
   };
   const handleSelectSegment = (segmentId) => {
     setSelectedCategory(segmentId);
@@ -241,6 +252,7 @@ export default function App() {
         onSelectCategory={handleSelectSegment}
       />
 
+
       <main>
         {currentPage === 'clients' ? (
           /* Dedicated Clients Page */
@@ -249,6 +261,9 @@ export default function App() {
             onQuoteClick={scrollToContact}
             onExploreCatalog={scrollToCatalog}
           />
+        ) : currentPage === 'about' ? (
+          /* Dedicated About Us Page */
+          <AboutUs />
         ) : (
           /* Main Landing Page */
           <>
@@ -263,7 +278,7 @@ export default function App() {
             {/* 3 Core Product Segments */}
             <Segments onSelectSegment={handleSelectSegment} />
 
-            {/* Product Catalog with Realtime Search & Category Tabs */}
+            {/* Product Catalog */}
             <ProductsCatalog
               products={products}
               loading={loading}
@@ -273,25 +288,24 @@ export default function App() {
               onQuickQuote={handleQuickQuote}
             />
 
-            {/* Interactive Cleanroom Interlock Simulator */}
+            {/* Cleanroom Interlock Simulator */}
             <DoorInterlockSimulator
-              onInquireInterlock={(name) => handleQuickQuote(name, 'Automation')}
+              onInquireInterlock={(name) =>
+                handleQuickQuote(name, 'Automation')
+              }
             />
 
             {/* Technology Partners & Clients */}
-            <PartnersClients 
-              partners={partners} 
-              clients={clients} 
+            <PartnersClients
+              partners={partners}
+              clients={clients}
               onViewAllClients={() => navigateTo('clients')}
             />
 
-            {/* Technical Blogs & Industry Insights */}
+            {/* Technical Blogs */}
             <BlogsSection blogs={blogs} />
 
-            {/* Corporate Heritage & Core Values */}
-            <AboutUs />
-
-            {/* Quote Request Form & Mumbai Contact */}
+            {/* Quote Request Form */}
             <ContactInquiry
               selectedProduct={prefilledProduct}
               selectedCategory={prefilledCategory}
@@ -300,6 +314,7 @@ export default function App() {
           </>
         )}
       </main>
+
 
       {/* Product Deep-Dive Modal */}
       {activeProductModal && (
@@ -320,8 +335,8 @@ export default function App() {
       />
 
       {/* Footer */}
-      <Footer 
-        onCategoryClick={handleSelectSegment} 
+      <Footer
+        onCategoryClick={handleSelectSegment}
         onNavigate={navigateTo}
       />
     </div>
