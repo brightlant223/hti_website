@@ -1,5 +1,5 @@
 import React from 'react';
-import { Handshake, Building2, Shield, Sparkles } from 'lucide-react';
+import { Handshake, Building2, Shield } from 'lucide-react';
 
 export default function PartnersClients({ partners, clients }) {
   const defaultPartners = [
@@ -137,21 +137,29 @@ export default function PartnersClients({ partners, clients }) {
     { name: 'Ferrero', sector: 'Global Confectionery & Food Manufacturing', logo: '/clients/ferrero.png', alt: 'Ferrero authentic logo' }
   ];
 
-  const displayPartners = partners && partners.length > 0 ? partners : defaultPartners;
-  
-  // Format clients ensuring authentic logos and names from Image 2
-  const displayClients = canonicalClients.map(canon => {
-    if (clients && clients.length > 0) {
-      const match = clients.find(c => (c.name || '').trim().toLowerCase() === canon.name.toLowerCase());
-      if (match) {
-        return {
-          ...canon,
-          sector: match.sector || canon.sector
-        };
-      }
-    }
-    return canon;
-  });
+  const partnerLogos = {
+    Honeywell: '/logos/honeywell.png',
+    Bosch: '/logos/bosch.png',
+    Metaflex: '/logos/metaflex.png',
+    Cisco: '/logos/cisco.png',
+    Eaton: '/logos/eaton.png',
+    Hikvision: '/logos/hikvision.png',
+    'L&T': '/logos/lt.png',
+    FAAC: '/logos/faac.jpg',
+    Ravel: '/logos/ravel.png',
+    Dorma: '/logos/dorma.jpg',
+    Nice: '/logos/nice.png',
+    Avtech: '/logos/avtech.png',
+    'Johnson Controls': '/logos/johnson-controls.png',
+    Siemens: '/logos/siemens.png',
+    'Zoloto Valves': '/logos/zoloto.jpg'
+  };
+
+  const displayPartners =
+    partners && partners.length > 0 ? partners : defaultPartners;
+
+  const displayClients =
+    clients && clients.length > 0 ? clients : defaultClients;
 
   return (
     <section id="partners" className="section partners-clients-section">
@@ -163,22 +171,59 @@ export default function PartnersClients({ partners, clients }) {
               <Handshake size={14} />
               <span>Authorized Integration Ecosystem</span>
             </div>
+
             <h2 className="section-heading">
               Global Technology <span className="gradient-text-red">Partners</span>
             </h2>
+
             <p className="section-desc">
               We engineer our systems utilizing field-tested hardware and certified components from the world's premier automation, safety, and surveillance innovators.
             </p>
           </div>
 
           <div className="partners-grid">
-            {displayPartners.map((p, idx) => (
-              <div key={idx} className="glass-card partner-card">
-                <div className="partner-name">{p.name}</div>
-                <div className="partner-cat">{p.category || 'Technology Partner'}</div>
-              </div>
-            ))}
+            {displayPartners.map((p, idx) => {
+              const logo = partnerLogos[p.name];
+
+              return (
+                <div key={idx} className="glass-card partner-card">
+                  <div className="partner-name">
+                    {logo ? (
+                      <img
+                        src={logo}
+                        alt={`${p.name} logo`}
+                        style={{
+                          width: '100%',
+                          maxWidth: '180px',
+                          height: '60px',
+                          objectFit: 'contain'
+                        }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextElementSibling.style.display = 'block';
+                        }}
+                      />
+                    ) : null}
+
+                    <span style={{ display: logo ? 'none' : 'block' }}>
+                      {p.name}
+                    </span>
+
+                    {logo && (
+                      <span style={{ display: 'none' }}>
+                        {p.name}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="partner-cat">
+                    {p.category || 'Technology Partner'}
+                  </div>
+                </div>
+              );
+            })}
           </div>
+
           <div className="text-center mt-6">
             <span className="text-muted text-sm italic">
               And many more top-notch international equipment brands...
@@ -193,6 +238,11 @@ export default function PartnersClients({ partners, clients }) {
               <Building2 size={14} />
               <span>Proven Track Record</span>
             </div>
+
+            <h2 className="section-heading">
+              Our Esteemed <span className="gradient-text-cyan">Client Segment</span>
+            </h2>
+
             <p className="section-desc">
               Trusted by multinational pharmaceutical formulation hubs, FMCG manufacturing facilities, and premier institutions across India.
             </p>
@@ -208,6 +258,7 @@ export default function PartnersClients({ partners, clients }) {
               </div>
             </div>
 
+
             {/* Responsive 4-column authentic logo grid */}
             <div className="client-logo-gallery-grid">
               {displayClients.map((client, idx) => (
@@ -215,23 +266,22 @@ export default function PartnersClients({ partners, clients }) {
                   <div className="client-logo-box">
                     <img
                       src={client.logo}
-                      alt={client.alt}
+                      alt={client.alt || `${client.name} logo`}
                       className="client-logo-img"
                       loading="lazy"
                     />
                   </div>
+
                   <div className="client-meta-box">
                     <h4 className="client-name-title">{client.name}</h4>
-                    {client.sector && <span className="client-sector-text">{client.sector}</span>}
+                    {client.sector && (
+                      <span className="client-sector-text">{client.sector}</span>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Closing text from Image 2 */}
-            <div className="client-gallery-footer">
-              <p className="client-closing-text">And many more satisfied clients...</p>
-            </div>
           </div>
 
           {/* Trust Banner */}
@@ -239,14 +289,18 @@ export default function PartnersClients({ partners, clients }) {
             <div className="trust-icon-box">
               <Shield size={28} className="text-cyan" />
             </div>
+
             <div className="trust-text-box">
               <h4>Zero-Tolerance Quality for Regulated Facilities</h4>
               <p>
                 From cleanroom door interlocking in sterile pharmaceutical environments to turnkey fire hydrant installations, satisfied clients are our greatest testament.
               </p>
             </div>
+
             <div className="trust-badge">
-              <span className="badge-pill badge-emerald">100% Audit Ready</span>
+              <span className="badge-pill badge-emerald">
+                100% Audit Ready
+              </span>
             </div>
           </div>
         </div>
