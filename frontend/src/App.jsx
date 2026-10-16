@@ -9,6 +9,7 @@ import ProductModal from './components/ProductModal';
 import DoorInterlockSimulator from './components/DoorInterlockSimulator';
 import PartnersClients from './components/PartnersClients';
 import BlogsSection from './components/BlogsSection';
+import InsightsAndQuote from './components/InsightsAndQuote';
 import ClientsPage from './components/ClientsPage';
 import AboutUs from './components/AboutUs';
 import ContactInquiry from './components/ContactInquiry';
@@ -386,32 +387,23 @@ export default function App() {
               onQuickQuote={handleQuickQuote}
             />
 
-            {/* Interactive Cleanroom Interlock Simulator */}
+            {/* Door Interlock Logic Simulator & Why Choose HTI */}
             <DoorInterlockSimulator
               onInquireInterlock={(name) => handleQuickQuote(name, 'Automation')}
             />
 
-            {/* Technology Partners & Clients */}
+            {/* Global Technology Partners & Our Esteemed Clients */}
             <PartnersClients 
               partners={partners} 
               clients={clients} 
               onViewAllClients={() => navigateTo('clients')}
+              onNavigate={navigateTo}
             />
 
-            {/* Technical Blogs & Industry Insights */}
-            <BlogsSection 
-              blogs={blogs} 
-              onViewAllBlogs={() => navigateTo('blogs')}
-            />
-
-            {/* Corporate Heritage & Core Values */}
-            <AboutUs onViewFullAbout={() => navigateTo('about')} />
-
-            {/* Quote Request Form & Mumbai Contact */}
-            <ContactInquiry
-              selectedProduct={prefilledProduct}
-              selectedCategory={prefilledCategory}
+            {/* Engineering Insights & Case Studies AND Request a Technical Proposal / Quote */}
+            <InsightsAndQuote
               onInquirySubmitted={handleInquirySubmitted}
+              onNavigate={navigateTo}
             />
           </>
         )}

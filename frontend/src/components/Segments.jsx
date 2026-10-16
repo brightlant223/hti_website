@@ -2,122 +2,119 @@ import React from 'react';
 import { Cpu, ShieldCheck, Sparkles, ArrowRight, Check } from 'lucide-react';
 
 export default function Segments({ onSelectSegment }) {
-  const segmentsData = [
+  const pillars = [
     {
       id: 'Automation',
       title: 'Automation Solutions',
-      tagline: 'Precision access, high-speed industrial gates & logistics handling',
+      subtitle: 'Precision access, high-speed industrial gates & logistics handling systems.',
       icon: Cpu,
-      accentClass: 'segment-card-red',
-      badge: 'Industrial Automation',
+      iconColor: '#0284c7',
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
       items: [
-        'Automatic Sliding & Swing Doors',
-        'Automatic Sliding & Swing Gates',
-        'Telescopic & Cantilever Trackless Gates',
-        'Fire Rated Doors & Fire Rated Shutters',
-        'High Speed Roll Up & Sectional Overhead Doors',
-        'Boom Barriers (Electromechanical / Hydraulic)',
+        'Automatic Doors, Gates & Barriers',
+        'High Speed & Sectional Doors',
         'Dock Levellers & Dock Shelters',
-        'Turnstiles, Flap Barriers & Speed Gates',
-        'Motorized Rolling Shutters',
-        'Bollards, Tyre Killers & Car Lifts',
-        'Chiller Doors & Clean Room Doors',
-        'Sound Proof Acoustic Doors',
-        'Fire Hydrant & Sprinkler Networks'
+        'Turnstiles, Flap Barriers & Car Lifts',
+        'Industrial Doors & Rolling Shutters'
       ],
-      description: 'Engineered for high-throughput traffic control, energy retention, and perimeter security across corporate campuses, manufacturing bays, and logistics warehouses.'
+      linkText: 'Explore Automation Products'
     },
     {
       id: 'Security System',
       title: 'Security & Life Safety Systems',
-      tagline: 'Pharma cleanroom interlocks, turnkey fire protection & intelligent surveillance',
+      subtitle: 'Maintain safety, secure and compliant facilities with integrated security & fire solutions.',
       icon: ShieldCheck,
-      accentClass: 'segment-card-cyan',
-      badge: 'Life Safety & Control',
+      iconColor: '#0284c7',
+      image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80',
       items: [
-        'CCTV Surveillance Systems (Analogue & IP 4K)',
-        'Biometric Access Control & Time Attendance',
-        'Door Interlock Systems (Flameproof & Non-Flameproof)',
-        'Pass Box Systems (Flameproof & Non-Flameproof)',
-        'Fire Alarm Systems (Conventional & Addressable)',
-        'Gas Detection Systems (Toxic, Combustible & VOC)',
-        'Digital Clocks (Flameproof & Non-Flameproof GPS Sync)',
-        'Video Door Phones (IP & Non-IP Intercom)',
-        'Public Address (PA) & Voice Evacuation Systems',
-        'Visitor Management & Digital Badging Systems',
-        'Parking Management & Intrusion Alarm Systems',
-        'Fault Alarm & Annunciator Systems',
-        'Server Room Environmental Alert Monitoring'
+        'Access Control & Time Attendance',
+        'CCTV Surveillance (HD & IP)',
+        'Fire Alarm System (Conventional/Addressable)',
+        'Fire Fighting & Gas Detection System',
+        'IP PBX & Parking Management'
       ],
-      description: 'Comprehensive defense, life-safety, and audit-grade monitoring systems protecting critical assets, personnel, and compliance in pharmaceutical and industrial setups.'
+      linkText: 'Explore Security Products'
     },
     {
       id: 'Hygiene',
       title: 'Hygiene & Cleanroom Solutions',
-      tagline: 'Touchless washroom automation, air curtains & contamination control',
+      subtitle: 'Touchless and hygienic solutions for clean rooms, healthcare and industrial facilities.',
       icon: Sparkles,
-      accentClass: 'segment-card-emerald',
-      badge: 'Sanitary Engineering',
+      iconColor: '#0d9488',
+      image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80',
       items: [
-        'High Speed Hand Dryers (Single & Double Blower, T.O.P. Protected)',
-        'Industrial Air Curtains (Flameproof & Thermo-Zone Barrier)',
-        'Solid-Cast Brass Touchless Sensor Taps',
-        'Automatic Concealed & Exposed Urinal Flush Valves',
-        'Touchless Liquid Soap & Sanitizer Dispensers',
-        'Lockable Automatic Roll Tissue Dispensers',
-        'Heavy-Duty Two-Brush Automatic Shoe Shine Machines',
-        'UV Stabilized 3mm Grade A+ Transparent PVC Strip Curtains'
+        'Hand Dryers, Air Curtains & Air Barrier',
+        'Auto Taps & Urinal Flush',
+        'Liquid Soap & Aerosol Dispenser',
+        'PVC Strip Curtains & Insect Killers',
+        'Automatic Shoe Cover Dispenser'
       ],
-      description: 'Preventing cross-contamination and reducing operational utility costs with sensor-driven water, air, and surface sanitary technology.'
+      linkText: 'Explore Hygiene Products'
     }
   ];
 
   return (
-    <section id="segments" className="section segments-section">
+    <section id="capabilities" className="capabilities-section">
       <div className="container">
-        <div className="section-title-wrap">
-          <div className="section-tag">Core Capabilities</div>
-          <h2 className="section-heading">
-            Three Pillars of <span className="gradient-text-red">Engineering</span> Excellence
+        {/* Section Header with Pill Badge */}
+        <div className="section-header-center">
+          <div className="pill-badge-blue">OUR CAPABILITIES</div>
+          <h2 className="section-title-large">
+            Three Pillars of <span className="title-highlight-blue">Engineering</span> Excellence
           </h2>
-          <p className="section-desc">
-            Explore our specialized domain divisions catering to commercial conglomerates, pharmaceuticals, healthcare, and industrial infrastructure.
+          <p className="section-subtitle-center">
+            Explore our specialized domain divisions catering to commercial, industrial, pharmaceutical, healthcare and infrastructure projects.
           </p>
         </div>
 
-        <div className="segments-grid">
-          {segmentsData.map((segment) => {
-            const Icon = segment.icon;
+        {/* 3 Pillars Grid */}
+        <div className="pillars-grid">
+          {pillars.map((pillar) => {
+            const Icon = pillar.icon;
             return (
-              <div key={segment.id} className={`glass-card segment-card ${segment.accentClass}`}>
-                <div className="segment-header">
-                  <div className="segment-icon-wrap">
-                    <Icon size={28} />
-                  </div>
-                  <span className="badge-pill segment-badge">{segment.badge}</span>
+              <div key={pillar.id} className="pillar-card">
+                {/* Top Image */}
+                <div className="pillar-img-wrap">
+                  <img 
+                    src={pillar.image} 
+                    alt={pillar.title} 
+                    className="pillar-card-img"
+                    loading="lazy"
+                  />
                 </div>
 
-                <h3 className="segment-title">{segment.title}</h3>
-                <p className="segment-tagline">{segment.tagline}</p>
-                <p className="segment-desc">{segment.description}</p>
+                {/* Card Content */}
+                <div className="pillar-card-content">
+                  <div className="pillar-title-row">
+                    <div className="pillar-icon-box" style={{ color: pillar.iconColor }}>
+                      <Icon size={20} />
+                    </div>
+                    <h3 className="pillar-title">{pillar.title}</h3>
+                  </div>
 
-                <div className="segment-list-title">Core Systems Include:</div>
-                <ul className="segment-items-list">
-                  {segment.items.map((item, idx) => (
-                    <li key={idx} className="segment-item">
-                      <Check size={14} className="check-icon" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                  <p className="pillar-subtitle">{pillar.subtitle}</p>
 
-                <button
-                  className="btn-segment-explore"
-                  onClick={() => onSelectSegment(segment.id)}
-                >
-                  <span>Explore {segment.id} Products</span>
-                  <ArrowRight size={16} />
-                </button>
+                  {/* Bullet Points with Checkmarks */}
+                  <ul className="pillar-checklist">
+                    {pillar.items.map((item, idx) => (
+                      <li key={idx} className="pillar-check-item">
+                        <div className="check-bullet-circle">
+                          <Check size={12} />
+                        </div>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Action Link */}
+                  <button 
+                    className="pillar-explore-link"
+                    onClick={() => onSelectSegment(pillar.id)}
+                  >
+                    <span>{pillar.linkText}</span>
+                    <ArrowRight size={15} />
+                  </button>
+                </div>
               </div>
             );
           })}

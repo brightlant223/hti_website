@@ -1,201 +1,196 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Filter, ArrowUpRight, CheckCircle2, SlidersHorizontal, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, Check } from 'lucide-react';
 
 export default function ProductsCatalog({
-  products,
-  loading,
-  selectedCategory,
+  products = [],
+  loading = false,
+  selectedCategory = 'All Products',
   onCategoryChange,
   onSelectProduct,
   onQuickQuote
 }) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [featuredOnly, setFeaturedOnly] = useState(false);
+  const [activeTab, setActiveTab] = useState('All Products');
 
-  const categories = [
-    { id: 'All', label: 'All Products', count: products.length },
-    { id: 'Automation', label: 'Automation', count: products.filter(p => p.category === 'Automation').length },
-    { id: 'Security System', label: 'Security Systems', count: products.filter(p => p.category === 'Security System').length },
-    { id: 'Hygiene', label: 'Hygiene Solutions', count: products.filter(p => p.category === 'Hygiene').length }
+  const filterTabs = [
+    'All Products',
+    'Automation',
+    'Security Systems',
+    'Hygiene Solutions',
+    'Fire & Life Safety',
+    'Cleanroom Solutions'
   ];
 
-  const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
-      const matchesCategory =
-        selectedCategory === 'All' || p.category.toLowerCase() === selectedCategory.toLowerCase();
+  // Curated showcase products matching the 5 cards in the reference image
+  const referenceProducts = [
+    {
+      id: 'prod-1',
+      slug: 'automatic-sliding-swing-doors',
+      name: 'Automatic Sliding Door',
+      category: 'Automation',
+      image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
+      bullets: [
+        'Sensor Operated Operation',
+        'Safe & Reliable',
+        'Suitable for Commercial & Industrial Use'
+      ]
+    },
+    {
+      id: 'prod-2',
+      slug: 'cctv-surveillance-analogue-ip',
+      name: 'CCTV Surveillance System',
+      category: 'Security Systems',
+      image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80',
+      bullets: [
+        'Analogue, HD & IP Solution',
+        'Indoor & Outdoor Cameras',
+        'Remote Monitoring'
+      ]
+    },
+    {
+      id: 'prod-3',
+      slug: 'biometric-access-control-time-attendance',
+      name: 'Access Control System',
+      category: 'Security Systems',
+      image: 'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80',
+      bullets: [
+        'Biometric, RFID, Card Based',
+        'Time Attendance Integration',
+        'Secure Entry Management'
+      ]
+    },
+    {
+      id: 'prod-4',
+      slug: 'fire-alarm-system-conventional-addressable',
+      name: 'Fire Alarm System',
+      category: 'Fire & Life Safety',
+      image: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=600&q=80',
+      bullets: [
+        'Conventional & Addressable',
+        'Detectors & Panels',
+        'Complete FAS Solution'
+      ]
+    },
+    {
+      id: 'prod-5',
+      slug: 'high-speed-hand-dryers-top-protected',
+      name: 'Hand Dryer',
+      category: 'Hygiene Solutions',
+      image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80',
+      bullets: [
+        'Touchless & Hygienic',
+        'Ideal for Clean Rooms',
+        'Energy Efficient'
+      ]
+    }
+  ];
 
-      const matchesSearch =
-        searchTerm === '' ||
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.subcategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (p.tagline && p.tagline.toLowerCase().includes(searchTerm.toLowerCase()));
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+    if (onCategoryChange) {
+      if (tab === 'All Products') onCategoryChange('All');
+      else if (tab === 'Security Systems') onCategoryChange('Security System');
+      else if (tab === 'Hygiene Solutions') onCategoryChange('Hygiene');
+      else onCategoryChange(tab);
+    }
+  };
 
-      const matchesFeatured = !featuredOnly || p.is_featured;
-
-      return matchesCategory && matchesSearch && matchesFeatured;
-    });
-  }, [products, selectedCategory, searchTerm, featuredOnly]);
+  const displayedProducts = activeTab === 'All Products'
+    ? referenceProducts
+    : referenceProducts.filter(p => {
+        if (activeTab === 'Automation') return p.category === 'Automation';
+        if (activeTab === 'Security Systems') return p.category === 'Security Systems';
+        if (activeTab === 'Hygiene Solutions') return p.category === 'Hygiene Solutions';
+        if (activeTab === 'Fire & Life Safety') return p.category === 'Fire & Life Safety';
+        if (activeTab === 'Cleanroom Solutions') return p.category === 'Automation' || p.category === 'Hygiene Solutions';
+        return true;
+      });
 
   return (
-    <section id="catalog" className="section catalog-section">
+    <section id="catalog" className="catalog-section">
       <div className="container">
-        <div className="section-title-wrap">
-          <div className="section-tag">
-            <SlidersHorizontal size={14} />
-            <span>Comprehensive Engineering Portfolio</span>
+        {/* Top Header Row with Title and Right Action Button */}
+        <div className="catalog-header-row">
+          <div className="catalog-header-left">
+            <div className="pill-badge-blue">COMPLETE RANGE</div>
+            <h2 className="section-title-large">
+              Commercial & Industrial <span className="title-highlight-blue">Product Catalog</span>
+            </h2>
+            <p className="catalog-subtitle">
+              Explore our comprehensive range of automation, security and hygiene solutions.
+            </p>
           </div>
-          <h2 className="section-heading">
-            Commercial & Industrial <span className="gradient-text-cyan">Product Catalog</span>
-          </h2>
-          <p className="section-desc">
-            Explore our complete range of certified systems across automation, perimeter control, fire fighting, life safety, and cleanroom hygiene.
-          </p>
+
+          <div className="catalog-header-right">
+            <button 
+              className="btn-view-all-products"
+              onClick={() => onCategoryChange && onCategoryChange('All')}
+            >
+              <span>View All Products</span>
+              <ArrowRight size={15} />
+            </button>
+          </div>
         </div>
 
-        {/* Filter Controls Bar */}
-        <div className="catalog-toolbar glass-card">
-          {/* Category Tabs */}
-          <div className="category-tabs">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                className={`category-tab-btn ${selectedCategory === cat.id ? 'tab-active' : ''}`}
-                onClick={() => onCategoryChange(cat.id)}
-              >
-                <span>{cat.label}</span>
-                <span className="tab-count">{cat.count}</span>
-              </button>
-            ))}
-          </div>
+        {/* Category Filter Pills */}
+        <div className="catalog-filter-bar">
+          {filterTabs.map((tab) => (
+            <button
+              key={tab}
+              className={`filter-pill-btn ${activeTab === tab ? 'pill-active' : ''}`}
+              onClick={() => handleTabClick(tab)}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
 
-          {/* Search & Toggle Box */}
-          <div className="search-filter-box">
-            <div className="search-input-wrap">
-              <Search size={16} className="search-icon" />
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search products, keywords, or specifications..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              {searchTerm && (
-                <button className="clear-search" onClick={() => setSearchTerm('')}>
-                  ×
+        {/* 5-Column Product Cards Grid */}
+        <div className="catalog-products-grid">
+          {displayedProducts.map((prod) => (
+            <div key={prod.id} className="catalog-product-card">
+              {/* Product Image */}
+              <div className="product-thumb-wrap">
+                <img 
+                  src={prod.image} 
+                  alt={prod.name} 
+                  className="product-thumb-img"
+                  loading="lazy"
+                />
+              </div>
+
+              {/* Product Info */}
+              <div className="product-card-body">
+                <h4 className="product-card-name">{prod.name}</h4>
+
+                <ul className="product-card-bullets">
+                  {prod.bullets.map((bullet, idx) => (
+                    <li key={idx} className="product-bullet-item">
+                      <div className="bullet-check-circle">
+                        <Check size={11} />
+                      </div>
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  className="btn-product-details"
+                  onClick={() => {
+                    const match = products.find(p => p.slug === prod.slug || p.name.toLowerCase().includes(prod.name.toLowerCase()));
+                    if (onSelectProduct && match) {
+                      onSelectProduct(match);
+                    } else if (onQuickQuote) {
+                      onQuickQuote(prod.name, prod.category);
+                    }
+                  }}
+                >
+                  <span>View Details</span>
+                  <ArrowRight size={14} />
                 </button>
-              )}
+              </div>
             </div>
-
-            <button
-              className={`featured-filter-btn ${featuredOnly ? 'active' : ''}`}
-              onClick={() => setFeaturedOnly(!featuredOnly)}
-              title="Show only featured showcase items"
-            >
-              <Sparkles size={14} />
-              <span>Featured Only</span>
-            </button>
-          </div>
+          ))}
         </div>
-
-        {/* Catalog Result Counter */}
-        <div className="catalog-status-bar">
-          <span className="showing-text">
-            Showing <strong className="text-white">{filteredProducts.length}</strong> systems in{' '}
-            <strong className="text-cyan">{selectedCategory}</strong>
-          </span>
-          {searchTerm && (
-            <span className="search-tag-pill">
-              Filtered by: "{searchTerm}"
-              <button onClick={() => setSearchTerm('')}>×</button>
-            </span>
-          )}
-        </div>
-
-        {/* Product Grid */}
-        {loading ? (
-          <div className="loading-grid">
-            <div className="loading-spinner"></div>
-            <p>Loading certified technical catalog from SQLite database...</p>
-          </div>
-        ) : filteredProducts.length === 0 ? (
-          <div className="empty-catalog glass-card">
-            <Filter size={40} className="text-dim" />
-            <h3>No products found</h3>
-            <p>We couldn't find any products matching your current search or category filter.</p>
-            <button
-              className="btn-secondary"
-              onClick={() => {
-                setSearchTerm('');
-                onCategoryChange('All');
-                setFeaturedOnly(false);
-              }}
-            >
-              Reset Filters
-            </button>
-          </div>
-        ) : (
-          <div className="products-grid">
-            {filteredProducts.map((product) => {
-              const categoryColorClass =
-                product.category === 'Automation'
-                  ? 'badge-red'
-                  : product.category === 'Hygiene'
-                  ? 'badge-emerald'
-                  : 'badge-cyan';
-
-              return (
-                <div key={product.id} className="glass-card product-card">
-                  <div className="product-card-top">
-                    <span className={`badge-pill ${categoryColorClass}`}>
-                      {product.category}
-                    </span>
-                    {product.badge && (
-                      <span className="badge-pill badge-amber">
-                        {product.badge}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="product-subcat">{product.subcategory}</div>
-                  <h3 className="product-title">{product.name}</h3>
-                  <p className="product-tagline">{product.tagline}</p>
-                  <p className="product-description">{product.description}</p>
-
-                  {/* Highlights */}
-                  {product.features && product.features.length > 0 && (
-                    <div className="product-features-preview">
-                      {product.features.slice(0, 3).map((feat, idx) => (
-                        <div key={idx} className="feature-mini-item">
-                          <CheckCircle2 size={13} className="text-cyan flex-shrink-0" />
-                          <span className="line-clamp-1">{feat}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Card Actions */}
-                  <div className="product-card-footer">
-                    <button
-                      className="btn-specs"
-                      onClick={() => onSelectProduct(product)}
-                      title="View complete technical specs and applications"
-                    >
-                      <span>Full Technical Specs</span>
-                      <ArrowUpRight size={14} />
-                    </button>
-                    <button
-                      className="btn-card-quote"
-                      onClick={() => onQuickQuote(product.name, product.category)}
-                    >
-                      Inquire Quote
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
       </div>
     </section>
   );

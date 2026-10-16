@@ -240,26 +240,25 @@ export default function Navbar({
 
   return (
     <header className="navbar-wrapper" ref={navRef}>
-      {/* 1. Sleek Top Bar (Brightlant dark aesthetic) */}
+      {/* 1. Sleek Top Bar */}
       <div className="bright-top-bar">
         <div className="bright-container top-bar-inner">
           <div className="top-bar-left">
-            <a href="mailto:hti@htisystems.in" className="top-link">
+            <a href="mailto:info@htisystems.in" className="top-link">
               <Mail size={13} className="top-icon" />
-              <span>hti@htisystems.in</span>
+              <span>info@htisystems.in</span>
             </a>
-            <span className="top-sep"></span>
+            <span className="top-sep">|</span>
             <button 
               className="top-link-btn" 
               onClick={() => handleNavClick('contact')}
             >
-              <MessageSquare size={13} className="top-icon" />
               <span>Contact Us</span>
             </button>
-            <span className="top-sep"></span>
-            <a href="tel:+919892756077" className="top-link">
+            <span className="top-sep">|</span>
+            <a href="tel:+919992756077" className="top-link">
               <Phone size={13} className="top-icon text-red" />
-              <span>+91 9892756077</span>
+              <span>+91 9992756077</span>
             </a>
           </div>
 
