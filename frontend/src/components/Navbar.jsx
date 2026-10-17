@@ -1,41 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Menu, 
-  X, 
-  ChevronDown, 
-  ChevronUp, 
-  ArrowUpRight, 
-  Download, 
-  Sun, 
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Menu,
+  X,
+  ChevronDown,
+  ChevronUp,
+  ArrowUpRight,
+  Download,
+  Sun,
   Moon,
   Monitor,
   Check,
-  Settings, 
-  Cpu, 
-  Lock, 
-  ShieldCheck, 
-  Flame, 
-  Sparkles, 
-  Activity, 
-  CheckCircle2, 
-  Building2, 
-  Users, 
+  Settings,
+  Cpu,
+  Lock,
+  ShieldCheck,
+  Flame,
+  Sparkles,
+  Activity,
+  CheckCircle2,
+  Building2,
+  Users,
   User,
-  Handshake, 
-  BookOpen, 
-  PhoneCall, 
+  Handshake,
+  BookOpen,
+  PhoneCall,
   ArrowRight,
   ExternalLink,
   MessageSquare
 } from 'lucide-react';
 
-export default function Navbar({ 
-  currentPage = 'home', 
-  onNavigate, 
-  onOpenAdmin, 
+export default function Navbar({
+  currentPage = 'home',
+  onNavigate,
+  onOpenAdmin,
   isAdminOpen = false,
   inquiryCount = 0,
   onSelectCategory,
@@ -252,8 +252,8 @@ export default function Navbar({
 
   return (
     <header className="navbar-wrapper" ref={navRef}>
-      {/* 1. Sleek Top Bar */}
-      <div className="bright-top-bar">
+      {/* 1. Sleek Top Bar (Hidden on Mobile) */}
+      <div className="bright-top-bar desktop-only">
         <div className="bright-container top-bar-inner">
           <div className="top-bar-left">
             <a href="mailto:info@htisystems.in" className="top-link">
@@ -261,8 +261,8 @@ export default function Navbar({
               <span>info@htisystems.in</span>
             </a>
             <span className="top-sep">|</span>
-            <button 
-              className="top-link-btn" 
+            <button
+              className="top-link-btn"
               onClick={() => handleNavClick('contact')}
             >
               <span>Contact Us</span>
@@ -296,13 +296,13 @@ export default function Navbar({
             }}
           >
             <div className="hti-logo-container">
-              <img 
-                src="/hti-logo.png" 
-                alt="HTI Systems Logo" 
-                className="hti-logo-img" 
+              <img
+                src="/hti-logo.png"
+                alt="HTI Systems Logo"
+                className="hti-logo-img"
               />
             </div>
-            
+
             <div className="brand-divider-line"></div>
 
             <div className="bright-brand-text">
@@ -383,7 +383,7 @@ export default function Navbar({
           <div className="bright-nav-actions desktop-only">
             {/* Theme / Mode Switcher with Interactive Dropdown */}
             <div className="theme-toggle-container" ref={themeMenuRef}>
-              <button 
+              <button
                 className={`bright-theme-toggle ${themeDropdownOpen ? 'active' : ''} ${resolvedTheme === 'dark' ? 'is-dark' : 'is-light'}`}
                 onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
                 title={`Current theme: ${theme.charAt(0).toUpperCase() + theme.slice(1)} mode (Click to switch)`}
@@ -431,26 +431,13 @@ export default function Navbar({
                     {theme === 'dark' && <Check size={14} className="theme-check-icon" />}
                   </button>
 
-                  <button
-                    className={`theme-menu-item ${theme === 'system' ? 'selected' : ''}`}
-                    onClick={() => {
-                      if (onThemeChange) onThemeChange('system');
-                      setThemeDropdownOpen(false);
-                    }}
-                    role="menuitem"
-                  >
-                    <div className="theme-item-left">
-                      <Monitor size={15} className="monitor-icon" />
-                      <span>System ({resolvedTheme})</span>
-                    </div>
-                    {theme === 'system' && <Check size={14} className="theme-check-icon" />}
-                  </button>
+
                 </div>
               )}
             </div>
 
             {/* Sleek Admin Icon Portal Button */}
-            <button 
+            <button
               className={`bright-admin-icon-btn ${isAdminOpen ? 'admin-active' : ''}`}
               onClick={onOpenAdmin}
               title="Open Admin Portal (CMS & Inquiries)"
@@ -481,7 +468,7 @@ export default function Navbar({
 
         {/* 1. SERVICES MEGA DROPDOWN */}
         {activeDropdown === 'services' && (
-          <div className="bright-horizontal-dropdown bright-mega-horizontal">
+          <div className="bright-horizontal-dropdown bright-mega-horizontal desktop-only">
             <div className="bright-container">
               <div className="mega-header-tag">
                 SERVICES · 6 SPECIALIZED GROUPS
@@ -545,8 +532,8 @@ export default function Navbar({
 
                   <div className="mega-features-grid">
                     {currentGroup.features.map((feat, fIdx) => (
-                      <div 
-                        key={fIdx} 
+                      <div
+                        key={fIdx}
                         className="mega-feature-card"
                         onClick={() => {
                           if (currentGroup.section) {
@@ -588,7 +575,7 @@ export default function Navbar({
                 <span className="mega-footer-text">
                   Every project includes a free consultation, site survey, and project roadmap.
                 </span>
-                <button 
+                <button
                   className="mega-talk-btn"
                   onClick={() => handleNavClick('contact')}
                 >
@@ -602,7 +589,7 @@ export default function Navbar({
 
         {/* 2. PRODUCTS HORIZONTAL DROPDOWN (Direct Link to Each Product's Dedicated Page) */}
         {activeDropdown === 'products' && (
-          <div className="bright-horizontal-dropdown products-mega-dropdown">
+          <div className="bright-horizontal-dropdown products-mega-dropdown desktop-only">
             <div className="bright-container">
               <div className="products-horizontal-grid">
                 {/* Col 1: Access Automation */}
@@ -773,10 +760,10 @@ export default function Navbar({
 
         {/* 3. COMPANY HORIZONTAL DROPDOWN (Dedicated Separate Pages) */}
         {activeDropdown === 'company' && (
-          <div className="bright-horizontal-dropdown">
+          <div className="bright-horizontal-dropdown desktop-only">
             <div className="bright-container">
               <div className="horizontal-columns-grid">
-                <button 
+                <button
                   className="horiz-col-item"
                   onClick={() => handleNavClick('about')}
                 >
@@ -784,7 +771,7 @@ export default function Navbar({
                   <div className="horiz-col-desc">Our story, values & engineering ethos since 2014</div>
                 </button>
 
-                <button 
+                <button
                   className="horiz-col-item"
                   onClick={() => handleNavClick('clients')}
                 >
@@ -792,15 +779,19 @@ export default function Navbar({
                   <div className="horiz-col-desc">100+ prestigious pharma & commercial corporate installations</div>
                 </button>
 
-                <button 
+
+                <button
                   className="horiz-col-item"
-                  onClick={() => handleNavClick('partners')}
+                  onClick={() => handleNavClick('careers')}
                 >
-                  <div className="horiz-col-title">Partners & Alliances</div>
-                  <div className="horiz-col-desc">Global OEM alliances, certifications & technology standards</div>
+                  <div className="horiz-col-title">Careers</div>
+                  <div className="horiz-col-desc">
+                    Explore career opportunities and grow with HTI Automation
+                  </div>
                 </button>
 
-                <button 
+
+                <button
                   className="horiz-col-item"
                   onClick={() => handleNavClick('blogs')}
                 >
@@ -808,7 +799,7 @@ export default function Navbar({
                   <div className="horiz-col-desc">Cleanroom standards, USFDA compliance & engineering notes</div>
                 </button>
 
-                <button 
+                <button
                   className="horiz-col-item"
                   onClick={() => handleNavClick('contact')}
                 >
@@ -907,8 +898,11 @@ export default function Navbar({
                   <button className="mobile-sublink" onClick={() => handleNavClick('clients')}>
                     Our Clients (100+ Pharma & Commercial)
                   </button>
-                  <button className="mobile-sublink" onClick={() => handleNavClick('home', 'partners')}>
-                    Technology Partners
+                  <button
+                    className="mobile-sublink"
+                    onClick={() => handleNavClick('careers')}
+                  >
+                    Careers
                   </button>
                   <button className="mobile-sublink" onClick={() => handleNavClick('home', 'blogs')}>
                     Technical Blogs
@@ -949,13 +943,7 @@ export default function Navbar({
                     <Moon size={14} className="moon-icon" />
                     <span>Dark</span>
                   </button>
-                  <button
-                    className={`mobile-theme-pill ${theme === 'system' ? 'active' : ''}`}
-                    onClick={() => onThemeChange && onThemeChange('system')}
-                  >
-                    <Monitor size={14} />
-                    <span>Auto</span>
-                  </button>
+
                 </div>
               </div>
 

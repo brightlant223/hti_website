@@ -109,7 +109,6 @@ export default function InsightsAndQuote({ onInquirySubmitted, onNavigate }) {
                 <p className="panel-subtitle">
                   Explore industry insights, latest projects and best practices in automation, security and hygiene.
                 </p>
-                <div className="panel-tag-link">All Articles</div>
               </div>
 
               <button 

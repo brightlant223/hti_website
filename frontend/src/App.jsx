@@ -15,6 +15,7 @@ import AboutUs from './components/AboutUs';
 import ContactInquiry from './components/ContactInquiry';
 import AdminPanel from './components/AdminPanel';
 import Footer from './components/Footer';
+import WhatsAppAndChatbot from './components/WhatsAppAndChatbot';
 
 // Dedicated Separate Pages
 import ProductDetailPage from './components/ProductDetailPage';
@@ -23,6 +24,7 @@ import AboutPage from './components/AboutPage';
 import ContactPage from './components/ContactPage';
 import PartnersPage from './components/PartnersPage';
 import BlogsPage from './components/BlogsPage';
+import CareersPage from './components/CareersPage';
 
 // Complete static seed data fallback for resilient offline loading
 import { productsData, getProductBySlug } from './data/productsData';
@@ -72,6 +74,9 @@ const parseUrlRoute = () => {
   }
   if (path === '/blogs' || path === '/blogs/' || hash === '#/blogs') {
     return { page: 'blogs', param: null };
+  }
+  if (path === '/careers' || path === '/careers/' || hash === '#/careers') {
+    return { page: 'careers', param: null };
   }
 
   return { page: 'home', param: null };
@@ -291,7 +296,7 @@ export default function App() {
     if (page === 'product') {
       targetUrl = `/product/${paramOrSection}`;
       targetParam = paramOrSection;
-    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'hygiene', 'clients', 'about', 'contact', 'partners', 'blogs'].includes(page)) {
+    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'hygiene', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
       targetUrl = `/${page}`;
     } else if (page === 'home') {
       targetUrl = '/';
@@ -429,7 +434,12 @@ export default function App() {
           <BlogsPage onNavigate={navigateTo} blogs={blogs} />
         )}
 
-        {/* ROUTE 8: Default Landing Home Page (/) */}
+        {/* ROUTE 8: Dedicated Careers Page (/careers) */}
+        {routeState.page === 'careers' && (
+          <CareersPage onNavigate={navigateTo} />
+        )}
+
+        {/* ROUTE 9: Default Landing Home Page (/) */}
         {routeState.page === 'home' && (
           <>
             {/* Hero Section */}
@@ -497,6 +507,12 @@ export default function App() {
       <Footer 
         onCategoryClick={handleSelectSegment} 
         onNavigate={navigateTo}
+      />
+
+      {/* Floating WhatsApp Quick Connect & AI Chatbot Assistant */}
+      <WhatsAppAndChatbot
+        onNavigate={navigateTo}
+        onQuoteClick={scrollToContact}
       />
     </div>
   );
