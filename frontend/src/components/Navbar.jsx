@@ -509,13 +509,6 @@ export default function Navbar({
             <span className="top-sep">|</span>
             <button 
               className="top-link-btn" 
-              onClick={() => handleNavClick('about')}
-            >
-              <span>About Us</span>
-            </button>
-            <span className="top-sep">|</span>
-            <button 
-              className="top-link-btn" 
               onClick={() => handleNavClick('contact')}
             >
               <span>Contact Us</span>
@@ -570,16 +563,7 @@ export default function Navbar({
           </a>
 
           {/* Desktop Nav Items */}
-          {/* Desktop Nav Items */}
           <div className="bright-nav-links desktop-only">
-            {/* Direct About Us link matching user request */}
-            <button
-              className={`bright-nav-btn ${currentPage === 'about' ? 'services-pill-btn is-active-pill' : ''}`}
-              onClick={() => handleNavClick('about')}
-            >
-              <span>About Us</span>
-            </button>
-
             {/* Services Pill / Dropdown */}
             <div 
               className="nav-item-dropdown"
