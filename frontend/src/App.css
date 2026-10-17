@@ -8802,14 +8802,13 @@
 .auto-card-btn-row {
   display: flex;
   align-items: center;
-  gap: 7px;
   margin-top: auto;
   padding-top: 12px;
   border-top: 1px solid #f1f5f9;
 }
 
 .auto-btn-view-details {
-  flex: 1;
+  width: 100%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -8818,15 +8817,17 @@
   color: #ffffff;
   border: none;
   border-radius: 8px;
-  padding: 7px 11px;
-  font-size: 0.76rem;
+  padding: 8px 14px;
+  font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.18s ease;
+  transition: all 0.18s ease;
 }
 
 .auto-btn-view-details:hover {
   background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.20);
 }
 
 .auto-btn-brochure {

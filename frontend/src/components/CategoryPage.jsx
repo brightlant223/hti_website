@@ -882,7 +882,7 @@ export default function CategoryPage({
                         ))}
                       </ul>
 
-                      {/* Action Buttons */}
+                      {/* Action Button */}
                       <div className="auto-card-btn-row">
                         <button 
                           className="auto-btn-view-details"
@@ -893,15 +893,6 @@ export default function CategoryPage({
                         >
                           <span>View Details</span>
                           <ArrowRight size={13} />
-                        </button>
-
-                        <button 
-                          className="auto-btn-brochure"
-                          onClick={() => handleBrochureDownload(service)}
-                          title={`Download ${service.title} Brochure`}
-                        >
-                          <Download size={13} />
-                          <span>Brochure</span>
                         </button>
                       </div>
                     </div>
@@ -1249,7 +1240,7 @@ export default function CategoryPage({
                         ))}
                       </ul>
 
-                      {/* Action Buttons */}
+                      {/* Action Button */}
                       <div className="auto-card-btn-row">
                         <button 
                           className="auto-btn-view-details"
@@ -1264,15 +1255,6 @@ export default function CategoryPage({
                         >
                           <span>View Details</span>
                           <ArrowRight size={13} />
-                        </button>
-
-                        <button 
-                          className="auto-btn-brochure"
-                          onClick={() => handleBrochureDownload(service)}
-                          title={`Download ${service.title} Brochure`}
-                        >
-                          <Download size={13} />
-                          <span>Brochure</span>
                         </button>
                       </div>
                     </div>
