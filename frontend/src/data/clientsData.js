@@ -1,6 +1,6 @@
 /**
  * Reusable client portfolio data for HTI Automation
- * 12 authentic clients matching the original company portfolio and Image 2 design
+ * 12 authentic corporate clients with verified industry solutions
  */
 export const clientsData = [
   {
@@ -8,7 +8,9 @@ export const clientsData = [
     num: '01',
     name: 'Glenmark',
     sector: 'Pharmaceuticals & Healthcare',
-    theme: 'red',
+    category: 'pharma',
+    tag: 'Pharma & Biotech',
+    solution: 'Cleanroom Interlocks & Automatic Sliding Doors',
     logo: '/clients/glenmark.png',
     alt: 'Glenmark Pharmaceuticals authentic logo',
     description: 'Multinational pharmaceutical formulation and active ingredient research innovator.'
@@ -17,8 +19,10 @@ export const clientsData = [
     id: 'indoco',
     num: '02',
     name: 'Indoco Remedies',
-    sector: 'Pharmaceuticals',
-    theme: 'cyan',
+    sector: 'Pharmaceuticals & R&D',
+    category: 'pharma',
+    tag: 'USFDA Formulation',
+    solution: 'Airlock Logic Controllers & High-Speed Doors',
     logo: '/clients/indoco.png',
     alt: 'Indoco Remedies Limited authentic logo',
     description: 'Fully integrated pharmaceutical manufacturing facility complying with USFDA standards.'
@@ -28,7 +32,9 @@ export const clientsData = [
     num: '03',
     name: 'Venus Remedies',
     sector: 'Pharmaceuticals & Injectables',
-    theme: 'red',
+    category: 'pharma',
+    tag: 'Sterile Injectables',
+    solution: 'Sterile Area Interlocks & Hermetic Doors',
     logo: '/clients/venus.png',
     alt: 'Venus Remedies authentic logo',
     description: 'Pioneering sterile injectable formulation and antimicrobial research hub.'
@@ -38,7 +44,9 @@ export const clientsData = [
     num: '04',
     name: 'Cadila Pharmaceuticals',
     sector: 'Pharmaceuticals',
-    theme: 'cyan',
+    category: 'pharma',
+    tag: 'Formulation Hub',
+    solution: 'Turnkey Access Control & Rolling Shutters',
     logo: '/clients/cadila.png',
     alt: 'Cadila Pharmaceuticals Limited authentic logo',
     description: 'Large-scale bulk drug and pharmaceutical formulation manufacturing facilities.'
@@ -48,7 +56,9 @@ export const clientsData = [
     num: '05',
     name: 'Shreya Life Sciences',
     sector: 'Pharmaceuticals',
-    theme: 'cyan',
+    category: 'pharma',
+    tag: 'Clinical Medicine',
+    solution: 'Cleanroom Controllers & Sensor Taps',
     logo: '/clients/shreya.png',
     alt: 'Shreya Life Sciences authentic logo',
     description: 'Advanced healthcare formulations in cardiology, diabetes, and clinical medicine.'
@@ -56,9 +66,11 @@ export const clientsData = [
   {
     id: 'pidilite',
     num: '06',
-    name: 'Pidilite',
+    name: 'Pidilite Industries',
     sector: 'Industrial Adhesives & Chemicals',
-    theme: 'red',
+    category: 'industrial',
+    tag: 'Specialty Chemicals',
+    solution: 'Explosion-Proof Motorized Gates & Perimeter Access',
     logo: '/clients/pidilite.png',
     alt: 'Pidilite Industries authentic logo',
     description: 'Market leader in consumer adhesives, specialized polymers, and construction chemicals.'
@@ -68,7 +80,9 @@ export const clientsData = [
     num: '07',
     name: 'P&G (Procter & Gamble)',
     sector: 'Global FMCG & Consumer Goods',
-    theme: 'cyan',
+    category: 'fmcg',
+    tag: 'Global FMCG',
+    solution: 'Air Curtains & Fast Action Roll-Up Doors',
     logo: '/clients/pg.png',
     alt: 'Procter & Gamble (P&G) authentic logo',
     description: 'Global FMCG manufacturer maintaining world-class hygiene and high-throughput automation.'
@@ -77,8 +91,10 @@ export const clientsData = [
     id: 'alkem',
     num: '08',
     name: 'Alkem Laboratories',
-    sector: 'Pharmaceuticals',
-    theme: 'red',
+    sector: 'Pharmaceuticals & Biotech',
+    category: 'pharma',
+    tag: 'Formulation & Biotech',
+    solution: 'Multi-Door Interlocks & Biometric Terminals',
     logo: '/clients/alkem.png',
     alt: 'Alkem Laboratories authentic logo',
     description: 'Premier pharmaceutical formulation, biotech, and nutraceutical development centers.'
@@ -88,7 +104,9 @@ export const clientsData = [
     num: '09',
     name: 'FSC (Future Supply Chain)',
     sector: 'Contract Logistics & Warehousing',
-    theme: 'red',
+    category: 'logistics',
+    tag: 'Automated Logistics',
+    solution: 'Heavy-Duty Sliding Gates & Boom Barriers',
     logo: '/clients/fsc.png',
     alt: 'FSC (Future Supply Chain) authentic logo',
     description: 'Automated high-bay warehousing, distribution hubs, and temperature-controlled logistics.'
@@ -97,8 +115,10 @@ export const clientsData = [
     id: 'iit-bombay',
     num: '10',
     name: 'IIT Bombay',
-    sector: 'Research & Technology',
-    theme: 'cyan',
+    sector: 'Research & Academics',
+    category: 'research',
+    tag: 'Scientific R&D',
+    solution: 'Class 100 Cleanroom Interlocks & Lab Access',
     logo: '/clients/iit-bombay.png',
     alt: 'Indian Institute of Technology Bombay (IIT Bombay) authentic seal logo',
     description: 'Apex academic and scientific research laboratories with advanced cleanroom infrastructure.'
@@ -107,8 +127,10 @@ export const clientsData = [
     id: 'alembic',
     num: '11',
     name: 'Alembic Pharmaceuticals',
-    sector: 'Healthcare (Touching Lives 100+ Years)',
-    theme: 'red',
+    sector: 'Healthcare & Formulations',
+    category: 'pharma',
+    tag: '100+ Years Heritage',
+    solution: 'Touchless Sensor Systems & Fire Doors',
     logo: '/clients/alembic.png',
     alt: 'Alembic Pharmaceuticals authentic logo',
     description: 'Historic healthcare enterprise with over a century of formulation excellence.'
@@ -116,9 +138,11 @@ export const clientsData = [
   {
     id: 'ferrero',
     num: '12',
-    name: 'Ferrero',
-    sector: 'Global Confectionery & Food Manufacturing',
-    theme: 'cyan',
+    name: 'Ferrero Rocher / India',
+    sector: 'Global Confectionery & Food Processing',
+    category: 'fmcg',
+    tag: 'Hygienic Food Processing',
+    solution: 'Hygiene Entry Stations & Fabric Doors',
     logo: '/clients/ferrero.png',
     alt: 'Ferrero authentic logo',
     description: 'Ultra-hygienic confectionery production lines requiring strict climate & particulate barriers.'

@@ -431,20 +431,7 @@ export default function Navbar({
                     {theme === 'dark' && <Check size={14} className="theme-check-icon" />}
                   </button>
 
-                  <button
-                    className={`theme-menu-item ${theme === 'system' ? 'selected' : ''}`}
-                    onClick={() => {
-                      if (onThemeChange) onThemeChange('system');
-                      setThemeDropdownOpen(false);
-                    }}
-                    role="menuitem"
-                  >
-                    <div className="theme-item-left">
-                      <Monitor size={15} className="monitor-icon" />
-                      <span>System ({resolvedTheme})</span>
-                    </div>
-                    {theme === 'system' && <Check size={14} className="theme-check-icon" />}
-                  </button>
+
                 </div>
               )}
             </div>
@@ -949,13 +936,7 @@ export default function Navbar({
                     <Moon size={14} className="moon-icon" />
                     <span>Dark</span>
                   </button>
-                  <button
-                    className={`mobile-theme-pill ${theme === 'system' ? 'active' : ''}`}
-                    onClick={() => onThemeChange && onThemeChange('system')}
-                  >
-                    <Monitor size={14} />
-                    <span>Auto</span>
-                  </button>
+
                 </div>
               </div>
 
