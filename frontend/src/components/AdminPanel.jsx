@@ -207,6 +207,18 @@ export default function AdminPanel({
     }
   }, [isOpen, isAuthenticated, activeTab, inquiryStatusFilter]);
 
+  // Support ESC key to close modal
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && onClose) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   // Derive unique categories dynamically
   const availableCategories = useMemo(() => {
     const cats = new Set(['Automation', 'Security', 'Engineering', 'Cleanroom']);
@@ -832,17 +844,17 @@ export default function AdminPanel({
 
           <div className="login-security-footer">
             <div className="login-security-tag">
-              <Shield size={12} className="text-cyan" />
+              <Shield size={13} className="text-cyan" />
               <span>256-Bit SSL</span>
             </div>
-            <span>•</span>
+            <span className="security-dot">•</span>
             <div className="login-security-tag">
-              <Database size={12} className="text-emerald" />
+              <Database size={13} className="text-emerald" />
               <span>SQLite Live v3.42</span>
             </div>
-            <span>•</span>
+            <span className="security-dot">•</span>
             <div className="login-security-tag">
-              <CheckCircle2 size={12} className="text-muted" />
+              <CheckCircle2 size={13} className="text-muted" />
               <span>Zero Trust Policy</span>
             </div>
           </div>
@@ -931,16 +943,19 @@ export default function AdminPanel({
           {/* Sidebar Telemetry Info */}
           <div className="sidebar-telemetry-box">
             <div className="telemetry-row">
-              <span>Database Engine:</span>
+              <span className="telemetry-label">Database Engine</span>
               <span className="telemetry-val">SQLite 3.42</span>
             </div>
             <div className="telemetry-row">
-              <span>Sync Latency:</span>
-              <span className="telemetry-val">4ms Live</span>
+              <span className="telemetry-label">Sync Latency</span>
+              <span className="telemetry-val telemetry-val-live">
+                <span className="telemetry-live-dot" />
+                4ms Live
+              </span>
             </div>
             <div className="telemetry-row">
-              <span>Cleanroom Gateway:</span>
-              <span className="text-emerald font-semibold">Active</span>
+              <span className="telemetry-label">Cleanroom Gateway</span>
+              <span className="telemetry-badge-active">Active</span>
             </div>
           </div>
 

@@ -103,6 +103,68 @@ export default function App() {
 
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
+  // Theme management ('light' | 'dark' | 'system')
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('hti_theme') || 'light';
+  });
+
+  const [resolvedTheme, setResolvedTheme] = useState(() => {
+    const saved = localStorage.getItem('hti_theme') || 'light';
+    if (saved === 'system') {
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return saved;
+  });
+
+  useEffect(() => {
+    const applyTheme = (themeName) => {
+      let resolved = themeName;
+      if (themeName === 'system') {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        resolved = prefersDark ? 'dark' : 'light';
+      }
+      setResolvedTheme(resolved);
+      document.documentElement.setAttribute('data-theme', resolved);
+      if (resolved === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      localStorage.setItem('hti_theme', themeName);
+    };
+
+    applyTheme(theme);
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemChange = (e) => {
+      if (theme === 'system') {
+        const resolved = e.matches ? 'dark' : 'light';
+        setResolvedTheme(resolved);
+        document.documentElement.setAttribute('data-theme', resolved);
+        if (resolved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    };
+
+    // Listen for tab sync
+    const handleStorageChange = (e) => {
+      if (e.key === 'hti_theme' && e.newValue) {
+        setTheme(e.newValue);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleSystemChange);
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleSystemChange);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [theme]);
+
   // Sync state with browser back/forward buttons
   useEffect(() => {
     const handlePopState = () => {
@@ -308,9 +370,13 @@ export default function App() {
       <Navbar
         currentPage={routeState.page}
         onNavigate={navigateTo}
-        onOpenAdmin={() => setIsAdminOpen(false) /* or true */}
+        onOpenAdmin={() => setIsAdminOpen(true)}
+        isAdminOpen={isAdminOpen}
         inquiryCount={inquiryCount}
         onSelectCategory={handleSelectSegment}
+        theme={theme}
+        resolvedTheme={resolvedTheme}
+        onThemeChange={setTheme}
       />
 
       <main>

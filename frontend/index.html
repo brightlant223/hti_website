@@ -7,9 +7,25 @@
     <title>HTI Automation & Security Systems Pvt. Ltd. | Official Corporate Portal</title>
     <meta name="description" content="Leading provider of industrial automation, fire fighting & alarm systems, CCTV surveillance, cleanroom door interlocks, and hygiene equipment since 2014 in Mumbai, India." />
     <meta name="keywords" content="HTI Automation, Security Systems Mumbai, Clean Room Door Interlock, Fire Hydrant Systems, Automatic Sliding Doors, Biometric Access, Air Curtains, Mumbai" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('hti_theme') || 'light';
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = saved === 'system' ? (prefersDark ? 'dark' : 'light') : saved;
+          document.documentElement.setAttribute('data-theme', theme);
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

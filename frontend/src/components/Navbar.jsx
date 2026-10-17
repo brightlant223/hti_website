@@ -10,6 +10,9 @@ import {
   ArrowUpRight, 
   Download, 
   Sun, 
+  Moon,
+  Monitor,
+  Check,
   Settings, 
   Cpu, 
   Lock, 
@@ -33,17 +36,22 @@ export default function Navbar({
   currentPage = 'home', 
   onNavigate, 
   onOpenAdmin, 
+  isAdminOpen = false,
   inquiryCount = 0,
-  onSelectCategory 
+  onSelectCategory,
+  theme = 'light',
+  resolvedTheme = 'light',
+  onThemeChange
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'services' | 'products' | 'company' | null
   const [selectedServiceGroup, setSelectedServiceGroup] = useState(0);
-  const [isThemeDark, setIsThemeDark] = useState(false);
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [mobileAccordion, setMobileAccordion] = useState(null);
 
   const navRef = useRef(null);
+  const themeMenuRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,6 +67,9 @@ export default function Navbar({
       if (navRef.current && !navRef.current.contains(e.target)) {
         setActiveDropdown(null);
       }
+      if (themeMenuRef.current && !themeMenuRef.current.contains(e.target)) {
+        setThemeDropdownOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -70,6 +81,7 @@ export default function Navbar({
       if (e.key === 'Escape') {
         setActiveDropdown(null);
         setMobileMenuOpen(false);
+        setThemeDropdownOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -367,28 +379,88 @@ export default function Navbar({
           </div>
 
           {/* Right Action Group: Theme Toggle + Consultation CTA */}
+          {/* Right Action Group: Theme Toggle + Admin Portal */}
           <div className="bright-nav-actions desktop-only">
-            {/* Theme / Mode Button (Brightlant Style) */}
-            <button 
-              className="bright-theme-toggle" 
-              onClick={() => setIsThemeDark(!isThemeDark)}
-              title="Toggle view mode"
-              aria-label="Theme mode"
-            >
-              <Sun size={17} className="sun-icon" />
-              <ChevronDown size={12} className="theme-chevron" />
-            </button>
+            {/* Theme / Mode Switcher with Interactive Dropdown */}
+            <div className="theme-toggle-container" ref={themeMenuRef}>
+              <button 
+                className={`bright-theme-toggle ${themeDropdownOpen ? 'active' : ''} ${resolvedTheme === 'dark' ? 'is-dark' : 'is-light'}`}
+                onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
+                title={`Current theme: ${theme.charAt(0).toUpperCase() + theme.slice(1)} mode (Click to switch)`}
+                aria-label="Toggle display theme"
+                aria-expanded={themeDropdownOpen}
+              >
+                {resolvedTheme === 'dark' ? (
+                  <Moon size={16} className="sun-icon moon-icon" />
+                ) : (
+                  <Sun size={16} className="sun-icon" />
+                )}
+                <ChevronDown size={12} className={`theme-chevron ${themeDropdownOpen ? 'rotated' : ''}`} />
+              </button>
+
+              {themeDropdownOpen && (
+                <div className="theme-dropdown-menu" role="menu">
+                  <div className="theme-menu-header">Display Theme</div>
+                  <button
+                    className={`theme-menu-item ${theme === 'light' ? 'selected' : ''}`}
+                    onClick={() => {
+                      if (onThemeChange) onThemeChange('light');
+                      setThemeDropdownOpen(false);
+                    }}
+                    role="menuitem"
+                  >
+                    <div className="theme-item-left">
+                      <Sun size={15} className="sun-icon" />
+                      <span>Light Mode</span>
+                    </div>
+                    {theme === 'light' && <Check size={14} className="theme-check-icon" />}
+                  </button>
+
+                  <button
+                    className={`theme-menu-item ${theme === 'dark' ? 'selected' : ''}`}
+                    onClick={() => {
+                      if (onThemeChange) onThemeChange('dark');
+                      setThemeDropdownOpen(false);
+                    }}
+                    role="menuitem"
+                  >
+                    <div className="theme-item-left">
+                      <Moon size={15} className="moon-icon" />
+                      <span>Dark Mode</span>
+                    </div>
+                    {theme === 'dark' && <Check size={14} className="theme-check-icon" />}
+                  </button>
+
+                  <button
+                    className={`theme-menu-item ${theme === 'system' ? 'selected' : ''}`}
+                    onClick={() => {
+                      if (onThemeChange) onThemeChange('system');
+                      setThemeDropdownOpen(false);
+                    }}
+                    role="menuitem"
+                  >
+                    <div className="theme-item-left">
+                      <Monitor size={15} className="monitor-icon" />
+                      <span>System ({resolvedTheme})</span>
+                    </div>
+                    {theme === 'system' && <Check size={14} className="theme-check-icon" />}
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Sleek Admin Icon Portal Button */}
             <button 
-              className="bright-admin-icon-btn"
+              className={`bright-admin-icon-btn ${isAdminOpen ? 'admin-active' : ''}`}
               onClick={onOpenAdmin}
-              title="Admin Portal (CMS)"
+              title="Open Admin Portal (CMS & Inquiries)"
               aria-label="Admin Portal"
             >
               <User size={18} />
               {inquiryCount > 0 && (
-                <span className="admin-icon-badge">{inquiryCount}</span>
+                <span className="admin-icon-badge" title={`${inquiryCount} active inquiries`}>
+                  {inquiryCount}
+                </span>
               )}
             </button>
           </div>
@@ -859,11 +931,39 @@ export default function Navbar({
 
             {/* Mobile CTAs */}
             <div className="mobile-drawer-footer">
+              {/* Mobile Theme Bar */}
+              <div className="mobile-theme-bar">
+                <span className="mobile-theme-label">Theme Mode</span>
+                <div className="mobile-theme-segments">
+                  <button
+                    className={`mobile-theme-pill ${theme === 'light' ? 'active' : ''}`}
+                    onClick={() => onThemeChange && onThemeChange('light')}
+                  >
+                    <Sun size={14} className="sun-icon" />
+                    <span>Light</span>
+                  </button>
+                  <button
+                    className={`mobile-theme-pill ${theme === 'dark' ? 'active' : ''}`}
+                    onClick={() => onThemeChange && onThemeChange('dark')}
+                  >
+                    <Moon size={14} className="moon-icon" />
+                    <span>Dark</span>
+                  </button>
+                  <button
+                    className={`mobile-theme-pill ${theme === 'system' ? 'active' : ''}`}
+                    onClick={() => onThemeChange && onThemeChange('system')}
+                  >
+                    <Monitor size={14} />
+                    <span>Auto</span>
+                  </button>
+                </div>
+              </div>
+
               <button
                 className="bright-admin-btn w-full justify-center py-3"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  onOpenAdmin();
+                  if (onOpenAdmin) onOpenAdmin();
                 }}
               >
                 <User size={17} />
