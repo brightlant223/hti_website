@@ -15,6 +15,7 @@ import AboutUs from './components/AboutUs';
 import ContactInquiry from './components/ContactInquiry';
 import AdminPanel from './components/AdminPanel';
 import Footer from './components/Footer';
+import WhatsAppAndChatbot from './components/WhatsAppAndChatbot';
 
 // Dedicated Separate Pages
 import ProductDetailPage from './components/ProductDetailPage';
@@ -431,6 +432,12 @@ export default function App() {
       <Footer 
         onCategoryClick={handleSelectSegment} 
         onNavigate={navigateTo}
+      />
+
+      {/* Floating WhatsApp Quick Connect & AI Chatbot Assistant */}
+      <WhatsAppAndChatbot
+        onNavigate={navigateTo}
+        onQuoteClick={scrollToContact}
       />
     </div>
   );

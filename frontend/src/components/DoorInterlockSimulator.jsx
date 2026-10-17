@@ -9,13 +9,23 @@ import {
   Users, 
   Camera, 
   PhoneCall, 
-  Check 
+  Check,
+  ShieldCheck,
+  Sparkles,
+  Award,
+  ArrowUpRight,
+  CheckCircle2,
+  AlertTriangle,
+  Activity,
+  Wind,
+  Radio
 } from 'lucide-react';
 
 export default function DoorInterlockSimulator({ onInquireInterlock }) {
   const [doorAOpen, setDoorAOpen] = useState(false);
   const [doorBOpen, setDoorBOpen] = useState(false);
   const [differentialPressure, setDifferentialPressure] = useState(10);
+  const [isEmergency, setIsEmergency] = useState(false);
   const [terminalLogs, setTerminalLogs] = useState([
     '[10:24:11] Request to open Door A.',
     '[10:24:11] Checking interlock conditions...',
@@ -28,9 +38,17 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
   };
 
   const handleOpenDoorA = () => {
+    if (isEmergency) {
+      setTerminalLogs(prev => [
+        `${getTimeString()} [MANUAL] Emergency override is engaged. Door A status toggled.`,
+        ...prev.slice(0, 3)
+      ]);
+      setDoorAOpen(!doorAOpen);
+      return;
+    }
     if (doorBOpen) {
       setTerminalLogs(prev => [
-        `${getTimeString()} Interlock Interlock Lock Active: Door B is open. Door A access denied!`,
+        `${getTimeString()} [INTERLOCK ACTIVE] Door B is currently open. Door A access denied!`,
         ...prev.slice(0, 3)
       ]);
       return;
@@ -40,23 +58,31 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
     if (newA) {
       setDifferentialPressure(15);
       setTerminalLogs(prev => [
-        `${getTimeString()} Door A opened. Door B magnetic lock energized.`,
-        `${getTimeString()} Differential pressure increased to +15 Pa.`,
+        `${getTimeString()} Door A opened. Door B 600lbs EM-Lock energized.`,
+        `${getTimeString()} Cleanroom differential pressure peaked to +15 Pa.`,
         ...prev.slice(0, 2)
       ]);
     } else {
       setDifferentialPressure(10);
       setTerminalLogs(prev => [
-        `${getTimeString()} Door A closed. Airlock loop restored to standby (+10 Pa).`,
+        `${getTimeString()} Door A closed & hermetically sealed. Airlock restored (+10 Pa).`,
         ...prev.slice(0, 3)
       ]);
     }
   };
 
   const handleOpenDoorB = () => {
+    if (isEmergency) {
+      setTerminalLogs(prev => [
+        `${getTimeString()} [MANUAL] Emergency override is engaged. Door B status toggled.`,
+        ...prev.slice(0, 3)
+      ]);
+      setDoorBOpen(!doorBOpen);
+      return;
+    }
     if (doorAOpen) {
       setTerminalLogs(prev => [
-        `${getTimeString()} Interlock Lock Active: Door A is open. Door B access denied!`,
+        `${getTimeString()} [INTERLOCK ACTIVE] Door A is currently open. Door B access denied!`,
         ...prev.slice(0, 3)
       ]);
       return;
@@ -66,34 +92,70 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
     if (newB) {
       setDifferentialPressure(15);
       setTerminalLogs(prev => [
-        `${getTimeString()} Door B opened. Door A magnetic lock energized.`,
-        `${getTimeString()} Differential pressure increased to +15 Pa.`,
+        `${getTimeString()} Door B opened. Door A 600lbs EM-Lock energized.`,
+        `${getTimeString()} Cleanroom differential pressure peaked to +15 Pa.`,
         ...prev.slice(0, 2)
       ]);
     } else {
       setDifferentialPressure(10);
       setTerminalLogs(prev => [
-        `${getTimeString()} Door B closed. Airlock loop restored to standby (+10 Pa).`,
+        `${getTimeString()} Door B closed & hermetically sealed. Airlock restored (+10 Pa).`,
         ...prev.slice(0, 3)
       ]);
     }
   };
 
+  const handleToggleEmergency = () => {
+    if (!isEmergency) {
+      setIsEmergency(true);
+      setDoorAOpen(true);
+      setDoorBOpen(true);
+      setDifferentialPressure(0);
+      setTerminalLogs(prev => [
+        `${getTimeString()} ⚠️ [PANIC TRIP] Fire / Evacuation Signal Triggered!`,
+        `${getTimeString()} ⚠️ [FAIL-SAFE] All electromagnetic locks released for life safety.`,
+        ...prev.slice(0, 2)
+      ]);
+    } else {
+      setIsEmergency(false);
+      setDoorAOpen(false);
+      setDoorBOpen(false);
+      setDifferentialPressure(10);
+      setTerminalLogs(prev => [
+        `${getTimeString()} [RESTORE] Emergency trip cleared. Logic returned to Standby (+10 Pa).`,
+        ...prev.slice(0, 3)
+      ]);
+    }
+  };
+
+  const handleResetAll = () => {
+    setIsEmergency(false);
+    setDoorAOpen(false);
+    setDoorBOpen(false);
+    setDifferentialPressure(10);
+    setTerminalLogs([
+      `${getTimeString()} Interlock System re-initialized. Standby mode active (+10 Pa).`,
+      `${getTimeString()} Both doors sealed & monitored by HTI Cleanroom Controller.`
+    ]);
+  };
+
   const handleSimulateCycle = () => {
+    setIsEmergency(false);
     setDoorBOpen(false);
     setDoorAOpen(true);
     setDifferentialPressure(15);
     setTerminalLogs([
-      `${getTimeString()} Request to open Door A.`,
-      `${getTimeString()} Checking interlock conditions...`,
-      `${getTimeString()} Door A opened. Other doors locked.`
+      `${getTimeString()} Personnel transit cycle initiated.`,
+      `${getTimeString()} Checking interlock conditions... Door B magnetic lock ENERGIZED.`,
+      `${getTimeString()} Door A opened. Personnel entered airlock chamber.`
     ]);
 
     setTimeout(() => {
       setDoorAOpen(false);
       setDifferentialPressure(10);
       setTerminalLogs(prev => [
-        `${getTimeString()} Door A air cycle complete. Door sealed.`,
+        `${getTimeString()} Door A sealed. UV purge delay complete.`,
+        `${getTimeString()} Door B access authorized. Cleanroom entry permitted.`,
         ...prev.slice(0, 2)
       ]);
     }, 2800);
@@ -103,27 +165,47 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
     {
       icon: Compass,
       title: 'Turnkey Design & Execution',
-      desc: 'End-to-end project management'
+      desc: 'Complete end-to-end site survey, architecture blueprint, installation & commissioning.',
+      badge: 'END-TO-END',
+      color: '#0284c7',
+      bg: 'rgba(2, 132, 199, 0.1)',
+      border: 'rgba(2, 132, 199, 0.25)'
     },
     {
       icon: Shield,
-      title: 'Quality Products',
-      desc: 'Top global brands'
+      title: 'Top Tier Global OEM Brands',
+      desc: 'Tested industrial hardware with heavy-duty duty cycles & rugged zero-downtime motors.',
+      badge: 'CERTIFIED OEM',
+      color: '#e63946',
+      bg: 'rgba(230, 57, 70, 0.1)',
+      border: 'rgba(230, 57, 70, 0.25)'
     },
     {
       icon: Users,
       title: 'Experienced Engineering Team',
-      desc: 'Domain expertise & technical support'
+      desc: 'Deep domain expertise across pharma cleanrooms, multi-tier corporate IT & industrial gates.',
+      badge: '12+ YRS EXP',
+      color: '#059669',
+      bg: 'rgba(5, 150, 105, 0.1)',
+      border: 'rgba(5, 150, 105, 0.25)'
     },
     {
-      icon: Camera,
-      title: 'Compliance Ready',
-      desc: 'USFDA, cGMP, WHO-GMP environments'
+      icon: ShieldCheck,
+      title: 'Strict USFDA & cGMP Compliance',
+      desc: 'Pre-validated 21 CFR Part 11 compliant logic, flameproof Ex-d enclosures & audit documentations.',
+      badge: 'REGULATORY READY',
+      color: '#7c3aed',
+      bg: 'rgba(124, 58, 237, 0.1)',
+      border: 'rgba(124, 58, 237, 0.25)'
     },
     {
       icon: PhoneCall,
-      title: 'After Sales Support',
-      desc: 'Reliable and dedicated service'
+      title: '24/7 Rapid After-Sales SLA Support',
+      desc: 'Prompt on-site emergency call-out, comprehensive AMC contracts & original spare parts support.',
+      badge: '24/7 RAPID SLA',
+      color: '#d97706',
+      bg: 'rgba(217, 119, 6, 0.1)',
+      border: 'rgba(217, 119, 6, 0.25)'
     }
   ];
 
@@ -192,6 +274,97 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
               </div>
             </div>
 
+            {/* Realtime PLC Diagnostics & Air Barrier Telemetry (Fills vertical void with interactive engineering controls) */}
+            <div className="interlock-telemetry-dashboard">
+              <div className="telemetry-header">
+                <div className="telemetry-live-indicator">
+                  <span className="telemetry-ping-dot"></span>
+                  <span className="telemetry-tag">REALTIME PLC LOGIC & PRESSURE TELEMETRY</span>
+                </div>
+                <div className="telemetry-mode-badge">
+                  <Activity size={12} />
+                  <span>21 CFR PART 11 READY</span>
+                </div>
+              </div>
+
+              <div className="telemetry-metrics-grid">
+                <div className="telemetry-metric-item">
+                  <div className="metric-icon-wrap text-blue">
+                    <Wind size={16} />
+                  </div>
+                  <div className="metric-data">
+                    <span className="metric-val">{differentialPressure > 0 ? `+${differentialPressure} Pa` : '0 Pa (Neutral)'}</span>
+                    <span className="metric-label">Cascade Differential</span>
+                  </div>
+                  <div className={`metric-status-pill ${differentialPressure > 10 ? 'status-peak' : 'status-nominal'}`}>
+                    {differentialPressure > 10 ? 'Peak Pressure' : 'Nominal Barrier'}
+                  </div>
+                </div>
+
+                <div className="telemetry-metric-item">
+                  <div className="metric-icon-wrap text-emerald">
+                    <Radio size={16} />
+                  </div>
+                  <div className="metric-data">
+                    <span className="metric-val">{isEmergency ? 'DE-ENERGIZED' : (doorAOpen || doorBOpen ? 'ACTIVE (600 LBS)' : 'STANDBY')}</span>
+                    <span className="metric-label">Magnetic Interlock</span>
+                  </div>
+                  <div className={`metric-status-pill ${isEmergency ? 'status-alarm' : (doorAOpen || doorBOpen ? 'status-locked' : 'status-ready')}`}>
+                    {isEmergency ? 'Fire Override' : (doorAOpen || doorBOpen ? 'Airlock Sealed' : 'Armed & Ready')}
+                  </div>
+                </div>
+
+                <div className="telemetry-metric-item">
+                  <div className="metric-icon-wrap text-purple">
+                    <ShieldCheck size={16} />
+                  </div>
+                  <div className="metric-data">
+                    <span className="metric-val">ISO Class 5</span>
+                    <span className="metric-label">Cleanroom Compliance</span>
+                  </div>
+                  <div className="metric-status-pill status-cert">
+                    cGMP Grade A/B
+                  </div>
+                </div>
+              </div>
+
+              {/* Dynamic Logic Status Narrative & Emergency Override Toolbar */}
+              <div className="telemetry-control-strip">
+                <div className="telemetry-status-narrative">
+                  <span className="narrative-bullet"></span>
+                  <span className="narrative-text">
+                    {isEmergency 
+                      ? '⚠️ FIRE / PANIC OVERRIDE ACTIVE: All magnetic locks released for emergency life-safety egress.'
+                      : doorAOpen 
+                        ? '🔒 Door A open: Door B magnetic lock ENERGIZED. Differential positive air barrier maintained.'
+                        : doorBOpen 
+                          ? '🔒 Door B open: Door A magnetic lock ENERGIZED. Contamination cascade prevented.'
+                          : '✅ Standby State: Both doors closed & hermetically sealed. Ready for single-person transit.'}
+                  </span>
+                </div>
+
+                <div className="telemetry-action-buttons">
+                  <button 
+                    className={`btn-telemetry-toggle ${isEmergency ? 'btn-active-emergency' : ''}`}
+                    onClick={handleToggleEmergency}
+                    title="Simulate Fire Alarm / Panic Release"
+                  >
+                    <AlertTriangle size={13} />
+                    <span>{isEmergency ? 'Restore System' : 'Fire Alarm Trip'}</span>
+                  </button>
+
+                  <button 
+                    className="btn-telemetry-reset"
+                    onClick={handleResetAll}
+                    title="Reset Simulator to Standby"
+                  >
+                    <RotateCcw size={13} />
+                    <span>Reset</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* Dark Console Terminal Log Box */}
             <div className="terminal-event-box">
               <div className="terminal-lines-col">
@@ -211,7 +384,7 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
           <div className="why-choose-column-card">
             <div className="why-choose-backdrop-wrap">
               <img 
-                src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80" 
+                src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80" 
                 alt="Corporate Architecture" 
                 className="why-backdrop-img"
               />
@@ -219,23 +392,70 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
             </div>
 
             <div className="why-choose-content">
-              <h2 className="why-choose-heading">Why Choose HTI?</h2>
+              <div className="why-header-top">
+                <span className="pill-badge-red">
+                  <Sparkles size={12} className="badge-sparkle-icon" />
+                  THE HTI ADVANTAGE
+                </span>
+                <span className="why-iso-badge">ISO 9001:2015 READY</span>
+              </div>
+
+              <h2 className="section-title-large why-title">
+                Why Choose <span className="title-highlight-red">HTI?</span>
+              </h2>
+              <p className="why-choose-subtitle">
+                Engineered for high-throughput corporate facilities & sterile pharmaceutical cleanrooms.
+              </p>
 
               <div className="why-choose-list">
                 {whyChooseItems.map((item, idx) => {
                   const Icon = item.icon;
                   return (
-                    <div key={idx} className="why-item-row">
-                      <div className="why-icon-bubble">
-                        <Icon size={19} />
+                    <div key={idx} className="why-item-card">
+                      <div 
+                        className="why-icon-bubble" 
+                        style={{ backgroundColor: item.bg, color: item.color, borderColor: item.border }}
+                      >
+                        <Icon size={20} />
                       </div>
                       <div className="why-text-box">
-                        <h4 className="why-item-title">{item.title}</h4>
+                        <div className="why-title-row">
+                          <h4 className="why-item-title">{item.title}</h4>
+                          <span 
+                            className="why-item-badge" 
+                            style={{ color: item.color, backgroundColor: item.bg, borderColor: item.border }}
+                          >
+                            {item.badge}
+                          </span>
+                        </div>
                         <p className="why-item-desc">{item.desc}</p>
                       </div>
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Bottom Interactive Engineering Banner */}
+              <div className="why-bottom-banner">
+                <div className="why-banner-meta">
+                  <div className="why-meta-stat">
+                    <span className="why-stat-number">100+</span>
+                    <span className="why-stat-text">Pharma & Industrial Sites</span>
+                  </div>
+                  <div className="why-meta-sep"></div>
+                  <div className="why-meta-stat">
+                    <span className="why-stat-number">24/7</span>
+                    <span className="why-stat-text">Dedicated SLA Dispatch</span>
+                  </div>
+                </div>
+
+                <button 
+                  className="btn-why-consult"
+                  onClick={() => onInquireInterlock && onInquireInterlock('Free Technical Consultation')}
+                >
+                  <span>Request Engineering Proposal</span>
+                  <ArrowRight size={15} />
+                </button>
               </div>
             </div>
           </div>

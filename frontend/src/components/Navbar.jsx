@@ -240,8 +240,8 @@ export default function Navbar({
 
   return (
     <header className="navbar-wrapper" ref={navRef}>
-      {/* 1. Sleek Top Bar */}
-      <div className="bright-top-bar">
+      {/* 1. Sleek Top Bar (Hidden on Mobile) */}
+      <div className="bright-top-bar desktop-only">
         <div className="bright-container top-bar-inner">
           <div className="top-bar-left">
             <a href="mailto:info@htisystems.in" className="top-link">
@@ -409,7 +409,7 @@ export default function Navbar({
 
         {/* 1. SERVICES MEGA DROPDOWN */}
         {activeDropdown === 'services' && (
-          <div className="bright-horizontal-dropdown bright-mega-horizontal">
+          <div className="bright-horizontal-dropdown bright-mega-horizontal desktop-only">
             <div className="bright-container">
               <div className="mega-header-tag">
                 SERVICES · 6 SPECIALIZED GROUPS
@@ -530,7 +530,7 @@ export default function Navbar({
 
         {/* 2. PRODUCTS HORIZONTAL DROPDOWN (Direct Link to Each Product's Dedicated Page) */}
         {activeDropdown === 'products' && (
-          <div className="bright-horizontal-dropdown products-mega-dropdown">
+          <div className="bright-horizontal-dropdown products-mega-dropdown desktop-only">
             <div className="bright-container">
               <div className="products-horizontal-grid">
                 {/* Col 1: Access Automation */}
@@ -701,7 +701,7 @@ export default function Navbar({
 
         {/* 3. COMPANY HORIZONTAL DROPDOWN (Dedicated Separate Pages) */}
         {activeDropdown === 'company' && (
-          <div className="bright-horizontal-dropdown">
+          <div className="bright-horizontal-dropdown desktop-only">
             <div className="bright-container">
               <div className="horizontal-columns-grid">
                 <button 
