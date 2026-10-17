@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  ArrowLeft, Search, Filter, ShieldCheck, ArrowRight, 
+import {
+  ArrowLeft, Search, Filter, ShieldCheck, ArrowRight,
   Send, Sparkles, Cpu, Layers, Flame, Lock, CheckCircle2,
   PhoneCall, FileText, Check, ChevronDown, ChevronUp, Wrench,
   Clock, Award, HelpCircle, CheckSquare, Factory, Building2,
-  SlidersHorizontal, Play, Truck, Plane, Download, X
+  SlidersHorizontal, Play, Truck, Plane, Download, X, Activity
 } from 'lucide-react';
 import { getProductsByCategory } from '../data/productsData';
 
@@ -362,10 +362,241 @@ const CLEANROOM_FILTER_CATEGORIES = [
   'Flameproof Ex-d'
 ];
 
-export default function CategoryPage({ 
-  categoryKey, 
-  onNavigate, 
-  onQuickQuote 
+// PERIMETER DEFENSE & TRAFFIC CONTROL SERVICES
+const PERIMETER_SERVICES = [
+  {
+    num: '01',
+    id: 1,
+    slug: 'boom-barriers',
+    title: 'Automatic Boom Barriers',
+    categoryBadge: 'Vehicle Access',
+    categoryFilters: ['All', 'Vehicle Access', 'High Speed', 'Heavy Duty'],
+    description: 'High-frequency electromechanical and hydraulic barriers engineered for continuous toll and parking gates.',
+    features: [
+      'Brushless DC & hydraulic 100% duty motor',
+      'Rapid 1.5s to 6s opening traversal',
+      'Integrated LED boom arm lighting & loop safety sensors'
+    ],
+    image: '/services/service-boom-barrier.jpg',
+    brochure: true
+  },
+  {
+    num: '02',
+    id: 2,
+    slug: 'bollards-tyre-killers-car-lifts',
+    title: 'Tyre Killers & Crash Bollards',
+    categoryBadge: 'Perimeter Defense',
+    categoryFilters: ['All', 'Perimeter Defense', 'Crash Rated', 'Heavy Duty'],
+    description: 'Crash-rated rising hydraulic bollards and heavy-duty spike tyre killers preventing unauthorized vehicular intrusion.',
+    features: [
+      'K4 / K8 / K12 anti-ram crash rating',
+      'Emergency Fast Operation (EFO) under 1.5s',
+      'Bidirectional hardened alloy tyre spikes'
+    ],
+    image: '/services/service-bollards-blockers.jpg',
+    brochure: true
+  },
+  {
+    num: '03',
+    id: 3,
+    slug: 'turnstiles-flap-barriers-speed-gates',
+    title: 'Optical Turnstiles & Speed Gates',
+    categoryBadge: 'Pedestrian Control',
+    categoryFilters: ['All', 'Pedestrian Control', 'Biometric Access', 'High Speed'],
+    description: 'Architectural pedestrian flap barriers and optical swing speed gates regulating high-throughput personnel movement.',
+    features: [
+      'High throughput up to 45 persons/min',
+      'Infrared anti-tailgating sensor array',
+      'Brushed SUS304 stainless steel cabinet'
+    ],
+    image: '/hero-glass-atrium.jpg',
+    brochure: true
+  },
+  {
+    num: '04',
+    id: 4,
+    slug: 'parking-intrusion-alarms',
+    title: 'Parking Management Systems',
+    categoryBadge: 'Traffic Management',
+    categoryFilters: ['All', 'Traffic Management', 'Vehicle Access', 'Smart Controls'],
+    description: 'Automated FASTag RFID guidance, ticket dispensers, barrier integration, and ultrasonic parking bay occupancy sensors.',
+    features: [
+      'FASTag & Long-Range UHF RFID integration',
+      'Ultrasonic bay occupancy LED indicators',
+      'Central revenue tracking & ticket billing'
+    ],
+    image: '/services/services-hero-access.jpg',
+    brochure: true
+  },
+  {
+    num: '05',
+    id: 5,
+    slug: 'bollards-tyre-killers-car-lifts',
+    title: 'Car Lift Systems',
+    categoryBadge: 'Vehicle Stacking',
+    categoryFilters: ['All', 'Vehicle Stacking', 'Heavy Duty', 'Custom Solutions'],
+    description: 'Heavy hydraulic multi-level scissor and cantilever vehicle elevators optimizing parking density in restricted spaces.',
+    features: [
+      '3,000 kg to 5,000 kg load capacity platform',
+      'Dual hydraulic lock valves & anti-drop safety',
+      'Smooth micro-leveling & compact footprint'
+    ],
+    image: '/services/services-trackless-gate.jpg',
+    brochure: true
+  },
+  {
+    num: '06',
+    id: 6,
+    slug: 'visitor-management-system',
+    title: 'Visitor Management Systems',
+    categoryBadge: 'Access Control',
+    categoryFilters: ['All', 'Access Control', 'Pedestrian Control', 'Smart Controls'],
+    description: 'Digital paperless visitor registration kiosks with dynamic QR badge printing, host alerts, and speed gate sync.',
+    features: [
+      'Self-service tablet kiosks & thermal badge print',
+      'Instant SMS / WhatsApp host notifications',
+      'Single-trip QR integration with turnstiles'
+    ],
+    image: '/hero-security-command-center.jpg',
+    brochure: true
+  }
+];
+
+const PERIMETER_FILTER_CATEGORIES = [
+  'All',
+  'Vehicle Access',
+  'Perimeter Defense',
+  'Pedestrian Control',
+  'Traffic Management',
+  'Vehicle Stacking',
+  'Access Control',
+  'Crash Rated',
+  'Heavy Duty',
+  'High Speed',
+  'Smart Controls',
+  'Custom Solutions'
+];
+
+// FIRE PROTECTION & LIFE SAFETY SERVICES
+const FIRE_SERVICES = [
+  {
+    num: '01',
+    id: 1,
+    slug: 'fire-alarm-system',
+    title: 'Addressable Fire Alarm Systems',
+    categoryBadge: 'Detection & Alarm',
+    categoryFilters: ['All', 'Detection & Alarm', 'Life Safety', 'Turnkey Arrays'],
+    description: 'Multi-zone micro-processed addressable fire alarm panels, optical smoke detectors, and thermal sensors with intelligent loop topology.',
+    features: [
+      '1 to 8 loop addressable multi-sensor network',
+      'Automatic AHU shutdown & lock release relays',
+      'UL Listed, EN 54 & NBC 2016 Part 4 compliant'
+    ],
+    image: '/services/service-fire-alarm.jpg',
+    brochure: true
+  },
+  {
+    num: '02',
+    id: 2,
+    slug: 'fire-hydrant-sprinkler-systems',
+    title: 'Fire Hydrant & Sprinkler Arrays',
+    categoryBadge: 'Fire Suppression',
+    categoryFilters: ['All', 'Fire Suppression', 'Industrial Protection', 'Turnkey Arrays'],
+    description: 'Complete industrial fire fighting networks featuring high-pressure hydrant landing valves, wet pipe sprinkler grids, and pump skids.',
+    features: [
+      'Main electric, diesel engine & jockey pump skids',
+      'Quick-response glass bulb sprinkler heads (UL/FM)',
+      'Heavy-duty ERW mild steel red enamel piping'
+    ],
+    image: '/case-studies/case-fire-hydrant.jpg',
+    brochure: true
+  },
+  {
+    num: '03',
+    id: 3,
+    slug: 'fire-rated-doors-shutters',
+    title: 'Fire Rated Doors & Shutters',
+    categoryBadge: 'Passive Containment',
+    categoryFilters: ['All', 'Passive Containment', 'Life Safety', 'Heavy Duty'],
+    description: 'Independently tested 120-minute and 240-minute fire containment doors and auto-descent motorized rolling shutters.',
+    features: [
+      'Certified 2-hour & 4-hour fire rating (IS 3614 / BS 476)',
+      'High-density rockwool / ceramic wool insulation',
+      'Gravity-drop fusible link & FACP auto-descent'
+    ],
+    image: '/services/service-fire-doors.jpg',
+    brochure: true
+  },
+  {
+    num: '04',
+    id: 4,
+    slug: 'public-address-system',
+    title: 'Public Address & Voice Evacuation',
+    categoryBadge: 'Emergency Alert',
+    categoryFilters: ['All', 'Emergency Alert', 'Life Safety', 'Smart Controls'],
+    description: 'Zoned emergency audio notification systems, voice alarm broadcast consoles, and industrial high-decibel siren towers.',
+    features: [
+      'Multi-zone voice evacuation with fire panel override',
+      'High-clarity paging microphones & chime generators',
+      'Constant-voltage 70V/100V distributed horn arrays'
+    ],
+    image: '/hero-security-command-center.jpg',
+    brochure: true
+  },
+  {
+    num: '05',
+    id: 5,
+    slug: 'gas-detection-systems',
+    title: 'Gas Leak Detection Systems',
+    categoryBadge: 'Hazard Prevention',
+    categoryFilters: ['All', 'Hazard Prevention', 'Industrial Protection', 'Flameproof Ex-d'],
+    description: 'Continuous gas monitoring transmitters for toxic, combustible LPG/CNG, VOC, and refrigerant leaks with automated exhaust trips.',
+    features: [
+      'Certified Flameproof (Ex-d Group IIA, IIB, IIC) sensor heads',
+      'Pellistor, electrochemical & NDIR infrared sensors',
+      'Direct relay interlocks for emergency exhaust blowers'
+    ],
+    image: '/case-studies/case-ss304-mist.jpg',
+    brochure: true
+  },
+  {
+    num: '06',
+    id: 6,
+    slug: 'door-interlock-systems',
+    title: 'Emergency Auto Trip & Safety Interlocks',
+    categoryBadge: 'Life Safety Interlock',
+    categoryFilters: ['All', 'Life Safety Interlock', 'Life Safety', 'Smart Controls'],
+    description: 'Fail-safe relay integration releasing access doors, tripping AHU dampers, activating fire pumps, and overriding airlocks upon fire alarm trigger.',
+    features: [
+      'Instant fail-safe electromagnetic lock release',
+      'AHU ventilation smoke damper trip contacts',
+      'Illuminated emergency break-glass & strobe beacon'
+    ],
+    image: '/services/service-emergency-trip.jpg',
+    brochure: true
+  }
+];
+
+const FIRE_FILTER_CATEGORIES = [
+  'All',
+  'Detection & Alarm',
+  'Fire Suppression',
+  'Passive Containment',
+  'Emergency Alert',
+  'Hazard Prevention',
+  'Life Safety Interlock',
+  'Life Safety',
+  'Turnkey Arrays',
+  'Industrial Protection',
+  'Flameproof Ex-d',
+  'Smart Controls',
+  'Custom Solutions'
+];
+
+export default function CategoryPage({
+  categoryKey,
+  onNavigate,
+  onQuickQuote
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSubcat, setSelectedSubcat] = useState('All');
@@ -376,6 +607,8 @@ export default function CategoryPage({
 
   const isAutomation = categoryKey?.toLowerCase() === 'automation';
   const isCleanroom = categoryKey?.toLowerCase() === 'cleanroom-interlocks' || categoryKey?.toLowerCase() === 'interlocks';
+  const isPerimeter = categoryKey?.toLowerCase() === 'perimeter-defense' || categoryKey?.toLowerCase() === 'perimeter';
+  const isFire = categoryKey?.toLowerCase() === 'fire-protection' || categoryKey?.toLowerCase() === 'fire' || categoryKey?.toLowerCase() === 'fire-safety';
 
   // Filter 14 Industrial Automation Services
   const filteredAutomationServices = useMemo(() => {
@@ -398,6 +631,42 @@ export default function CategoryPage({
   // Filter 6 Cleanroom Interlocks & Pass Boxes Services
   const filteredCleanroomServices = useMemo(() => {
     return CLEANROOM_SERVICES.filter(service => {
+      const matchSearch = (
+        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      const matchFilter = (
+        activeFilter === 'All' ||
+        service.categoryFilters.includes(activeFilter) ||
+        service.categoryBadge === activeFilter
+      );
+      return matchSearch && matchFilter;
+    });
+  }, [searchQuery, activeFilter]);
+
+  // Filter 6 Perimeter Defense & Traffic Control Services
+  const filteredPerimeterServices = useMemo(() => {
+    return PERIMETER_SERVICES.filter(service => {
+      const matchSearch = (
+        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      const matchFilter = (
+        activeFilter === 'All' ||
+        service.categoryFilters.includes(activeFilter) ||
+        service.categoryBadge === activeFilter
+      );
+      return matchSearch && matchFilter;
+    });
+  }, [searchQuery, activeFilter]);
+
+  // Filter 6 Fire Protection & Life Safety Services
+  const filteredFireServices = useMemo(() => {
+    return FIRE_SERVICES.filter(service => {
       const matchSearch = (
         service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -528,6 +797,79 @@ export default function CategoryPage({
             }
           ]
         };
+      case 'perimeter-defense':
+      case 'perimeter':
+        return {
+          title: 'Perimeter Defense & Traffic Control Systems',
+          categoryName: 'Perimeter Defense',
+          tagline: 'High-frequency boom barriers, crash-rated bollards, tyre killers, optical turnstiles & intelligent parking automation.',
+          icon: ShieldCheck,
+          badgeColor: 'badge-blue',
+          heroGradient: 'hero-gradient-automation',
+          stats: [
+            { label: 'Barriers & Gates Installed', value: '320+' },
+            { label: 'Continuous Duty Rating', value: '100% BLDC' },
+            { label: 'Crash Resistance Standards', value: 'K4 / K12 / PAS 68' },
+            { label: 'Throughput Capacity', value: '45 P/Min' }
+          ],
+          overviewText: 'HTI Perimeter Defense & Traffic Control Directorate delivers heavy-duty physical barriers and intelligent vehicle access solutions. From ultra-fast 1.5-second automated boom barriers and anti-terror crash-rated hydraulic bollards to biometric optical speed gates and automated multi-tier car parking lifts, our systems ensure rigorous boundary protection and frictionless transit flow across corporate IT parks, industrial complexes, toll plazas, and high-security government facilities.',
+          sectors: ['Corporate IT Parks & Campuses', 'Industrial Complexes & Plants', 'Toll Plazas & Logistics Yards', 'Government & Defense Sites', 'Commercial Malls & Basements'],
+          faqs: [
+            {
+              q: 'What makes HTI automatic boom barriers suitable for 24/7 continuous traffic?',
+              a: 'Our boom barriers feature brushless DC (BLDC) motors and heavy-duty planetary gearboxes rated for 100% continuous duty (exceeding 5 million cycles) without thermal overload. They integrate auto-reversing safety loops and optical photocells for complete accident prevention.'
+            },
+            {
+              q: 'Are HTI bollards and tyre killers crash-rated for high-security applications?',
+              a: 'Yes. Our rising hydraulic bollards are available in K4, K8, and K12 crash ratings compliant with ASTM and PAS 68 standards, capable of stopping a 7.5-ton truck travelling up to 80 km/h. Tyre killers feature bidirectional hardened steel spikes designed to shred heavy vehicle tyres instantaneously.'
+            },
+            {
+              q: 'How do optical turnstiles and flap barriers prevent tailgating?',
+              a: 'HTI speed gates and optical turnstiles feature multi-beam infrared sensor matrices (6 to 12 pairs) along the passage corridor. The logic detects uncredentialed individuals attempting to follow an authorized user, triggers an audible warning alarm, and closes the acrylic wings.'
+            },
+            {
+              q: 'Can the parking management system integrate with Indian FASTag RFID?',
+              a: 'Yes. Our automated parking systems integrate long-range UHF RFID readers compatible with NPCI FASTag protocol, enabling seamless automated entry and exit without paper tickets or manual operator intervention.'
+            }
+          ]
+        };
+      case 'fire-protection':
+      case 'fire':
+      case 'fire-safety':
+        return {
+          title: 'Fire Protection & Life Safety Systems',
+          categoryName: 'Fire Protection',
+          tagline: 'Addressable fire alarm networks, turnkey hydrant & sprinkler arrays, certified fire doors & gas detection.',
+          icon: Flame,
+          badgeColor: 'badge-red',
+          heroGradient: 'hero-gradient-cleanroom',
+          stats: [
+            { label: 'Turnkey Systems Deployed', value: '280+' },
+            { label: 'Fire Rating Integrity', value: 'Up to 240 Min' },
+            { label: 'Hydrant Working Pressure', value: '7 to 14 Bar' },
+            { label: 'Compliance Standards', value: 'NBC 2016 / TAC' }
+          ],
+          overviewText: 'HTI Fire Protection & Life Safety Division delivers end-to-end turnkey fire protection infrastructure engineered in accordance with National Building Code (NBC 2016 Part 4) and CFO regulations. Our life-safety architecture encompasses micro-processed multi-loop addressable fire alarm panels, turnkey industrial fire hydrant pump skids, wet pipe automatic sprinkler grids, certified 120/240-minute fire containment doors, toxic and combustible gas leak transmitters, and integrated emergency audio voice evacuation systems.',
+          sectors: ['Pharmaceutical & Chemical Plants', 'Commercial Towers & IT Parks', 'Industrial Warehouses & Logistics Hubs', 'Hospitals & Healthcare Facilities', 'Refineries & Hazardous Storage'],
+          faqs: [
+            {
+              q: 'How does the Fire Alarm System integrate with cleanroom door interlocks and access doors?',
+              a: 'All HTI addressable and conventional fire alarm panels feature certified potential-free dry relay trip contacts wired directly into door interlocking controllers and access control power supplies. Upon a verified detector or manual pull station trigger, power drops instantaneously to release all electromagnetic locks for unhindered emergency egress.'
+            },
+            {
+              q: 'What statutory standards do HTI Fire Hydrant and Sprinkler systems conform to?',
+              a: 'Our installations strictly comply with the National Building Code of India (NBC 2016), Tariff Advisory Committee (TAC) guidelines, and local Chief Fire Officer (CFO) statutory mandates, utilizing UL/FM approved sprinkler heads and heavy-class ISI certified piping.'
+            },
+            {
+              q: 'What is the fire resistance rating of HTI Fire Doors and Shutters?',
+              a: 'Our hollow metal fire doors and motorized fire shutters are independently tested and certified for 60, 120, and 240 minutes fire integrity in accordance with IS 3614 and BS 476 Part 20/22. They feature intumescent perimeter seals that expand under heat to block smoke infiltration.'
+            },
+            {
+              q: 'Can the gas detection system trigger ventilation blowers automatically?',
+              a: 'Yes. HTI gas transmitters feature configurable dual alarm setpoints (Warning at 20% LEL, Danger at 40% LEL). When gas thresholds are breached, onboard SPDT relays immediately trip industrial exhaust blowers, sound warning horns, and shut off fuel solenoid valves.'
+            }
+          ]
+        };
       case 'hygiene':
       case 'hygiene solutions':
       default:
@@ -627,9 +969,9 @@ export default function CategoryPage({
                 </button>
               </div>
               <div className="auto-modal-body">
-                <img 
-                  src="/services/services-hero-access.jpg" 
-                  alt="Industrial Access Overview" 
+                <img
+                  src="/services/services-hero-access.jpg"
+                  alt="Industrial Access Overview"
                   className="w-full rounded-lg mb-4"
                 />
                 <p className="text-slate-600 text-sm leading-relaxed mb-4">
@@ -724,13 +1066,13 @@ export default function CategoryPage({
               {/* Right Column: Hero Facility Image with Play Button */}
               <div className="auto-hero-right">
                 <div className="auto-hero-media-wrapper">
-                  <img 
-                    src="/services/services-hero-access.jpg" 
-                    alt="Industrial Facility Entrance Automation" 
+                  <img
+                    src="/services/services-hero-access.jpg"
+                    alt="Industrial Facility Entrance Automation"
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button 
+                  <button
                     className="auto-watch-video-btn"
                     onClick={() => setVideoModalOpen(true)}
                   >
@@ -797,8 +1139,8 @@ export default function CategoryPage({
             <div className="auto-search-bar-row">
               <div className="auto-search-input-wrap">
                 <Search size={17} className="auto-search-icon" />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Search services, solutions..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -838,7 +1180,7 @@ export default function CategoryPage({
                 <Search size={36} className="text-slate-400 mb-2" />
                 <h3>No services matching "{searchQuery}"</h3>
                 <p>Try searching for doors, gates, roll-up, barriers, or clear filters.</p>
-                <button 
+                <button
                   className="btn btn-secondary btn-sm mt-3"
                   onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
                 >
@@ -851,9 +1193,9 @@ export default function CategoryPage({
                   <div key={service.num} className="auto-service-card">
                     {/* Card Media with Number and Category Badges */}
                     <div className="auto-card-media">
-                      <img 
-                        src={service.image} 
-                        alt={service.title} 
+                      <img
+                        src={service.image}
+                        alt={service.title}
                         className="auto-card-img"
                         loading="lazy"
                       />
@@ -884,7 +1226,7 @@ export default function CategoryPage({
 
                       {/* Action Button */}
                       <div className="auto-card-btn-row">
-                        <button 
+                        <button
                           className="auto-btn-view-details"
                           onClick={() => {
                             onNavigate('product', service.slug);
@@ -893,6 +1235,15 @@ export default function CategoryPage({
                         >
                           <span>View Details</span>
                           <ArrowRight size={13} />
+                        </button>
+
+                        <button
+                          className="auto-btn-brochure"
+                          onClick={() => handleBrochureDownload(service)}
+                          title={`Download ${service.title} Brochure`}
+                        >
+                          <Download size={13} />
+                          <span>Brochure</span>
                         </button>
                       </div>
                     </div>
@@ -932,7 +1283,7 @@ export default function CategoryPage({
                           </li>
                         </ul>
 
-                        <button 
+                        <button
                           className="auto-cta-btn"
                           onClick={() => {
                             onNavigate('contact');
@@ -945,9 +1296,9 @@ export default function CategoryPage({
                       </div>
 
                       <div className="auto-cta-right-media">
-                        <img 
-                          src="/services/services-hero-access.jpg" 
-                          alt="HTI Industrial Facility Automation" 
+                        <img
+                          src="/services/services-hero-access.jpg"
+                          alt="HTI Industrial Facility Automation"
                           className="auto-cta-image"
                         />
                       </div>
@@ -985,9 +1336,9 @@ export default function CategoryPage({
                 <button className="auto-modal-close" onClick={() => setVideoModalOpen(false)}>✕</button>
               </div>
               <div className="auto-modal-body">
-                <img 
-                  src="/hero-cleanroom-interlock-chamber.jpg" 
-                  alt="Cleanroom Interlocks &amp; Pass Boxes Overview" 
+                <img
+                  src="/hero-cleanroom-interlock-chamber.jpg"
+                  alt="Cleanroom Interlocks &amp; Pass Boxes Overview"
                   className="w-full rounded-lg mb-4"
                 />
                 <p className="text-slate-600 text-sm leading-relaxed mb-4">
@@ -1082,13 +1433,13 @@ export default function CategoryPage({
               {/* Right Column: Hero Facility Image with Play Button */}
               <div className="auto-hero-right">
                 <div className="auto-hero-media-wrapper">
-                  <img 
-                    src="/hero-cleanroom-interlock-chamber.jpg" 
-                    alt="Pharma Cleanroom Interlock Chamber" 
+                  <img
+                    src="/hero-cleanroom-interlock-chamber.jpg"
+                    alt="Pharma Cleanroom Interlock Chamber"
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button 
+                  <button
                     className="auto-watch-video-btn"
                     onClick={() => setVideoModalOpen(true)}
                   >
@@ -1155,8 +1506,8 @@ export default function CategoryPage({
             <div className="auto-search-bar-row">
               <div className="auto-search-input-wrap">
                 <Search size={17} className="auto-search-icon" />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Search cleanroom services, solutions..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -1196,7 +1547,7 @@ export default function CategoryPage({
                 <Search size={36} className="text-slate-400 mb-2" />
                 <h3>No cleanroom services matching "{searchQuery}"</h3>
                 <p>Try searching for interlocks, pass box, clocks, doors, or reset filters.</p>
-                <button 
+                <button
                   className="btn btn-secondary btn-sm mt-3"
                   onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
                 >
@@ -1209,9 +1560,9 @@ export default function CategoryPage({
                   <div key={service.num} className="auto-service-card">
                     {/* Card Media with Number and Category Badges */}
                     <div className="auto-card-media">
-                      <img 
-                        src={service.image} 
-                        alt={service.title} 
+                      <img
+                        src={service.image}
+                        alt={service.title}
                         className="auto-card-img"
                         loading="lazy"
                       />
@@ -1242,7 +1593,7 @@ export default function CategoryPage({
 
                       {/* Action Button */}
                       <div className="auto-card-btn-row">
-                        <button 
+                        <button
                           className="auto-btn-view-details"
                           onClick={() => {
                             if (service.slug) {
@@ -1255,6 +1606,15 @@ export default function CategoryPage({
                         >
                           <span>View Details</span>
                           <ArrowRight size={13} />
+                        </button>
+
+                        <button
+                          className="auto-btn-brochure"
+                          onClick={() => handleBrochureDownload(service)}
+                          title={`Download ${service.title} Brochure`}
+                        >
+                          <Download size={13} />
+                          <span>Brochure</span>
                         </button>
                       </div>
                     </div>
@@ -1294,7 +1654,7 @@ export default function CategoryPage({
                           </li>
                         </ul>
 
-                        <button 
+                        <button
                           className="auto-cta-btn"
                           onClick={() => {
                             onNavigate('contact');
@@ -1307,9 +1667,9 @@ export default function CategoryPage({
                       </div>
 
                       <div className="auto-cta-right-media">
-                        <img 
-                          src="/hero-cleanroom-automation.jpg" 
-                          alt="HTI Cleanroom Automation &amp; Interlocks" 
+                        <img
+                          src="/hero-cleanroom-automation.jpg"
+                          alt="HTI Cleanroom Automation &amp; Interlocks"
                           className="auto-cta-image"
                         />
                       </div>
@@ -1323,21 +1683,768 @@ export default function CategoryPage({
       </div>
     );
   }
+
+  // =========================================================================
+  // DEDICATED PERIMETER DEFENSE & TRAFFIC CONTROL SERVICE PAGE
+  // =========================================================================
+  if (isPerimeter) {
+    return (
+      <div className="auto-service-page perimeter-service-page">
+        {/* Toast Feedback for Brochure Downloads */}
+        {brochureToast && (
+          <div className="auto-toast-notice">
+            <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
+            <span>{brochureToast}</span>
+          </div>
+        )}
+
+        {/* Video Solutions Modal */}
+        {videoModalOpen && (
+          <div className="auto-video-modal-backdrop" onClick={() => setVideoModalOpen(false)}>
+            <div className="auto-video-modal-card" onClick={(e) => e.stopPropagation()}>
+              <div className="auto-modal-header">
+                <h3 className="auto-modal-title">HTI Perimeter Defense &amp; Traffic Control Overview</h3>
+                <button className="auto-modal-close" onClick={() => setVideoModalOpen(false)}>
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="auto-modal-body">
+                <img
+                  src="/case-studies/case-boom-barrier.jpg"
+                  alt="Perimeter Defense &amp; Traffic Control Overview"
+                  className="w-full rounded-lg mb-4"
+                />
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                  HTI executes high-throughput electromechanical boom barriers, crash-rated bollards, tyre killers, optical turnstiles, and automated multi-level parking systems engineered for continuous duty and hostile vehicle mitigation.
+                </p>
+                <div className="flex justify-end gap-3">
+                  <button className="btn btn-secondary btn-sm" onClick={() => setVideoModalOpen(false)}>
+                    Close
+                  </button>
+                  <button className="btn btn-primary btn-sm" onClick={() => { setVideoModalOpen(false); onNavigate('contact'); }}>
+                    Request Perimeter Survey
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="auto-page-container">
+          {/* 1. BREADCRUMBS BAR */}
+          <div className="auto-breadcrumb-nav">
+            <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-current">Perimeter Defense &amp; Traffic Control</span>
+          </div>
+
+          {/* 2. HERO SECTION */}
+          <section className="auto-hero-section">
+            <div className="auto-hero-grid">
+              {/* Left Column: Heading, Description, Stat Cards */}
+              <div className="auto-hero-left">
+                <div className="auto-hero-pill-badge">
+                  <span className="auto-pulse-dot"></span>
+                  <span>PERIMETER DEFENSE &amp; TRAFFIC CONTROL</span>
+                </div>
+
+                <h1 className="auto-hero-title">
+                  Perimeter Defense <br />
+                  <span className="text-blue-accent">&amp; Traffic Control</span>
+                </h1>
+
+                <p className="auto-hero-desc">
+                  High-frequency boom barriers, crash-rated anti-ram bollards, tyre killers, optical turnstiles &amp; multi-level car lift systems engineered for secure and efficient facility access.
+                </p>
+
+                {/* Four Compact Statistic Cards */}
+                <div className="auto-hero-stats-grid">
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <ShieldCheck size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">320+</div>
+                      <div className="auto-stat-lbl">Barriers &amp; Gates Installed</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Cpu size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">100% BLDC</div>
+                      <div className="auto-stat-lbl">Continuous Duty Motors</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Award size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">K4 / K12</div>
+                      <div className="auto-stat-lbl">Crash Rated Standards</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <SlidersHorizontal size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">45 P/Min</div>
+                      <div className="auto-stat-lbl">Pedestrian Throughput</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Hero Facility Image with Play Button */}
+              <div className="auto-hero-right">
+                <div className="auto-hero-media-wrapper">
+                  <img
+                    src="/case-studies/case-boom-barrier.jpg"
+                    alt="Perimeter Defense &amp; Traffic Control Infrastructure"
+                    className="auto-hero-image"
+                    loading="eager"
+                  />
+                  <button
+                    className="auto-watch-video-btn"
+                    onClick={() => setVideoModalOpen(true)}
+                  >
+                    <div className="auto-play-icon-circle">
+                      <Play size={12} fill="#1d4ed8" />
+                    </div>
+                    <span>Watch Perimeter Demo</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 3. ENGINEERING INTRODUCTION SECTION */}
+          <section className="auto-engineering-section">
+            <div className="auto-engineering-card">
+              <div className="auto-arch-header-row">
+                <div className="auto-arch-badge-blue">
+                  <span className="auto-subtle-dot"></span>
+                  <span>PERIMETER &amp; TRAFFIC ARCHITECTURE</span>
+                </div>
+                <div className="auto-arch-badge-red">
+                  <Wrench size={13} />
+                  <span>Turnkey Physical Security Engineering</span>
+                </div>
+              </div>
+
+              <h2 className="auto-arch-heading">
+                Comprehensive Engineering &amp; Execution for Perimeter Defense
+              </h2>
+
+              <p className="auto-arch-desc">
+                HTI Perimeter Defense &amp; Traffic Control Directorate delivers heavy-duty physical barriers and intelligent vehicle access solutions. From ultra-fast 1.5-second automated boom barriers and anti-terror crash-rated hydraulic bollards to biometric optical speed gates and automated multi-tier car parking lifts, our systems ensure rigorous boundary protection and frictionless transit flow across corporate IT parks, industrial complexes, toll plazas, and high-security government facilities.
+              </p>
+
+              {/* Five Application Chips */}
+              <div className="auto-app-chips-row">
+                <div className="auto-app-chip">
+                  <Building2 size={15} className="chip-icon" />
+                  <span>Corporate IT Parks &amp; Campuses</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Factory size={15} className="chip-icon" />
+                  <span>Industrial Complexes &amp; Plants</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Truck size={15} className="chip-icon" />
+                  <span>Toll Plazas &amp; Logistics Yards</span>
+                </div>
+                <div className="auto-app-chip">
+                  <ShieldCheck size={15} className="chip-icon" />
+                  <span>Government &amp; Defense Sites</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Layers size={15} className="chip-icon" />
+                  <span>Commercial Malls &amp; Basements</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 4. SEARCH AND FILTER SECTION */}
+          <section className="auto-controls-section">
+            <div className="auto-search-bar-row">
+              <div className="auto-search-input-wrap">
+                <Search size={17} className="auto-search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search perimeter services, solutions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="auto-search-field"
+                />
+                {searchQuery && (
+                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
+                )}
+              </div>
+
+              <div className="auto-results-count">
+                <span>{filteredPerimeterServices.length} services found</span>
+              </div>
+            </div>
+
+            {/* Filter Chips by Application */}
+            <div className="auto-filters-container">
+              <div className="auto-filter-label">FILTER BY APPLICATION</div>
+              <div className="auto-filter-chips-list">
+                {PERIMETER_FILTER_CATEGORIES.map((filter) => (
+                  <button
+                    key={filter}
+                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 5. 6 SERVICE CARDS & CUSTOM PERIMETER CTA */}
+          <section className="auto-services-grid-section">
+            {filteredPerimeterServices.length === 0 ? (
+              <div className="auto-empty-state">
+                <Search size={36} className="text-slate-400 mb-2" />
+                <h3>No perimeter services matching "{searchQuery}"</h3>
+                <p>Try searching for boom barriers, bollards, tyre killers, turnstiles, parking, or reset filters.</p>
+                <button
+                  className="btn btn-secondary btn-sm mt-3"
+                  onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <div className="auto-services-grid">
+                {filteredPerimeterServices.map((service) => (
+                  <div key={service.num} className="auto-service-card">
+                    {/* Card Media with Number and Category Badges */}
+                    <div className="auto-card-media">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="auto-card-img"
+                        loading="lazy"
+                      />
+                      <div className="auto-card-num-badge">
+                        {service.num}
+                      </div>
+                      <div className="auto-card-cat-pill">
+                        {service.categoryBadge}
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="auto-card-body">
+                      <h3 className="auto-card-title">{service.title}</h3>
+                      <p className="auto-card-description">{service.description}</p>
+
+                      {/* 3 Concise Feature Bullets */}
+                      <ul className="auto-card-features">
+                        {service.features.map((feat, idx) => (
+                          <li key={idx} className="auto-feature-bullet">
+                            <span className="auto-bullet-icon">
+                              <Check size={11} strokeWidth={2.5} />
+                            </span>
+                            <span className="auto-bullet-text">{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Action Buttons */}
+                      <div className="auto-card-btn-row">
+                        <button
+                          className="auto-btn-view-details"
+                          onClick={() => {
+                            if (service.slug) {
+                              onNavigate('product', service.slug);
+                            } else {
+                              onNavigate('contact');
+                            }
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>View Details</span>
+                          <ArrowRight size={13} />
+                        </button>
+
+                        <button
+                          className="auto-btn-brochure"
+                          onClick={() => handleBrochureDownload(service)}
+                          title={`Download ${service.title} Brochure`}
+                        >
+                          <Download size={13} />
+                          <span>Brochure</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* CUSTOM PERIMETER SOLUTION CTA CARD */}
+                {(!searchQuery && (activeFilter === 'All' || activeFilter === 'Perimeter Defense' || activeFilter === 'Vehicle Access' || activeFilter === 'Custom Solutions')) && (
+                  <div className="auto-custom-cta-card">
+                    <div className="auto-cta-inner">
+                      <div className="auto-cta-left">
+                        <div className="auto-cta-icon-box">
+                          <ShieldCheck size={22} className="text-blue-600" />
+                        </div>
+
+                        <h3 className="auto-cta-heading">Need Custom Perimeter Defense Architecture?</h3>
+                        <p className="auto-cta-desc">
+                          Our physical security and perimeter engineering team can design crash-rated defense arrays, automated bollards, and custom FASTag vehicle access for your campus.
+                        </p>
+
+                        <ul className="auto-cta-checklist">
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Perimeter threat &amp; traffic survey</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Crash-rated bollard &amp; barrier engineering</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Turnkey civil, electrical &amp; hydraulic works</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Comprehensive AMC &amp; maintenance support</span>
+                          </li>
+                        </ul>
+
+                        <button
+                          className="auto-cta-btn"
+                          onClick={() => {
+                            onNavigate('contact');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>Consult Perimeter Engineers</span>
+                          <ArrowRight size={14} />
+                        </button>
+                      </div>
+
+                      <div className="auto-cta-right-media">
+                        <img
+                          src="/case-studies/case-boom-barrier.jpg"
+                          alt="HTI Perimeter Defense &amp; Traffic Control"
+                          className="auto-cta-image"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // DEDICATED FIRE PROTECTION & LIFE SAFETY SERVICE PAGE
+  // =========================================================================
+  if (isFire) {
+    return (
+      <div className="auto-service-page fire-service-page">
+        {/* Toast Feedback for Brochure Downloads */}
+        {brochureToast && (
+          <div className="auto-toast-notice">
+            <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
+            <span>{brochureToast}</span>
+          </div>
+        )}
+
+        {/* Video Solutions Modal */}
+        {videoModalOpen && (
+          <div className="auto-video-modal-backdrop" onClick={() => setVideoModalOpen(false)}>
+            <div className="auto-video-modal-card" onClick={(e) => e.stopPropagation()}>
+              <div className="auto-modal-header">
+                <h3 className="auto-modal-title">HTI Fire Protection &amp; Life Safety Overview</h3>
+                <button className="auto-modal-close" onClick={() => setVideoModalOpen(false)}>
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="auto-modal-body">
+                <img
+                  src="/case-studies/case-fire-hydrant.jpg"
+                  alt="Fire Protection &amp; Life Safety Infrastructure"
+                  className="w-full rounded-lg mb-4"
+                />
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                  HTI executes multi-loop addressable fire alarm networks, turnkey industrial fire hydrant pump stations, wet pipe sprinkler arrays, certified 120/240-minute fire doors, and toxic gas leak monitoring engineered to NBC 2016 Part 4.
+                </p>
+                <div className="flex justify-end gap-3">
+                  <button className="btn btn-secondary btn-sm" onClick={() => setVideoModalOpen(false)}>
+                    Close
+                  </button>
+                  <button className="btn btn-primary btn-sm" onClick={() => { setVideoModalOpen(false); onNavigate('contact'); }}>
+                    Request Fire Safety Audit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="auto-page-container">
+          {/* 1. BREADCRUMBS BAR */}
+          <div className="auto-breadcrumb-nav">
+            <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-current">Fire Protection &amp; Life Safety</span>
+          </div>
+
+          {/* 2. HERO SECTION */}
+          <section className="auto-hero-section">
+            <div className="auto-hero-grid">
+              {/* Left Column: Heading, Description, Stat Cards */}
+              <div className="auto-hero-left">
+                <div className="auto-hero-pill-badge">
+                  <span className="auto-pulse-dot"></span>
+                  <span>FIRE PROTECTION &amp; LIFE SAFETY</span>
+                </div>
+
+                <h1 className="auto-hero-title">
+                  Fire Protection <br />
+                  <span className="text-blue-accent">&amp; Life Safety</span>
+                </h1>
+
+                <p className="auto-hero-desc">
+                  Turnkey addressable fire detection networks, high-pressure hydrant &amp; sprinkler arrays, 120/240 min fire rated doors &amp; toxic gas monitoring engineered to NBC 2016 norms.
+                </p>
+
+                {/* Four Compact Statistic Cards */}
+                <div className="auto-hero-stats-grid">
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Flame size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">280+</div>
+                      <div className="auto-stat-lbl">Turnkey Projects Deployed</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Award size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">Up to 240m</div>
+                      <div className="auto-stat-lbl">Fire Rating Integrity</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Activity size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">7-14 Bar</div>
+                      <div className="auto-stat-lbl">Hydrant Working Pressure</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <ShieldCheck size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">NBC / TAC</div>
+                      <div className="auto-stat-lbl">Statutory Compliance</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Hero Facility Image with Play Button */}
+              <div className="auto-hero-right">
+                <div className="auto-hero-media-wrapper">
+                  <img
+                    src="/case-studies/case-fire-hydrant.jpg"
+                    alt="Fire Protection &amp; Life Safety Infrastructure"
+                    className="auto-hero-image"
+                    loading="eager"
+                  />
+                  <button
+                    className="auto-watch-video-btn"
+                    onClick={() => setVideoModalOpen(true)}
+                  >
+                    <div className="auto-play-icon-circle">
+                      <Play size={12} fill="#1d4ed8" />
+                    </div>
+                    <span>Watch Fire Safety Demo</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 3. ENGINEERING INTRODUCTION SECTION */}
+          <section className="auto-engineering-section">
+            <div className="auto-engineering-card">
+              <div className="auto-arch-header-row">
+                <div className="auto-arch-badge-blue">
+                  <span className="auto-subtle-dot"></span>
+                  <span>FIRE SAFETY ARCHITECTURE</span>
+                </div>
+                <div className="auto-arch-badge-red">
+                  <Wrench size={13} />
+                  <span>Turnkey NBC 2016 &amp; TAC Compliance</span>
+                </div>
+              </div>
+
+              <h2 className="auto-arch-heading">
+                Comprehensive Engineering &amp; Execution for Fire Protection
+              </h2>
+
+              <p className="auto-arch-desc">
+                HTI Fire Protection &amp; Life Safety Directorate delivers end-to-end turnkey fire protection infrastructure engineered in accordance with National Building Code (NBC 2016 Part 4) and CFO regulations. Our life-safety architecture encompasses micro-processed multi-loop addressable fire alarm panels, turnkey industrial fire hydrant pump skids, wet pipe automatic sprinkler grids, certified 120/240-minute fire containment doors, toxic and combustible gas leak transmitters, and integrated emergency audio voice evacuation systems.
+              </p>
+
+              {/* Five Application Chips */}
+              <div className="auto-app-chips-row">
+                <div className="auto-app-chip">
+                  <Factory size={15} className="chip-icon" />
+                  <span>Pharmaceutical &amp; Chemical Plants</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Building2 size={15} className="chip-icon" />
+                  <span>Commercial Towers &amp; IT Parks</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Truck size={15} className="chip-icon" />
+                  <span>Warehouses &amp; Logistics Hubs</span>
+                </div>
+                <div className="auto-app-chip">
+                  <ShieldCheck size={15} className="chip-icon" />
+                  <span>Hospitals &amp; Healthcare Facilities</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Layers size={15} className="chip-icon" />
+                  <span>Refineries &amp; Hazardous Storage</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 4. SEARCH AND FILTER SECTION */}
+          <section className="auto-controls-section">
+            <div className="auto-search-bar-row">
+              <div className="auto-search-input-wrap">
+                <Search size={17} className="auto-search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search fire protection services, solutions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="auto-search-field"
+                />
+                {searchQuery && (
+                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
+                )}
+              </div>
+
+              <div className="auto-results-count">
+                <span>{filteredFireServices.length} services found</span>
+              </div>
+            </div>
+
+            {/* Filter Chips by Application */}
+            <div className="auto-filters-container">
+              <div className="auto-filter-label">FILTER BY APPLICATION</div>
+              <div className="auto-filter-chips-list">
+                {FIRE_FILTER_CATEGORIES.map((filter) => (
+                  <button
+                    key={filter}
+                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 5. 6 SERVICE CARDS & CUSTOM FIRE SAFETY CTA */}
+          <section className="auto-services-grid-section">
+            {filteredFireServices.length === 0 ? (
+              <div className="auto-empty-state">
+                <Search size={36} className="text-slate-400 mb-2" />
+                <h3>No fire safety services matching "{searchQuery}"</h3>
+                <p>Try searching for fire alarms, hydrants, sprinklers, fire doors, gas detection, or reset filters.</p>
+                <button
+                  className="btn btn-secondary btn-sm mt-3"
+                  onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <div className="auto-services-grid">
+                {filteredFireServices.map((service) => (
+                  <div key={service.num} className="auto-service-card">
+                    {/* Card Media with Number and Category Badges */}
+                    <div className="auto-card-media">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="auto-card-img"
+                        loading="lazy"
+                      />
+                      <div className="auto-card-num-badge">
+                        {service.num}
+                      </div>
+                      <div className="auto-card-cat-pill">
+                        {service.categoryBadge}
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="auto-card-body">
+                      <h3 className="auto-card-title">{service.title}</h3>
+                      <p className="auto-card-description">{service.description}</p>
+
+                      {/* 3 Concise Feature Bullets */}
+                      <ul className="auto-card-features">
+                        {service.features.map((feat, idx) => (
+                          <li key={idx} className="auto-feature-bullet">
+                            <span className="auto-bullet-icon">
+                              <Check size={11} strokeWidth={2.5} />
+                            </span>
+                            <span className="auto-bullet-text">{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Action Buttons */}
+                      <div className="auto-card-btn-row">
+                        <button
+                          className="auto-btn-view-details"
+                          onClick={() => {
+                            if (service.slug) {
+                              onNavigate('product', service.slug);
+                            } else {
+                              onNavigate('contact');
+                            }
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>View Details</span>
+                          <ArrowRight size={13} />
+                        </button>
+
+                        <button
+                          className="auto-btn-brochure"
+                          onClick={() => handleBrochureDownload(service)}
+                          title={`Download ${service.title} Brochure`}
+                        >
+                          <Download size={13} />
+                          <span>Brochure</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* CUSTOM FIRE SAFETY SOLUTION CTA CARD */}
+                {(!searchQuery && (activeFilter === 'All' || activeFilter === 'Detection & Alarm' || activeFilter === 'Fire Suppression' || activeFilter === 'Turnkey Arrays' || activeFilter === 'Custom Solutions')) && (
+                  <div className="auto-custom-cta-card">
+                    <div className="auto-cta-inner">
+                      <div className="auto-cta-left">
+                        <div className="auto-cta-icon-box">
+                          <Flame size={22} className="text-blue-600" />
+                        </div>
+
+                        <h3 className="auto-cta-heading">Need Turnkey Fire Protection Architecture?</h3>
+                        <p className="auto-cta-desc">
+                          Our certified fire engineers provide turnkey facility surveys, hydraulic calculations, FACP wiring diagrams, and statutory CFO compliance support.
+                        </p>
+
+                        <ul className="auto-cta-checklist">
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Site survey &amp; fire hazard risk assessment</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Hydraulic pipe sizing &amp; FACP loop design</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Turnkey mechanical, electrical &amp; civil execution</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Mandatory CFO sign-off &amp; annual maintenance</span>
+                          </li>
+                        </ul>
+
+                        <button
+                          className="auto-cta-btn"
+                          onClick={() => {
+                            onNavigate('contact');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>Consult Fire Engineers</span>
+                          <ArrowRight size={14} />
+                        </button>
+                      </div>
+
+                      <div className="auto-cta-right-media">
+                        <img
+                          src="/case-studies/case-fire-hydrant.jpg"
+                          alt="HTI Turnkey Fire Hydrant &amp; Alarm Solutions"
+                          className="auto-cta-image"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="category-dedicated-page">
       {/* 1. Breadcrumbs Bar */}
       <div className="detail-breadcrumb-bar">
         <div className="container">
           <div className="breadcrumb-nav">
-            <button 
-              className="breadcrumb-link" 
+            <button
+              className="breadcrumb-link"
               onClick={() => onNavigate('home')}
             >
               Home
             </button>
             <span className="breadcrumb-separator">/</span>
-            <button 
-              className="breadcrumb-link" 
+            <button
+              className="breadcrumb-link"
               onClick={() => onNavigate('home', 'catalog')}
             >
               Products & Solutions
@@ -1346,7 +2453,7 @@ export default function CategoryPage({
             <span className="breadcrumb-current">{categoryMeta.categoryName}</span>
           </div>
 
-          <button 
+          <button
             className="back-btn"
             onClick={() => onNavigate('home', 'catalog')}
           >
@@ -1423,7 +2530,7 @@ export default function CategoryPage({
             {/* Search input */}
             <div className="category-search-box">
               <Search size={18} className="search-icon" />
-              <input 
+              <input
                 type="text"
                 placeholder={`Search within ${categoryMeta.categoryName}...`}
                 value={searchQuery}
@@ -1431,7 +2538,7 @@ export default function CategoryPage({
                 className="category-search-input"
               />
               {searchQuery && (
-                <button 
+                <button
                   className="clear-search-btn"
                   onClick={() => setSearchQuery('')}
                 >
@@ -1474,7 +2581,7 @@ export default function CategoryPage({
               <Search size={40} className="text-slate-400 mb-3 mx-auto" />
               <h3 className="text-xl font-bold text-slate-800">No products matching "{searchQuery}"</h3>
               <p className="text-slate-500 mt-2 mb-4">Try clearing your search term or selecting a different subcategory filter.</p>
-              <button 
+              <button
                 className="btn btn-secondary"
                 onClick={() => {
                   setSearchQuery('');
@@ -1500,7 +2607,7 @@ export default function CategoryPage({
 
                   <h3 className="cat-prod-title">{p.name}</h3>
                   <p className="cat-prod-tagline">{p.tagline}</p>
-                  
+
                   {p.workSummary && (
                     <div className="cat-work-summary">
                       <span className="summary-label">Work / Function:</span>
@@ -1520,7 +2627,7 @@ export default function CategoryPage({
 
                   {/* Actions Row */}
                   <div className="cat-card-action-row">
-                    <button 
+                    <button
                       className="btn btn-primary btn-sm flex-1"
                       onClick={() => {
                         onNavigate('product', p.slug);
@@ -1531,7 +2638,7 @@ export default function CategoryPage({
                       <ArrowRight size={14} />
                     </button>
 
-                    <button 
+                    <button
                       className="btn btn-outline-cyan btn-sm"
                       onClick={() => onQuickQuote(p.name, p.category)}
                       title="Request Quotation"
@@ -1625,8 +2732,8 @@ export default function CategoryPage({
               {categoryMeta.faqs.map((faq, idx) => {
                 const isOpen = activeFaq === idx;
                 return (
-                  <div 
-                    key={idx} 
+                  <div
+                    key={idx}
                     className="glass-card border border-slate-200 rounded-xl bg-white overflow-hidden transition-all shadow-sm"
                   >
                     <button
@@ -1662,15 +2769,15 @@ export default function CategoryPage({
                 From initial site surveys in Mumbai to turnkey PAN-India commissioning, our technical teams provide detailed BOQs, CAD drawings, and statutory compliance assistance.
               </p>
               <div className="cta-buttons-row">
-                <button 
+                <button
                   className="btn btn-primary"
                   onClick={() => onNavigate('contact')}
                 >
                   <Send size={16} />
                   <span>Send Project BOQ / Requirement</span>
                 </button>
-                <a 
-                  href="tel:+919820112345" 
+                <a
+                  href="tel:+919820112345"
                   className="btn btn-secondary"
                 >
                   <PhoneCall size={16} />

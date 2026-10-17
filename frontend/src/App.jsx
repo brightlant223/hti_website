@@ -55,6 +55,12 @@ const parseUrlRoute = () => {
   if (path === '/cleanroom-interlocks' || path === '/cleanroom-interlocks/' || path === '/interlocks' || hash === '#/cleanroom-interlocks') {
     return { page: 'cleanroom-interlocks', param: null };
   }
+  if (path === '/perimeter-defense' || path === '/perimeter-defense/' || path === '/perimeter' || hash === '#/perimeter-defense') {
+    return { page: 'perimeter-defense', param: null };
+  }
+  if (path === '/fire-protection' || path === '/fire-protection/' || path === '/fire' || path === '/fire-safety' || hash === '#/fire-protection') {
+    return { page: 'fire-protection', param: null };
+  }
   if (path === '/hygiene' || path === '/hygiene/' || hash === '#/hygiene') {
     return { page: 'hygiene', param: null };
   }
@@ -304,7 +310,7 @@ export default function App() {
     if (page === 'product') {
       targetUrl = `/product/${paramOrSection}`;
       targetParam = paramOrSection;
-    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'hygiene', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
+    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
       targetUrl = `/${page}`;
     } else if (page === 'home') {
       targetUrl = '/';
@@ -340,6 +346,10 @@ export default function App() {
       navigateTo('security-systems');
     } else if (cleanId.includes('interlock')) {
       navigateTo('cleanroom-interlocks');
+    } else if (cleanId.includes('perim')) {
+      navigateTo('perimeter-defense');
+    } else if (cleanId.includes('fire')) {
+      navigateTo('fire-protection');
     } else if (cleanId.includes('hyg')) {
       navigateTo('hygiene');
     } else {
@@ -401,8 +411,8 @@ export default function App() {
           />
         )}
 
-        {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /hygiene) */}
-        {['automation', 'security-systems', 'cleanroom-interlocks', 'hygiene'].includes(routeState.page) && (
+        {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /perimeter-defense, /fire-protection, /hygiene) */}
+        {['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene'].includes(routeState.page) && (
           <CategoryPage
             categoryKey={routeState.page}
             onNavigate={navigateTo}

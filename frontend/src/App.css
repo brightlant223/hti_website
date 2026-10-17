@@ -405,6 +405,38 @@
   min-width: 0;
 }
 
+.mega-pill-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 12px;
+}
+
+.mega-overview-link {
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #1d4ed8;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  line-height: 1;
+}
+
+.mega-overview-link:hover {
+  background: #1d4ed8;
+  color: #ffffff;
+  border-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+}
+
 .mega-pill-badge {
   display: inline-flex;
   align-items: center;
@@ -417,7 +449,7 @@
   padding: 3px 10px;
   border-radius: 9999px;
   letter-spacing: 0.04em;
-  margin-bottom: 6px;
+  margin-bottom: 0;
 }
 
 .mega-pulse-dot {
@@ -15090,6 +15122,18 @@
   background: rgba(56, 189, 248, 0.12);
   color: #38bdf8;
   border-color: rgba(56, 189, 248, 0.25);
+}
+
+[data-theme="dark"] .mega-overview-link {
+  background: #1e293b;
+  border-color: #334155;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .mega-overview-link:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
 }
 
 [data-theme="dark"] .mega-badge-dot {

@@ -149,7 +149,7 @@ export default function Navbar({
       tagline: 'Automatic doors, telescopic gates, high-speed roll-up & dock levellers.',
       icon: Cpu,
       color: '#0284c7',
-      category: 'Automation',
+      page: 'automation',
       badge: 'INDUSTRIAL ACCESS AUTOMATION',
       headingPrimary: 'High-Throughput Industrial',
       headingAccent: 'Access & Gates.',
@@ -263,7 +263,7 @@ export default function Navbar({
       tagline: 'Boom barriers, tyre killers, car lifts, turnstiles & flap barriers.',
       icon: ShieldCheck,
       color: '#0284c7',
-      category: 'Automation',
+      page: 'perimeter-defense',
       badge: 'TRAFFIC & PERIMETER DEFENSE',
       headingPrimary: 'Vehicle Access, Tyre Killers &',
       headingAccent: 'Pedestrian Speed Gates.',
@@ -273,7 +273,7 @@ export default function Navbar({
         { 
           title: 'Boom Barriers',
           description: 'High-duty electromechanical & hydraulic automated barrier arms.',
-          image: '/case-studies/case-boom-barrier.jpg',
+          image: '/services/service-boom-barrier.jpg',
           icon: SlidersHorizontal,
           slug: 'boom-barriers'
         },
@@ -282,35 +282,35 @@ export default function Navbar({
           description: 'Biometric speed gates & swing flap barriers for corporate lobbies.',
           image: '/hero-glass-atrium.jpg',
           icon: User,
-          category: 'Automation'
+          slug: 'turnstiles-flap-barriers-speed-gates'
         },
         { 
           title: 'Tyre Killers & Bollards',
           description: 'Heavy hydraulic tyre spikes & crash-rated anti-ram bollards.',
-          image: '/services/services-perimeter-gate.jpg',
+          image: '/services/service-bollards-blockers.jpg',
           icon: ShieldCheck,
-          category: 'Automation'
+          slug: 'bollards-tyre-killers-car-lifts'
         },
         { 
           title: 'Car Lift Systems',
           description: 'Hydraulic multi-tier car parking lifts & heavy goods vehicle lifts.',
           image: '/services/services-trackless-gate.jpg',
           icon: Truck,
-          category: 'Automation'
+          slug: 'bollards-tyre-killers-car-lifts'
         },
         { 
           title: 'Parking Management',
           description: 'FASTag RFID tolling, ticket dispensers & bay occupancy sensors.',
           image: '/services/services-hero-access.jpg',
           icon: Cpu,
-          category: 'Automation'
+          slug: 'parking-intrusion-alarms'
         },
         { 
           title: 'Visitor Management',
           description: 'QR digital gate passes, facial recognition & badge printing.',
           image: '/hero-security-command-center.jpg',
           icon: CheckCircle2,
-          category: 'Automation'
+          slug: 'visitor-management-system'
         }
       ]
     },
@@ -320,7 +320,7 @@ export default function Navbar({
       tagline: 'Fire alarms, hydrant sprinkler arrays & fire rated containment.',
       icon: Flame,
       color: '#0284c7',
-      category: 'Security System',
+      page: 'fire-protection',
       badge: 'TURNKEY LIFE SAFETY',
       headingPrimary: 'Complete Industrial Fire Fighting &',
       headingAccent: 'Alarm Systems.',
@@ -330,44 +330,44 @@ export default function Navbar({
         { 
           title: 'Addressable Fire Alarms',
           description: 'Multi-zone detection panels, optical smoke sensors & heat probes.',
-          image: '/case-studies/case-fire-hydrant.jpg',
+          image: '/services/service-fire-alarm.jpg',
           icon: Flame,
-          category: 'Security System'
+          slug: 'fire-alarm-system'
         },
         { 
           title: 'Hydrant & Sprinkler Arrays',
           description: 'Water deluge networks, certified landing valves & pump skids.',
           image: '/case-studies/case-fire-hydrant.jpg',
           icon: Activity,
-          category: 'Security System'
+          slug: 'fire-hydrant-sprinkler-systems'
         },
         { 
           title: 'Fire Rated Doors & Shutters',
           description: '120-240 minute certified fire-resistant doors & auto drop shutters.',
-          image: '/services/services-heavy-security.jpg',
+          image: '/services/service-fire-doors.jpg',
           icon: Lock,
-          category: 'Security System'
+          slug: 'fire-rated-doors-shutters'
         },
         { 
           title: 'Public Address (PA)',
           description: 'Voice evacuation systems, emergency sirens & plant horns.',
           image: '/hero-security-command-center.jpg',
           icon: MessageSquare,
-          category: 'Security System'
+          slug: 'public-address-system'
         },
         { 
           title: 'Gas Leak Detection',
           description: 'Toxic, combustible, VOC & ammonia gas monitoring sensors.',
           image: '/case-studies/case-ss304-mist.jpg',
           icon: ShieldCheck,
-          category: 'Security System'
+          slug: 'gas-detection-systems'
         },
         { 
           title: 'Emergency Auto Trip',
           description: 'Relay integration with access doors, AHU shut-off & fire pumps.',
-          image: '/case-studies/case-air-curtain.jpg',
+          image: '/services/service-emergency-trip.jpg',
           icon: Settings,
-          category: 'Security System'
+          slug: 'door-interlock-systems'
         }
       ]
     },
@@ -776,9 +776,27 @@ export default function Navbar({
                 {/* Top Section: Text Info on Left + Hero Feature Image on Right */}
                 <div className="mega-right-header-row">
                   <div className="mega-right-header-text">
-                    <div className="mega-pill-badge">
-                      <span className="mega-pulse-dot"></span>
-                      <span>{currentGroup.badge}</span>
+                    <div className="mega-pill-badge-row">
+                      <div className="mega-pill-badge">
+                        <span className="mega-pulse-dot"></span>
+                        <span>{currentGroup.badge}</span>
+                      </div>
+                      <button
+                        className="mega-overview-link"
+                        onClick={() => {
+                          if (currentGroup.page) {
+                            handleNavClick(currentGroup.page);
+                          } else if (currentGroup.section) {
+                            handleNavClick('home', currentGroup.section);
+                          } else {
+                            handleCategoryClick(currentGroup.category);
+                          }
+                        }}
+                        title={`View ${currentGroup.title} Overview`}
+                      >
+                        <span>Overview</span>
+                        <ArrowRight size={13} />
+                      </button>
                     </div>
 
                     <h3 className="mega-panel-heading">
