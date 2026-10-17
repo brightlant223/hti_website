@@ -1,323 +1,506 @@
 import React from 'react';
 import { 
-  ArrowLeft, Compass, ShieldCheck, Award, Users, CheckCircle2, 
-  Zap, Target, Building2, MapPin, PhoneCall, Send, FileText, Check,
-  Wrench, Activity, Factory, HeartHandshake, CheckSquare
+  Settings, 
+  ShieldCheck, 
+  Leaf, 
+  Calendar, 
+  MapPin, 
+  Mail, 
+  Phone, 
+  Globe, 
+  ArrowRight, 
+  ChevronRight, 
+  Lightbulb, 
+  Award, 
+  Users, 
+  Headphones,
+  CheckCircle2,
+  ExternalLink
 } from 'lucide-react';
+import '../Aboutus.css';
 
 export default function AboutPage({ onNavigate }) {
-  const milestones = [
-    {
-      year: '2014',
-      title: 'Foundation in Mumbai',
-      desc: 'Established in Goregaon (West), Mumbai with a vision to deliver reliable industrial automation and perimeter access solutions for commercial real estate.'
-    },
-    {
-      year: '2017',
-      title: 'Cleanroom Interlock Breakthrough',
-      desc: 'Engineered specialized flameproof (Ex-d) and multi-door interlock logic controllers compliant with USFDA 21 CFR Part 11 for leading pharma plants.'
-    },
-    {
-      year: '2020',
-      title: 'Touchless Hygiene Infrastructure',
-      desc: 'Introduced high-velocity double-blower hand dryers, solid-cast brass sensor taps, and aerodynamic thermo-zone air curtains nationwide.'
-    },
-    {
-      year: '2023',
-      title: 'AI Surveillance & Turnkey Fire Safety',
-      desc: 'Expanded into 4K AI perimeter video analytics, addressable fire alarm panels, and turnkey NBC 2016 fire hydrant pumping infrastructure.'
-    },
-    {
-      year: '2026',
-      title: 'Trusted Partner to 450+ Corporates',
-      desc: 'Providing 24/7 mission-critical maintenance and turnkey execution across Maharashtra, Gujarat, Goa, Telangana, and pan-India industrial clusters.'
+  const handleNav = (page, section = null) => {
+    if (onNavigate) {
+      onNavigate(page, section);
+    } else {
+      window.location.href = `/${page}`;
     }
-  ];
+  };
 
-  const corePillars = [
-    {
-      icon: Zap,
-      title: 'Precision Engineering',
-      desc: 'Micro-processed brushless DC drives, high-pressure hydraulic manifolds, and custom GA mechanical fabrication engineered down to the millimetre.'
-    },
-    {
-      icon: ShieldCheck,
-      title: 'Statutory Code Compliance',
-      desc: 'Zero-compromise adherence to NBC 2016 Part 4, USFDA 21 CFR Part 11, EN 16005 pedestrian safety, and PESO / ATEX flameproof norms.'
-    },
-    {
-      icon: Wrench,
-      title: 'Turnkey Responsibility',
-      desc: 'From initial site surveys in Mumbai to turnkey PAN-India commissioning, testing, civil foundations, electrical cabling, and statutory sign-offs.'
-    },
-    {
-      icon: HeartHandshake,
-      title: 'Service Continuity & SLA',
-      desc: 'Dedicated round-the-clock emergency assistance, resident maintenance engineers, and guaranteed spare parts availability in Mumbai.'
-    }
-  ];
-
-  const qualityProtocols = [
-    {
-      title: '50,000 Cycle Continuous Load Stress Test',
-      detail: 'All gate and door motor operators are endurance-tested under full mechanical load before site delivery.'
-    },
-    {
-      title: 'Hydrostatic Pressure & Fire Burn Integrity',
-      detail: 'Fire rated doors and fire hydrant valves undergo testing compliant with IS 3614, BS 476, and TAC norms.'
-    },
-    {
-      title: 'Airtight Leakage Calibration (EN 12207)',
-      detail: 'Chiller doors and cleanroom hermetic seals undergo positive and negative pressure decay testing.'
-    },
-    {
-      title: 'High-Voltage Dielectric Insulation Test',
-      detail: 'Interlocking controllers, timers, and power packs undergo high-voltage surge and insulation resistance checks.'
-    },
-    {
-      title: 'Optical Sensor Sensitivity & Auto-Reverse Check',
-      detail: 'Safety photocells and bottom wireless edges are calibrated to reverse traversal within 0.15 seconds of obstruction.'
-    },
-    {
-      title: 'Flameproof Explosion-Containment Inspection',
-      detail: 'Cast enclosures undergo hydrostatic pressure containment tests compliant with IS/IEC 60079-1 standards.'
-    }
-  ];
-
-  const certifications = [
-    { title: 'ISO 9001:2015', desc: 'Certified Quality Management System for design, supply, fabrication & turnkey commissioning.' },
-    { title: 'USFDA 21 CFR Part 11', desc: 'Compliant cleanroom door interlocking logic, electronic batch audit trails, and GPS clocks.' },
-    { title: 'NBC 2016 Part 4', desc: 'Turnkey compliance for industrial fire hydrant pumping networks, piping, and addressable fire alarm panels.' },
-    { title: 'CE & EN 16005', desc: 'European safety directives for automatic pedestrian sliding and swing doors with anti-pinch technology.' },
-    { title: 'Flameproof Ex-d Group IIA, IIB', desc: 'PESO / ATEX certified enclosures for hazardous chemical, solvent synthesis, and explosive atmospheres.' },
-    { title: 'IS 3614 / BS 476 Part 20/22', desc: 'Certified 60, 120, and 240-minute fire resistant hollow metal doors and motorized rolling shutters.' }
+  // Partner brands matching the 14 logos in the reference design
+  const partnerBrands = [
+    { name: 'Honeywell', logo: '/logos/honeywell.png' },
+    { name: 'Bosch', logo: '/logos/bosch.png' },
+    { name: 'Cisco', logo: '/logos/cisco.png' },
+    { name: 'Eaton', logo: '/logos/eaton.png' },
+    { name: 'Hikvision', logo: '/logos/hikvision.png' },
+    { name: 'L&T', logo: '/logos/lt.png' },
+    { name: 'FAAC', logo: '/logos/faac.jpg' },
+    { name: 'Ravel', logo: '/logos/ravel.png' },
+    { name: 'Dorma', logo: '/logos/dorma.jpg' },
+    { name: 'Nice', logo: '/logos/nice.png' },
+    { name: 'Avtech', logo: '/logos/avtech.png' },
+    { name: 'Johnson Controls', logo: '/logos/johnson-controls.png' },
+    { name: 'Siemens', logo: '/logos/Siemens.png' },
+    { name: 'Zoloto Valves', logo: '/logos/zoloto.jpg' }
   ];
 
   return (
-    <div className="about-dedicated-page">
-      {/* 1. Breadcrumbs */}
-      <div className="detail-breadcrumb-bar">
-        <div className="container">
-          <div className="breadcrumb-nav">
-            <button className="breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
-            <span className="breadcrumb-separator">/</span>
-            <span className="breadcrumb-current">About Us</span>
-          </div>
-          <button className="back-btn" onClick={() => onNavigate('home')}>
-            <ArrowLeft size={15} />
-            <span>Back to Home</span>
-          </button>
-        </div>
-      </div>
+    <div className="about-page-wrapper">
+      {/* =====================================================================
+          1. HERO SECTION: Reliable Automation, Hygiene & Security Solutions
+          ===================================================================== */}
+      <section className="about-hero-section">
+        <div className="about-container">
+          <div className="about-hero-grid">
+            {/* Left Content */}
+            <div className="about-hero-left">
+              <div className="about-hero-badge-pill">
+                <Settings size={14} className="animate-spin-slow text-sky-600" />
+                <span>SERVING CLIENTS SINCE 2014</span>
+              </div>
 
-      {/* 2. Hero Section */}
-      <div className="about-page-hero">
-        <div className="container">
-          <div className="about-hero-inner">
-            <div className="category-hero-badge">
-              <Compass size={16} />
-              <span>ENGINEERING HERITAGE SINCE 2014</span>
-            </div>
-            <h1 className="about-hero-title">
-              Pioneering Industrial Automation, Cleanroom Hygiene & Life Safety
-            </h1>
-            <p className="about-hero-desc">
-              HTI Automation & Security Systems Pvt. Ltd. is an Indian engineering enterprise dedicated to mission-critical access automation, sterile pharma contamination control, and life-safety systems.
-            </p>
-          </div>
-        </div>
-      </div>
+              <h1 className="about-hero-heading">
+                Reliable Automation,<br />
+                Hygiene & Security Solutions
+              </h1>
 
-      {/* 3. Corporate Overview */}
-      <div className="about-content-section section">
-        <div className="container">
-          <div className="about-story-grid">
-            <div className="about-story-card">
-              <div className="story-badge">MUMBAI HEADQUARTERS</div>
-              <h2 className="story-title">Over a Decade of Engineering Trust Across Indian Industry</h2>
-              <p className="story-p">
-                Founded in 2014 in Mumbai, HTI Automation began with a single core philosophy: <strong>engineering precision paired with dependable, responsive after-sales service</strong>. What began as a perimeter gate automation specialist has matured into one of India’s most trusted turnkey solution providers across three critical sectors:
+              <p className="about-hero-desc">
+                HTI Automation & Security Systems Pvt. Ltd. is a reliable automation and security system provider serving clients since 2014. We deliver quality products to the corporate sector, backed by experienced engineering and dedicated service.
               </p>
-              
-              <div className="story-disciplines-list mt-6">
-                <div className="discipline-item">
-                  <div className="disc-num">01</div>
-                  <div>
-                    <h4>Industrial Access Automation</h4>
-                    <p>High-speed roll-up doors, telescopic cantilever gates, dock levellers, and optical speed gates engineered for continuous heavy-duty industrial cycles.</p>
-                  </div>
-                </div>
 
-                <div className="discipline-item">
-                  <div className="disc-num">02</div>
-                  <div>
-                    <h4>Cleanroom & Environmental Hygiene</h4>
-                    <p>USFDA-compliant multi-door interlocks, dynamic pass boxes, touchless sensor taps, and aerodynamic air curtains preventing cleanroom contamination.</p>
-                  </div>
-                </div>
+              <div className="about-hero-solutions-row">
+                <button 
+                  className="hero-solution-chip"
+                  onClick={() => handleNav('automation')}
+                >
+                  <Settings size={18} className="text-sky-600" />
+                  <span>Automation Solutions</span>
+                </button>
 
-                <div className="discipline-item">
-                  <div className="disc-num">03</div>
-                  <div>
-                    <h4>Perimeter Defense & Life Safety</h4>
-                    <p>Turnkey fire hydrant networks, addressable fire alarm panels, anti-ram rising bollards, and 4K AI video surveillance installations.</p>
-                  </div>
-                </div>
+                <button 
+                  className="hero-solution-chip"
+                  onClick={() => handleNav('security-systems')}
+                >
+                  <ShieldCheck size={18} className="text-sky-600" />
+                  <span>Security Systems</span>
+                </button>
+
+                <button 
+                  className="hero-solution-chip chip-hygiene"
+                  onClick={() => handleNav('hygiene')}
+                >
+                  <Leaf size={18} className="text-emerald-600" />
+                  <span>Hygiene Solutions</span>
+                </button>
               </div>
             </div>
 
-            {/* Quick Corporate Facts Card */}
-            <div className="about-stats-sidebar">
-              <div className="facts-card">
-                <h3 className="facts-title">HTI at a Glance</h3>
-                <div className="facts-list">
-                  <div className="fact-row">
-                    <span className="fact-lbl">Year Established</span>
-                    <span className="fact-val">2014</span>
-                  </div>
-                  <div className="fact-row">
-                    <span className="fact-lbl">Corporate Office</span>
-                    <span className="fact-val">Goregaon (West), Mumbai</span>
-                  </div>
-                  <div className="fact-row">
-                    <span className="fact-lbl">Clients Served</span>
-                    <span className="fact-val">450+ Enterprises</span>
-                  </div>
-                  <div className="fact-row">
-                    <span className="fact-lbl">Active Products</span>
-                    <span className="fact-val">33+ Engineered Systems</span>
-                  </div>
-                  <div className="fact-row">
-                    <span className="fact-lbl">Geographic Reach</span>
-                    <span className="fact-val">Pan-India Support</span>
-                  </div>
-                  <div className="fact-row">
-                    <span className="fact-lbl">SLA Uptime</span>
-                    <span className="fact-val">99.8% Guaranteed</span>
-                  </div>
-                </div>
-
-                <div className="facts-contact-box mt-6">
-                  <p className="contact-prompt text-sm text-slate-600 mb-3">
-                    Have a corporate tender, site survey requirement, or turnkey project?
-                  </p>
-                  <button 
-                    className="btn btn-primary w-full"
-                    onClick={() => onNavigate('contact')}
-                  >
-                    <Send size={15} />
-                    <span>Contact Project Directorate</span>
-                  </button>
+            {/* Right Cleanroom Engineer Hero Image */}
+            <div className="about-hero-image-col">
+              <div className="about-hero-image-wrap">
+                <img 
+                  src="/about-hero-cleanroom.jpg" 
+                  alt="HTI Cleanroom Automated Glass Doors and Engineer" 
+                  className="about-hero-img"
+                  loading="eager"
+                />
+                
+                {/* Floating Badge */}
+                <div className="hero-floating-badge">
+                  <div className="floating-badge-title">Engineering</div>
+                  <div className="floating-badge-sub">for safer, cleaner spaces</div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* 4. Core Pillars */}
-          <div className="core-pillars-section mt-16">
-            <div className="section-title-wrap text-center mb-8">
-              <div className="section-tag inline-flex items-center gap-2">
-                <Target size={14} />
-                <span>Foundational Values</span>
+      {/* =====================================================================
+          2. BACKGROUND & HTI AT A GLANCE
+          ===================================================================== */}
+      <section className="about-bg-section">
+        <div className="about-container">
+          <div className="about-bg-grid">
+            {/* Left Column: Our Background */}
+            <div className="about-bg-left">
+              <div className="section-kicker-red">
+                <span className="kicker-line"></span>
+                <span>OUR BACKGROUND</span>
               </div>
-              <h2 className="section-heading text-2xl font-bold text-slate-900 mt-2">
-                Our Core Engineering Values
+
+              <h2 className="about-section-heading">
+                Built on Engineering, Service & Quality
               </h2>
+
+              <p className="about-lead-desc">
+                A dynamic organization catering high-quality products to the corporate sector. Known for delivering quality products with a focus on service, bolstered by experienced engineering. A rapidly growing company specializing in automation, hygiene, and security, distinguished for its exceptional service and the expertise of its well-trained engineering team.
+              </p>
+
+              {/* Numbered 01, 02, 03 List */}
+              <div className="about-features-stack">
+                {/* 01: Automation */}
+                <div 
+                  className="about-feat-item"
+                  onClick={() => handleNav('automation')}
+                >
+                  <div className="about-feat-num-box">01</div>
+                  <div className="about-feat-icon-wrap">
+                    <Settings size={22} />
+                  </div>
+                  <div className="about-feat-text">
+                    <div className="about-feat-title">Automation</div>
+                    <p className="about-feat-p">
+                      Wide range of automatic doors, gates, barriers and industrial doors for commercial and industrial facilities. Automatic sliding/swing doors, gates, boom barriers, fire rated doors and shutters, dock levellers and more.
+                    </p>
+                  </div>
+                  <ChevronRight size={20} className="about-feat-arrow" />
+                </div>
+
+                {/* 02: Security Systems */}
+                <div 
+                  className="about-feat-item"
+                  onClick={() => handleNav('security-systems')}
+                >
+                  <div className="about-feat-num-box">02</div>
+                  <div className="about-feat-icon-wrap">
+                    <ShieldCheck size={22} />
+                  </div>
+                  <div className="about-feat-text">
+                    <div className="about-feat-title">Security Systems</div>
+                    <p className="about-feat-p">
+                      Advanced security and access control solutions for safer and smarter premises. Door interlock systems, access control, CCTV surveillance, fire alarm, fire fighting, gas detection and more.
+                    </p>
+                  </div>
+                  <ChevronRight size={20} className="about-feat-arrow" />
+                </div>
+
+                {/* 03: Hygiene Solutions */}
+                <div 
+                  className="about-feat-item feat-hygiene"
+                  onClick={() => handleNav('hygiene')}
+                >
+                  <div className="about-feat-num-box">03</div>
+                  <div className="about-feat-icon-wrap">
+                    <Leaf size={22} />
+                  </div>
+                  <div className="about-feat-text">
+                    <div className="about-feat-title">Hygiene Solutions</div>
+                    <p className="about-feat-p">
+                      Cleanroom and hygiene products for cleaner and healthier environments. Hand dryers, air curtains, automatic taps, urinal flush, soap dispensers, PVC strip curtains and more.
+                    </p>
+                  </div>
+                  <ChevronRight size={20} className="about-feat-arrow" />
+                </div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {corePillars.map((pil, idx) => {
-                const Icon = pil.icon;
-                return (
-                  <div key={idx} className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-                    <div className="w-12 h-12 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center mb-4">
-                      <Icon size={24} />
+            {/* Right Column: HTI at a Glance Card */}
+            <div className="about-glance-col">
+              <div className="about-glance-card">
+                <div className="glance-header">
+                  <h3 className="glance-title">HTI at a Glance</h3>
+                  <img 
+                    src="/about-glance-building.jpg" 
+                    alt="HTI Corporate Building" 
+                    className="glance-header-img"
+                  />
+                </div>
+
+                <div className="glance-table">
+                  {/* Established */}
+                  <div className="glance-row">
+                    <div className="glance-label">
+                      <Calendar size={17} className="glance-label-icon" />
+                      <span>Established</span>
                     </div>
-                    <h4 className="font-bold text-slate-900 text-lg mb-2">{pil.title}</h4>
-                    <p className="text-slate-600 text-sm leading-relaxed">{pil.desc}</p>
+                    <div className="glance-val">2014</div>
                   </div>
-                );
-              })}
-            </div>
-          </div>
 
-          {/* 5. Milestones Timeline */}
-          <div className="milestones-section mt-16">
-            <div className="section-title-wrap text-center mb-8">
-              <div className="section-tag inline-flex items-center gap-2">
-                <Award size={14} />
-                <span>Our Track Record</span>
-              </div>
-              <h2 className="section-heading text-2xl font-bold text-slate-900 mt-2">
-                Milestones in Our Journey
-              </h2>
-            </div>
+                  {/* Office Address */}
+                  <div className="glance-row">
+                    <div className="glance-label">
+                      <MapPin size={17} className="glance-label-icon" />
+                      <span>Office Address</span>
+                    </div>
+                    <div className="glance-val">
+                      407 DR-4 Ram Mandir Road, Goregaon (West), Mumbai 400104
+                    </div>
+                  </div>
 
-            <div className="milestones-timeline-grid">
-              {milestones.map((m, idx) => (
-                <div key={idx} className="milestone-card">
-                  <div className="milestone-year">{m.year}</div>
-                  <h4 className="milestone-title">{m.title}</h4>
-                  <p className="milestone-desc">{m.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+                  {/* Email */}
+                  <div className="glance-row">
+                    <div className="glance-label">
+                      <Mail size={17} className="glance-label-icon" />
+                      <span>Email</span>
+                    </div>
+                    <div className="glance-val">
+                      <a href="mailto:hti@htisystems.in">hti@htisystems.in</a>
+                    </div>
+                  </div>
 
-          {/* 6. Quality Testing Protocols */}
-          <div className="quality-protocols-section mt-16 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-            <div className="section-title-wrap mb-6">
-              <div className="section-tag inline-flex items-center gap-2">
-                <CheckSquare size={14} />
-                <span>Rigorous Quality Control</span>
-              </div>
-              <h3 className="section-heading text-2xl font-bold text-slate-900 mt-2">
-                Factory Acceptance Testing (FAT) Protocols
-              </h3>
-              <p className="text-slate-600 text-sm mt-1">
-                Before any motorized door, barrier, or interlock panel leaves our facility, it passes 6 mandatory validation benchmarks:
-              </p>
-            </div>
+                  {/* Phone */}
+                  <div className="glance-row">
+                    <div className="glance-label">
+                      <Phone size={17} className="glance-label-icon" />
+                      <span>Phone</span>
+                    </div>
+                    <div className="glance-val">
+                      <a href="tel:+919892756077">9892756077</a> / <a href="tel:+919594917010">9594917010</a>
+                    </div>
+                  </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {qualityProtocols.map((qp, idx) => (
-                <div key={idx} className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-start gap-3">
-                  <CheckCircle2 size={18} className="text-sky-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h5 className="font-bold text-slate-900 text-sm">{qp.title}</h5>
-                    <p className="text-slate-600 text-xs mt-1 leading-relaxed">{qp.detail}</p>
+                  {/* Website */}
+                  <div className="glance-row">
+                    <div className="glance-label">
+                      <Globe size={17} className="glance-label-icon" />
+                      <span>Website</span>
+                    </div>
+                    <div className="glance-val">
+                      <a href="https://www.htisystems.in" target="_blank" rel="noopener noreferrer">
+                        www.htisystems.in
+                      </a>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* 7. Standards & Certifications */}
-          <div className="certifications-section mt-16">
-            <div className="section-title-wrap text-center mb-8">
-              <div className="section-tag inline-flex items-center gap-2">
-                <ShieldCheck size={14} />
-                <span>Quality & Compliance</span>
+                <button 
+                  className="glance-cta-btn"
+                  onClick={() => handleNav('contact')}
+                >
+                  <Mail size={17} />
+                  <span>Contact Our Team →</span>
+                </button>
               </div>
-              <h2 className="section-heading text-2xl font-bold text-slate-900 mt-2">
-                Statutory Certifications & Statutory Codes
-              </h2>
-            </div>
-
-            <div className="cert-cards-grid">
-              {certifications.map((c, idx) => (
-                <div key={idx} className="cert-card">
-                  <div className="cert-icon-wrap">
-                    <CheckCircle2 size={24} className="text-sky-600" />
-                  </div>
-                  <h4 className="cert-title">{c.title}</h4>
-                  <p className="cert-desc">{c.desc}</p>
-                </div>
-              ))}
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* =====================================================================
+          3. OUR CORE VALUES (4 Cards)
+          ===================================================================== */}
+      <section className="about-values-section">
+        <div className="about-container">
+          <div className="section-kicker-red">
+            <span className="kicker-line"></span>
+            <span>OUR CORE VALUES</span>
+          </div>
+
+          <div className="values-grid">
+            {/* Value 1: Innovation */}
+            <div className="value-card">
+              <div className="value-icon-circle">
+                <Lightbulb size={24} />
+              </div>
+              <h4 className="value-card-title">Innovation</h4>
+              <p className="value-card-desc">
+                We embrace innovation to deliver advanced and reliable solutions.
+              </p>
+            </div>
+
+            {/* Value 2: Commitment to Quality */}
+            <div className="value-card">
+              <div className="value-icon-circle">
+                <Award size={24} />
+              </div>
+              <h4 className="value-card-title">Commitment to Quality</h4>
+              <p className="value-card-desc">
+                We focus on delivering high-quality products with perfection.
+              </p>
+            </div>
+
+            {/* Value 3: Engineering Expertise */}
+            <div className="value-card">
+              <div className="value-icon-circle">
+                <Users size={24} />
+              </div>
+              <h4 className="value-card-title">Engineering Expertise</h4>
+              <p className="value-card-desc">
+                Backed by experienced and well-trained engineering team with domain knowledge.
+              </p>
+            </div>
+
+            {/* Value 4: Dedicated Customer Service */}
+            <div className="value-card">
+              <div className="value-icon-circle">
+                <Headphones size={24} />
+              </div>
+              <h4 className="value-card-title">Dedicated Customer Service</h4>
+              <p className="value-card-desc">
+                Our satisfied customers are a testament to our dedicated and helpful team.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          4. SOLUTIONS ACROSS THREE KEY SEGMENTS (3 Large Cards)
+          ===================================================================== */}
+      <section className="about-solutions-section">
+        <div className="about-container">
+          <div className="section-kicker-red" style={{ color: '#0f2942' }}>
+            <span className="kicker-line"></span>
+            <span style={{ color: '#0f2942' }}>Solutions Across Three Key Segments</span>
+          </div>
+
+          <div className="solutions-grid">
+            {/* Card 1: Automation */}
+            <div 
+              className="solution-segment-card"
+              onClick={() => handleNav('automation')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="solution-card-img-wrap">
+                <img 
+                  src="/about-automation-doors.jpg" 
+                  alt="HTI Automation Sliding Doors" 
+                  className="solution-card-img"
+                  loading="lazy"
+                />
+              </div>
+
+              <div className="solution-badge-row">
+                <div className="segment-pill-tag">
+                  <Settings size={15} />
+                  <span>Automation</span>
+                </div>
+                <div className="segment-arrow-btn">
+                  <ArrowRight size={15} />
+                </div>
+              </div>
+
+              <div className="solution-card-body">
+                <p className="solution-items-desc">
+                  Automatic Sliding Doors, Automatic Swing Doors, Sliding & Swing Gates, Telescopic Gates, Cantilever Gates, Boom Barriers, Fire Rated Doors & Shutters, High Speed Doors, Sectional Over Head Doors, Dock Levellers, Turnstiles, Motorized Rolling Shutters, Clean Room Doors and more.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 2: Security Systems */}
+            <div 
+              className="solution-segment-card"
+              onClick={() => handleNav('security-systems')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="solution-card-img-wrap">
+                <img 
+                  src="/about-security-camera.jpg" 
+                  alt="HTI Security Surveillance Systems" 
+                  className="solution-card-img"
+                  loading="lazy"
+                />
+              </div>
+
+              <div className="solution-badge-row">
+                <div className="segment-pill-tag">
+                  <ShieldCheck size={15} />
+                  <span>Security Systems</span>
+                </div>
+                <div className="segment-arrow-btn">
+                  <ArrowRight size={15} />
+                </div>
+              </div>
+
+              <div className="solution-card-body">
+                <p className="solution-items-desc">
+                  Door Interlock Systems, Biometric Access Control, Time Attendance System, CCTV Surveillance (Analogue, HD & IP), Fire Alarm System (Conventional & Addressable), Fire Fighting System, Gas Detection System, Video Door Phone (IP/Non-IP), Public Address System, IP PBX & EPABX, Parking Management System and more.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3: Hygiene */}
+            <div 
+              className="solution-segment-card"
+              onClick={() => handleNav('hygiene')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="solution-card-img-wrap">
+                <img 
+                  src="/about-hygiene-washroom.jpg" 
+                  alt="HTI Hygiene Cleanroom Washroom Solutions" 
+                  className="solution-card-img"
+                  loading="lazy"
+                />
+              </div>
+
+              <div className="solution-badge-row">
+                <div className="segment-pill-tag hygiene-tag">
+                  <Leaf size={15} />
+                  <span>Hygiene</span>
+                </div>
+                <div className="segment-arrow-btn">
+                  <ArrowRight size={15} />
+                </div>
+              </div>
+
+              <div className="solution-card-body">
+                <p className="solution-items-desc">
+                  Hand Dryers, Air Curtains, Fly Killers, Insect Killers, Automatic Taps, Auto Urinal Flush, Liquid Soap Dispensers, Aerosol Dispensers, Automatic Shoe Shine Machine, PVC Strip Curtains, Spot Extractors, Industrial Blowers and more.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          5. TECHNOLOGY PARTNERSHIPS (14 Logos)
+          ===================================================================== */}
+      <section className="about-partners-section">
+        <div className="about-container">
+          <div className="section-kicker-red" style={{ color: '#0f2942' }}>
+            <span className="kicker-line"></span>
+            <span style={{ color: '#0f2942' }}>Technology Partnerships</span>
+          </div>
+
+          <p className="partners-subtitle">
+            Working with established technology brands to support dependable solutions.
+          </p>
+
+          <div className="partners-logos-grid">
+            {partnerBrands.map((brand, bIdx) => (
+              <div key={bIdx} className="partner-logo-tile" title={brand.name}>
+                <img 
+                  src={brand.logo} 
+                  alt={brand.name} 
+                  className="partner-logo-img"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          6. BOTTOM CALL TO ACTION BANNER
+          ===================================================================== */}
+      <section className="about-cta-banner">
+        <div className="about-container">
+          <div className="about-cta-inner">
+            <div className="cta-banner-text">
+              <h3 className="cta-banner-heading">
+                <span className="kicker-line" style={{ width: 28, height: 4 }}></span>
+                <span>Let's Build Safer, Smarter Environments</span>
+              </h3>
+              <p className="cta-banner-desc">
+                Talk to HTI about your automation, security or hygiene requirements.
+              </p>
+            </div>
+
+            <button 
+              className="cta-contact-btn"
+              onClick={() => handleNav('contact')}
+            >
+              <span>Contact HTI →</span>
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

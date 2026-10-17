@@ -261,8 +261,15 @@ export default function Navbar({
               <span>info@htisystems.in</span>
             </a>
             <span className="top-sep">|</span>
-            <button
-              className="top-link-btn"
+            <button 
+              className="top-link-btn" 
+              onClick={() => handleNavClick('about')}
+            >
+              <span>About Us</span>
+            </button>
+            <span className="top-sep">|</span>
+            <button 
+              className="top-link-btn" 
               onClick={() => handleNavClick('contact')}
             >
               <span>Contact Us</span>
@@ -319,6 +326,14 @@ export default function Navbar({
           {/* Desktop Nav Items */}
           {/* Desktop Nav Items */}
           <div className="bright-nav-links desktop-only">
+            {/* Direct About Us link matching user request */}
+            <button
+              className={`bright-nav-btn ${currentPage === 'about' ? 'services-pill-btn is-active-pill' : ''}`}
+              onClick={() => handleNavClick('about')}
+            >
+              <span>About Us</span>
+            </button>
+
             {/* Services Pill / Dropdown */}
             <div className="nav-item-dropdown">
               <button
@@ -892,7 +907,7 @@ export default function Navbar({
 
               {mobileAccordion === 'company' && (
                 <div className="mobile-accordion-body">
-                  <button className="mobile-sublink" onClick={() => handleNavClick('home', 'about')}>
+                  <button className="mobile-sublink" onClick={() => handleNavClick('about')}>
                     About HTI Automation
                   </button>
                   <button className="mobile-sublink" onClick={() => handleNavClick('clients')}>
@@ -904,7 +919,10 @@ export default function Navbar({
                   >
                     Careers
                   </button>
-                  <button className="mobile-sublink" onClick={() => handleNavClick('home', 'blogs')}>
+                  <button className="mobile-sublink" onClick={() => handleNavClick('partners')}>
+                    Technology Partners
+                  </button>
+                  <button className="mobile-sublink" onClick={() => handleNavClick('blogs')}>
                     Technical Blogs
                   </button>
                 </div>
