@@ -239,20 +239,6 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
     return () => clearTimeout(swapTimer);
   }, [frontFace, currentSlide]);
 
-  const handleDotClick = (targetIndex) => {
-    if (targetIndex === currentSlide) return;
-    if (frontFace === 'A') {
-      setFaceBSlide(targetIndex);
-      setRotationDeg(prev => prev + 180);
-      setFrontFace('B');
-    } else {
-      setFaceASlide(targetIndex);
-      setRotationDeg(prev => prev + 180);
-      setFrontFace('A');
-    }
-    setCurrentSlide(targetIndex);
-  };
-
   useEffect(() => {
     const currentWord = ROTATING_DOMAINS[domainIndex].word;
 
@@ -430,22 +416,6 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
               </svg>
               <div className="shield-lock-icon-wrap">
                 <Lock size={26} className="shield-lock-icon" />
-              </div>
-            </div>
-
-            {/* Interactive Carousel Pill Controls */}
-            <div className="hero-carousel-controls">
-              <span className="carousel-slide-tag">{CAROUSEL_SLIDES[currentSlide].tag}</span>
-              <div className="carousel-dots-list">
-                {CAROUSEL_SLIDES.map((_, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    className={`carousel-dot ${idx === currentSlide ? 'active' : ''}`}
-                    onClick={() => handleDotClick(idx)}
-                    aria-label={`Go to slide ${idx + 1}`}
-                  />
-                ))}
               </div>
             </div>
           </div>

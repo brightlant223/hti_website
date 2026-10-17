@@ -10,6 +10,65 @@ def get_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+def migrate_columns(cursor):
+    tables = {
+        "products": [
+            ("image_url", "TEXT"),
+            ("brochure_url", "TEXT"),
+            ("datasheet_url", "TEXT"),
+            ("is_published", "INTEGER DEFAULT 1"),
+            ("display_order", "INTEGER DEFAULT 0"),
+        ],
+        "inquiries": [
+            ("assigned_to", "TEXT DEFAULT 'Unassigned'"),
+            ("followup_notes", "TEXT DEFAULT ''"),
+            ("last_contacted_at", "TEXT"),
+            ("updated_at", "TEXT")
+        ],
+        "clients": [
+            ("logo_url", "TEXT"),
+            ("website_url", "TEXT"),
+            ("is_active", "INTEGER DEFAULT 1"),
+            ("display_order", "INTEGER DEFAULT 0"),
+            ("is_authorized", "INTEGER DEFAULT 1"),
+        ],
+        "partners": [
+            ("logo_url", "TEXT"),
+            ("website_url", "TEXT"),
+            ("is_active", "INTEGER DEFAULT 1"),
+            ("display_order", "INTEGER DEFAULT 0"),
+            ("is_authorized", "INTEGER DEFAULT 1"),
+        ],
+        "blogs": [
+            ("tags", "TEXT DEFAULT ''"),
+            ("seo_title", "TEXT"),
+            ("meta_description", "TEXT"),
+            ("scheduled_at", "TEXT"),
+        ]
+    }
+    for table, cols in tables.items():
+        try:
+            cursor.execute(f"PRAGMA table_info({table})")
+            existing_cols = {row[1] for row in cursor.fetchall()}
+            for col_name, col_def in cols:
+                if col_name not in existing_cols:
+                    cursor.execute(f"ALTER TABLE {table} ADD COLUMN {col_name} {col_def}")
+        except Exception as e:
+            print(f"Migration notice for {table}: {e}")
+
+def add_audit_log(username: str, action: str, module: str, details: str):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+        INSERT INTO audit_logs (username, action, module, details)
+        VALUES (?, ?, ?, ?)
+        """, (username or "system", action, module, details))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Failed to record audit log: {e}")
+
 def init_db():
     conn = get_connection()
     cursor = conn.cursor()
@@ -28,7 +87,12 @@ def init_db():
         specs TEXT NOT NULL,    -- JSON object
         applications TEXT,     -- JSON array
         badge TEXT,
-        is_featured INTEGER DEFAULT 0
+        is_featured INTEGER DEFAULT 0,
+        image_url TEXT,
+        brochure_url TEXT,
+        datasheet_url TEXT,
+        is_published INTEGER DEFAULT 1,
+        display_order INTEGER DEFAULT 0
     );
     """)
 
@@ -44,7 +108,11 @@ def init_db():
         product_name TEXT,
         message TEXT NOT NULL,
         status TEXT DEFAULT 'New',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        assigned_to TEXT DEFAULT 'Unassigned',
+        followup_notes TEXT DEFAULT '',
+        last_contacted_at TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
 
@@ -54,7 +122,12 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         category TEXT NOT NULL,
-        tagline TEXT
+        tagline TEXT,
+        logo_url TEXT,
+        website_url TEXT,
+        is_active INTEGER DEFAULT 1,
+        display_order INTEGER DEFAULT 0,
+        is_authorized INTEGER DEFAULT 1
     );
     """)
 
@@ -63,7 +136,12 @@ def init_db():
     CREATE TABLE IF NOT EXISTS clients (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        sector TEXT NOT NULL
+        sector TEXT NOT NULL,
+        logo_url TEXT,
+        website_url TEXT,
+        is_active INTEGER DEFAULT 1,
+        display_order INTEGER DEFAULT 0,
+        is_authorized INTEGER DEFAULT 1
     );
     """)
 
@@ -80,9 +158,79 @@ def init_db():
         content TEXT NOT NULL,
         image_url TEXT,
         is_published INTEGER DEFAULT 1,
+        tags TEXT DEFAULT '',
+        seo_title TEXT,
+        meta_description TEXT,
+        scheduled_at TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
+
+    # Create projects table (Module 6: Projects & Installations)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS projects (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        slug TEXT UNIQUE NOT NULL,
+        title TEXT NOT NULL,
+        client_name TEXT,
+        client_approved INTEGER DEFAULT 1,
+        industry TEXT NOT NULL,
+        location TEXT NOT NULL,
+        completion_year TEXT,
+        description TEXT NOT NULL,
+        image_url TEXT,
+        related_products TEXT, -- JSON array
+        is_published INTEGER DEFAULT 1,
+        display_order INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    # Create website_content table (Module 7: Website Content Management)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS website_content (
+        section_key TEXT PRIMARY KEY,
+        data_json TEXT NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    # Create admin_users table (Module 8: Admin Users & Roles)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS admin_users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        full_name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        role TEXT NOT NULL DEFAULT 'Administrator', -- Administrator | Editor | Viewer
+        is_active INTEGER DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    # Create audit_logs table (Module 8: Audit Logs)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS audit_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        username TEXT NOT NULL,
+        action TEXT NOT NULL,
+        module TEXT NOT NULL,
+        details TEXT NOT NULL
+    );
+    """)
+
+    # Create system_settings table (Module 9: Settings & System Health)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS system_settings (
+        key TEXT PRIMARY KEY,
+        value TEXT
+    );
+    """)
+
+    # Run safe column migration for any existing tables
+    migrate_columns(cursor)
 
     conn.commit()
     conn.close()
@@ -1083,6 +1231,180 @@ def seed_db():
             INSERT INTO blogs (slug, title, category, author, read_time, excerpt, content, image_url, is_published)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, b)
+
+    # Admin Users (Module 8: Admin Users & Roles)
+    cursor.execute("SELECT COUNT(*) as count FROM admin_users")
+    if cursor.fetchone()["count"] == 0:
+        users = [
+            ("admin", "admin123", "Chief Administrator", "admin@htisystems.in", "Administrator", 1),
+            ("editor", "editor123", "Technical Content Lead", "editor@htisystems.in", "Editor", 1),
+            ("sales", "sales123", "Commercial Sales Officer", "sales@htisystems.in", "Viewer", 1)
+        ]
+        for u in users:
+            cursor.execute("""
+            INSERT INTO admin_users (username, password_hash, full_name, email, role, is_active)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """, u)
+
+    # Initial Audit Log entry
+    cursor.execute("SELECT COUNT(*) as count FROM audit_logs")
+    if cursor.fetchone()["count"] == 0:
+        cursor.execute("""
+        INSERT INTO audit_logs (username, action, module, details)
+        VALUES ('system', 'SYSTEM_INITIALIZE', 'Core', 'HTI enterprise database schema initialized and operational.')
+        """)
+
+    # Projects / Case Studies (Module 6: Projects & Installations)
+    cursor.execute("SELECT COUNT(*) as count FROM projects")
+    if cursor.fetchone()["count"] == 0:
+        projects = [
+            (
+                "glenmark-formulation-cleanroom-interlocks",
+                "Turnkey 12-Door Cleanroom Interlocking Network",
+                "Glenmark Pharmaceuticals",
+                1,
+                "Pharmaceutical Cleanroom",
+                "Navi Mumbai, Maharashtra",
+                "2025",
+                "Engineered and commissioned an integrated 12-door optical-sensor interlock system with programmable pressure delays, magnetic locks, and emergency fire evacuation overrides for OSD formulation blocks.",
+                "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+                json.dumps(["Door Interlock System", "Air Shower Automation", "Electromagnetic Locks"]),
+                1,
+                1
+            ),
+            (
+                "sun-pharma-rnd-access-and-surveillance",
+                "High-Security Access Control & Perimeter Surveillance",
+                "Sun Pharmaceutical Industries",
+                1,
+                "Life Sciences & R&D",
+                "Vadodara, Gujarat",
+                "2024",
+                "Complete installation of biometric multi-door controllers, optical turnstiles, and 4K IP surveillance cameras guarding specialized chemical synthesis and cold-storage holding rooms.",
+                "https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=800&q=80",
+                json.dumps(["IP Surveillance & CCTV", "Access Control Systems", "Biometric Attendance"]),
+                1,
+                2
+            ),
+            (
+                "pidilite-flameproof-air-curtains",
+                "Heavy Industrial Flameproof Air Curtain Barriers",
+                "Pidilite Industries",
+                1,
+                "Chemical & Adhesive Manufacturing",
+                "Vapi, Gujarat",
+                "2024",
+                "Supplied and installed certified explosion-proof (Ex-d) industrial air curtains across raw material transfer bays, preventing thermal energy loss and hazardous particulate contamination.",
+                "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
+                json.dumps(["Industrial Air Curtains", "Flameproof Controllers", "PVC Strip Curtains"]),
+                1,
+                3
+            ),
+            (
+                "iit-bombay-nanotech-cleanroom-automation",
+                "Nanofabrication Facility Airlock Environmental Control",
+                "IIT Bombay (Centre for Nano Science)",
+                1,
+                "Academic & Advanced Research",
+                "Powai, Mumbai",
+                "2023",
+                "Designed customized interlocking logic with differential pressure integration and cleanroom status indicators meeting Class 100 / ISO 5 standards.",
+                "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+                json.dumps(["Door Interlock System", "Environmental Sensors", "Room Alert Monitor"]),
+                1,
+                4
+            )
+        ]
+        for p in projects:
+            cursor.execute("""
+            INSERT INTO projects (slug, title, client_name, client_approved, industry, location, completion_year, description, image_url, related_products, is_published, display_order)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, p)
+
+    # Website Content Management (Module 7: Website Content Management)
+    cursor.execute("SELECT COUNT(*) as count FROM website_content")
+    if cursor.fetchone()["count"] == 0:
+        default_content = {
+            "homepage_hero": json.dumps({
+                "badge": "ISO 9001:2015 & CE Certified Cleanroom & Security Systems",
+                "title": "Intelligent Cleanroom Automation, Fire Safety & Security Systems",
+                "subtitle": "From multi-door cleanroom interlocks and touchless hygiene automation to turnkey fire hydrant networks and addressable alarms. Trusted by top pharmaceutical manufacturers, chemical plants, and institutions across India since 2014.",
+                "cta_primary_text": "Explore Product Catalog",
+                "cta_primary_link": "/#catalog",
+                "cta_secondary_text": "Request Engineering Quote",
+                "cta_secondary_link": "/#quote",
+                "stat_installations": "450+",
+                "stat_satisfaction": "99.8%",
+                "stat_years": "12+"
+            }),
+            "company_profile": json.dumps({
+                "headline": "Engineering Precision & Industrial Reliability",
+                "description": "Headquartered in Mumbai, HTI Automation & Security Systems Pvt. Ltd. is an established engineering manufacturer and turnkey solutions provider. We specialize in contamination-control cleanroom interlocks, industrial flameproof air barriers, automatic hygiene systems, and enterprise security networks.",
+                "years_in_business": 12,
+                "cleanrooms_secured": 850,
+                "corporate_clients": 120,
+                "certifications": "ISO 9001:2015, CE Certified, Flameproof Ex-d Compliant"
+            }),
+            "contact_details": json.dumps({
+                "company_name": "HTI Automation & Security Systems Pvt. Ltd.",
+                "primary_phone": "+91 9892756077",
+                "secondary_phone": "+91 9594917010",
+                "sales_email": "sales@htisystems.in",
+                "support_email": "hti@htisystems.in",
+                "address_line": "407 DR-4 Ram Mandir Road, Goregaon (West)",
+                "city": "Mumbai",
+                "state": "Maharashtra",
+                "pincode": "400104",
+                "country": "India",
+                "working_hours": "Monday - Saturday: 9:00 AM - 6:30 PM"
+            }),
+            "testimonials": json.dumps([
+                {
+                    "quote": "HTI delivered our 12-door cleanroom interlocking system on an aggressive schedule. The programmable pressure delays and flameproof controllers passed our USFDA audit without a single observation.",
+                    "author": "Vice President - Engineering",
+                    "company": "Leading Pharmaceutical Multinational",
+                    "location": "Navi Mumbai",
+                    "rating": 5
+                },
+                {
+                    "quote": "The industrial air curtains and high-speed PVC curtains drastically cut thermal losses across our packaging docks. Outstanding craftsmanship and reliable engineering support.",
+                    "author": "Plant Operations Head",
+                    "company": "Chemical Manufacturing Plant",
+                    "location": "Gujarat",
+                    "rating": 5
+                },
+                {
+                    "quote": "We have partnered with HTI for our campus fire hydrant networks, addressable panels, and access turnstiles. Real expertise with zero downtime.",
+                    "author": "Chief Facilities Director",
+                    "company": "Premier Educational Institution",
+                    "location": "Mumbai",
+                    "rating": 5
+                }
+            ])
+        }
+        for key, val in default_content.items():
+            cursor.execute("""
+            INSERT INTO website_content (section_key, data_json)
+            VALUES (?, ?)
+            """, (key, val))
+
+    # System Settings (Module 9: Settings & System Health)
+    cursor.execute("SELECT COUNT(*) as count FROM system_settings")
+    if cursor.fetchone()["count"] == 0:
+        default_settings = [
+            ("site_title", "HTI Automation & Security Systems Pvt. Ltd."),
+            ("meta_description", "Manufacturer & Turnkey Integrator of Door Interlock Systems, Industrial Air Curtains, Washroom Automation, and Fire Protection Systems in Mumbai, India."),
+            ("meta_keywords", "door interlock system, cleanroom interlocking, air curtain mumbai, automatic sensor taps, fire hydrant turnkey, pharmaceutical cleanroom automation"),
+            ("notification_email", "sales@htisystems.in, director@htisystems.in"),
+            ("last_backup_time", "2026-10-17 13:53:00"),
+            ("last_backup_file", "hti_website_git_bundle_20261017.bundle"),
+            ("backup_status", "Success - Verified Complete")
+        ]
+        for k, v in default_settings:
+            cursor.execute("""
+            INSERT INTO system_settings (key, value)
+            VALUES (?, ?)
+            """, (k, v))
 
     conn.commit()
     conn.close()
