@@ -426,7 +426,7 @@ export default function App() {
 
         {/* ROUTE 7: Dedicated Technical Blogs Page (/blogs) */}
         {routeState.page === 'blogs' && (
-          <BlogsPage onNavigate={navigateTo} />
+          <BlogsPage onNavigate={navigateTo} blogs={blogs} />
         )}
 
         {/* ROUTE 8: Default Landing Home Page (/) */}
