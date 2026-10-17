@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   ArrowLeft,
-  Briefcase, 
-  ArrowRight, 
-  Users, 
-  Cpu, 
-  ShieldCheck, 
+  Briefcase,
+  ArrowRight,
+  Users,
+  Cpu,
+  ShieldCheck,
   Award,
   X,
   MapPin,
@@ -422,10 +422,9 @@ export default function CareersPage({ onNavigate }) {
   const mailtoHref = `mailto:careers@htisystems.in?subject=${encodeURIComponent(
     `Application: ${formData.position || 'Open Role'} - ${formData.fullName}`
   )}&body=${encodeURIComponent(
-    `Dear HTI Automation Talent Acquisition Team,\n\nPlease find my application details below:\n\n• Full Name: ${formData.fullName}\n• Email: ${formData.email}\n• Phone: ${formData.phone}\n• Position: ${formData.position}\n• Experience: ${formData.experience || 'Not specified'}\n• LinkedIn: ${formData.linkedinUrl || 'N/A'}\n• Portfolio / GitHub: ${formData.portfolioUrl || 'N/A'}\n\nCandidate Message:\n${formData.message || 'N/A'}\n\n${
-      resumeFile
-        ? `[Resume file "${resumeFile.name}" attached with this email]`
-        : '[Resume file attached with this email]'
+    `Dear HTI Automation Talent Acquisition Team,\n\nPlease find my application details below:\n\n• Full Name: ${formData.fullName}\n• Email: ${formData.email}\n• Phone: ${formData.phone}\n• Position: ${formData.position}\n• Experience: ${formData.experience || 'Not specified'}\n• LinkedIn: ${formData.linkedinUrl || 'N/A'}\n• Portfolio / GitHub: ${formData.portfolioUrl || 'N/A'}\n\nCandidate Message:\n${formData.message || 'N/A'}\n\n${resumeFile
+      ? `[Resume file "${resumeFile.name}" attached with this email]`
+      : '[Resume file attached with this email]'
     }\n\nBest regards,\n${formData.fullName}`
   )}`;
 
@@ -440,8 +439,8 @@ export default function CareersPage({ onNavigate }) {
       <div className="detail-breadcrumb-bar">
         <div className="container">
           <div className="breadcrumb-nav">
-            <button 
-              className="breadcrumb-link" 
+            <button
+              className="breadcrumb-link"
               onClick={() => onNavigate && onNavigate('home')}
             >
               Home
@@ -450,8 +449,8 @@ export default function CareersPage({ onNavigate }) {
             <span className="breadcrumb-current">Careers</span>
           </div>
 
-          <button 
-            className="back-btn" 
+          <button
+            className="back-btn"
             onClick={() => onNavigate && onNavigate('home')}
             aria-label="Back to Home"
           >
@@ -486,9 +485,9 @@ export default function CareersPage({ onNavigate }) {
 
               {/* Supporting Copy */}
               <p className="careers-hero-desc">
-                Join our Mumbai-based engineering team delivering high-reliability industrial 
-                automation, cleanroom door interlocks, and turnkey life-safety infrastructure. 
-                Work alongside seasoned specialists on mission-critical manufacturing and corporate 
+                Join our Mumbai-based engineering team delivering high-reliability industrial
+                automation, cleanroom door interlocks, and turnkey life-safety infrastructure.
+                Work alongside seasoned specialists on mission-critical manufacturing and corporate
                 projects that advance safety, precision, and your professional growth.
               </p>
 
@@ -581,9 +580,9 @@ export default function CareersPage({ onNavigate }) {
       </section>
 
       {/* 3. Section 2: Open Positions (Inspired by Recharge Careers Reference) */}
-      <section 
-        className="careers-positions-section" 
-        id="open-positions" 
+      <section
+        className="careers-positions-section"
+        id="open-positions"
         aria-label="Open Positions"
       >
         <div className="container">
@@ -603,8 +602,8 @@ export default function CareersPage({ onNavigate }) {
             </div>
             <div className="positions-intro-desc">
               <p>
-                We are continually seeking passionate engineers, creative problem-solvers, and growth-minded 
-                professionals. At HTI Automation, you will work on mission-critical automation hardware and 
+                We are continually seeking passionate engineers, creative problem-solvers, and growth-minded
+                professionals. At HTI Automation, you will work on mission-critical automation hardware and
                 enterprise software that safeguard facilities and advance modern Indian industry.
               </p>
             </div>
@@ -614,8 +613,8 @@ export default function CareersPage({ onNavigate }) {
           <div className="positions-filters-wrap" role="tablist" aria-label="Job category filters">
             {CATEGORY_TABS.map((tab) => {
               const isActive = activeFilter === tab.id;
-              const count = tab.id === 'all' 
-                ? JOB_POSITIONS.length 
+              const count = tab.id === 'all'
+                ? JOB_POSITIONS.length
                 : JOB_POSITIONS.filter(p => p.category === tab.id).length;
 
               return (
@@ -679,9 +678,9 @@ export default function CareersPage({ onNavigate }) {
       </section>
 
       {/* 4. Section 3: Why Work With Us (Editorial Split Layout) */}
-      <section 
-        className="careers-why-section" 
-        id="life-at-hti" 
+      <section
+        className="careers-why-section"
+        id="life-at-hti"
         aria-label="Why Work With Us"
       >
         <div className="container">
@@ -700,10 +699,10 @@ export default function CareersPage({ onNavigate }) {
               </h2>
 
               <p className="why-paragraph">
-                At HTI Automation, you don’t just write code or assemble components—you 
-                engineer mission-critical automation systems that protect lives, prevent 
-                pharmaceutical contamination, and empower India’s most demanding industries. 
-                Work alongside seasoned engineers who share ideas openly, embrace complex 
+                At HTI Automation, you don’t just write code or assemble components—you
+                engineer mission-critical automation systems that protect lives, prevent
+                pharmaceutical contamination, and empower India’s most demanding industries.
+                Work alongside seasoned engineers who share ideas openly, embrace complex
                 technical challenges, and empower your long-term professional growth.
               </p>
 
@@ -742,7 +741,7 @@ export default function CareersPage({ onNavigate }) {
               </div>
               <h3 className="benefit-title">Learning & Growth</h3>
               <p className="benefit-desc">
-                Opportunities to develop technical and professional skills through hands-on mentorship, 
+                Opportunities to develop technical and professional skills through hands-on mentorship,
                 advanced automation toolchains, and real-world system deployments.
               </p>
             </div>
@@ -754,7 +753,7 @@ export default function CareersPage({ onNavigate }) {
               </div>
               <h3 className="benefit-title">Collaborative Culture</h3>
               <p className="benefit-desc">
-                Work together, share ideas, and solve problems as a team where transparent communication 
+                Work together, share ideas, and solve problems as a team where transparent communication
                 and diverse engineering perspectives are always celebrated.
               </p>
             </div>
@@ -766,7 +765,7 @@ export default function CareersPage({ onNavigate }) {
               </div>
               <h3 className="benefit-title">Meaningful Projects</h3>
               <p className="benefit-desc">
-                Contribute to practical technology and automation solutions that safeguard cleanrooms, 
+                Contribute to practical technology and automation solutions that safeguard cleanrooms,
                 streamline manufacturing lines, and protect critical infrastructure across India.
               </p>
             </div>
@@ -775,9 +774,9 @@ export default function CareersPage({ onNavigate }) {
       </section>
 
       {/* 5. Section 4: Our Hiring Process (Awwwards-Inspired Editorial Sequence) */}
-      <section 
-        className="careers-process-section" 
-        id="hiring-process" 
+      <section
+        className="careers-process-section"
+        id="hiring-process"
         aria-label="Our Hiring Process"
       >
         <div className="container">
@@ -787,11 +786,11 @@ export default function CareersPage({ onNavigate }) {
               <span className="process-eyebrow-line" aria-hidden="true" />
               <span>OUR HIRING PROCESS</span>
             </div>
-            
+
             <h2 className="process-heading">
               Your journey starts here.
             </h2>
-            
+
             <p className="process-intro-text">
               A straightforward process designed to help us understand your strengths, experience, and potential.
             </p>
@@ -851,14 +850,14 @@ export default function CareersPage({ onNavigate }) {
       </section>
 
       {/* 6. Section 5: Application Form (Two-Column Editorial & Application Suite) */}
-      <section 
-        className="careers-application-section" 
-        id="application-form" 
+      <section
+        className="careers-application-section"
+        id="application-form"
         aria-label="Application Form"
       >
         <div className="container">
           <div className="application-split-grid">
-            
+
             {/* Left Column: Introduction & HR Contact Block */}
             <div className="application-intro-col">
               <div className="application-eyebrow">
@@ -961,7 +960,7 @@ export default function CareersPage({ onNavigate }) {
                       <AlertCircle className="notice-icon" size={22} aria-hidden="true" />
                       <h4 className="notice-title">Application Validated — Backend Integration Notice</h4>
                     </div>
-                    
+
                     <p className="notice-desc">
                       An automated application submission endpoint (<code>/api/careers/apply</code>) is not yet configured on the server. Your information has been completely validated and is ready to submit.
                     </p>
@@ -1220,7 +1219,7 @@ export default function CareersPage({ onNavigate }) {
                           </button>
                         </div>
                       ) : (
-                        <div 
+                        <div
                           className="resume-upload-zone"
                           onClick={() => document.getElementById('resumeUpload')?.click()}
                           onKeyDown={(e) => {
@@ -1351,14 +1350,14 @@ export default function CareersPage({ onNavigate }) {
       </section>
 
       {/* 7. Section 6: Frequently Asked Questions (Minimalist Editorial Accordion) */}
-      <section 
-        className="careers-faq-section" 
-        id="faq" 
+      <section
+        className="careers-faq-section"
+        id="faq"
         aria-label="Frequently Asked Questions"
       >
         <div className="container">
           <div className="faq-editorial-grid">
-            
+
             {/* Left Column: Heading & Introductory Text */}
             <div className="faq-header-col">
               <div className="faq-eyebrow">
@@ -1396,8 +1395,8 @@ export default function CareersPage({ onNavigate }) {
                   const answerId = `faq-a-${idx}`;
 
                   return (
-                    <div 
-                      key={item.id} 
+                    <div
+                      key={item.id}
                       className={`faq-item ${isOpen ? 'is-expanded' : ''}`}
                     >
                       <button
@@ -1436,15 +1435,15 @@ export default function CareersPage({ onNavigate }) {
 
       {/* 8. Role Details Modal (Accessible, Complete, Connected to Email & Contact) */}
       {selectedRole && (
-        <div 
-          className="role-modal-overlay" 
+        <div
+          className="role-modal-overlay"
           onClick={() => setSelectedRole(null)}
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-role-title"
         >
-          <div 
-            className="role-modal-container" 
+          <div
+            className="role-modal-container"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
@@ -1473,9 +1472,9 @@ export default function CareersPage({ onNavigate }) {
                 </div>
               </div>
 
-              <button 
-                type="button" 
-                className="role-modal-close-btn" 
+              <button
+                type="button"
+                className="role-modal-close-btn"
                 onClick={() => setSelectedRole(null)}
                 aria-label="Close role details"
               >
