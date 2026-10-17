@@ -287,6 +287,14 @@ export default function App() {
     fetchStats();
   };
 
+  const handleRefreshProjects = () => {
+    fetchStats();
+  };
+
+  const handleRefreshContent = () => {
+    fetchStats();
+  };
+
   // Centralized page, category, and product navigation
   const navigateTo = (page, paramOrSection = null) => {
     let targetUrl = '/';
@@ -501,6 +509,8 @@ export default function App() {
         onProductsChanged={handleRefreshProducts}
         onBlogsChanged={handleRefreshBlogs}
         onClientsChanged={handleRefreshClients}
+        onProjectsChanged={handleRefreshProjects}
+        onContentChanged={handleRefreshContent}
       />
 
       {/* Footer */}
