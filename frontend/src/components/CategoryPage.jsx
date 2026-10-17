@@ -3,9 +3,364 @@ import {
   ArrowLeft, Search, Filter, ShieldCheck, ArrowRight, 
   Send, Sparkles, Cpu, Layers, Flame, Lock, CheckCircle2,
   PhoneCall, FileText, Check, ChevronDown, ChevronUp, Wrench,
-  Clock, Award, HelpCircle, CheckSquare, Factory, Building2
+  Clock, Award, HelpCircle, CheckSquare, Factory, Building2,
+  SlidersHorizontal, Play, Truck, Plane, Download, X
 } from 'lucide-react';
 import { getProductsByCategory } from '../data/productsData';
+
+// EXACT 14 INDUSTRIAL ACCESS AUTOMATION SERVICES MATCHING REFERENCE DESIGN
+const INDUSTRIAL_AUTOMATION_SERVICES = [
+  {
+    num: '01',
+    id: 1,
+    slug: 'automatic-sliding-swing-doors',
+    title: 'Automatic Sliding & Swing Doors',
+    categoryBadge: 'Industrial Access',
+    categoryFilters: ['All', 'Industrial Access', 'Heavy Duty', 'Energy Efficient'],
+    description: 'Advanced automatic entrance systems for commercial, industrial and public facilities.',
+    features: [
+      'Touchless & hygienic access',
+      'Custom glass / metal finish',
+      'Suitable for high-traffic areas'
+    ],
+    image: '/services/services-touchless-entry.jpg',
+    brochure: true
+  },
+  {
+    num: '02',
+    id: 2,
+    slug: 'automatic-sliding-swing-gates',
+    title: 'Automatic Sliding & Swing Gates',
+    categoryBadge: 'Perimeter Security',
+    categoryFilters: ['All', 'Perimeter Security', 'Heavy Duty'],
+    description: 'Robust perimeter gates for industrial and commercial sites.',
+    features: [
+      'Heavy-duty automation',
+      'Multiple gate configurations',
+      'Secure & reliable operation'
+    ],
+    image: '/services/services-perimeter-gate.jpg',
+    brochure: true
+  },
+  {
+    num: '03',
+    id: 3,
+    slug: 'telescopic-cantilever-gates',
+    title: 'Telescopic & Cantilever Gates',
+    categoryBadge: 'Perimeter Security',
+    categoryFilters: ['All', 'Perimeter Security', 'Custom Solutions', 'Heavy Duty'],
+    description: 'Wide span gate solutions for large openings and heavy-duty applications.',
+    features: [
+      'Telescopic / cantilever design',
+      'Ideal for wide entrances',
+      'Smooth & stable operation'
+    ],
+    image: '/services/services-trackless-gate.jpg',
+    brochure: true
+  },
+  {
+    num: '04',
+    id: 4,
+    slug: 'pvc-rapid-roll-up-doors',
+    title: 'High-Speed PVC Rapid Roll-Up Doors',
+    categoryBadge: 'Industrial Doors',
+    categoryFilters: ['All', 'Vertical Access', 'High Speed', 'Energy Efficient'],
+    description: 'Fast, durable doors for high-traffic industrial zones.',
+    features: [
+      'High opening/closing speed',
+      'Insulated & energy efficient',
+      'Suitable for indoor/outdoor use'
+    ],
+    image: '/services/services-rapid-airlock.jpg',
+    brochure: true
+  },
+  {
+    num: '05',
+    id: 5,
+    slug: 'sectional-overhead-doors',
+    title: 'Sectional Overhead Doors',
+    categoryBadge: 'Industrial Doors',
+    categoryFilters: ['All', 'Vertical Access', 'Logistics & Loading', 'Energy Efficient', 'Heavy Duty'],
+    description: 'Insulated sectional doors with high durability and smooth operation.',
+    features: [
+      'Space saving design',
+      'Thermal insulation',
+      'Ideal for warehouses & plants'
+    ],
+    image: '/services/service-sectional-doors.jpg',
+    brochure: true
+  },
+  {
+    num: '06',
+    id: 6,
+    slug: 'fire-rated-doors-shutters',
+    title: 'Fire Rated Doors & Shutters',
+    categoryBadge: 'Fire Protection',
+    categoryFilters: ['All', 'Fire & Smoke Protection', 'Vertical Access', 'Heavy Duty'],
+    description: 'Certified fire-rated doors and shutters for enhanced safety.',
+    features: [
+      'Fire resistance as per standards',
+      'Automatic closing system',
+      'Suitable for critical areas'
+    ],
+    image: '/services/service-fire-doors.jpg',
+    brochure: true
+  },
+  {
+    num: '07',
+    id: 7,
+    slug: 'motorized-rolling-shutters',
+    title: 'Motorized Industrial Rolling Shutters',
+    categoryBadge: 'Industrial Access',
+    categoryFilters: ['All', 'Industrial Access', 'Vertical Access', 'Heavy Duty'],
+    description: 'Heavy-duty rolling shutters for maximum security.',
+    features: [
+      'Durable and robust design',
+      'Custom sizes & finishes',
+      'Ideal for industrial sites'
+    ],
+    image: '/services/services-heavy-security.jpg',
+    brochure: true
+  },
+  {
+    num: '08',
+    id: 8,
+    slug: 'boom-barriers',
+    title: 'Automatic Boom Barriers',
+    categoryBadge: 'Traffic & Vehicle Access',
+    categoryFilters: ['All', 'Traffic & Vehicle Access', 'Perimeter Security', 'High Speed'],
+    description: 'Reliable vehicle access control for entry/exit points.',
+    features: [
+      'Fast operation',
+      'Integrated access control',
+      'Ideal for parking & gated facilities'
+    ],
+    image: '/services/service-boom-barrier.jpg',
+    brochure: true
+  },
+  {
+    num: '09',
+    id: 9,
+    slug: 'dock-levellers-dock-shelters',
+    title: 'Dock Levellers & Dock Shelters',
+    categoryBadge: 'Logistics & Loading',
+    categoryFilters: ['All', 'Logistics & Loading', 'Heavy Duty'],
+    description: 'Optimized loading bay solutions for efficient material handling.',
+    features: [
+      'Hydraulic & mechanical options',
+      'Weather protection',
+      'Suitable for all truck types'
+    ],
+    image: '/services/services-logistics-bridge.jpg',
+    brochure: true
+  },
+  {
+    num: '10',
+    id: 31,
+    slug: 'industrial-air-curtains',
+    title: 'Air Curtains',
+    categoryBadge: 'Indoor Air Control',
+    categoryFilters: ['All', 'Indoor Air Control', 'Energy Efficient'],
+    description: 'Maintains indoor climate and prevents dust, insects and outside air.',
+    features: [
+      'Energy efficient operation',
+      'Suitable for commercial & industrial',
+      'Multiple sizes and models'
+    ],
+    image: '/services/service-air-curtain.jpg',
+    brochure: true
+  },
+  {
+    num: '11',
+    id: 17,
+    slug: 'door-interlock-systems',
+    title: 'Cleanroom Interlocks & Pass Boxes',
+    categoryBadge: 'Hygiene & Cleanrooms',
+    categoryFilters: ['All', 'Hygiene & Cleanrooms', 'Custom Solutions'],
+    description: 'For contamination control in cleanroom environments.',
+    features: [
+      'Static & dynamic pass boxes',
+      'UV & interlock options',
+      'Custom cleanroom solutions'
+    ],
+    image: '/services/service-cleanroom.jpg',
+    brochure: true
+  },
+  {
+    num: '12',
+    id: 11,
+    slug: 'bollards-tyre-killers-car-lifts',
+    title: 'Bollards & Road Blockers',
+    categoryBadge: 'Perimeter Security',
+    categoryFilters: ['All', 'Perimeter Security', 'Traffic & Vehicle Access', 'Heavy Duty'],
+    description: 'High-security vehicle access control solutions.',
+    features: [
+      'Automatic & manual options',
+      'Crash-rated models',
+      'Suitable for sensitive locations'
+    ],
+    image: '/services/service-bollards-blockers.jpg',
+    brochure: true
+  },
+  {
+    num: '13',
+    id: 12,
+    slug: 'pvc-rapid-roll-up-doors',
+    title: 'High-Speed Industrial Doors',
+    categoryBadge: 'Special Applications',
+    categoryFilters: ['All', 'Vertical Access', 'High Speed', 'Custom Solutions'],
+    description: 'Advanced doors for specialized applications.',
+    features: [
+      'High cycle performance',
+      'Insulated & durable',
+      'Custom configuration'
+    ],
+    image: '/services/service-high-speed-doors.jpg',
+    brochure: true
+  },
+  {
+    num: '14',
+    id: 3,
+    slug: 'telescopic-cantilever-gates',
+    title: 'Hangar Doors',
+    categoryBadge: 'Special Applications',
+    categoryFilters: ['All', 'Vertical Access', 'Heavy Duty', 'Custom Solutions'],
+    description: 'Large span doors for aviation and heavy industrial facilities.',
+    features: [
+      'Custom engineered design',
+      'Wide opening solutions',
+      'Robust and reliable operation'
+    ],
+    image: '/services/service-hangar-doors.jpg',
+    brochure: true
+  }
+];
+
+const FILTER_CATEGORIES = [
+  'All',
+  'Industrial Access',
+  'Perimeter Security',
+  'Vertical Access',
+  'Logistics & Loading',
+  'Fire & Smoke Protection',
+  'Indoor Air Control',
+  'Hygiene & Cleanrooms',
+  'Traffic & Vehicle Access',
+  'Heavy Duty',
+  'High Speed',
+  'Energy Efficient',
+  'Custom Solutions'
+];
+
+// CLEANROOM INTERLOCKS & PASS BOXES SERVICES
+const CLEANROOM_SERVICES = [
+  {
+    num: '01',
+    id: 1,
+    slug: 'door-interlock-systems',
+    title: 'Door Interlock Systems',
+    categoryBadge: 'Airlock Control',
+    categoryFilters: ['All', 'Airlock Control', 'Pressure Containment', 'Flameproof Ex-d'],
+    description: 'Microcontroller 2 to 12 door interlocking logic preventing simultaneous door opening in sterile cascades.',
+    features: [
+      'Sequential & priority interlocking logic',
+      'Flameproof Ex-d & SS304 flush options',
+      'Programmable pressure stabilization delay'
+    ],
+    image: '/hero-cleanroom-interlock-chamber.jpg',
+    brochure: true
+  },
+  {
+    num: '02',
+    id: 2,
+    slug: 'pass-box-systems',
+    title: 'Pass Box Systems',
+    categoryBadge: 'Material Transfer',
+    categoryFilters: ['All', 'Material Transfer', 'Pressure Containment', 'Audit Compliance'],
+    description: 'Static and dynamic material transfer hatches with electromagnetic interlocking and germicidal UV-C disinfection.',
+    features: [
+      'SS304/SS316 mirror-finished chamber',
+      'Dynamic mini-pleat HEPA (99.997% @ 0.3μm)',
+      'UV-C timer cutoff with interlocking doors'
+    ],
+    image: '/hero-cleanroom-automation.jpg',
+    brochure: true
+  },
+  {
+    num: '03',
+    id: 3,
+    slug: 'door-interlock-systems',
+    title: 'Digital Clock / Synchronization Systems',
+    categoryBadge: 'Audit Compliance',
+    categoryFilters: ['All', 'Audit Compliance', 'Emergency Safety'],
+    description: 'GPS master-slave synchronized digital clocks ensuring uniform time-stamped batch records for 21 CFR Part 11.',
+    features: [
+      'GPS satellite & NTP master-slave sync',
+      'Flameproof & SS flush cleanroom enclosures',
+      'USFDA 21 CFR Part 11 audit compliance'
+    ],
+    image: '/case-studies/case-cleanroom.jpg',
+    brochure: true
+  },
+  {
+    num: '04',
+    id: 4,
+    slug: 'door-interlock-systems',
+    title: 'Cleanroom Doors',
+    categoryBadge: 'Pressure Containment',
+    categoryFilters: ['All', 'Pressure Containment', 'Airlock Control'],
+    description: 'Hermetically sealed flush cleanroom doors preventing particulate infiltration and air leakage across pressure zones.',
+    features: [
+      'Hermetic perimeter silicone drop seals',
+      'Flush double-glazed vision view panels',
+      'Seamless SS304 / powder-coated GI construction'
+    ],
+    image: '/about-hero-cleanroom.jpg',
+    brochure: true
+  },
+  {
+    num: '05',
+    id: 5,
+    slug: 'door-interlock-systems',
+    title: 'Acoustic Sound Doors',
+    categoryBadge: 'Pressure Containment',
+    categoryFilters: ['All', 'Pressure Containment', 'Emergency Safety'],
+    description: 'Heavy noise-dampening acoustic barrier doors engineered for cleanroom utility corridors and compressor plant rooms.',
+    features: [
+      'Certified high STC acoustic insulation',
+      'Heavy-gauge perimeter compression seals',
+      'Flush finish compatible with clean environments'
+    ],
+    image: '/services/service-fire-doors.jpg',
+    brochure: true
+  },
+  {
+    num: '06',
+    id: 6,
+    slug: 'door-interlock-systems',
+    title: 'Safety Override Buzzers',
+    categoryBadge: 'Emergency Safety',
+    categoryFilters: ['All', 'Emergency Safety', 'Airlock Control', 'Flameproof Ex-d'],
+    description: 'Emergency release logic and integrated audio buzzer alerts for instant unhindered exit during fire trips.',
+    features: [
+      'Instant lock release upon fire alarm trigger',
+      'Illuminated emergency mushroom push buttons',
+      'Integrated high-visibility LED and audio buzzers'
+    ],
+    image: '/case-studies/case-ss304-mist.jpg',
+    brochure: true
+  }
+];
+
+const CLEANROOM_FILTER_CATEGORIES = [
+  'All',
+  'Airlock Control',
+  'Material Transfer',
+  'Pressure Containment',
+  'Emergency Safety',
+  'Audit Compliance',
+  'Flameproof Ex-d'
+];
 
 export default function CategoryPage({ 
   categoryKey, 
@@ -15,8 +370,55 @@ export default function CategoryPage({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSubcat, setSelectedSubcat] = useState('All');
   const [activeFaq, setActiveFaq] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [brochureToast, setBrochureToast] = useState(null);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
-  // Category metadata configurations with rich content
+  const isAutomation = categoryKey?.toLowerCase() === 'automation';
+  const isCleanroom = categoryKey?.toLowerCase() === 'cleanroom-interlocks' || categoryKey?.toLowerCase() === 'interlocks';
+
+  // Filter 14 Industrial Automation Services
+  const filteredAutomationServices = useMemo(() => {
+    return INDUSTRIAL_AUTOMATION_SERVICES.filter(service => {
+      const matchSearch = (
+        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      const matchFilter = (
+        activeFilter === 'All' ||
+        service.categoryFilters.includes(activeFilter) ||
+        service.categoryBadge === activeFilter
+      );
+      return matchSearch && matchFilter;
+    });
+  }, [searchQuery, activeFilter]);
+
+  // Filter 6 Cleanroom Interlocks & Pass Boxes Services
+  const filteredCleanroomServices = useMemo(() => {
+    return CLEANROOM_SERVICES.filter(service => {
+      const matchSearch = (
+        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      const matchFilter = (
+        activeFilter === 'All' ||
+        service.categoryFilters.includes(activeFilter) ||
+        service.categoryBadge === activeFilter
+      );
+      return matchSearch && matchFilter;
+    });
+  }, [searchQuery, activeFilter]);
+
+  const handleBrochureDownload = (service) => {
+    setBrochureToast(`Technical engineering brochure for "${service.title}" has been downloaded.`);
+    setTimeout(() => setBrochureToast(null), 3500);
+  };
+
+  // Category metadata configurations with rich content for non-automation categories
   const categoryMeta = useMemo(() => {
     switch (categoryKey?.toLowerCase()) {
       case 'automation':
@@ -34,7 +436,7 @@ export default function CategoryPage({
             { label: 'Certifications', value: 'CE / EN 16005' }
           ],
           overviewText: 'HTI Automation delivers heavy-duty, high-frequency motorized entrance systems engineered to withstand continuous commercial and industrial traffic. Our access automation systems incorporate brushless DC drives, obstacle auto-reverse sensors, hydraulic power units, and intelligent microprocessor controls. From sterile pharmaceutical cleanroom airlocks to 3000 kg industrial factory gates, our turnkey engineering ensures zero downtime and complete statutory safety compliance.',
-          sectors: ['Pharmaceutical Manufacturing', 'Corporate Tech Parks', 'Logistics & Warehouses', 'Heavy Manufacturing', 'Airports & Transit'],
+          sectors: ['Manufacturing Facilities', 'Corporate & IT Parks', 'Logistics & Warehouses', 'Pharma & Healthcare', 'Infrastructure & Airports'],
           faqs: [
             {
               q: 'Can automatic sliding doors and gates operate during a complete power failure?',
@@ -166,7 +568,7 @@ export default function CategoryPage({
     }
   }, [categoryKey]);
 
-  // Fetch all products matching category
+  // Fetch all products matching category (for other categories)
   const allCategoryProducts = useMemo(() => {
     return getProductsByCategory(categoryMeta.categoryName);
   }, [categoryMeta]);
@@ -180,7 +582,7 @@ export default function CategoryPage({
     return ['All', ...Array.from(set)];
   }, [allCategoryProducts]);
 
-  // Filter products by search and subcategory
+  // Filter products by search and subcategory (for other categories)
   const filteredProducts = useMemo(() => {
     return allCategoryProducts.filter(p => {
       const matchSearch = (
@@ -200,6 +602,745 @@ export default function CategoryPage({
     setActiveFaq(prev => prev === idx ? null : idx);
   };
 
+  // =========================================================================
+  // DEDICATED REFERENCE-ACCURATE INDUSTRIAL ACCESS AUTOMATION SERVICE PAGE
+  // =========================================================================
+  if (isAutomation) {
+    return (
+      <div className="auto-service-page">
+        {/* Toast Feedback for Brochure Downloads */}
+        {brochureToast && (
+          <div className="auto-toast-notice">
+            <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
+            <span>{brochureToast}</span>
+          </div>
+        )}
+
+        {/* Video Solutions Modal */}
+        {videoModalOpen && (
+          <div className="auto-video-modal-backdrop" onClick={() => setVideoModalOpen(false)}>
+            <div className="auto-video-modal-card" onClick={(e) => e.stopPropagation()}>
+              <div className="auto-modal-header">
+                <h3 className="auto-modal-title">HTI Industrial Access Solutions Overview</h3>
+                <button className="auto-modal-close" onClick={() => setVideoModalOpen(false)}>
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="auto-modal-body">
+                <img 
+                  src="/services/services-hero-access.jpg" 
+                  alt="Industrial Access Overview" 
+                  className="w-full rounded-lg mb-4"
+                />
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                  HTI executes high-throughput motorized entrance barriers, cantilever gate automation, telescopic systems, and rapid roll-up doors engineered for Indian climatic extremes and heavy-cycle traffic.
+                </p>
+                <div className="flex justify-end gap-3">
+                  <button className="btn btn-secondary btn-sm" onClick={() => setVideoModalOpen(false)}>
+                    Close
+                  </button>
+                  <button className="btn btn-primary btn-sm" onClick={() => { setVideoModalOpen(false); onNavigate('contact'); }}>
+                    Request Site Survey
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="auto-page-container">
+          {/* 1. BREADCRUMBS BAR */}
+          <div className="auto-breadcrumb-nav">
+            <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-current">Industrial Access Automation</span>
+          </div>
+
+          {/* 2. HERO SECTION */}
+          <section className="auto-hero-section">
+            <div className="auto-hero-grid">
+              {/* Left Column: Heading, Description, Stat Cards */}
+              <div className="auto-hero-left">
+                <div className="auto-hero-pill-badge">
+                  <span className="auto-pulse-dot"></span>
+                  <span>INDUSTRIAL ACCESS AUTOMATION</span>
+                </div>
+
+                <h1 className="auto-hero-title">
+                  Industrial Access Automation <br />
+                  <span className="text-blue-accent">&amp; Perimeter Defense</span>
+                </h1>
+
+                <p className="auto-hero-desc">
+                  High-throughput motorized entrance doors, telescopic cantilever gates, rapid roll-up &amp; loading bay logistics solutions for industrial, commercial and infrastructure facilities.
+                </p>
+
+                {/* Four Compact Statistic Cards */}
+                <div className="auto-hero-stats-grid">
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Cpu size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">450+</div>
+                      <div className="auto-stat-lbl">Projects Installed</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <ShieldCheck size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">100%</div>
+                      <div className="auto-stat-lbl">Customized Solutions</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <SlidersHorizontal size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">Up to 25m</div>
+                      <div className="auto-stat-lbl">Wide Gate Span</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Award size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">CE / EN 16005</div>
+                      <div className="auto-stat-lbl">Compliant Systems</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Hero Facility Image with Play Button */}
+              <div className="auto-hero-right">
+                <div className="auto-hero-media-wrapper">
+                  <img 
+                    src="/services/services-hero-access.jpg" 
+                    alt="Industrial Facility Entrance Automation" 
+                    className="auto-hero-image"
+                    loading="eager"
+                  />
+                  <button 
+                    className="auto-watch-video-btn"
+                    onClick={() => setVideoModalOpen(true)}
+                  >
+                    <div className="auto-play-icon-circle">
+                      <Play size={12} fill="#1d4ed8" />
+                    </div>
+                    <span>Watch Our Solutions</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 3. ENGINEERING INTRODUCTION SECTION */}
+          <section className="auto-engineering-section">
+            <div className="auto-engineering-card">
+              <div className="auto-arch-header-row">
+                <div className="auto-arch-badge-blue">
+                  <span className="auto-subtle-dot"></span>
+                  <span>COMPLETE ACCESS ARCHITECTURE</span>
+                </div>
+                <div className="auto-arch-badge-red">
+                  <Wrench size={13} />
+                  <span>End-to-End Support &amp; Customization</span>
+                </div>
+              </div>
+
+              <h2 className="auto-arch-heading">
+                Comprehensive Engineering &amp; Execution for Automation
+              </h2>
+
+              <p className="auto-arch-desc">
+                HTI Automation delivers heavy-duty, high-throughput entrance automation systems engineered to withstand continuous commercial and industrial traffic. Our solutions combine smart motors, robust mechanical design, and advanced safety features to ensure reliable, secure, and efficient access for manufacturing plants, warehouses, logistics hubs, pharma facilities and corporate campuses.
+              </p>
+
+              {/* Five Application Chips */}
+              <div className="auto-app-chips-row">
+                <div className="auto-app-chip">
+                  <Factory size={15} className="chip-icon" />
+                  <span>Manufacturing Facilities</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Building2 size={15} className="chip-icon" />
+                  <span>Corporate &amp; IT Parks</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Truck size={15} className="chip-icon" />
+                  <span>Logistics &amp; Warehouses</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Layers size={15} className="chip-icon" />
+                  <span>Pharma &amp; Healthcare</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Plane size={15} className="chip-icon" />
+                  <span>Infrastructure &amp; Airports</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 4. SEARCH AND FILTER SECTION */}
+          <section className="auto-controls-section">
+            <div className="auto-search-bar-row">
+              <div className="auto-search-input-wrap">
+                <Search size={17} className="auto-search-icon" />
+                <input 
+                  type="text" 
+                  placeholder="Search services, solutions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="auto-search-field"
+                />
+                {searchQuery && (
+                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
+                )}
+              </div>
+
+              <div className="auto-results-count">
+                <span>{filteredAutomationServices.length} services found</span>
+              </div>
+            </div>
+
+            {/* Filter Chips by Application */}
+            <div className="auto-filters-container">
+              <div className="auto-filter-label">FILTER BY APPLICATION</div>
+              <div className="auto-filter-chips-list">
+                {FILTER_CATEGORIES.map((filter) => (
+                  <button
+                    key={filter}
+                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 5. 14 SERVICE CARDS & CUSTOM CTA */}
+          <section className="auto-services-grid-section">
+            {filteredAutomationServices.length === 0 ? (
+              <div className="auto-empty-state">
+                <Search size={36} className="text-slate-400 mb-2" />
+                <h3>No services matching "{searchQuery}"</h3>
+                <p>Try searching for doors, gates, roll-up, barriers, or clear filters.</p>
+                <button 
+                  className="btn btn-secondary btn-sm mt-3"
+                  onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <div className="auto-services-grid">
+                {filteredAutomationServices.map((service) => (
+                  <div key={service.num} className="auto-service-card">
+                    {/* Card Media with Number and Category Badges */}
+                    <div className="auto-card-media">
+                      <img 
+                        src={service.image} 
+                        alt={service.title} 
+                        className="auto-card-img"
+                        loading="lazy"
+                      />
+                      <div className="auto-card-num-badge">
+                        {service.num}
+                      </div>
+                      <div className="auto-card-cat-pill">
+                        {service.categoryBadge}
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="auto-card-body">
+                      <h3 className="auto-card-title">{service.title}</h3>
+                      <p className="auto-card-description">{service.description}</p>
+
+                      {/* 3 Concise Feature Bullets */}
+                      <ul className="auto-card-features">
+                        {service.features.map((feat, idx) => (
+                          <li key={idx} className="auto-feature-bullet">
+                            <span className="auto-bullet-icon">
+                              <Check size={11} strokeWidth={2.5} />
+                            </span>
+                            <span className="auto-bullet-text">{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Action Buttons */}
+                      <div className="auto-card-btn-row">
+                        <button 
+                          className="auto-btn-view-details"
+                          onClick={() => {
+                            onNavigate('product', service.slug);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>View Details</span>
+                          <ArrowRight size={13} />
+                        </button>
+
+                        <button 
+                          className="auto-btn-brochure"
+                          onClick={() => handleBrochureDownload(service)}
+                          title={`Download ${service.title} Brochure`}
+                        >
+                          <Download size={13} />
+                          <span>Brochure</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* 15. CUSTOM SOLUTION CTA CARD (Completes the 4-column grid alongside cards 13 & 14) */}
+                {(!searchQuery && (activeFilter === 'All' || activeFilter === 'Custom Solutions')) && (
+                  <div className="auto-custom-cta-card">
+                    <div className="auto-cta-inner">
+                      <div className="auto-cta-left">
+                        <div className="auto-cta-icon-box">
+                          <Cpu size={22} className="text-blue-600" />
+                        </div>
+
+                        <h3 className="auto-cta-heading">Need a Custom Solution?</h3>
+                        <p className="auto-cta-desc">
+                          Our engineering team can design a tailored access automation solution for your facility.
+                        </p>
+
+                        <ul className="auto-cta-checklist">
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Site survey &amp; consultation</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Custom design &amp; manufacturing</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Installation &amp; commissioning</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>After-sales support</span>
+                          </li>
+                        </ul>
+
+                        <button 
+                          className="auto-cta-btn"
+                          onClick={() => {
+                            onNavigate('contact');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>Contact Our Engineers</span>
+                          <ArrowRight size={14} />
+                        </button>
+                      </div>
+
+                      <div className="auto-cta-right-media">
+                        <img 
+                          src="/services/services-hero-access.jpg" 
+                          alt="HTI Industrial Facility Automation" 
+                          className="auto-cta-image"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // DEDICATED CLEANROOM INTERLOCKS & PASS BOXES SERVICE PAGE
+  // =========================================================================
+  if (isCleanroom) {
+    return (
+      <div className="auto-service-page cleanroom-service-page">
+        {/* Toast Notification */}
+        {brochureToast && (
+          <div className="auto-toast-notification">
+            <CheckCircle2 size={16} className="text-green-500" />
+            <span>{brochureToast}</span>
+          </div>
+        )}
+
+        {/* Video / Solutions Modal */}
+        {videoModalOpen && (
+          <div className="auto-modal-backdrop" onClick={() => setVideoModalOpen(false)}>
+            <div className="auto-modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="auto-modal-header">
+                <h3>Cleanroom Interlock &amp; Pass Box Solutions</h3>
+                <button className="auto-modal-close" onClick={() => setVideoModalOpen(false)}>✕</button>
+              </div>
+              <div className="auto-modal-body">
+                <img 
+                  src="/hero-cleanroom-interlock-chamber.jpg" 
+                  alt="Cleanroom Interlocks &amp; Pass Boxes Overview" 
+                  className="w-full rounded-lg mb-4"
+                />
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                  HTI executes USFDA 21 CFR Part 11 compliant 2 to 12 door interlocking logic, dynamic pass boxes with UV-C disinfection, and GPS master-slave clocks engineered for sterile pharma cleanrooms, OT suites, and containment labs.
+                </p>
+                <div className="flex justify-end gap-3">
+                  <button className="btn btn-secondary btn-sm" onClick={() => setVideoModalOpen(false)}>
+                    Close
+                  </button>
+                  <button className="btn btn-primary btn-sm" onClick={() => { setVideoModalOpen(false); onNavigate('contact'); }}>
+                    Consult Cleanroom Engineers
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="auto-page-container">
+          {/* 1. BREADCRUMBS BAR */}
+          <div className="auto-breadcrumb-nav">
+            <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-current">Cleanroom Interlocks &amp; Pass Boxes</span>
+          </div>
+
+          {/* 2. HERO SECTION */}
+          <section className="auto-hero-section">
+            <div className="auto-hero-grid">
+              {/* Left Column: Heading, Description, Stat Cards */}
+              <div className="auto-hero-left">
+                <div className="auto-hero-pill-badge">
+                  <span className="auto-pulse-dot"></span>
+                  <span>CLEANROOM INTERLOCKS &amp; PASS BOXES</span>
+                </div>
+
+                <h1 className="auto-hero-title">
+                  Cleanroom Interlocks <br />
+                  <span className="text-blue-accent">&amp; Pass Boxes</span>
+                </h1>
+
+                <p className="auto-hero-desc">
+                  Advanced cleanroom access control, differential pressure preservation, and controlled material transfer systems engineered for pharmaceutical, healthcare, and containment environments.
+                </p>
+
+                {/* Four Compact Statistic Cards */}
+                <div className="auto-hero-stats-grid">
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <ShieldCheck size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">180+</div>
+                      <div className="auto-stat-lbl">Pharma Blocks Protected</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Lock size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">2 to 12</div>
+                      <div className="auto-stat-lbl">Doors per Controller</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <SlidersHorizontal size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">Micro-Sec</div>
+                      <div className="auto-stat-lbl">Airlock Priority Logic</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Award size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">Ex-d / Safe</div>
+                      <div className="auto-stat-lbl">Flameproof Options</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Hero Facility Image with Play Button */}
+              <div className="auto-hero-right">
+                <div className="auto-hero-media-wrapper">
+                  <img 
+                    src="/hero-cleanroom-interlock-chamber.jpg" 
+                    alt="Pharma Cleanroom Interlock Chamber" 
+                    className="auto-hero-image"
+                    loading="eager"
+                  />
+                  <button 
+                    className="auto-watch-video-btn"
+                    onClick={() => setVideoModalOpen(true)}
+                  >
+                    <div className="auto-play-icon-circle">
+                      <Play size={12} fill="#1d4ed8" />
+                    </div>
+                    <span>Watch Cleanroom Demo</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 3. ENGINEERING INTRODUCTION SECTION */}
+          <section className="auto-engineering-section">
+            <div className="auto-engineering-card">
+              <div className="auto-arch-header-row">
+                <div className="auto-arch-badge-blue">
+                  <span className="auto-subtle-dot"></span>
+                  <span>PHARMA AIRLOCK ARCHITECTURE</span>
+                </div>
+                <div className="auto-arch-badge-red">
+                  <Wrench size={13} />
+                  <span>USFDA &amp; EU-GMP Validation Ready</span>
+                </div>
+              </div>
+
+              <h2 className="auto-arch-heading">
+                Comprehensive Engineering &amp; Execution for Cleanroom Airlocks
+              </h2>
+
+              <p className="auto-arch-desc">
+                HTI specializes in cleanroom door interlocking systems, dynamic and static pass boxes, and precision environment controls engineered for sterile pharmaceutical manufacturing, biotechnology labs, and healthcare suites. Our multi-door controllers regulate differential air pressures, prevent particulate cross-contamination, and ensure full statutory audit compliance.
+              </p>
+
+              {/* Five Application Chips */}
+              <div className="auto-app-chips-row">
+                <div className="auto-app-chip">
+                  <Factory size={15} className="chip-icon" />
+                  <span>Sterile Injectables &amp; API</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Layers size={15} className="chip-icon" />
+                  <span>Biotechnology &amp; Vaccines</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Building2 size={15} className="chip-icon" />
+                  <span>Hospital Surgical OTs</span>
+                </div>
+                <div className="auto-app-chip">
+                  <ShieldCheck size={15} className="chip-icon" />
+                  <span>Microbiology &amp; QC Testing</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Cpu size={15} className="chip-icon" />
+                  <span>Semiconductor Cleanrooms</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 4. SEARCH AND FILTER SECTION */}
+          <section className="auto-controls-section">
+            <div className="auto-search-bar-row">
+              <div className="auto-search-input-wrap">
+                <Search size={17} className="auto-search-icon" />
+                <input 
+                  type="text" 
+                  placeholder="Search cleanroom services, solutions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="auto-search-field"
+                />
+                {searchQuery && (
+                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
+                )}
+              </div>
+
+              <div className="auto-results-count">
+                <span>{filteredCleanroomServices.length} services found</span>
+              </div>
+            </div>
+
+            {/* Filter Chips by Application */}
+            <div className="auto-filters-container">
+              <div className="auto-filter-label">FILTER BY APPLICATION</div>
+              <div className="auto-filter-chips-list">
+                {CLEANROOM_FILTER_CATEGORIES.map((filter) => (
+                  <button
+                    key={filter}
+                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 5. 6 SERVICE CARDS & CUSTOM CLEANROOM CTA */}
+          <section className="auto-services-grid-section">
+            {filteredCleanroomServices.length === 0 ? (
+              <div className="auto-empty-state">
+                <Search size={36} className="text-slate-400 mb-2" />
+                <h3>No cleanroom services matching "{searchQuery}"</h3>
+                <p>Try searching for interlocks, pass box, clocks, doors, or reset filters.</p>
+                <button 
+                  className="btn btn-secondary btn-sm mt-3"
+                  onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <div className="auto-services-grid">
+                {filteredCleanroomServices.map((service) => (
+                  <div key={service.num} className="auto-service-card">
+                    {/* Card Media with Number and Category Badges */}
+                    <div className="auto-card-media">
+                      <img 
+                        src={service.image} 
+                        alt={service.title} 
+                        className="auto-card-img"
+                        loading="lazy"
+                      />
+                      <div className="auto-card-num-badge">
+                        {service.num}
+                      </div>
+                      <div className="auto-card-cat-pill">
+                        {service.categoryBadge}
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="auto-card-body">
+                      <h3 className="auto-card-title">{service.title}</h3>
+                      <p className="auto-card-description">{service.description}</p>
+
+                      {/* 3 Concise Feature Bullets */}
+                      <ul className="auto-card-features">
+                        {service.features.map((feat, idx) => (
+                          <li key={idx} className="auto-feature-bullet">
+                            <span className="auto-bullet-icon">
+                              <Check size={11} strokeWidth={2.5} />
+                            </span>
+                            <span className="auto-bullet-text">{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Action Buttons */}
+                      <div className="auto-card-btn-row">
+                        <button 
+                          className="auto-btn-view-details"
+                          onClick={() => {
+                            if (service.slug) {
+                              onNavigate('product', service.slug);
+                            } else {
+                              onNavigate('contact');
+                            }
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>View Details</span>
+                          <ArrowRight size={13} />
+                        </button>
+
+                        <button 
+                          className="auto-btn-brochure"
+                          onClick={() => handleBrochureDownload(service)}
+                          title={`Download ${service.title} Brochure`}
+                        >
+                          <Download size={13} />
+                          <span>Brochure</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* CUSTOM CLEANROOM SOLUTION CTA CARD */}
+                {(!searchQuery && (activeFilter === 'All' || activeFilter === 'Airlock Control' || activeFilter === 'Pressure Containment')) && (
+                  <div className="auto-custom-cta-card">
+                    <div className="auto-cta-inner">
+                      <div className="auto-cta-left">
+                        <div className="auto-cta-icon-box">
+                          <Lock size={22} className="text-blue-600" />
+                        </div>
+
+                        <h3 className="auto-cta-heading">Need Custom Cleanroom Airlock Logic?</h3>
+                        <p className="auto-cta-desc">
+                          Our cleanroom automation specialists design tailored multi-door interlocking sequences, pass boxes, and flameproof stations for your facility.
+                        </p>
+
+                        <ul className="auto-cta-checklist">
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Cleanroom layout review</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Custom interlock logic programming</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>DQ, IQ &amp; OQ documentation</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>On-site commissioning</span>
+                          </li>
+                        </ul>
+
+                        <button 
+                          className="auto-cta-btn"
+                          onClick={() => {
+                            onNavigate('contact');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>Consult Cleanroom Engineers</span>
+                          <ArrowRight size={14} />
+                        </button>
+                      </div>
+
+                      <div className="auto-cta-right-media">
+                        <img 
+                          src="/hero-cleanroom-automation.jpg" 
+                          alt="HTI Cleanroom Automation &amp; Interlocks" 
+                          className="auto-cta-image"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="category-dedicated-page">
       {/* 1. Breadcrumbs Bar */}
