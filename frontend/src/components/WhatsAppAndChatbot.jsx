@@ -212,7 +212,7 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
           1. FLOATING ACTION WIDGETS (WhatsApp + Chatbot Launcher)
           ========================================================================= */}
       <div className="hti-floating-actions-container">
-        {/* WhatsApp Quick Launcher Button with Rich Official 3D Glow */}
+        {/* WhatsApp Quick Launcher Button with Rich Official 3D Glossy Glow */}
         <button
           className="hti-float-btn hti-whatsapp-float"
           onClick={() => openWhatsApp()}
@@ -224,8 +224,6 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
               <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.9C17.18 3.03 14.69 2 12.04 2ZM12.05 20.15C10.57 20.15 9.12 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.68 12.05 3.68C14.25 3.68 16.31 4.54 17.87 6.1C19.42 7.66 20.28 9.72 20.28 11.92C20.28 16.46 16.59 20.15 12.05 20.15ZM16.57 14.37C16.32 14.25 15.1 13.65 14.87 13.56C14.65 13.48 14.48 13.44 14.32 13.69C14.15 13.94 13.68 14.49 13.53 14.66C13.39 14.82 13.24 14.84 12.99 14.72C12.74 14.6 11.94 14.33 11 13.49C10.26 12.83 9.77 12.02 9.63 11.77C9.48 11.52 9.61 11.39 9.74 11.26C9.85 11.15 9.99 10.97 10.11 10.83C10.24 10.69 10.28 10.58 10.36 10.42C10.44 10.26 10.4 10.11 10.34 9.99C10.28 9.87 9.79 8.67 9.58 8.18C9.38 7.7 9.18 7.76 9.02 7.75C8.88 7.74 8.71 7.74 8.55 7.74C8.38 7.74 8.12 7.8 7.89 8.05C7.67 8.3 7.03 8.9 7.03 10.12C7.03 11.34 7.92 12.51 8.04 12.68C8.16 12.84 9.78 15.34 12.26 16.41C12.85 16.66 13.31 16.82 13.67 16.93C14.26 17.12 14.8 17.09 15.22 17.03C15.7 16.96 16.69 16.43 16.9 15.84C17.11 15.25 17.11 14.74 17.04 14.63C16.97 14.52 16.82 14.45 16.57 14.37Z" />
             </svg>
           </div>
-          <span className="float-pulse-ring wa-pulse-1"></span>
-          <span className="float-pulse-ring wa-pulse-2"></span>
           <span className="float-tooltip">Chat on WhatsApp</span>
         </button>
 
@@ -245,7 +243,6 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
                 <span className="bot-sparkle-dot"></span>
               </div>
               {hasUnread && <span className="chat-unread-badge">1</span>}
-              <span className="float-pulse-ring bot-pulse-ring"></span>
               <span className="float-tooltip">Need Help? Ask AI</span>
             </>
           )}
