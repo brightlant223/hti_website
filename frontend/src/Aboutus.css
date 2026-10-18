@@ -871,27 +871,83 @@
    RESPONSIVE DESIGN (Laptops, Tablets, Mobile)
    ========================================================================= */
 
+/* 1. SMALL LAPTOPS & DESKTOPS (<= 1200px) */
+@media (max-width: 1200px) {
+  .about-hero-heading {
+    font-size: clamp(30px, 3.8vw, 46px);
+  }
+
+  .about-hero-grid {
+    gap: 36px;
+  }
+
+  .partners-logos-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* 2. TABLET LANDSCAPE & IPAD PRO (<= 1024px) */
 @media (max-width: 1024px) {
-  .about-hero-grid,
+  .about-hero-section {
+    min-height: auto;
+    padding-top: 48px;
+    padding-bottom: 40px;
+  }
+
+  .about-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .about-hero-image-wrap {
+    max-height: 440px;
+    aspect-ratio: 16 / 10;
+  }
+
   .about-bg-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 32px;
   }
 
   .values-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .solutions-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
 
   .partners-logos-grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
   }
 }
 
+/* 3. TABLET PORTRAIT & MEDIUM SCREENS (<= 900px) */
+@media (max-width: 900px) {
+  .solutions-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .solution-card-media {
+    height: 200px;
+  }
+}
+
+/* 4. MOBILE LANDSCAPE & SMALL TABLETS (<= 768px) */
 @media (max-width: 768px) {
+  .about-container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
   .about-hero-section {
     min-height: auto;
     padding-top: 36px;
-    padding-bottom: 36px;
+    padding-bottom: 32px;
   }
 
   .about-video-section,
@@ -903,48 +959,111 @@
     padding-bottom: 32px;
   }
 
-  .values-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .about-hero-heading {
+    font-size: clamp(26px, 5.5vw, 36px);
+    margin-bottom: 14px;
   }
 
-  .solutions-grid {
-    grid-template-columns: 1fr;
+  .about-hero-desc {
+    font-size: 14.5px;
+    margin-bottom: 22px;
+  }
+
+  .about-hero-badges-row {
+    gap: 8px;
+  }
+
+  .hero-pill-badge {
+    padding: 7px 14px;
+    font-size: 12.5px;
+  }
+
+  .about-hero-image-wrap {
+    aspect-ratio: 16 / 11;
+    max-height: 380px;
+  }
+
+  .about-hero-scroll-cue {
+    margin-top: 24px;
+    font-size: 11px;
+  }
+
+  .video-section-heading {
+    font-size: clamp(24px, 4.5vw, 32px);
+  }
+
+  .video-section-sub {
+    font-size: 14px;
+  }
+
+  .video-player-container {
+    max-height: 420px;
+  }
+
+  .video-overlay-scrim {
+    padding: 18px 20px;
+  }
+
+  .video-play-btn-center {
+    width: 60px;
+    height: 60px;
+  }
+
+  .video-title {
+    font-size: 16px;
+  }
+
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
   }
 
   .partners-logos-grid {
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .video-title {
-    font-size: 17px;
+    gap: 8px;
   }
 }
 
-@media (max-width: 480px) {
-  .about-container {
-    padding-left: 16px;
-    padding-right: 16px;
+/* 5. PHABLETS & LARGE MOBILE PHONES (<= 640px) */
+@media (max-width: 640px) {
+  .hero-floating-card {
+    bottom: 12px;
+    right: 12px;
+    padding: 10px 14px;
+    gap: 12px;
+    max-width: 230px;
   }
 
-  .about-hero-heading {
-    font-size: 24px;
+  .floating-card-title {
+    font-size: 12px;
   }
 
-  .values-grid {
-    grid-template-columns: 1fr;
+  .floating-card-sub {
+    font-size: 10.5px;
   }
 
-  .partners-logos-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .floating-card-arrow-btn {
+    width: 28px;
+    height: 28px;
   }
 
-  .video-play-btn-center {
-    width: 56px;
-    height: 56px;
+  .about-feat-item {
+    padding: 12px 14px;
+    gap: 12px;
   }
 
-  .video-title {
-    font-size: 15px;
+  .about-feat-icon-wrap {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+  }
+
+  .about-feat-title {
+    font-size: 13.5px;
+  }
+
+  .about-feat-p {
+    font-size: 12px;
   }
 
   .glance-row {
@@ -955,5 +1074,140 @@
   .glance-val {
     padding-left: 0;
     border-left: none;
+  }
+
+  .values-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .video-overlay-scrim {
+    padding: 14px 16px;
+  }
+
+  .video-play-btn-center {
+    width: 52px;
+    height: 52px;
+    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.5), 0 0 0 5px rgba(255, 255, 255, 0.2);
+  }
+
+  .video-tag {
+    font-size: 9.5px;
+  }
+
+  .video-title {
+    font-size: 14px;
+  }
+
+  .video-duration-pill {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
+
+/* 6. STANDARD & SMALL SMARTPHONES (<= 480px) */
+@media (max-width: 480px) {
+  .about-container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .about-hero-heading {
+    font-size: 25px;
+    line-height: 1.15;
+  }
+
+  .about-hero-desc {
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+
+  .about-hero-badges-row {
+    gap: 7px;
+  }
+
+  .hero-pill-badge {
+    padding: 6px 12px;
+    font-size: 11.5px;
+    gap: 6px;
+  }
+
+  .hero-pill-icon {
+    transform: scale(0.9);
+  }
+
+  .about-hero-image-wrap {
+    aspect-ratio: 4 / 3;
+    max-height: 290px;
+    border-radius: 14px;
+  }
+
+  .hero-floating-card {
+    bottom: 8px;
+    right: 8px;
+    padding: 8px 12px;
+    gap: 8px;
+    max-width: 200px;
+    border-radius: 8px;
+  }
+
+  .floating-card-title {
+    font-size: 11px;
+  }
+
+  .floating-card-sub {
+    font-size: 9.5px;
+  }
+
+  .floating-card-arrow-btn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .video-player-container {
+    border-radius: 12px;
+  }
+
+  .about-section-heading {
+    font-size: 21px;
+  }
+
+  .about-lead-desc {
+    font-size: 13.5px;
+  }
+
+  .partners-logos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .partner-logo-tile {
+    min-height: 48px;
+    padding: 8px 10px;
+  }
+
+  .partner-tile-img {
+    max-height: 22px;
+  }
+
+  .partner-text-mark {
+    font-size: 12.5px;
+  }
+}
+
+/* 7. EXTRA SMALL DEVICES (<= 360px) */
+@media (max-width: 360px) {
+  .about-hero-heading {
+    font-size: 22px;
+  }
+
+  .hero-floating-card {
+    max-width: 175px;
+    padding: 6px 10px;
+  }
+
+  .hero-pill-badge {
+    padding: 5px 10px;
+    font-size: 11px;
   }
 }
