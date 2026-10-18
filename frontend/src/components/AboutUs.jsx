@@ -384,11 +384,11 @@ export default function AboutUs() {
             <div className="hti-contact-detail">
               <MapPin size={20} />
               <p>
-                407 DR-4, Ram Mandir Road,
+                Unit No - 825, Plot No C-3C, Goodwill Bizhubb,
                 <br />
-                Goregaon (West), Mumbai 400104,
+                Next to Ikea, TTC Industrial Area Estate,
                 <br />
-                Maharashtra, India
+                Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703
               </p>
             </div>
             <a className="hti-contact-detail" href="tel:+919892756077">

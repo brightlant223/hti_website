@@ -65,8 +65,8 @@ All systems include optical safety photobeams and remote smartphone/PLC trigger 
     response: `You can reach our corporate engineering headquarters directly:
 
 🏢 **Office Address:**
-HTI Automation & Security Systems Pvt. Ltd.
-Goregaon (West), Mumbai - 400104, Maharashtra, India.
+HTI Automation and Security System Pvt Ltd
+Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate, Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703.
 
 📞 **Phone / WhatsApp:** +91 9992756077
 ✉️ **Email:** info@htisystems.in

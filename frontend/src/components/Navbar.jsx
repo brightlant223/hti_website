@@ -635,7 +635,7 @@ export default function Navbar({
           <div className="top-bar-right">
             <span className="top-location">
               <MapPin size={13} className="top-icon location-pin" />
-              <span>Goregaon (West), Mumbai - 400104</span>
+              <span>Turbhe, Navi Mumbai - 400703</span>
             </span>
           </div>
         </div>
@@ -1077,7 +1077,7 @@ export default function Navbar({
                   onClick={() => handleNavClick('contact')}
                 >
                   <div className="horiz-col-title">Contact Office</div>
-                  <div className="horiz-col-desc">Talk to our engineering team in Goregaon (West), Mumbai</div>
+                  <div className="horiz-col-desc">Talk to our engineering team in Turbhe, Navi Mumbai</div>
                 </button>
               </div>
             </div>
@@ -1184,6 +1184,9 @@ export default function Navbar({
                   </button>
                   <button className="mobile-sublink" onClick={() => handleNavClick('blogs')}>
                     Technical Blogs
+                  </button>
+                  <button className="mobile-sublink font-semibold text-orange-600" onClick={() => handleNavClick('contact')}>
+                    Contact Office (Turbhe, Navi Mumbai)
                   </button>
                 </div>
               )}
