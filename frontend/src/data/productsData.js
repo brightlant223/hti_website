@@ -1051,11 +1051,199 @@ export const productsData = [
   }
 ];
 
-// Helper: Get product by slug
+// Helper: Get product media (Images, Multi-angle Gallery, Video Demo Config)
+export const getProductMedia = (productOrSlug) => {
+  const slug = typeof productOrSlug === 'string' 
+    ? productOrSlug.toLowerCase() 
+    : productOrSlug?.slug?.toLowerCase() || '';
+
+  // 1. Automatic Sliding & Swing Doors
+  if (slug.includes('sliding-swing-doors') || slug.includes('sliding-door') || slug.includes('swing-door')) {
+    return {
+      primaryImage: '/products/automatic-doors.jpg',
+      badge: '4K Corporate Vision',
+      caption: 'Architectural Touchless Entry with Smart Infrared & Radar Sensing',
+      gallery: [
+        { url: '/products/automatic-doors.jpg', title: 'Corporate Atrium Installation', subtitle: 'Frameless Toughened Glass & Whisper-Quiet Drive' },
+        { url: '/services/services-touchless-entry.jpg', title: 'Motion Radar & Safety Sensors', subtitle: 'Dual Microwave Radar with Anti-Pinch Infrared Curtain' },
+        { url: '/hero-glass-atrium.jpg', title: 'Commercial Facade Integration', subtitle: 'Continuous 100% Duty Cycle High-Traffic Entryway' },
+        { url: '/about-automation-doors.jpg', title: 'BLDC Motor & Control Unit', subtitle: 'Microprocessor Brushless DC Motor with Battery Backup' },
+      ],
+      video: {
+        title: 'Automatic Door 4K Operating Cycle & Safety Reversal Test',
+        duration: '01:45',
+        resolution: '4K UHD 60fps',
+        type: 'Electromechanical Simulation',
+        simType: 'sliding_doors'
+      }
+    };
+  }
+
+  // 2. Heavy Duty Sliding & Swing Gates / Telescopic Cantilever
+  if (slug.includes('gates') || slug.includes('cantilever') || slug.includes('telescopic')) {
+    return {
+      primaryImage: '/services/services-perimeter-gate.jpg',
+      badge: 'Heavy Industrial',
+      caption: 'High-Torque Oil-Bath Motorized Perimeter Defense Gates',
+      gallery: [
+        { url: '/services/services-perimeter-gate.jpg', title: 'Factory Perimeter Gate', subtitle: 'Heavy Structural Steel with Oil-Bath Gearmotor' },
+        { url: '/services/services-trackless-gate.jpg', title: 'Cantilever Trackless Carriage', subtitle: 'Floats Above Sloping & Debris-Prone Ground' },
+        { url: '/products/boom-barriers.jpg', title: 'Combined Vehicle Checkpoint', subtitle: 'ANPR Camera & Long-Range UHF RFID Integration' },
+        { url: '/services/services-heavy-security.jpg', title: 'Dual Safety Beam Sensors', subtitle: 'Pneumatic Safety Edges & Anti-Crush Photocells' },
+      ],
+      video: {
+        title: 'Heavy-Duty Industrial Perimeter Gate Traversal & Soft-Stop Demo',
+        duration: '02:10',
+        resolution: '4K UHD 60fps',
+        type: 'Industrial Drive Simulation',
+        simType: 'perimeter_gates'
+      }
+    };
+  }
+
+  // 3. High Speed Rapid Doors / Shutters / Sectional Doors
+  if (slug.includes('rapid') || slug.includes('roll-up') || slug.includes('shutter') || slug.includes('sectional')) {
+    return {
+      primaryImage: '/products/rapid-doors.jpg',
+      badge: '1.5 m/s Rapid Cycle',
+      caption: 'Self-Repairing High-Speed PVC Curtain for Cleanroom & Logistics Isolation',
+      gallery: [
+        { url: '/products/rapid-doors.jpg', title: 'Cold-Chain Logistics Airlock', subtitle: 'Rapid Thermal Retention & Dust Barrier Isolation' },
+        { url: '/services/service-high-speed-doors.jpg', title: 'Self-Repairing Zipper Track', subtitle: 'Automatic Re-insertion After Accidental Vehicle Impact' },
+        { url: '/services/services-rapid-airlock.jpg', title: 'Pharma Airlock Partition', subtitle: 'Grade A Fire-Retardant PVC with Vision Window' },
+        { url: '/services/service-sectional-doors.jpg', title: 'Heavy Insulated Sectional Bay', subtitle: 'PUF Sandwich Panels for Acoustic & Thermal Seal' },
+      ],
+      video: {
+        title: 'Rapid Roll-Up Door 1.5 m/s Cycle & Wireless Bottom Edge Auto-Reverse',
+        duration: '01:30',
+        resolution: '4K UHD 60fps',
+        type: 'High-Speed Curtain Simulation',
+        simType: 'rapid_doors'
+      }
+    };
+  }
+
+  // 4. Boom Barriers / Dock Levellers / Turnstiles / Bollards / Parking
+  if (slug.includes('boom-barrier') || slug.includes('dock') || slug.includes('turnstile') || slug.includes('bollard') || slug.includes('visitor')) {
+    return {
+      primaryImage: '/products/boom-barriers.jpg',
+      badge: 'Continuous Duty',
+      caption: 'High-Frequency Intelligent Toll & Corporate Parking Access Control',
+      gallery: [
+        { url: '/products/boom-barriers.jpg', title: 'Corporate Multi-Lane Entrance', subtitle: 'High-Torque Brushless Barrier with Integrated Flap Gates' },
+        { url: '/services/service-boom-barrier.jpg', title: 'Speed Boom Barrier Mechanism', subtitle: '0.8s to 3.0s Fast Articulated & Straight Arm Drive' },
+        { url: '/services/services-logistics-bridge.jpg', title: 'Hydraulic Dock Leveller Bay', subtitle: 'Heavy-Duty 12-Ton Bridge with Inflatable Dock Shelter' },
+        { url: '/services/service-bollards-blockers.jpg', title: 'Anti-Ram Hydraulic Bollards', subtitle: 'K4/K12 Impact-Rated Retractable Vehicle Defense' },
+      ],
+      video: {
+        title: 'Intelligent Boom Barrier & Biometric Pedestrian Speed Gate Operation',
+        duration: '02:00',
+        resolution: '4K UHD 60fps',
+        type: 'Traffic Automation Simulation',
+        simType: 'boom_barriers'
+      }
+    };
+  }
+
+  // 5. Cleanroom Door Interlocks / Pass Box / Clocks / Cleanroom Doors
+  if (slug.includes('interlock') || slug.includes('pass-box') || slug.includes('clock') || slug.includes('clean-room') || slug.includes('acoustic') || slug.includes('sound-proof')) {
+    return {
+      primaryImage: '/products/cleanroom-interlocks.jpg',
+      badge: '21 CFR Part 11',
+      caption: 'USFDA 21 CFR Part 11 Compliant Intelligent Interlocking System',
+      gallery: [
+        { url: '/products/cleanroom-interlocks.jpg', title: 'Pharma Airlock Interlock Controller', subtitle: 'Multi-Door Sequential Logic with Touchless Sensor' },
+        { url: '/services/service-cleanroom.jpg', title: 'Dynamic Pass Box with UV Interlock', subtitle: 'SS 304 Electro-Polished Body with HEPA Filtration' },
+        { url: '/hero-cleanroom-interlock-chamber.jpg', title: 'Hermetic Cleanroom Chamber', subtitle: 'Airlock Pressure Retention & Emergency Fire Release' },
+        { url: '/hero-cleanroom-automation.jpg', title: 'Central Monitoring Annunciator', subtitle: 'BMS SCADA Relay Interface with Audit Trail Logging' },
+      ],
+      video: {
+        title: 'Cleanroom Door Interlock Multi-Door Sequence & Emergency Trip Test',
+        duration: '01:50',
+        resolution: '4K UHD 60fps',
+        type: 'Pharma Logic Simulation',
+        simType: 'cleanroom_interlocks'
+      }
+    };
+  }
+
+  // 6. Fire Alarm / Hydrant / Fire Rated Doors / PA System / Gas Detection
+  if (slug.includes('fire') || slug.includes('public-address') || slug.includes('gas-detection')) {
+    return {
+      primaryImage: '/products/fire-alarm.jpg',
+      badge: 'Life Safety UL/FM',
+      caption: 'Intelligent Multi-Loop Addressable Fire Detection & Auto-Suppression',
+      gallery: [
+        { url: '/products/fire-alarm.jpg', title: 'Addressable Fire Alarm Console', subtitle: 'Multi-Loop Control Room Panel with Graphic Display' },
+        { url: '/services/service-fire-alarm.jpg', title: 'Optical Smoke & Flame Detectors', subtitle: 'Early Warning Laser Sensors with Low False-Alarm Algorithm' },
+        { url: '/services/service-fire-doors.jpg', title: '120/240 Min Fire Rated Containment', subtitle: 'CBRI Certified Steel Fire Doors & Motorized Shutters' },
+        { url: '/services/service-emergency-trip.jpg', title: 'Voice Evacuation & PA Speakers', subtitle: 'Zoned Public Address Broadcast with Auto-Mute Override' },
+      ],
+      video: {
+        title: 'Intelligent Addressable Fire Network Detection & Auto-Relay Release',
+        duration: '02:15',
+        resolution: '4K UHD 60fps',
+        type: 'Safety Matrix Simulation',
+        simType: 'fire_safety'
+      }
+    };
+  }
+
+  // 7. CCTV / Biometrics / Video Door Phones / Server Monitoring / Fault Alarms
+  if (slug.includes('cctv') || slug.includes('biometric') || slug.includes('video-door') || slug.includes('server-room') || slug.includes('fault') || slug.includes('intrusion')) {
+    return {
+      primaryImage: '/products/cctv-biometrics.jpg',
+      badge: 'AI 4K Analytics',
+      caption: 'Deep-Learning Facial Biometrics & Ultra-HD Command Center CCTV',
+      gallery: [
+        { url: '/products/cctv-biometrics.jpg', title: 'Dual-Lens AI Biometric Terminal', subtitle: '0.2s Touchless Face & Fingerprint Shift Verification' },
+        { url: '/about-security-camera.jpg', title: '4K Ultra-HD Network Dome Camera', subtitle: 'Starlight Night Vision & Flameproof Explosion Enclosure' },
+        { url: '/hero-security-command-center.jpg', title: 'Integrated Security Monitoring Hub', subtitle: 'Video Wall Matrix with Multi-Site NVR Centralization' },
+        { url: '/products/automatic-doors.jpg', title: 'Direct Access Barrier Integration', subtitle: 'Automated Relay Trigger for Turnstiles & Interlocks' },
+      ],
+      video: {
+        title: 'AI Facial Verification & 4K CCTV Starlight Night Analytics Live Demo',
+        duration: '01:40',
+        resolution: '4K UHD 60fps',
+        type: 'AI Vision Simulation',
+        simType: 'surveillance_ai'
+      }
+    };
+  }
+
+  // 8. Hygiene Solutions / Air Curtains / Dispensers / Strip Curtains
+  return {
+    primaryImage: '/services/service-air-curtain.jpg',
+    badge: 'Industrial Grade',
+    caption: 'High-Velocity Environmental Air Barrier & Touchless Hygiene Technology',
+    gallery: [
+      { url: '/services/service-air-curtain.jpg', title: 'High-Velocity Air Curtain System', subtitle: 'Centrifugal Cross-Flow Blower for Insect & Dust Rejection' },
+      { url: '/about-hygiene-washroom.jpg', title: 'Touchless Automatic Hand Dispensers', subtitle: 'Infrared Spray/Gel Sanitizer with 30,000 Cycle Capacity' },
+      { url: '/products/rapid-doors.jpg', title: 'Grade A+ Transparent PVC Curtains', subtitle: 'UV-Stabilized 99.2% Optical Clarity Strips for Loading Bays' },
+      { url: '/products/cleanroom-interlocks.jpg', title: 'Airlock Hygiene Integration', subtitle: 'Coordinated Decontamination for Pharma Gowning Suites' },
+    ],
+    video: {
+      title: 'Industrial Air Curtain Aerodynamic Velocity & Dust Deflection Demo',
+      duration: '01:25',
+      resolution: '4K UHD 60fps',
+      type: 'Airflow Barrier Simulation',
+      simType: 'hygiene_barrier'
+    }
+  };
+};
+
+// Helper: Get product by slug (with intelligent fallback)
 export const getProductBySlug = (slug) => {
   if (!slug) return null;
   const cleanSlug = slug.toLowerCase().trim();
-  return productsData.find(p => p.slug.toLowerCase() === cleanSlug) || null;
+  const exact = productsData.find(p => p.slug.toLowerCase() === cleanSlug);
+  if (exact) return exact;
+  const partial = productsData.find(p => 
+    p.slug.toLowerCase().includes(cleanSlug) || 
+    cleanSlug.includes(p.slug.toLowerCase()) ||
+    p.name.toLowerCase().includes(cleanSlug.replace(/-/g, ' '))
+  );
+  return partial || productsData[0];
 };
 
 // Helper: Get products by category
@@ -1082,3 +1270,4 @@ export const getProductsByCategory = (category) => {
     return pCat === cleanCat;
   });
 };
+

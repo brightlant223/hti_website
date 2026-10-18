@@ -35,6 +35,8 @@ import {
   Layers,
   Truck
 } from 'lucide-react';
+import ProductHoverPopup from './ProductHoverPopup';
+import { getProductBySlug, getProductMedia } from '../data/productsData';
 
 export default function Navbar({
   currentPage = 'home',
@@ -129,7 +131,54 @@ export default function Navbar({
     }
   };
 
+  const [hoveredProductInfo, setHoveredProductInfo] = useState(null);
+  const [popupPos, setPopupPos] = useState({ top: 120, left: 100, align: 'right' });
+  const hoverTimeoutRef = useRef(null);
+
+  const handleProductHover = (slug, event) => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    const prod = getProductBySlug(slug);
+    const media = getProductMedia(slug);
+    if (!prod) return;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    // Smart positioning:
+    // If rect is near right edge (>60% of screen width), pop up to the left of the button
+    let left = rect.right + 14;
+    let top = rect.top - 12;
+    let align = 'right';
+
+    if (rect.right + 330 > screenWidth || rect.left > screenWidth * 0.55) {
+      left = Math.max(12, rect.left - 338);
+      align = 'left';
+    }
+
+    // Keep top within viewport bounds
+    if (top + 420 > screenHeight) {
+      top = Math.max(14, screenHeight - 430);
+    }
+    if (top < 10) top = 10;
+
+    setPopupPos({ top, left, align });
+    setHoveredProductInfo({
+      product: prod,
+      media: media,
+      slug: slug
+    });
+  };
+
+  const handleProductLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredProductInfo(null);
+    }, 120);
+  };
+
   const handleProductClick = (slug) => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setHoveredProductInfo(null);
     setActiveDropdown(null);
     setMobileMenuOpen(false);
     if (onNavigate) {
@@ -483,6 +532,69 @@ export default function Navbar({
           icon: Settings,
           category: 'Security System'
         }
+      ]
+    }
+  ];
+
+  const productColumns = [
+    {
+      title: 'ACCESS AUTOMATION',
+      icon: Cpu,
+      colorClass: 'text-blue',
+      items: [
+        { slug: 'automatic-sliding-swing-doors', name: 'Automatic Sliding & Swing Doors', work: 'Touchless sensor entry for offices & hospitals' },
+        { slug: 'automatic-sliding-swing-gates', name: 'Automatic Sliding & Swing Gates', work: 'Motorized perimeter gates for factory estates' },
+        { slug: 'telescopic-cantilever-gates', name: 'Telescopic & Cantilever Gates', work: 'Trackless space-saving sliding barriers' },
+        { slug: 'pvc-rapid-roll-up-doors', name: 'High Speed Roll Up & Sectional Doors', work: 'Rapid thermal & airlock environmental retention' },
+        { slug: 'motorized-rolling-shutters', name: 'Motorized Rolling Shutters', work: 'Heavy-gauge galvanized security bay protection' },
+      ]
+    },
+    {
+      title: 'TRAFFIC & PERIMETER',
+      icon: ShieldCheck,
+      colorClass: 'text-amber',
+      items: [
+        { slug: 'boom-barriers', name: 'Boom Barriers (Electro / Hydraulic)', work: 'High-frequency corporate parking & toll gates' },
+        { slug: 'dock-levellers-dock-shelters', name: 'Dock Levellers & Dock Shelters', work: 'Logistics loading bridge between trucks & bay' },
+        { slug: 'turnstiles-flap-barriers-speed-gates', name: 'Turnstiles & Flap Barriers', work: 'Pedestrian biometric lobby speed gates' },
+        { slug: 'bollards-tyre-killers-car-lifts', name: 'Bollards, Tyre Killers & Car Lifts', work: 'Anti-ram vehicle defense & multi-level elevators' },
+        { slug: 'visitor-management-system', name: 'Parking & Visitor Management', work: 'Automated RFID guidance & QR digital pass' },
+      ]
+    },
+    {
+      title: 'PHARMA CLEANROOM',
+      icon: Lock,
+      colorClass: 'text-red',
+      items: [
+        { slug: 'door-interlock-systems', name: 'Door Interlock System (Ex-d & Safe)', work: 'USFDA 21 CFR Part 11 compliant 2–8 door logic' },
+        { slug: 'pass-box-systems', name: 'Pass Box System (Static & Dynamic)', work: 'Contamination-free material transfer with UV' },
+        { slug: 'digital-gps-clocks', name: 'Digital Clocks (Flameproof / Safe)', work: 'GPS master-slave pharma time synchronization' },
+        { slug: 'chiller-clean-room-doors', name: 'Chiller Doors & Clean Room Doors', work: 'Hermetically sealed cold storage & lab barriers' },
+        { slug: 'sound-proof-doors', name: 'Sound Proof Acoustic Doors', work: 'Heavy acoustic decibel dampening for machinery' },
+      ]
+    },
+    {
+      title: 'FIRE & LIFE SAFETY',
+      icon: Flame,
+      colorClass: 'text-orange',
+      items: [
+        { slug: 'fire-alarm-system', name: 'Fire Alarm (Conventional & Addr)', work: 'Multi-loop smoke, heat & flame sensor network' },
+        { slug: 'fire-hydrant-sprinkler-systems', name: 'Fire Hydrant & Sprinkler System', work: 'Turnkey industrial fire fighting water distribution' },
+        { slug: 'fire-rated-doors-shutters', name: 'Fire Rated Door & Fire Rated Shutter', work: 'Certified 120/240 min containment barrier' },
+        { slug: 'public-address-system', name: 'Public Address (PA) System', work: 'Zoned emergency voice evacuation broadcast' },
+        { slug: 'gas-detection-systems', name: 'Gas Detection Systems', work: 'Toxic, combustible LPG/CNG & VOC leak alerts' },
+      ]
+    },
+    {
+      title: 'SURVEILLANCE & ALERTS',
+      icon: Activity,
+      colorClass: 'text-emerald',
+      items: [
+        { slug: 'cctv-surveillance-system', name: 'CCTV Surveillance (Analogue & IP 4K)', work: 'Ultra-HD AI analytics & flameproof camera arrays' },
+        { slug: 'biometric-access-attendance', name: 'Biometric Access & Time Attendance', work: 'Facial recognition & fingerprint shift logging' },
+        { slug: 'video-door-phones', name: 'Video Door Phone (IP & Non-IP)', work: '2-way video intercom with remote door release' },
+        { slug: 'server-room-monitoring', name: 'Server Room Monitoring', work: '24/7 Temp, RH, water leak & fire SMS dialer' },
+        { slug: 'fault-alarm-systems', name: 'Fault & Intrusion Alarm Systems', work: 'Central pump trip & perimeter breach annunciator' },
       ]
     }
   ];
@@ -860,155 +972,34 @@ export default function Navbar({
           <div className="bright-horizontal-dropdown products-mega-dropdown desktop-only">
             <div className="bright-container">
               <div className="products-horizontal-grid">
-                {/* Col 1: Access Automation */}
-                <div className="prod-col-group">
-                  <div className="prod-col-header text-blue">
-                    <Cpu size={16} />
-                    <span>ACCESS AUTOMATION</span>
-                  </div>
-                  <div className="prod-col-items">
-                    <button className="prod-item-btn" onClick={() => handleProductClick('automatic-sliding-swing-doors')}>
-                      <div className="prod-item-name">Automatic Sliding & Swing Doors</div>
-                      <div className="prod-item-work">Touchless sensor entry for offices & hospitals</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('automatic-sliding-swing-gates')}>
-                      <div className="prod-item-name">Automatic Sliding & Swing Gates</div>
-                      <div className="prod-item-work">Motorized perimeter gates for factory estates</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('telescopic-cantilever-gates')}>
-                      <div className="prod-item-name">Telescopic & Cantilever Gates</div>
-                      <div className="prod-item-work">Trackless space-saving sliding barriers</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('pvc-rapid-roll-up-doors')}>
-                      <div className="prod-item-name">High Speed Roll Up & Sectional Doors</div>
-                      <div className="prod-item-work">Rapid thermal & airlock environmental retention</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('motorized-rolling-shutters')}>
-                      <div className="prod-item-name">Motorized Rolling Shutters</div>
-                      <div className="prod-item-work">Heavy-gauge galvanized security bay protection</div>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Col 2: Traffic & Perimeter */}
-                <div className="prod-col-group">
-                  <div className="prod-col-header text-amber">
-                    <ShieldCheck size={16} />
-                    <span>TRAFFIC & PERIMETER</span>
-                  </div>
-                  <div className="prod-col-items">
-                    <button className="prod-item-btn" onClick={() => handleProductClick('boom-barriers')}>
-                      <div className="prod-item-name">Boom Barriers (Electro / Hydraulic)</div>
-                      <div className="prod-item-work">High-frequency corporate parking & toll gates</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('dock-levellers-dock-shelters')}>
-                      <div className="prod-item-name">Dock Levellers & Dock Shelters</div>
-                      <div className="prod-item-work">Logistics loading bridge between trucks & bay</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('turnstiles-flap-barriers-speed-gates')}>
-                      <div className="prod-item-name">Turnstiles & Flap Barriers</div>
-                      <div className="prod-item-work">Pedestrian biometric lobby speed gates</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('bollards-tyre-killers-car-lifts')}>
-                      <div className="prod-item-name">Bollards, Tyre Killers & Car Lifts</div>
-                      <div className="prod-item-work">Anti-ram vehicle defense & multi-level elevators</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('visitor-management-system')}>
-                      <div className="prod-item-name">Parking & Visitor Management</div>
-                      <div className="prod-item-work">Automated RFID guidance & QR digital pass</div>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Col 3: Cleanroom Engineering */}
-                <div className="prod-col-group">
-                  <div className="prod-col-header text-red">
-                    <Lock size={16} />
-                    <span>PHARMA CLEANROOM</span>
-                  </div>
-                  <div className="prod-col-items">
-                    <button className="prod-item-btn" onClick={() => handleProductClick('door-interlock-systems')}>
-                      <div className="prod-item-name">Door Interlock System (Ex-d & Safe)</div>
-                      <div className="prod-item-work">USFDA 21 CFR Part 11 compliant 2-8 door logic</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('pass-box-systems')}>
-                      <div className="prod-item-name">Pass Box System (Static & Dynamic)</div>
-                      <div className="prod-item-work">Contamination-free material transfer with UV</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('digital-gps-clocks')}>
-                      <div className="prod-item-name">Digital Clocks (Flameproof / Safe)</div>
-                      <div className="prod-item-work">GPS master-slave pharma time synchronization</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('chiller-clean-room-doors')}>
-                      <div className="prod-item-name">Chiller Doors & Clean Room Doors</div>
-                      <div className="prod-item-work">Hermetically sealed cold storage & lab barriers</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('sound-proof-doors')}>
-                      <div className="prod-item-name">Sound Proof Acoustic Doors</div>
-                      <div className="prod-item-work">Heavy acoustic decibel dampening for machinery</div>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Col 4: Fire & Life Safety */}
-                <div className="prod-col-group">
-                  <div className="prod-col-header text-orange">
-                    <Flame size={16} />
-                    <span>FIRE & LIFE SAFETY</span>
-                  </div>
-                  <div className="prod-col-items">
-                    <button className="prod-item-btn" onClick={() => handleProductClick('fire-alarm-system')}>
-                      <div className="prod-item-name">Fire Alarm (Conventional & Addr)</div>
-                      <div className="prod-item-work">Multi-loop smoke, heat & flame sensor network</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('fire-hydrant-sprinkler-systems')}>
-                      <div className="prod-item-name">Fire Hydrant & Sprinkler System</div>
-                      <div className="prod-item-work">Turnkey industrial fire fighting water distribution</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('fire-rated-doors-shutters')}>
-                      <div className="prod-item-name">Fire Rated Door & Fire Rated Shutter</div>
-                      <div className="prod-item-work">Certified 120/240 min containment barrier</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('public-address-system')}>
-                      <div className="prod-item-name">Public Address (PA) System</div>
-                      <div className="prod-item-work">Zoned emergency voice evacuation broadcast</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('gas-detection-systems')}>
-                      <div className="prod-item-name">Gas Detection Systems</div>
-                      <div className="prod-item-work">Toxic, combustible LPG/CNG & VOC leak alerts</div>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Col 5: Surveillance & Monitoring */}
-                <div className="prod-col-group">
-                  <div className="prod-col-header text-emerald">
-                    <Activity size={16} />
-                    <span>SURVEILLANCE & ALERTS</span>
-                  </div>
-                  <div className="prod-col-items">
-                    <button className="prod-item-btn" onClick={() => handleProductClick('cctv-surveillance-system')}>
-                      <div className="prod-item-name">CCTV Surveillance (Analogue & IP 4K)</div>
-                      <div className="prod-item-work">Ultra-HD AI analytics & flameproof camera arrays</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('biometric-access-attendance')}>
-                      <div className="prod-item-name">Biometric Access & Time Attendance</div>
-                      <div className="prod-item-work">Facial recognition & fingerprint shift logging</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('video-door-phones')}>
-                      <div className="prod-item-name">Video Door Phone (IP & Non-IP)</div>
-                      <div className="prod-item-work">2-way video intercom with remote door release</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('server-room-monitoring')}>
-                      <div className="prod-item-name">Server Room Monitoring</div>
-                      <div className="prod-item-work">24/7 Temp, RH, water leak & fire SMS dialer</div>
-                    </button>
-                    <button className="prod-item-btn" onClick={() => handleProductClick('fault-alarm-systems')}>
-                      <div className="prod-item-name">Fault & Intrusion Alarm Systems</div>
-                      <div className="prod-item-work">Central pump trip & perimeter breach annunciator</div>
-                    </button>
-                  </div>
-                </div>
+                {productColumns.map((col, idx) => {
+                  const IconComp = col.icon;
+                  return (
+                    <div key={idx} className="prod-col-group">
+                      <div className={`prod-col-header ${col.colorClass}`}>
+                        <IconComp size={16} />
+                        <span>{col.title}</span>
+                      </div>
+                      <div className="prod-col-items">
+                        {col.items.map((item) => {
+                          const isHovered = hoveredProductInfo?.slug === item.slug;
+                          return (
+                            <button
+                              key={item.slug}
+                              className={`prod-item-btn ${isHovered ? 'is-active-hover' : ''}`}
+                              onClick={() => handleProductClick(item.slug)}
+                              onMouseEnter={(e) => handleProductHover(item.slug, e)}
+                              onMouseLeave={handleProductLeave}
+                            >
+                              <div className="prod-item-name">{item.name}</div>
+                              <div className="prod-item-work">{item.work}</div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Bottom Quick Bar */}
@@ -1023,6 +1014,20 @@ export default function Navbar({
                 </button>
               </div>
             </div>
+
+            {/* Rich Hover Popup with Corporate Generated Images & Technical Specs */}
+            {hoveredProductInfo && (
+              <ProductHoverPopup
+                product={hoveredProductInfo.product}
+                media={hoveredProductInfo.media}
+                position={popupPos}
+                onNavigate={handleProductClick}
+                onMouseEnter={() => {
+                  if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+                }}
+                onMouseLeave={handleProductLeave}
+              />
+            )}
           </div>
         )}
 

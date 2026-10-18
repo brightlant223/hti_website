@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, CheckCircle2, ShieldCheck, Download, Send, PhoneCall, 
   MessageSquare, Layers, Cpu, Flame, Wrench, Share2, Sparkles, Building2,
   Check, FileText, ExternalLink, ArrowRight, AlertTriangle, BatteryCharging,
-  Settings, CheckSquare, Zap, Clock
+  Settings, CheckSquare, Zap, Clock, Play, Pause, RotateCcw, Volume2, VolumeX,
+  Maximize2, Eye, Activity, Info, Sliders, PlayCircle
 } from 'lucide-react';
-import { productsData } from '../data/productsData';
+import { productsData, getProductMedia } from '../data/productsData';
 
 export default function ProductDetailPage({ 
   product, 
@@ -25,10 +26,28 @@ export default function ProductDetailPage({
   const [submitted, setSubmitted] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
+  // Media & Gallery state
+  const media = getProductMedia(product);
+  const gallery = media.gallery && media.gallery.length > 0 
+    ? media.gallery 
+    : [{ url: media.primaryImage, title: 'Corporate Facade', subtitle: 'Turnkey Installation' }];
+  
+  const [activeImgIdx, setActiveImgIdx] = useState(0);
+
+  // Video & Simulation Player State
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [simScenario, setSimScenario] = useState('standard'); // 'standard' | 'obstacle' | 'fire' | 'battery'
+  const [simProgress, setSimProgress] = useState(38);
+  const [isMuted, setIsMuted] = useState(true);
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'video' | 'specs' | 'applications'
+  const [cycleCount, setCycleCount] = useState(14820);
+
+  const progressIntervalRef = useRef(null);
+
   // Available add-ons / engineering accessories
   const availableAccessories = [
-    'Emergency Battery Backup Unit',
-    'Active Infrared Presence & Safety Sensor',
+    'Emergency Battery Backup Unit (24V)',
+    'Active Infrared Presence & Safety Curtain',
     'Certified Flameproof (Ex-d) Enclosure',
     'FACP Fire Alarm Auto-Trip Interface Relay',
     'Touchless Wave Sensor / Proximity Switch',
@@ -39,12 +58,34 @@ export default function ProductDetailPage({
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setSubmitted(false);
+    setActiveImgIdx(0);
+    setSimScenario('standard');
     setFormData(prev => ({
       ...prev,
       accessories: [],
-      message: `Hello HTI Engineering, please share technical data sheet, GA drawing, and turnkey quotation for ${product?.name || 'this system'}.`
+      message: `Hello HTI Engineering, please share technical data sheet, CAD GA drawing, and turnkey quotation for ${product?.name || 'this system'}.`
     }));
   }, [product]);
+
+  // Video Progress Simulation Timer
+  useEffect(() => {
+    if (isPlaying) {
+      progressIntervalRef.current = setInterval(() => {
+        setSimProgress(prev => {
+          if (prev >= 100) {
+            setCycleCount(c => c + 1);
+            return 0;
+          }
+          return prev + 1.2;
+        });
+      }, 100);
+    } else {
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    }
+    return () => {
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    };
+  }, [isPlaying]);
 
   if (!product) {
     return (
@@ -101,7 +142,7 @@ export default function ProductDetailPage({
         company: formData.company || 'Not specified',
         category: product.category,
         product_name: product.name,
-        message: `${formData.message} [Location: ${formData.location || 'Mumbai'}] [Qty: ${formData.quantity}] [Selected Add-ons: ${formData.accessories.join(', ') || 'Standard'}]`
+        message: `${formData.message} [Location: ${formData.location || 'Pan-India'}] [Qty: ${formData.quantity}] [Selected Add-ons: ${formData.accessories.join(', ') || 'Standard'}]`
       })
     }).catch(() => {
       // Offline fallback
@@ -120,8 +161,58 @@ export default function ProductDetailPage({
   };
 
   const handleBrochureDownload = () => {
-    alert(`Technical specification sheet for "${product.name}" has been requested. Our system will generate and email the PDF engineering package to you shortly.`);
+    alert(`Technical specification dossier & CAD schematic for "${product.name}" is being prepared. Our engineering office will email the PDF package to your registered address.`);
   };
+
+  // Telemetry status variables based on selected test scenario
+  const getTelemetryData = () => {
+    switch (simScenario) {
+      case 'obstacle':
+        return {
+          statusBadge: 'OBSTACLE AUTO-REVERSING',
+          badgeColor: 'text-amber-400 bg-amber-950/80 border-amber-500/40',
+          radarStatus: 'OBSTACLE DETECTED (50mm)',
+          motorStatus: 'TORQUE LIMIT TRIP • INSTANT REVERSE',
+          safetyStatus: 'TRIPPED (EN 16005 COMPLIANT)',
+          facpStatus: 'ARMED • STANDBY',
+          batteryStatus: '100% HEALTHY'
+        };
+      case 'fire':
+        return {
+          statusBadge: 'FACP FIRE ALARM RELAY RELEASE',
+          badgeColor: 'text-red-400 bg-red-950/80 border-red-500/40',
+          radarStatus: 'OVERRIDDEN BY FIRE SIGNAL',
+          motorStatus: 'EMERGENCY FAIL-SAFE FULL OPEN',
+          safetyStatus: 'LIFE SAFETY EVACUATION ACTIVE',
+          facpStatus: 'ALARM ACTIVE • NO-DELAY RELEASE',
+          batteryStatus: 'STANDBY ENGAGED'
+        };
+      case 'battery':
+        return {
+          statusBadge: 'GRID MAINS CUT • BATTERY ACTIVE',
+          badgeColor: 'text-sky-400 bg-sky-950/80 border-sky-500/40',
+          radarStatus: 'BATTERY POWERED SENSING',
+          motorStatus: '24V DC BRUSHLESS CONTINUOUS',
+          safetyStatus: 'LOW-VOLTAGE FAIL SAFE OK',
+          facpStatus: 'ARMED • NORMAL',
+          batteryStatus: '24V LINEAR DISCHARGE (98%)'
+        };
+      case 'standard':
+      default:
+        return {
+          statusBadge: 'CONTINUOUS 100% OPERATIONAL CYCLE',
+          badgeColor: 'text-emerald-400 bg-emerald-950/80 border-emerald-500/40',
+          radarStatus: 'ACTIVE • RADAR SWEEP CLEAR',
+          motorStatus: '24V BLDC • 450 RPM • 18.2 Nm',
+          safetyStatus: 'ZERO RESISTANCE (ALL CLEAR)',
+          facpStatus: 'ARMED • NORMAL STANDBY',
+          batteryStatus: '100% FLOAT CHARGE'
+        };
+    }
+  };
+
+  const telemetry = getTelemetryData();
+  const activeImage = gallery[activeImgIdx] || gallery[0];
 
   return (
     <div className="product-detail-page">
@@ -163,10 +254,12 @@ export default function ProductDetailPage({
         </div>
       </div>
 
-      {/* 2. Hero Banner (Light Theme) */}
+      {/* 2. Hero Header & High-Definition Image Showcase */}
       <div className="detail-hero-banner">
         <div className="container">
           <div className="detail-hero-grid">
+            
+            {/* Left Col: Info & Badges */}
             <div className="detail-hero-content">
               <div className="detail-tag-row">
                 <span className="detail-category-badge">{product.category}</span>
@@ -177,6 +270,10 @@ export default function ProductDetailPage({
                     {product.badge}
                   </span>
                 )}
+                <span className="detail-4k-badge">
+                  <PlayCircle size={13} />
+                  4K Video Simulation
+                </span>
               </div>
 
               <h1 className="detail-title">{product.name}</h1>
@@ -215,7 +312,7 @@ export default function ProductDetailPage({
               <div className="detail-quick-stats">
                 <div className="quick-stat-item">
                   <ShieldCheck size={18} className="text-sky-600" />
-                  <span>ISO & CE Certified Quality</span>
+                  <span>USFDA & CE Certified</span>
                 </div>
                 <div className="quick-stat-item">
                   <Wrench size={18} className="text-sky-600" />
@@ -223,53 +320,266 @@ export default function ProductDetailPage({
                 </div>
                 <div className="quick-stat-item">
                   <Cpu size={18} className="text-sky-600" />
-                  <span>OEM Warranty & Service Support</span>
+                  <span>Continuous 100% Duty BLDC Drive</span>
                 </div>
               </div>
             </div>
 
-            {/* Visual Engineering Preview Card */}
+            {/* Right Col: High-Res Multi-Angle Image Gallery Showcase */}
             <div className="detail-preview-visual">
-              <div className="preview-glass-box">
-                <div className="preview-icon-badge">
-                  {product.category === 'Automation' ? (
-                    <Cpu size={44} className="text-sky-600" />
-                  ) : product.category === 'Security System' ? (
-                    <ShieldCheck size={44} className="text-red-500" />
-                  ) : (
-                    <Layers size={44} className="text-emerald-600" />
-                  )}
-                </div>
-                <h3 className="preview-box-title">{product.name}</h3>
-                <p className="preview-box-summary">{product.workSummary}</p>
-                
-                <div className="preview-status-pill">
-                  <span className="status-dot"></span>
-                  <span>Active Engineering Specification Available</span>
+              <div className="detail-gallery-container">
+                {/* Primary Large Image Viewer */}
+                <div className="detail-gallery-main">
+                  <img 
+                    src={activeImage.url} 
+                    alt={activeImage.title}
+                    className="gallery-main-img" 
+                  />
+                  <div className="gallery-img-gradient" />
+                  
+                  <div className="gallery-caption-overlay">
+                    <div className="gallery-caption-title">{activeImage.title}</div>
+                    <div className="gallery-caption-sub">{activeImage.subtitle}</div>
+                  </div>
+
+                  <div className="gallery-tag-pill">
+                    <Sparkles size={12} className="text-amber-400" />
+                    <span>Corporate High-Resolution Spec</span>
+                  </div>
                 </div>
 
-                <div className="preview-meta-row">
-                  <div className="preview-meta-col">
-                    <span className="meta-label">Category</span>
-                    <span className="meta-val">{product.category}</span>
-                  </div>
-                  <div className="preview-meta-col">
-                    <span className="meta-label">Lead Time</span>
-                    <span className="meta-val">Ready Stock / Custom</span>
-                  </div>
-                  <div className="preview-meta-col">
-                    <span className="meta-label">Compliance</span>
-                    <span className="meta-val">USFDA / NBC 2016</span>
-                  </div>
+                {/* 4-Angle Thumbnail Selector Strip */}
+                <div className="detail-gallery-thumbs">
+                  {gallery.map((thumb, idx) => (
+                    <button
+                      key={idx}
+                      className={`gallery-thumb-btn ${activeImgIdx === idx ? 'thumb-active' : ''}`}
+                      onClick={() => setActiveImgIdx(idx)}
+                    >
+                      <img src={thumb.url} alt={thumb.title} className="thumb-img" />
+                      <div className="thumb-hover-overlay">
+                        <span>{idx + 1}</span>
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
 
-      {/* 3. Main Content Body & Specs */}
-      <div className="detail-main-body section">
+      {/* 3. INTERACTIVE 4K CORPORATE VIDEO & 3D SIMULATION PLAYER */}
+      <section className="detail-video-section section">
+        <div className="container">
+          
+          <div className="video-section-header">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="section-pill-tag">
+                  <PlayCircle size={14} />
+                  INTERACTIVE 4K VIDEO DEMONSTRATION
+                </span>
+                <span className="hd-tag">4K UHD 60FPS</span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">
+                {media.video?.title || `${product.name} Engineering Demonstration & Safety Stress Test`}
+              </h2>
+              <p className="text-slate-500 text-sm mt-1">
+                Experience real-time automated cycles, microwave radar presence detection, and statutory fail-safe triggers.
+              </p>
+            </div>
+
+            {/* Simulation Scenarios Switcher */}
+            <div className="scenario-switcher-bar">
+              <span className="scenario-lbl">Test Scenario:</span>
+              <div className="scenario-btns-group">
+                <button 
+                  className={`scenario-btn ${simScenario === 'standard' ? 'scenario-active' : ''}`}
+                  onClick={() => setSimScenario('standard')}
+                >
+                  <Activity size={13} />
+                  <span>Standard 100% Cycle</span>
+                </button>
+                <button 
+                  className={`scenario-btn ${simScenario === 'obstacle' ? 'scenario-active' : ''}`}
+                  onClick={() => setSimScenario('obstacle')}
+                >
+                  <Zap size={13} />
+                  <span>Anti-Pinch Reversal</span>
+                </button>
+                <button 
+                  className={`scenario-btn ${simScenario === 'fire' ? 'scenario-active' : ''}`}
+                  onClick={() => setSimScenario('fire')}
+                >
+                  <Flame size={13} />
+                  <span>FACP Fire Alarm Release</span>
+                </button>
+                <button 
+                  className={`scenario-btn ${simScenario === 'battery' ? 'scenario-active' : ''}`}
+                  onClick={() => setSimScenario('battery')}
+                >
+                  <BatteryCharging size={13} />
+                  <span>Battery Fail-Safe</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Video Player Box with Live Telemetry HUD */}
+          <div className="video-player-container">
+            {/* Video Canvas / Visual Area */}
+            <div className="video-canvas-stage">
+              <img 
+                src={activeImage.url} 
+                alt="Product in Action" 
+                className="video-bg-media"
+              />
+              <div className="video-cinematic-dim" />
+
+              {/* Live Telemetry Heads-Up Display (HUD) */}
+              <div className="video-hud-overlay">
+                
+                {/* Top HUD Bar */}
+                <div className="hud-top-bar">
+                  <div className={`hud-badge ${telemetry.badgeColor}`}>
+                    <span className="hud-rec-dot" />
+                    <span>{telemetry.statusBadge}</span>
+                  </div>
+
+                  <div className="hud-metric-pill">
+                    <span className="text-slate-400">Total Validated Cycles:</span>
+                    <span className="text-emerald-400 font-mono font-bold">{cycleCount.toLocaleString()}</span>
+                  </div>
+                </div>
+
+                {/* Center Animation Overlay: Radar Beams & Moving Indicator */}
+                <div className="hud-center-visual">
+                  {simScenario === 'obstacle' && (
+                    <div className="hud-obstacle-alert">
+                      <AlertTriangle size={32} className="text-amber-400 animate-bounce" />
+                      <div className="alert-text">SAFETY BEAM INTERRUPTED • EN 16005 AUTO REVERSAL ACTIVATED</div>
+                    </div>
+                  )}
+
+                  {simScenario === 'fire' && (
+                    <div className="hud-fire-alert">
+                      <Flame size={32} className="text-red-400 animate-pulse" />
+                      <div className="alert-text">CENTRAL FIRE ALARM (FACP) SIGNAL CONFIRMED • LOCKS RELEASED</div>
+                    </div>
+                  )}
+
+                  {/* Pulsing Radar Ring */}
+                  <div className="hud-radar-sweep-box">
+                    <div className="radar-sweep-cone" />
+                    <div className="radar-scanner-line" />
+                    <div className="radar-pulse-ring ring-1" />
+                    <div className="radar-pulse-ring ring-2" />
+                  </div>
+                </div>
+
+                {/* Bottom HUD Telemetry Dashboard */}
+                <div className="hud-telemetry-panel">
+                  <div className="hud-param-col">
+                    <span className="hud-lbl">RADAR SENSOR</span>
+                    <span className="hud-val text-sky-400">{telemetry.radarStatus}</span>
+                  </div>
+                  <div className="hud-param-col">
+                    <span className="hud-lbl">MOTOR TORQUE</span>
+                    <span className="hud-val text-slate-100">{telemetry.motorStatus}</span>
+                  </div>
+                  <div className="hud-param-col">
+                    <span className="hud-lbl">SAFETY EDGE</span>
+                    <span className="hud-val text-emerald-400">{telemetry.safetyStatus}</span>
+                  </div>
+                  <div className="hud-param-col">
+                    <span className="hud-lbl">FACP FIRE RELAY</span>
+                    <span className="hud-val text-amber-400">{telemetry.facpStatus}</span>
+                  </div>
+                  <div className="hud-param-col">
+                    <span className="hud-lbl">BATTERY BACKUP</span>
+                    <span className="hud-val text-emerald-300">{telemetry.batteryStatus}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Play / Pause Big Center Trigger */}
+              <button 
+                className={`video-center-play-btn ${isPlaying ? 'btn-faded' : ''}`}
+                onClick={() => setIsPlaying(!isPlaying)}
+                title={isPlaying ? "Pause Demonstration" : "Play Demonstration"}
+              >
+                {isPlaying ? <Pause size={34} /> : <Play size={34} className="ml-1" />}
+              </button>
+            </div>
+
+            {/* Video Controls Bar */}
+            <div className="video-controls-bar">
+              <button 
+                className="v-ctrl-btn"
+                onClick={() => setIsPlaying(!isPlaying)}
+              >
+                {isPlaying ? <Pause size={17} /> : <Play size={17} />}
+              </button>
+
+              <button 
+                className="v-ctrl-btn"
+                onClick={() => setSimProgress(0)}
+                title="Replay from start"
+              >
+                <RotateCcw size={15} />
+              </button>
+
+              {/* Interactive Scrub Bar */}
+              <div 
+                className="v-timeline-wrapper"
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const clickX = e.clientX - rect.left;
+                  const newPercent = Math.min(100, Math.max(0, (clickX / rect.width) * 100));
+                  setSimProgress(newPercent);
+                }}
+              >
+                <div className="v-timeline-rail">
+                  <div 
+                    className="v-timeline-fill"
+                    style={{ width: `${simProgress}%` }}
+                  />
+                  <div 
+                    className="v-timeline-thumb"
+                    style={{ left: `${simProgress}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="v-time-display font-mono">
+                <span>00:{Math.floor(simProgress * 0.6).toString().padStart(2, '0')}</span>
+                <span className="text-slate-500"> / </span>
+                <span className="text-slate-400">{media.video?.duration || '01:45'}</span>
+              </div>
+
+              <button 
+                className="v-ctrl-btn"
+                onClick={() => setIsMuted(!isMuted)}
+                title={isMuted ? "Unmute Audio Track" : "Mute Audio Track"}
+              >
+                {isMuted ? <VolumeX size={17} /> : <Volume2 size={17} />}
+              </button>
+
+              <div className="v-hd-badge">
+                <span>4K HDR</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. Main Engineering Tabs, Technical Specs & Inquiry Form */}
+      <div className="detail-main-body section pt-0">
         <div className="container">
           <div className="detail-columns-grid">
             
@@ -283,6 +593,21 @@ export default function ProductDetailPage({
                   <span>Engineering & Technical Overview</span>
                 </h2>
                 <p className="detail-description-text">{product.description}</p>
+
+                <div className="overview-badges-list mt-4">
+                  <div className="overview-badge-item">
+                    <CheckCircle2 size={15} className="text-emerald-500" />
+                    <span>Microprocessor Brushless DC Motor drive with whisper-quiet planetary gear</span>
+                  </div>
+                  <div className="overview-badge-item">
+                    <CheckCircle2 size={15} className="text-emerald-500" />
+                    <span>Pre-engineered for seamless BMS, SCADA, Access Control & Fire Alarm integration</span>
+                  </div>
+                  <div className="overview-badge-item">
+                    <CheckCircle2 size={15} className="text-emerald-500" />
+                    <span>Heavy-duty architectural Grade 304 Stainless Steel / Toughened Glass finish</span>
+                  </div>
+                </div>
               </div>
 
               {/* Key Features & System Capabilities */}
@@ -362,199 +687,171 @@ export default function ProductDetailPage({
 
                   <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
                     <div className="flex items-center gap-2 font-bold text-slate-800 mb-1">
-                      <Wrench size={18} className="text-sky-600" />
-                      <span>Personalized Key Manual Override</span>
+                      <CheckCircle2 size={18} className="text-sky-600" />
+                      <span>Compliance Documentation Dossier</span>
                     </div>
                     <p className="text-slate-600 text-sm">
-                      High-security keyed clutch disengagement lever allows smooth manual operation during planned maintenance or electrical outages.
+                      Furnished with certified Factory Acceptance Test (FAT), Material Test Certificates (MTC), and CE/ISO declarations.
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Target Industrial Applications */}
-              <div className="detail-card mt-6">
-                <h2 className="detail-section-title">
-                  <Building2 size={20} className="text-sky-600" />
-                  <span>Target Applications & Deployments</span>
-                </h2>
-                <div className="applications-badge-grid">
-                  {product.applications && product.applications.map((app, idx) => (
-                    <div key={idx} className="application-badge-item">
-                      <CheckCircle2 size={15} className="text-sky-600" />
-                      <span>{app}</span>
-                    </div>
-                  ))}
+              {/* Applications & Industry Deployments */}
+              {product.applications && product.applications.length > 0 && (
+                <div className="detail-card mt-6">
+                  <h2 className="detail-section-title">
+                    <Building2 size={20} className="text-sky-600" />
+                    <span>Target Applications & Architectural Deployments</span>
+                  </h2>
+                  <div className="applications-pills-wrap mt-3">
+                    {product.applications.map((app, idx) => (
+                      <span key={idx} className="application-pill-tag">
+                        <Check size={14} className="text-sky-600" />
+                        <span>{app}</span>
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {/* Engineering Consultation Callout */}
-              <div className="engineer-callout-banner mt-6">
-                <div className="callout-icon">
-                  <PhoneCall size={30} />
-                </div>
-                <div>
-                  <h4 className="callout-title">Need Custom Clearances or CAD Drawings?</h4>
-                  <p className="callout-desc">
-                    Our technical application engineers in Mumbai provide site visits, bespoke mechanical design, CAD drawings, and fire/pharma statutory consultation.
-                  </p>
-                </div>
-                <a 
-                  href="tel:+919820112345" 
-                  className="btn btn-primary"
-                >
-                  <PhoneCall size={16} />
-                  <span>+91 98201 12345</span>
-                </a>
-              </div>
             </div>
 
-            {/* Right 35%: Sticky Quote Inquiry Form */}
+            {/* Right 35%: Quotation & Engineering Inquiry Card (Sticky) */}
             <div className="detail-sidebar-column">
-              <div id="quote-form" className="quote-sticky-card">
-                <div className="quote-card-header">
-                  <div className="quote-header-tag">DIRECT TECHNICAL DESK</div>
-                  <h3 className="quote-card-title">Request Official Quotation</h3>
-                  <p className="quote-card-subtitle">
-                    Get customized pricing, GA drawings, and lead times within 2 business hours.
+              <div className="quote-sidebar-card" id="quote-form">
+                <div className="quote-sidebar-header">
+                  <div className="flex items-center justify-between">
+                    <span className="quote-badge">Instant Project Inquiry</span>
+                    <span className="quote-response-time">Average SLA: &lt; 2 Hours</span>
+                  </div>
+                  <h3 className="quote-sidebar-title">Request Turnkey Quotation</h3>
+                  <p className="quote-sidebar-desc">
+                    Get customized technical documentation, CAD general arrangement (GA) layout, and project pricing.
                   </p>
                 </div>
 
                 {submitted ? (
                   <div className="quote-success-state">
                     <div className="success-icon-wrap">
-                      <CheckCircle2 size={44} className="text-emerald-500 mx-auto" />
+                      <CheckCircle2 size={44} className="text-emerald-500" />
                     </div>
-                    <h4>Inquiry Submitted!</h4>
-                    <p>
-                      Thank you for your interest in <strong>{product.name}</strong>. An HTI senior application engineer will contact you shortly with the official quotation.
+                    <h4 className="success-title">Inquiry Registered Successfully!</h4>
+                    <p className="success-desc">
+                      Thank you, <strong>{formData.name}</strong>. Our industrial project engineering team has received your request for <strong>{product.name}</strong> and will contact you at <strong>{formData.phone}</strong> shortly.
                     </p>
                     <button 
-                      className="btn btn-secondary mt-4 w-full"
+                      className="btn btn-outline-primary w-full mt-4"
                       onClick={() => setSubmitted(false)}
                     >
-                      Submit Another Requirement
+                      Submit Another Inquiry
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="quote-form-body">
-                    <div className="form-group-sm">
-                      <label>Target Product</label>
+                  <form className="quote-form-body" onSubmit={handleSubmit}>
+                    
+                    <div className="form-group">
+                      <label className="form-label">Full Name *</label>
                       <input 
                         type="text" 
-                        value={product.name} 
-                        readOnly 
-                        className="form-input readonly-input" 
+                        name="name" 
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="e.g. Rajesh Sharma"
+                        className="form-input" 
+                        required 
                       />
                     </div>
 
-                    <div className="form-row-2">
-                      <div className="form-group-sm">
-                        <label>Your Name *</label>
-                        <input 
-                          type="text" 
-                          name="name" 
-                          required 
-                          placeholder="e.g. Rajesh Sharma"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          className="form-input" 
-                        />
-                      </div>
-                      <div className="form-group-sm">
-                        <label>Company / Organization</label>
-                        <input 
-                          type="text" 
-                          name="company" 
-                          placeholder="e.g. Glenmark Pharma"
-                          value={formData.company}
-                          onChange={handleInputChange}
-                          className="form-input" 
-                        />
-                      </div>
-                    </div>
-
-                    <div className="form-row-2">
-                      <div className="form-group-sm">
-                        <label>Email Address *</label>
+                    <div className="form-grid-2">
+                      <div className="form-group">
+                        <label className="form-label">Work Email *</label>
                         <input 
                           type="email" 
                           name="email" 
-                          required 
-                          placeholder="name@company.com"
                           value={formData.email}
                           onChange={handleInputChange}
+                          placeholder="rajesh@company.com"
                           className="form-input" 
+                          required 
                         />
                       </div>
-                      <div className="form-group-sm">
-                        <label>Phone / Mobile *</label>
+                      <div className="form-group">
+                        <label className="form-label">Phone / WhatsApp *</label>
                         <input 
                           type="tel" 
                           name="phone" 
-                          required 
-                          placeholder="+91 98201 12345"
                           value={formData.phone}
                           onChange={handleInputChange}
+                          placeholder="+91 98765 43210"
                           className="form-input" 
+                          required 
                         />
                       </div>
                     </div>
 
-                    <div className="form-row-2">
-                      <div className="form-group-sm">
-                        <label>Site Location / City</label>
+                    <div className="form-grid-2">
+                      <div className="form-group">
+                        <label className="form-label">Company / Client</label>
+                        <input 
+                          type="text" 
+                          name="company" 
+                          value={formData.company}
+                          onChange={handleInputChange}
+                          placeholder="e.g. Cipla / L&T"
+                          className="form-input" 
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Site Location</label>
                         <input 
                           type="text" 
                           name="location" 
-                          placeholder="e.g. Mumbai, Pune, Vapi"
                           value={formData.location}
                           onChange={handleInputChange}
+                          placeholder="e.g. Mumbai / Pan-India"
                           className="form-input" 
                         />
                       </div>
-                      <div className="form-group-sm">
-                        <label>Estimated Quantity</label>
-                        <select 
-                          name="quantity"
-                          value={formData.quantity}
-                          onChange={handleInputChange}
-                          className="form-input"
-                        >
-                          <option value="1 Unit / Turnkey Site">1 Unit / Turnkey Site</option>
-                          <option value="2 - 5 Units">2 - 5 Units</option>
-                          <option value="6 - 15 Units">6 - 15 Units</option>
-                          <option value="15+ Multi-Site Project">15+ Multi-Site Project</option>
-                          <option value="Annual Maintenance Contract (AMC)">Annual Maintenance (AMC)</option>
-                        </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Project Scope / Quantity</label>
+                      <select 
+                        name="quantity" 
+                        value={formData.quantity}
+                        onChange={handleInputChange}
+                        className="form-input form-select"
+                      >
+                        <option value="1 Unit / Turnkey Site">1 Unit (Pilot / Replacement)</option>
+                        <option value="2 to 5 Units (Facility Block)">2 to 5 Units (Facility Block)</option>
+                        <option value="6 to 20 Units (Expansion Project)">6 to 20 Units (Expansion Project)</option>
+                        <option value="Full Turnkey Facility Contract">Full Turnkey Facility Contract</option>
+                      </select>
+                    </div>
+
+                    {/* Engineering Add-ons Checklist */}
+                    <div className="form-group">
+                      <label className="form-label">Select Engineering Options:</label>
+                      <div className="accessories-checklist">
+                        {availableAccessories.map((acc, idx) => (
+                          <label key={idx} className="accessory-checkbox-item">
+                            <input 
+                              type="checkbox"
+                              checked={formData.accessories.includes(acc)}
+                              onChange={() => handleAccessoryToggle(acc)}
+                              className="acc-checkbox"
+                            />
+                            <span className="acc-label-text">{acc}</span>
+                          </label>
+                        ))}
                       </div>
                     </div>
 
-                    {/* Optional Accessories Selector */}
-                    <div className="form-group-sm">
-                      <label className="block mb-2">Select Optional Engineering Accessories:</label>
-                      <div className="flex flex-col gap-1.5 p-3 bg-slate-50 border border-slate-200 rounded-lg max-h-36 overflow-y-auto">
-                        {availableAccessories.map((acc, aIdx) => {
-                          const isChecked = formData.accessories.includes(acc);
-                          return (
-                            <label key={aIdx} className="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
-                              <input 
-                                type="checkbox" 
-                                checked={isChecked}
-                                onChange={() => handleAccessoryToggle(acc)}
-                                className="rounded text-sky-600"
-                              />
-                              <span>{acc}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    <div className="form-group-sm">
-                      <label>Specific Technical Requirements</label>
+                    <div className="form-group">
+                      <label className="form-label">Technical Notes & Requirements</label>
                       <textarea 
-                        name="message"
+                        name="message" 
                         rows="3"
                         value={formData.message}
                         onChange={handleInputChange}
@@ -562,38 +859,36 @@ export default function ProductDetailPage({
                       />
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-full quote-submit-btn">
+                    <button type="submit" className="btn btn-primary w-full btn-submit-quote">
                       <Send size={16} />
-                      <span>Send Technical Inquiry</span>
+                      <span>Dispatch Technical Quotation Request</span>
                     </button>
 
-                    <div className="quote-trust-footer">
-                      <ShieldCheck size={14} className="text-slate-400" />
-                      <span>Direct response from Mumbai engineering desk. Zero spam.</span>
+                    <div className="quote-reassurance">
+                      <div className="reassurance-item">
+                        <ShieldCheck size={14} className="text-sky-600" />
+                        <span>Direct OEM Pricing</span>
+                      </div>
+                      <div className="reassurance-item">
+                        <Wrench size={14} className="text-sky-600" />
+                        <span>Factory Trained Engineers</span>
+                      </div>
                     </div>
+
                   </form>
                 )}
-              </div>
 
-              {/* Direct Technical Hotline Support Card */}
-              <div className="support-quick-card mt-6">
-                <h4 className="support-title">Direct Technical Helpline</h4>
-                <div className="support-list">
-                  <div className="support-item">
-                    <PhoneCall size={16} className="text-red-500 flex-shrink-0" />
+                {/* Direct Emergency Contact */}
+                <div className="quote-sidebar-footer">
+                  <div className="sidebar-contact-callout">
+                    <PhoneCall size={18} className="text-sky-600" />
                     <div>
-                      <div className="support-role">Sales & Engineering Desk</div>
-                      <a href="tel:+919820112345" className="support-contact-link">+91 98201 12345</a>
-                    </div>
-                  </div>
-                  <div className="support-item">
-                    <MessageSquare size={16} className="text-sky-600 flex-shrink-0" />
-                    <div>
-                      <div className="support-role">Official Project Email</div>
-                      <a href="mailto:info@htiautomation.com" className="support-contact-link">info@htiautomation.com</a>
+                      <div className="callout-label">Need immediate sizing advice?</div>
+                      <a href="tel:+919820000000" className="callout-number">+91 (022) 2850-HTI / +91 98200 12345</a>
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
 
@@ -601,42 +896,54 @@ export default function ProductDetailPage({
         </div>
       </div>
 
-      {/* 4. Related Products Showcase */}
+      {/* 5. Related Engineering Systems Showcase */}
       {relatedProducts.length > 0 && (
-        <div className="related-products-section section">
+        <section className="detail-related-section section bg-slate-50">
           <div className="container">
-            <div className="section-title-wrap">
-              <div className="section-tag">
-                <Layers size={14} />
-                <span>Related Solutions</span>
-              </div>
-              <h3 className="section-heading text-2xl font-bold text-slate-900 mt-2">
-                Explore More in <span className="gradient-text-red">{product.category}</span>
-              </h3>
+            <div className="section-header text-center mb-10">
+              <span className="section-pill-tag">COMPLEMENTARY SYSTEMS</span>
+              <h2 className="section-title">Related {product.category} Solutions</h2>
+              <p className="section-subtitle">
+                Engineered to seamlessly interface with {product.name} for integrated facility management.
+              </p>
             </div>
 
             <div className="related-products-grid">
-              {relatedProducts.map((rel) => (
-                <div key={rel.id} className="related-card">
-                  <div className="related-card-badge">{rel.subcategory}</div>
-                  <h4 className="related-card-title">{rel.name}</h4>
-                  <p className="related-card-summary">{rel.workSummary}</p>
-                  <button 
-                    className="btn btn-outline-cyan btn-sm mt-4 w-full"
-                    onClick={() => {
-                      onNavigate('product', rel.slug);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                  >
-                    <span>View Specifications</span>
-                    <ArrowRight size={14} />
-                  </button>
-                </div>
-              ))}
+              {relatedProducts.map((relProd) => {
+                const relMedia = getProductMedia(relProd);
+                return (
+                  <div key={relProd.id} className="related-prod-card">
+                    <div className="related-prod-media">
+                      <img 
+                        src={relMedia.primaryImage} 
+                        alt={relProd.name} 
+                        className="related-prod-img" 
+                      />
+                      <span className="related-cat-badge">{relProd.category}</span>
+                      <div className="related-video-tag">
+                        <PlayCircle size={12} />
+                        <span>4K Video</span>
+                      </div>
+                    </div>
+                    <div className="related-prod-body">
+                      <h4 className="related-prod-name">{relProd.name}</h4>
+                      <p className="related-prod-work">{relProd.workSummary}</p>
+                      <button 
+                        className="btn-related-link"
+                        onClick={() => onNavigate('product', relProd.slug)}
+                      >
+                        <span>Explore Full System Specs</span>
+                        <ArrowRight size={13} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-        </div>
+        </section>
       )}
+
     </div>
   );
 }

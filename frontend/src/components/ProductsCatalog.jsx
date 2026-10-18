@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ArrowRight, Check, Zap, Shield, Droplets, Flame, Wind, Layers } from 'lucide-react';
+import { ArrowRight, Check, Zap, Shield, Droplets, Flame, Wind, Layers, PlayCircle, Sparkles } from 'lucide-react';
+import { getProductMedia, getProductBySlug } from '../data/productsData';
 
 const categoryMeta = {
   'All Products':        { icon: Layers,  gradient: 'linear-gradient(135deg,#1e3a5f,#0f172a)', accent: '#38bdf8', glow: 'rgba(56,189,248,0.25)' },
@@ -23,47 +24,56 @@ const referenceProducts = [
   {
     id: 'prod-1',
     slug: 'automatic-sliding-swing-doors',
-    name: 'Automatic Sliding Door',
+    name: 'Automatic Sliding & Swing Doors',
     category: 'Automation',
-    tag: 'Automation',
-    image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
-    bullets: ['Sensor Operated', 'Commercial & Industrial', 'Safe & Reliable'],
+    tag: 'Access Automation',
+    image: '/products/automatic-doors.jpg',
+    bullets: ['Touchless Sensor Entry', 'Brushless DC Drive', 'EN 16005 / CE Certified'],
   },
   {
     id: 'prod-2',
-    slug: 'cctv-surveillance-analogue-ip',
-    name: 'CCTV Surveillance',
+    slug: 'cctv-surveillance-system',
+    name: 'CCTV Surveillance (IP 4K)',
     category: 'Security Systems',
-    tag: 'Security',
-    image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80',
-    bullets: ['HD & IP Cameras', 'Remote Monitoring', 'Indoor & Outdoor'],
+    tag: 'AI Surveillance',
+    image: '/products/cctv-biometrics.jpg',
+    bullets: ['Ultra-HD 4K AI Analytics', 'Flameproof & Starlight', 'Central NVR Integration'],
   },
   {
     id: 'prod-3',
-    slug: 'biometric-access-control-time-attendance',
-    name: 'Access Control System',
+    slug: 'biometric-access-attendance',
+    name: 'Biometric Access Control',
     category: 'Security Systems',
-    tag: 'Security',
-    image: 'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80',
-    bullets: ['Biometric & RFID', 'Time Attendance', 'Secure Entry'],
+    tag: 'Access Control',
+    image: '/products/cctv-biometrics.jpg',
+    bullets: ['0.2s Facial Recognition', 'Dual Lens Anti-Spoof', 'Turnstile Interlocking'],
   },
   {
     id: 'prod-4',
-    slug: 'fire-alarm-system-conventional-addressable',
-    name: 'Fire Alarm System',
+    slug: 'fire-alarm-system',
+    name: 'Addressable Fire Alarm System',
     category: 'Fire & Life Safety',
-    tag: 'Fire Safety',
-    image: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=600&q=80',
-    bullets: ['Conventional & Addressable', 'Detectors & Panels', 'Full FAS Solution'],
+    tag: 'Life Safety',
+    image: '/products/fire-alarm.jpg',
+    bullets: ['Multi-Loop Network Console', 'Optical Smoke & Flame', 'Auto-Suppression Relays'],
   },
   {
     id: 'prod-5',
-    slug: 'cleanroom-door-interlock',
-    name: 'Cleanroom Door Interlock',
+    slug: 'door-interlock-systems',
+    name: 'Pharma Door Interlock System',
     category: 'Cleanroom Solutions',
     tag: 'Cleanroom',
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80',
-    bullets: ['Pharma Grade', 'ISO Class Compliant', 'Contamination Control'],
+    image: '/products/cleanroom-interlocks.jpg',
+    bullets: ['USFDA 21 CFR Part 11', 'Static & Dynamic Airlock', 'Emergency Fire Trip'],
+  },
+  {
+    id: 'prod-6',
+    slug: 'pvc-rapid-roll-up-doors',
+    name: 'High-Speed PVC Rapid Doors',
+    category: 'Automation',
+    tag: 'Industrial Doors',
+    image: '/products/rapid-doors.jpg',
+    bullets: ['1.5 m/s Operating Velocity', 'Self-Repairing Zipper', 'Airlock Dust Isolation'],
   },
 ];
 
@@ -170,12 +180,17 @@ export default function ProductsCatalog({
                 className="catalog-product-card"
                 onMouseEnter={() => setHoveredCard(prod.id)}
                 onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => {
+                  const match = products.find(p => p.slug === prod.slug || p.name.toLowerCase().includes(prod.name.toLowerCase())) || getProductBySlug(prod.slug);
+                  if (onSelectProduct && match) onSelectProduct(match);
+                }}
                 style={isHovered ? {
                   '--card-accent': cardMeta.accent,
                   '--card-glow': cardMeta.glow,
                   transform: 'translateY(-8px) scale(1.02)',
                   boxShadow: `0 24px 48px ${cardMeta.glow}, 0 0 0 1.5px ${cardMeta.accent}40`,
-                } : { '--card-accent': cardMeta.accent, '--card-glow': cardMeta.glow }}
+                  cursor: 'pointer'
+                } : { '--card-accent': cardMeta.accent, '--card-glow': cardMeta.glow, cursor: 'pointer' }}
               >
                 {/* Image with overlay gradient */}
                 <div className="product-thumb-wrap">
@@ -193,6 +208,12 @@ export default function ProductsCatalog({
                     style={{ background: cardMeta.gradient, color: '#fff', boxShadow: `0 2px 8px ${cardMeta.glow}` }}
                   >
                     {prod.tag}
+                  </div>
+
+                  {/* 4K Video badge */}
+                  <div className="product-card-4k-badge">
+                    <PlayCircle size={12} className="text-sky-400" />
+                    <span>4K Video Demo</span>
                   </div>
                 </div>
 
@@ -225,13 +246,14 @@ export default function ProductsCatalog({
                       borderColor: cardMeta.accent,
                       color: isHovered ? '#fff' : cardMeta.accent,
                     }}
-                    onClick={() => {
-                      const match = products.find(p => p.slug === prod.slug || p.name.toLowerCase().includes(prod.name.toLowerCase()));
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const match = products.find(p => p.slug === prod.slug || p.name.toLowerCase().includes(prod.name.toLowerCase())) || getProductBySlug(prod.slug);
                       if (onSelectProduct && match) onSelectProduct(match);
                       else if (onQuickQuote) onQuickQuote(prod.name, prod.category);
                     }}
                   >
-                    <span>View Details</span>
+                    <span>View 4K Specs &amp; Video</span>
                     <ArrowRight size={13} />
                   </button>
                 </div>
