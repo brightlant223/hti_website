@@ -12,6 +12,7 @@ import {
   Headphones,
   CheckCircle2,
   ChevronRight,
+  ChevronDown,
   ArrowRight,
   Play,
   Pause,
@@ -70,6 +71,12 @@ export default function AboutPage({ onNavigate }) {
       onNavigate(page, section);
     } else {
       window.location.href = `/${page}`;
+    }
+  };
+
+  const scrollToSolutions = () => {
+    if (videoSectionRef.current) {
+      videoSectionRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -149,22 +156,22 @@ export default function AboutPage({ onNavigate }) {
               {/* 4 Feature Badges in Hero */}
               <div className="about-hero-badges-row">
                 <div className="hero-pill-badge">
-                  <ShieldCheck size={14} className="hero-pill-icon" />
+                  <ShieldCheck size={16} className="hero-pill-icon" />
                   <span>Trusted Expertise</span>
                 </div>
 
                 <div className="hero-pill-badge">
-                  <Settings size={14} className="hero-pill-icon" />
+                  <Settings size={16} className="hero-pill-icon" />
                   <span>Industrial Solutions</span>
                 </div>
 
                 <div className="hero-pill-badge">
-                  <Leaf size={14} className="hero-pill-icon text-emerald-600" />
+                  <Leaf size={16} className="hero-pill-icon text-emerald-600" />
                   <span>Hygiene Excellence</span>
                 </div>
 
                 <div className="hero-pill-badge">
-                  <Headphones size={14} className="hero-pill-icon" />
+                  <Headphones size={16} className="hero-pill-icon" />
                   <span>End-to-End Support</span>
                 </div>
               </div>
@@ -187,11 +194,17 @@ export default function AboutPage({ onNavigate }) {
                     <div className="floating-card-sub">Cleaner, Safer<br />and Smarter Spaces</div>
                   </div>
                   <div className="floating-card-arrow-btn" aria-hidden="true">
-                    <ChevronRight size={15} />
+                    <ChevronRight size={16} />
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Bottom Scroll Cue to Next Section */}
+          <div className="about-hero-scroll-cue" onClick={scrollToSolutions} role="button" tabIndex={0}>
+            <span>Scroll to explore solutions</span>
+            <ChevronDown size={18} className="scroll-chevron-bounce" />
           </div>
         </div>
       </section>
