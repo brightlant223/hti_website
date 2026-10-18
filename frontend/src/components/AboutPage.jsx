@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Settings, 
   ShieldCheck, 
@@ -26,6 +26,44 @@ export default function AboutPage({ onNavigate }) {
   const [isMuted, setIsMuted] = useState(false);
   const [duration, setDuration] = useState('02:15');
   const videoRef = useRef(null);
+  const videoSectionRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Smooth scroll scale-up effect: increases container size on scroll, then reveals full scale
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (videoSectionRef.current) {
+            const rect = videoSectionRef.current.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            
+            // Starts expanding when section top enters near viewport bottom (95%)
+            // Reaches full 100% scale and presentation when top reaches around 28% from viewport top
+            const startOffset = windowHeight * 0.95;
+            const endOffset = windowHeight * 0.28;
+            
+            const raw = (startOffset - rect.top) / (startOffset - endOffset);
+            const clamped = Math.min(Math.max(raw, 0), 1);
+            setScrollProgress(clamped);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   const handleNav = (page, section = null) => {
     if (onNavigate) {
@@ -161,9 +199,17 @@ export default function AboutPage({ onNavigate }) {
       {/* =====================================================================
           2. VIDEO PLAYER SECTION: See Our Solutions in Action
           ===================================================================== */}
-      <section className="about-video-section">
+      <section className="about-video-section" ref={videoSectionRef}>
         <div className="about-container">
-          <div className="video-section-header">
+          <div 
+            className="video-section-header"
+            style={{
+              transform: `scale(${(0.94 + scrollProgress * 0.06).toFixed(3)}) translateY(${((1 - scrollProgress) * 8).toFixed(1)}px)`,
+              opacity: (0.75 + scrollProgress * 0.25).toFixed(2),
+              transformOrigin: 'left bottom',
+              transition: 'transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.15s ease'
+            }}
+          >
             <div className="section-kicker-blue">
               <span className="kicker-line-blue"></span>
               <span>SEE OUR SOLUTIONS IN ACTION</span>
@@ -174,8 +220,19 @@ export default function AboutPage({ onNavigate }) {
             </p>
           </div>
 
-          {/* Interactive 16:9 Video Player Card */}
-          <div className="video-player-container">
+          {/* Interactive 16:9 Video Player Card with Smooth Scroll Expansion */}
+          <div 
+            className={`video-player-container ${scrollProgress >= 0.92 ? 'is-revealed' : ''}`}
+            style={{
+              transform: `scale(${(0.88 + scrollProgress * 0.12).toFixed(3)})`,
+              borderRadius: `${(26 - scrollProgress * 12).toFixed(1)}px`,
+              boxShadow: scrollProgress > 0.6 
+                ? '0 24px 60px rgba(11, 26, 46, 0.22), 0 4px 20px rgba(2, 132, 199, 0.14)' 
+                : '0 12px 30px rgba(11, 26, 46, 0.12)',
+              transition: 'transform 0.16s cubic-bezier(0.25, 0.8, 0.25, 1), border-radius 0.16s ease, box-shadow 0.25s ease',
+              transformOrigin: 'center top'
+            }}
+          >
             <video
               ref={videoRef}
               src="/gemini_generated_video_02f233ca.mp4"
