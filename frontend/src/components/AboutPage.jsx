@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Settings, 
   ShieldCheck, 
@@ -15,11 +15,38 @@ import {
   Users, 
   Headphones,
   CheckCircle2,
-  ExternalLink
+  ExternalLink,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import '../Aboutus.css';
 
 export default function AboutPage({ onNavigate }) {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef(null);
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        videoRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
   const handleNav = (page, section = null) => {
     if (onNavigate) {
       onNavigate(page, section);
@@ -97,15 +124,48 @@ export default function AboutPage({ onNavigate }) {
               </div>
             </div>
 
-            {/* Right Cleanroom Engineer Hero Image */}
+            {/* Right Cleanroom & Automation Showcase Video */}
             <div className="about-hero-image-col">
               <div className="about-hero-image-wrap">
-                <img 
-                  src="/about-hero-cleanroom.jpg" 
-                  alt="HTI Cleanroom Automated Glass Doors and Engineer" 
-                  className="about-hero-img"
-                  loading="eager"
+                <video 
+                  ref={videoRef}
+                  src="/gemini_generated_video_02f233ca.mp4" 
+                  poster="/about-hero-cleanroom.jpg"
+                  autoPlay
+                  loop
+                  muted={isMuted}
+                  playsInline
+                  className="about-hero-img about-hero-video"
                 />
+
+                {/* Top Left Status Badge */}
+                <div className="video-top-tag">
+                  <span className="video-live-dot"></span>
+                  <span>HTI In Action</span>
+                </div>
+
+                {/* Top Right Video Playback & Sound Controls */}
+                <div className="video-overlay-controls">
+                  <button
+                    type="button"
+                    className="video-control-btn"
+                    onClick={togglePlay}
+                    title={isPlaying ? "Pause video" : "Play video"}
+                    aria-label={isPlaying ? "Pause video" : "Play video"}
+                  >
+                    {isPlaying ? <Pause size={13} /> : <Play size={13} fill="currentColor" />}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="video-control-btn"
+                    onClick={toggleMute}
+                    title={isMuted ? "Unmute sound" : "Mute sound"}
+                    aria-label={isMuted ? "Unmute sound" : "Mute sound"}
+                  >
+                    {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+                  </button>
+                </div>
                 
                 {/* Floating Badge */}
                 <div className="hero-floating-badge">
