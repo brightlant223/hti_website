@@ -170,7 +170,7 @@ const FAQ_ITEMS = [
   {
     id: 'faq-7',
     question: 'How can I contact the recruitment team?',
-    answer: 'You can contact our talent acquisition and HR team directly via email at careers@htisystems.in or by calling +91 9992756077 / 9594917010 during office hours (Monday to Saturday, 9:00 AM – 6:30 PM IST). Our corporate headquarters is located at 401 CR-4, Ram Mandir Road, Goregaon (West), Mumbai - 400104.'
+    answer: 'You can contact our talent acquisition and HR team directly via email at careers@htisystems.in or by calling +91 9992756077 / 9594917010 during office hours (Monday to Saturday, 9:00 AM – 6:30 PM IST). Our corporate headquarters is located at Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate, Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703.'
   }
 ];
 
@@ -924,7 +924,7 @@ export default function CareersPage({ onNavigate }) {
                     <div className="hr-item-content">
                       <span className="hr-item-label">Corporate Headquarters</span>
                       <span className="hr-item-text">
-                        401 CR-4, Ram Mandir Road, Goregaon (West), Mumbai - 400104
+                        Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate, Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703
                       </span>
                     </div>
                   </div>

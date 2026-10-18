@@ -226,7 +226,7 @@ export default function AboutPage({ onNavigate }) {
                       <span>Office Address</span>
                     </div>
                     <div className="glance-val">
-                      407 DR-4 Ram Mandir Road, Goregaon (West), Mumbai 400104
+                      Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate, Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703
                     </div>
                   </div>
 

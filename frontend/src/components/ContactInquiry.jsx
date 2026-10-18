@@ -122,9 +122,9 @@ export default function ContactInquiry({
                 <div>
                   <div className="contact-label">Registered Office & Work Centre</div>
                   <div className="contact-val">
-                    407 DR-4 Ram Mandir Road,<br />
-                    Goregaon (West), Mumbai - 400104,<br />
-                    Maharashtra, India
+                    Unit No - 825, Plot No C-3C, Goodwill Bizhubb,<br />
+                    Next to Ikea, TTC Industrial Area Estate,<br />
+                    Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703
                   </div>
                 </div>
               </div>
