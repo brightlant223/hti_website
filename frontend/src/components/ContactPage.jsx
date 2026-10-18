@@ -573,136 +573,151 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
       </section>
 
       {/* =========================================================================
-          4. SECTION 4: VISIT OUR HEAD OFFICE (Map & Info)
+          4. SECTION 4: VISIT OUR HEAD OFFICE (Unified Banner matching Screenshot)
           ========================================================================= */}
       <section className="contact-location-section">
         <div className="contact-container">
-          <div className="section-header-center">
-            <div className="kicker-tag">
-              <span className="kicker-dash"></span>
-              <span>OUR LOCATION</span>
-            </div>
-            <h2 className="section-main-heading">Visit Our Head Office</h2>
-            <p className="section-main-subtext">
-              Plan a visit to discuss your project requirements with our experts.
-            </p>
-          </div>
-
-          <div className="location-layout-grid">
-            {/* Left Box: Office Info */}
-            <div className="location-details-box">
-              <div className="location-building-icon-wrap">
-                <Building2 size={24} />
-              </div>
-
-              <h3 className="location-office-title">
-                HTI Automation and Security System Pvt Ltd
-              </h3>
-
-              <div className="location-address-row">
-                <MapPin size={18} className="address-pin-icon" />
-                <p className="location-address-text">
-                  Unit No - 825, Plot No C-3C, Goodwill Bizhubb,<br />
-                  Next to Ikea, TTC Industrial Area Estate,<br />
-                  Turbhe MIDC, Turbhe, Navi Mumbai,<br />
-                  Maharashtra - 400703
+          <div className="head-office-unified-banner">
+            {/* Left Side: Dark Navy Info Block */}
+            <div className="office-banner-info-pane">
+              <div className="office-pane-header">
+                <div className="office-header-title-row">
+                  <div className="office-pin-circle">
+                    <MapPin size={18} />
+                  </div>
+                  <h2 className="office-pane-title">Visit Our Head Office</h2>
+                </div>
+                <p className="office-pane-sub">
+                  Plan a visit to discuss your project requirements with our experts.
                 </p>
               </div>
 
-              <a
-                href={gmapsUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-view-gmaps"
-              >
-                <Navigation size={15} className="gmaps-pin-color" />
-                <span>View on Google Maps →</span>
-              </a>
+              <div className="office-pane-body-row">
+                <div className="office-building-thumb-wrap">
+                  <img
+                    src="/head-office-building.jpg"
+                    alt="HTI Corporate Head Office Building"
+                    className="office-building-thumb"
+                  />
+                </div>
+
+                <div className="office-details-content">
+                  <div className="office-name-row">
+                    <MapPin size={18} className="office-orange-pin" />
+                    <div>
+                      <h3 className="office-company-name">
+                        HTI Automation &amp; Security Systems Pvt. Ltd.
+                      </h3>
+                      <p className="office-address-lines">
+                        Goregaon (West), Mumbai – 400104,<br />
+                        Maharashtra, India
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=Goregaon+West+Mumbai+400104"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-gmaps-pill"
+                    title="Open location in Google Maps"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="gmaps-color-icon">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#4285F4"/>
+                      <path d="M12 2C10.5 2 9.1 2.5 8 3.3L12 11.5L16 3.3C14.9 2.5 13.5 2 12 2z" fill="#EA4335"/>
+                      <path d="M5 9c0 2.2 1.2 4.6 2.7 7L12 9H5z" fill="#FBBC05"/>
+                      <path d="M12 9l4.3 7c1.5-2.4 2.7-4.8 2.7-7h-7z" fill="#34A853"/>
+                      <circle cx="12" cy="9" r="2.5" fill="#FFFFFF"/>
+                    </svg>
+                    <span>View on Google Maps</span>
+                    <span className="gmaps-arrow-char">→</span>
+                  </a>
+                </div>
+              </div>
             </div>
 
-            {/* Right Box: Stylized Map Graphic matching Image 2 */}
-            <div className="location-map-wrap">
+            {/* Right Side: Seamless Map Graphic */}
+            <div className="office-banner-map-pane">
               <div className="custom-map-container">
                 {/* SVG Map Canvas with Roads, Green Area, Water */}
-                <svg className="map-svg-canvas" viewBox="0 0 600 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="map-svg-canvas" viewBox="0 0 540 280" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                   {/* Background Land */}
-                  <rect width="600" height="320" fill="#f1f5f9" />
+                  <rect width="540" height="280" fill="#f1f5f9" />
 
-                  {/* Parsik Hills / Green Area */}
-                  <path d="M480,0 L600,0 L600,220 C540,200 500,160 480,100 Z" fill="#dcfce7" />
+                  {/* Aarey Colony Green Area */}
+                  <path d="M430,0 L540,0 L540,280 L440,280 C400,200 420,100 430,0 Z" fill="#dcfce7" />
 
-                  {/* Roads network */}
-                  {/* Thane-Belapur Highway */}
-                  <path d="M380,0 L420,320" stroke="#fef08a" strokeWidth="10" strokeLinecap="round" />
-                  <path d="M380,0 L420,320" stroke="#facc15" strokeWidth="6" strokeLinecap="round" />
+                  {/* Western Express Highway (Yellow/Golden central corridor) */}
+                  <path d="M340,0 L360,280" stroke="#fef08a" strokeWidth="12" strokeLinecap="round" />
+                  <path d="M340,0 L360,280" stroke="#eab308" strokeWidth="7" strokeLinecap="round" />
 
-                  {/* MIDC Spine Road */}
-                  <path d="M220,0 L250,320" stroke="#ffffff" strokeWidth="8" strokeLinecap="round" />
-                  <path d="M220,0 L250,320" stroke="#e2e8f0" strokeWidth="6" strokeLinecap="round" />
+                  {/* S.V. Road */}
+                  <path d="M190,0 L210,280" stroke="#ffffff" strokeWidth="8" strokeLinecap="round" />
+                  <path d="M190,0 L210,280" stroke="#cbd5e1" strokeWidth="5" strokeLinecap="round" />
 
-                  {/* Palm Beach Connector */}
-                  <path d="M80,0 L110,320" stroke="#ffffff" strokeWidth="7" strokeLinecap="round" />
+                  {/* Link Road */}
+                  <path d="M60,0 L80,280" stroke="#ffffff" strokeWidth="7" strokeLinecap="round" />
 
-                  {/* Turbhe MIDC Road (Next to Ikea) */}
-                  <path d="M40,140 Q 240,135 410,135 T 600,150" stroke="#fed7aa" strokeWidth="9" strokeLinecap="round" />
-                  <path d="M40,140 Q 240,135 410,135 T 600,150" stroke="#fb923c" strokeWidth="5" strokeLinecap="round" />
-
-                  {/* Sion-Panvel Highway Connector */}
-                  <path d="M120,200 L500,220" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" />
-                  <path d="M120,200 L500,220" stroke="#cbd5e1" strokeWidth="4" strokeLinecap="round" />
+                  {/* Ram Mandir Road */}
+                  <path d="M20,120 Q 200,115 350,115 T 540,130" stroke="#fed7aa" strokeWidth="8" strokeLinecap="round" />
+                  <path d="M20,120 Q 200,115 350,115 T 540,130" stroke="#fb923c" strokeWidth="4" strokeLinecap="round" />
 
                   {/* Secondary Streets */}
-                  <path d="M40,80 L350,90" stroke="#ffffff" strokeWidth="5" />
-                  <path d="M180,50 L200,280" stroke="#ffffff" strokeWidth="4" />
-                  <path d="M300,100 L320,300" stroke="#ffffff" strokeWidth="4" />
-                  <path d="M400,180 L580,260" stroke="#ffffff" strokeWidth="5" />
+                  <path d="M30,60 L300,70" stroke="#ffffff" strokeWidth="4" />
+                  <path d="M150,40 L170,240" stroke="#ffffff" strokeWidth="3" />
+                  <path d="M260,80 L280,260" stroke="#ffffff" strokeWidth="4" />
+                  <path d="M360,160 L520,240" stroke="#ffffff" strokeWidth="4" />
 
-                  {/* Railway Line (Harbour / Trans-Harbour Line) */}
-                  <path d="M280,0 L300,320" stroke="#94a3b8" strokeWidth="3" strokeDasharray="6 4" />
+                  {/* Western Railway Line */}
+                  <path d="M245,0 L265,280" stroke="#94a3b8" strokeWidth="3" strokeDasharray="6 4" />
                 </svg>
 
-                {/* POI Labels */}
-                <div className="map-poi-item poi-turbhe-midc">
-                  <span>TURBHE MIDC</span>
+                {/* POI Labels matching Screenshot */}
+                <div className="map-poi-item poi-goregaon-west">
+                  <span>GOREGAON WEST</span>
                 </div>
 
-                <div className="map-poi-item poi-ttc">
-                  <span>TTC IND. AREA</span>
+                <div className="map-poi-item poi-oberoi">
+                  <span>🛍️ Oberoi Mall</span>
                 </div>
 
-                <div className="map-poi-item poi-ikea">
-                  <span>🛋️ IKEA Navi Mumbai</span>
+                <div className="map-poi-item poi-aarey">
+                  <span>AAREY COLONY</span>
                 </div>
 
-                <div className="map-poi-item poi-turbhe-stn">
-                  <span>🚉 Turbhe Station</span>
+                <div className="map-poi-item poi-oarey">
+                  <span>OAREY COLONY</span>
                 </div>
 
-                <div className="map-poi-item poi-goodwill">
-                  <span>🏢 Goodwill Bizhubb</span>
+                <div className="map-poi-item poi-gare-galony">
+                  <span>GARE GALONY</span>
                 </div>
 
-                {/* HTI Red Location Pin with Label */}
+                <div className="map-poi-item poi-filmcity">
+                  <span>🎬 Film City</span>
+                </div>
+
+                {/* HTI Red Pin with Label matching Screenshot */}
                 <a
-                  href={gmapsUrl}
+                  href="https://www.google.com/maps/search/?api=1&query=Goregaon+West+Mumbai+400104"
                   target="_blank"
                   rel="noreferrer"
                   className="map-hti-marker"
-                  title="Click to open HTI Head Office in Google Maps"
+                  title="Click to view in Google Maps"
                 >
-                  <MapPin size={32} className="map-pin-red" fill="#dc2626" color="#ffffff" />
+                  <MapPin size={28} className="map-pin-red" fill="#dc2626" color="#ffffff" />
                   <div className="map-marker-label">
-                    <span>HTI Automation &amp; Security System Pvt Ltd</span>
+                    <span>HTI Automation &amp;<br />Security Systems Pvt. Ltd.</span>
                   </div>
                 </a>
 
-                {/* Map Zoom Controls */}
+                {/* Map Controls (+ / -) */}
                 <div className="map-zoom-controls">
                   <button className="map-zoom-btn" type="button" aria-label="Zoom in">+</button>
                   <button className="map-zoom-btn" type="button" aria-label="Zoom out">−</button>
                 </div>
 
-                {/* Google Logo text */}
+                {/* Google Logo */}
                 <div className="map-google-logo">
                   Google
                 </div>
