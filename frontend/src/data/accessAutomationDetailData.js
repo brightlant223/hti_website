@@ -358,8 +358,8 @@ const ACCESS_AUTOMATION_INTERNAL_CONFIGS = {
       { text: 'OEM Warranty & Service Support', icon: 'Settings' }
     ],
     video: {
-      hasVideoFile: false,
-      videoSrc: '',
+      hasVideoFile: true,
+      videoSrc: '/High-speed.mp4',
       poster: '/products/rapid-doors.jpg',
       badge: 'PRODUCT VIDEO',
       heading: 'High-Speed PVC Rapid Roll-Up Doors Overview',
@@ -470,8 +470,8 @@ const ACCESS_AUTOMATION_INTERNAL_CONFIGS = {
       { text: 'OEM Warranty & Service Support', icon: 'Settings' }
     ],
     video: {
-      hasVideoFile: false,
-      videoSrc: '',
+      hasVideoFile: true,
+      videoSrc: '/Motorized%20Industrial%20Rolling%20Shutters.mp4',
       poster: '/services/services-heavy-security.jpg',
       badge: 'PRODUCT VIDEO',
       heading: 'Motorized Industrial Rolling Shutters Overview',

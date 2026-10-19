@@ -525,6 +525,7 @@ export default function AutomaticDoorsDetailView({
                     className="auto-html5-video"
                     onPlay={() => setIsVideoPlaying(true)}
                     onPause={() => setIsVideoPlaying(false)}
+                    onEnded={() => setIsVideoPlaying(false)}
                   />
                   {!isVideoPlaying && (
                     <button 
