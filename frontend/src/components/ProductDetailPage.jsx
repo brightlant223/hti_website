@@ -7,6 +7,7 @@ import {
   Maximize2, Eye, Activity, Info, Sliders, PlayCircle
 } from 'lucide-react';
 import { productsData, getProductMedia } from '../data/productsData';
+import AutomaticDoorsDetailView from './AutomaticDoorsDetailView';
 
 // Exact 1:1 image mapping for all 14 Industrial Access Automation services
 export const SERVICE_CARD_IMAGES = {
@@ -231,6 +232,32 @@ export default function ProductDetailPage({
 
   const telemetry = getTelemetryData();
   const activeImage = gallery[activeImgIdx] || gallery[0];
+
+  const ACCESS_AUTOMATION_REDESIGNED_SLUGS = [
+    'automatic-sliding-swing-doors',
+    'automatic-sliding-swing-gates',
+    'telescopic-cantilever-gates',
+    'pvc-rapid-roll-up-doors',
+    'motorized-rolling-shutters'
+  ];
+
+  if (
+    ACCESS_AUTOMATION_REDESIGNED_SLUGS.includes(product?.slug) ||
+    product?.id === 'automatic-doors' ||
+    product?.id === 'automatic-sliding-swing-doors' ||
+    product?.id === 'automatic-sliding-swing-gates' ||
+    product?.id === 'telescopic-cantilever-gates' ||
+    product?.id === 'pvc-rapid-roll-up-doors' ||
+    product?.id === 'motorized-rolling-shutters'
+  ) {
+    return (
+      <AutomaticDoorsDetailView
+        product={product}
+        onNavigate={onNavigate}
+        onQuoteSubmit={onQuoteSubmit}
+      />
+    );
+  }
 
   return (
     <div className="product-detail-page">
