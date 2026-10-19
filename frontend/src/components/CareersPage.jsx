@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowLeft, Briefcase, ArrowRight, Users, Cpu, ShieldCheck, Award,
   X, MapPin, Clock, Building2, CheckCircle2, Mail, Send, TrendingUp,
   Sparkles, Phone, FileText, UploadCloud, AlertCircle, Loader2,
-  Plus, Minus, Heart, Zap, Globe, Target
+  Plus, Minus, Heart, Zap, Globe, Target, ChevronLeft, ChevronRight, Check
 } from 'lucide-react';
 import './Careers.css';
 
@@ -34,103 +34,153 @@ const JOB_POSITIONS = [
     ]
   },
   {
-    id: 'plc-automation-engineer',
-    title: 'Automation & PLC Engineer',
+    id: 'site-supervisor',
+    title: 'Site Supervisor',
     category: 'engineering',
     categoryLabel: 'Engineering',
-    subtitle: 'Full-Time · Industrial Controls & Systems · Mumbai HQ',
-    department: 'Automation Engineering',
-    location: 'Goregaon (West), Mumbai & Site Deployments',
+    subtitle: 'Full-Time · Site Operations & Project Execution · Pan-India Sites',
+    department: 'Site Operations & Field Execution',
+    location: 'Navi Mumbai HQ + Pan-India Project Sites',
     employmentType: 'Full-Time',
     experience: '2 – 5 Years',
-    summary: 'Design, program, and commission PLC-based industrial control systems for cleanroom door interlocks, perimeter defense, and high-speed door automation. Work on complex multi-sensor integration projects for pharma, food, and corporate facility clients.',
+    summary: 'Supervise on-site installation, mechanical fitting, and electrical cabling of automated doors, boom barriers, and cleanroom interlock systems at industrial and commercial project sites across India. Coordinate site workforce, subcontractors, and ensure adherence to safety standards and project timelines.',
     responsibilities: [
-      'Program and configure PLCs (Siemens, Delta, Schneider, or equivalent) for interlock sequences and motor drive control.',
-      'Design relay logic, wiring diagrams, and control panel schematics for access automation and door interlock systems.',
-      'Integrate SCADA dashboards for remote monitoring, alarm management, and audit trail logging.',
-      'Conduct FAT and SAT testing for pharma cleanroom compliance.',
-      'Ensure all systems meet USFDA 21 CFR Part 11, EN 16005, and IS 2189 fire safety standards.'
+      'Supervise on-site mechanical and electrical installation of automated sliding/swing doors, boom barriers, and access control hardware.',
+      'Coordinate daily task allocation for field technicians, electricians, and client MEP subcontractors.',
+      'Perform quality checks, alignment verifications, cable insulation tests, and ensure safety compliance on site.',
+      'Track daily site progress (DPR), manage site inventory and tools, and address client punch-lists promptly.',
+      'Liaise between client site engineers and HTI project managers to maintain handover schedules.'
     ],
     requirements: [
-      'B.E./B.Tech in Electrical, Electronics, Instrumentation, or Control Systems Engineering.',
-      'Demonstrated experience programming Siemens S7, Delta DVP, or Allen-Bradley PLCs.',
-      'Knowledge of industrial protocols: Modbus RTU/TCP, CANopen, or BACnet.',
-      'Familiarity with USFDA cleanroom validation protocols, GMP, and HVAC interlock logic is a strong plus.'
+      'Diploma or Degree in Electrical, Mechanical, Instrumentation, or Civil Engineering.',
+      '2+ years experience in supervising site execution for building automation, MEP, or industrial installations.',
+      'Practical understanding of electrical schematics, mechanical drawings, and site safety protocols.',
+      'Strong communication, leadership skills, and willingness to travel for out-of-station site deployments.'
     ]
   },
   {
-    id: 'sales-and-business-development',
-    title: 'Business Development Executive',
+    id: 'site-engineer-field',
+    title: 'Site Engineer',
+    category: 'engineering',
+    categoryLabel: 'Engineering',
+    subtitle: 'Full-Time · Installation & Commissioning · Pan-India Sites',
+    department: 'Field Engineering & Commissioning',
+    location: 'Navi Mumbai HQ + Pan-India Project Sites',
+    employmentType: 'Full-Time',
+    experience: '1 – 3 Years',
+    summary: 'Execute on-site installation, termination, wiring, testing, and commissioning for automated entry systems, access control units, and industrial security solutions at client facilities. Troubleshoot electrical and mechanical systems to ensure smooth handovers.',
+    responsibilities: [
+      'Perform hands-on installation, cable termination, and loop testing of door controllers, sensors, and access panels.',
+      'Conduct power-up commissioning, calibration of sensors, and trial testing for automatic doors and gate systems.',
+      'Troubleshoot on-site electrical, wiring, and mechanical alignment issues under senior guidance.',
+      'Assist in site surveys, measurement verifications, and material readiness checks prior to installation.',
+      'Prepare site test reports, commissioning sign-off sheets, and client handover documentation.'
+    ],
+    requirements: [
+      'Diploma or B.E. in Electrical, Electronics, Instrumentation, or Mechatronics Engineering.',
+      'Hands-on experience with control panels, DC/AC motors, multimeters, and low-voltage field wiring.',
+      'Willingness to travel for field installations at pharmaceutical, logistics, and commercial sites pan-India.',
+      'Good analytical skills, attention to safety norms, and disciplined work approach.'
+    ]
+  },
+  {
+    id: 'sales-executive',
+    title: 'Sales Executive',
     category: 'sales',
     categoryLabel: 'Sales',
-    subtitle: 'Full-Time · Corporate & Enterprise Accounts · Mumbai HQ',
-    department: 'Enterprise Sales & Client Accounts',
-    location: 'Goregaon (West), Mumbai',
+    subtitle: 'Full-Time · Client Acquisition & Inquiries · Navi Mumbai HQ',
+    department: 'Sales & Business Development',
+    location: 'Turbhe, Navi Mumbai HQ',
     employmentType: 'Full-Time',
-    experience: '2 – 6 Years',
-    summary: 'Drive revenue by identifying, pursuing, and converting high-value opportunities across pharmaceutical facilities, corporate campuses, logistics parks, and commercial real estate. Build long-term client relationships and present HTI\'s turnkey automation portfolio.',
+    experience: '1 – 3 Years',
+    summary: 'Drive sales of HTI Automation\'s physical security, automatic doors, and cleanroom interlock solutions. Identify prospective B2B clients, handle incoming inquiries, present product capabilities, and coordinate with technical teams to generate commercial quotes.',
     responsibilities: [
-      'Prospect and qualify leads across pharma, corporate real estate, logistics, and hospitality sectors.',
-      'Conduct site visits, needs assessments, and technical presentations showcasing HTI\'s automation portfolio.',
-      'Prepare BOQs, tender documents, commercial proposals, and negotiate contracts through to closure.',
-      'Coordinate with engineering and project teams for accurate scope definition and delivery.',
-      'Maintain CRM pipeline, track KPIs, and provide monthly revenue forecasts to senior leadership.'
+      'Identify and prospect new B2B accounts across industrial manufacturing, warehousing, pharma, and commercial realty.',
+      'Follow up on incoming sales leads, qualify client requirements, and conduct introductory product presentations.',
+      'Work closely with technical estimation teams to prepare accurate quotations, tender responses, and BOQs.',
+      'Maintain systematic follow-ups with prospective clients, handle commercial negotiations, and assist in closing deals.',
+      'Track client feedback, pipeline status in CRM, and submit weekly sales progress reports.'
     ],
     requirements: [
-      'Proven B2B sales track record in building automation, industrial equipment, MEP, or security systems.',
-      'Ability to interpret architectural drawings, MEP tender documents, and technical specifications.',
-      'Excellent consultative selling, negotiation, and relationship management capabilities.',
-      'Bachelor\'s in Engineering, Business, or equivalent — MBA preferred but not mandatory.'
+      'Bachelor\'s Degree in Business, Marketing, Engineering, or relevant diploma.',
+      '1–3 years experience in B2B direct sales, industrial equipment, architectural products, or MEP systems.',
+      'Strong verbal and written communication skills in English and Hindi (working knowledge of Marathi is a plus).',
+      'Self-motivated, relationship-oriented, and comfortable with client meetings and consultative selling.'
     ]
   },
   {
-    id: 'full-stack-developer',
-    title: 'Full Stack Developer',
-    category: 'engineering',
-    categoryLabel: 'Engineering',
-    subtitle: 'Full-Time · Software & IoT Platforms · Mumbai HQ / Hybrid',
-    department: 'IoT & Software Systems',
-    location: 'Goregaon (West), Mumbai / Hybrid',
+    id: 'accountant',
+    title: 'Accountant',
+    category: 'operations',
+    categoryLabel: 'Operations',
+    subtitle: 'Full-Time · Accounts & Tax Compliance · Navi Mumbai HQ',
+    department: 'Finance & Accounts',
+    location: 'Turbhe, Navi Mumbai HQ',
     employmentType: 'Full-Time',
     experience: '2 – 5 Years',
-    summary: 'Build and scale web monitoring portals, hardware telemetry dashboards, and client-facing CRM systems that bridge HTI\'s physical automation infrastructure with cloud management platforms.',
+    summary: 'Manage day-to-day accounts, vendor invoices, client billing, bank reconciliations, and statutory tax compliance (GST, TDS, PF/ESIC) for HTI Automation. Maintain accurate financial books and support periodic audits.',
     responsibilities: [
-      'Develop responsive React frontends for device monitoring dashboards and client-facing web applications.',
-      'Build secure RESTful APIs and WebSocket services using Python (FastAPI/Django) or Node.js.',
-      'Integrate hardware controllers (door interlocks, CCTV DVRs, access panels) with cloud APIs.',
-      'Maintain audit-trail logging, user access management, and enterprise-grade database architectures.',
-      'Collaborate with hardware engineers to define interface contracts and telemetry data formats.'
+      'Record daily accounting transactions, journal entries, and bank vouchers in Tally / ERP software.',
+      'Process vendor bills, verify purchase orders against delivery challans, and schedule timely vendor payments.',
+      'Generate GST-compliant client invoices, track accounts receivable, and follow up on outstanding payments.',
+      'Prepare monthly GST returns (GSTR-1, GSTR-3B) and compute TDS deductions in line with tax regulations.',
+      'Perform monthly bank reconciliations, vendor ledger reconciliations, and assist auditors during financial audits.'
     ],
     requirements: [
-      'Strong proficiency in React, JavaScript (ES6+), and modern CSS design systems.',
-      'Solid backend experience with Python or Node.js and relational databases (PostgreSQL, MySQL).',
-      'Familiarity with MQTT, WebSockets, or IoT telemetry interfaces is a strong advantage.',
-      'B.E./B.Tech in Computer Science, IT, or demonstrable project portfolio.'
+      'B.Com / M.Com or equivalent degree in Accounting / Finance.',
+      '2–5 years of accounting experience in a manufacturing, engineering contracting, or trading business.',
+      'Proficiency in Tally Prime, MS Excel (VLOOKUP, pivot tables), and GST / Income Tax portal workflows.',
+      'High numerical accuracy, integrity, and sound knowledge of TDS and GST compliance.'
     ]
   },
   {
-    id: 'digital-marketing-specialist',
-    title: 'Digital Marketing & Content Specialist',
-    category: 'marketing',
-    categoryLabel: 'Marketing',
-    subtitle: 'Full-Time · Brand & Growth Strategy · Mumbai HQ',
-    department: 'Brand Communications & Growth',
-    location: 'Goregaon (West), Mumbai',
+    id: 'office-boy',
+    title: 'Office Boy',
+    category: 'operations',
+    categoryLabel: 'Operations',
+    subtitle: 'Full-Time · Office Support & Upkeep · Navi Mumbai HQ',
+    department: 'Office Administration',
+    location: 'Turbhe, Navi Mumbai HQ',
     employmentType: 'Full-Time',
-    experience: '1 – 4 Years',
-    summary: 'Strengthen HTI Automation\'s digital presence, execute B2B inbound marketing campaigns, and produce authoritative technical content that builds trust with industrial decision-makers.',
+    experience: '1 – 3 Years',
+    summary: 'Ensure smooth daily office operations by maintaining cleanliness, managing pantry services, handling local banking and courier errands, and assisting office staff and visitors with daily administrative support.',
     responsibilities: [
-      'Plan and execute targeted B2B campaigns across LinkedIn, Google Search (SEO/SEM), and industry platforms.',
-      'Author case studies, technical whitepapers, product brochures, and client success stories.',
-      'Manage website SEO performance, track lead conversion analytics, and optimize landing pages.',
-      'Coordinate with engineering leads to capture project milestones, certifications, and testimonials.',
-      'Manage social media presence (LinkedIn, YouTube), email campaigns, and trade press relations.'
+      'Maintain overall office cleanliness, organize conference rooms, and ensure workstations are orderly.',
+      'Manage pantry services, prepare tea and coffee, and serve refreshments to team members, clients, and visitors.',
+      'Carry out local banking errands (cheque deposits), courier drop-offs, and local document collections.',
+      'Assist with office stationery inventory, printing, photocopying, and basic material handling in the office.',
+      'Support administrative staff with daily errands and coordinate with building housekeeping when required.'
     ],
     requirements: [
-      'Experience in B2B digital marketing, content strategy, or growth marketing — industrial or tech sector preferred.',
-      'Working knowledge of Google Analytics 4, LinkedIn Campaign Manager, SEMrush, and CMS platforms.',
-      'Strong technical writing ability — comfortable converting engineering specs into compelling narratives.',
-      'Bachelor\'s in Marketing, Communications, Journalism, or related discipline.'
+      'Minimum 10th or 12th pass (SSC / HSC).',
+      '1+ years of prior experience in an office boy, pantry boy, or support staff role.',
+      'Polite, punctual, honest, and helpful attitude with a clean personal presentation.',
+      'Familiarity with Navi Mumbai local routes and transport.'
+    ]
+  },
+  {
+    id: 'dispatch-manager',
+    title: 'Dispatch Manager',
+    category: 'operations',
+    categoryLabel: 'Operations',
+    subtitle: 'Full-Time · Logistics & Material Dispatch · Navi Mumbai HQ',
+    department: 'Supply Chain & Logistics',
+    location: 'Turbhe, Navi Mumbai HQ',
+    employmentType: 'Full-Time',
+    experience: '3 – 6 Years',
+    summary: 'Oversee warehouse dispatch operations, equipment packing, e-Way bill documentation, and transporter logistics to ensure timely and damage-free delivery of automation systems and components to project sites across India.',
+    responsibilities: [
+      'Plan, coordinate, and supervise daily material packing, staging, loading, and dispatch to project sites.',
+      'Generate delivery challans, packing lists, e-Way bills, and transport documentation in compliance with GST norms.',
+      'Coordinate with logistics partners, freight transporters, and couriers to negotiate rates and secure timely deliveries.',
+      'Maintain warehouse inventory records, track in-transit consignments, and update project teams on dispatch status.',
+      'Inspect outgoing and incoming materials for quality, quantity, and packaging integrity to minimize transit damage.'
+    ],
+    requirements: [
+      'Bachelor\'s Degree or Diploma in Commerce, Logistics, Supply Chain, or equivalent discipline.',
+      '3–6 years experience in dispatch management or warehouse logistics, preferably in engineering or manufacturing.',
+      'Strong practical knowledge of e-Way bills, GST transport compliance, delivery challans, and inventory tracking.',
+      'Excellent coordination and vendor management skills under dynamic project delivery schedules.'
     ]
   }
 ];
@@ -139,14 +189,15 @@ const CATEGORY_TABS = [
   { id: 'all', label: 'All Roles' },
   { id: 'engineering', label: 'Engineering' },
   { id: 'sales', label: 'Sales' },
-  { id: 'marketing', label: 'Marketing' }
+  { id: 'marketing', label: 'Marketing' },
+  { id: 'operations', label: 'Operations' }
 ];
 
 const FAQ_ITEMS = [
   {
     id: 'faq-1',
     question: 'What types of roles does HTI Automation hire for?',
-    answer: 'We hire across three domains: Engineering (site commissioning, PLC/automation, software development), Sales (B2B enterprise accounts and business development), and Marketing (digital campaigns and technical content). All roles are based in our Mumbai HQ, with some requiring pan-India site travel.'
+    answer: 'We hire across four domains: Engineering (site commissioning, supervision, PLC/automation, software development), Sales (B2B enterprise accounts and business development), Operations (accounts, office administration, and dispatch logistics), and Marketing (digital campaigns and technical content). All roles are based in our Mumbai / Navi Mumbai HQ, with engineering and field positions requiring pan-India site travel.'
   },
   {
     id: 'faq-2',
@@ -184,27 +235,81 @@ const STATS = [
   { value: '10+', label: 'Years of Excellence', sub: 'Serving India since 2014' },
   { value: '100+', label: 'Client Installations', sub: 'Pharma, corporate & logistics' },
   { value: '500+', label: 'Projects Delivered', sub: 'Across 15+ states pan-India' },
-  { value: '5', label: 'Open Positions', sub: 'Join our growing team today' },
+  { value: `${JOB_POSITIONS.length}`, label: 'Open Positions', sub: 'Join our growing team today' },
 ];
 
 const BENEFITS = [
-  { icon: TrendingUp, color: 'cyan', title: 'Career Growth', desc: 'Clear progression paths from Engineer to Senior, Project Lead, and Department Head. We invest in your long-term professional development.' },
-  { icon: Globe, color: 'blue', title: 'Pan-India Exposure', desc: 'Work on projects at premier pharma facilities, corporate campuses, and industrial parks across India. Expand your professional network significantly.' },
-  { icon: Zap, color: 'amber', title: 'Cutting-Edge Technology', desc: 'Get hands-on with the latest industrial PLCs, AI surveillance systems, cleanroom interlock controllers, and IoT telemetry platforms.' },
-  { icon: Users, color: 'red', title: 'Collaborative Culture', desc: 'A flat, transparent team where ideas are heard, challenges are shared, and every member\'s contribution is recognized and valued.' },
-  { icon: Heart, color: 'rose', title: 'Work-Life Balance', desc: 'Structured working hours (Mon–Sat), defined leave policies, and management that genuinely respects your personal time and wellbeing.' },
-  { icon: Target, color: 'emerald', title: 'Meaningful Impact', desc: 'Every system you build protects lives — from pharma cleanroom interlocks preventing contamination to fire alarms safeguarding industrial workers.' }
+  {
+    num: '01',
+    icon: TrendingUp,
+    color: 'cyan',
+    title: 'Career Growth',
+    tag: 'Progression Path',
+    desc: 'Clear progression paths from Engineer to Senior, Project Lead, and Department Head. We invest in your long-term professional development.'
+  },
+  {
+    num: '02',
+    icon: Globe,
+    color: 'blue',
+    title: 'Pan-India Exposure',
+    tag: 'Pan-India Sites',
+    desc: 'Work on projects at premier pharma facilities, corporate campuses, and industrial parks across India. Expand your professional network significantly.'
+  },
+  {
+    num: '03',
+    icon: Zap,
+    color: 'amber',
+    title: 'Cutting-Edge Technology',
+    tag: 'Industrial Automation',
+    desc: 'Get hands-on with the latest industrial PLCs, AI surveillance systems, cleanroom interlock controllers, and IoT telemetry platforms.'
+  },
+  {
+    num: '04',
+    icon: Users,
+    color: 'red',
+    title: 'Collaborative Culture',
+    tag: 'Transparent Team',
+    desc: 'A flat, transparent team where ideas are heard, challenges are shared, and every member\'s contribution is recognized and valued.'
+  },
+  {
+    num: '05',
+    icon: Heart,
+    color: 'rose',
+    title: 'Work-Life Balance',
+    tag: 'Structured Hours',
+    desc: 'Structured working hours (Mon–Sat), defined leave policies, and management that genuinely respects your personal time and wellbeing.'
+  },
+  {
+    num: '06',
+    icon: Target,
+    color: 'emerald',
+    title: 'Meaningful Impact',
+    tag: 'Mission-Critical',
+    desc: 'Every system you build protects lives — from pharma cleanroom interlocks preventing contamination to fire alarms safeguarding industrial workers.'
+  }
 ];
 
 export default function CareersPage({ onNavigate }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedRole, setSelectedRole] = useState(null);
 
+  // Scroll-driven horizontal benefits section refs and state
+  const whySectionRef = useRef(null);
+  const trackRef = useRef(null);
+  const viewportRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [maxHorizontalOverflow, setMaxHorizontalOverflow] = useState(0);
+  const [pinnedScrollDistance, setPinnedScrollDistance] = useState(0);
+  const [isPinnedEnabled, setIsPinnedEnabled] = useState(false);
+  const [navHeight, setNavHeight] = useState(96);
+
   const [formData, setFormData] = useState({
     fullName: '', email: '', phone: '', position: '',
-    experience: '', currentCTC: '', noticePeriod: '',
-    linkedinUrl: '', message: '', agreePrivacy: false,
+    experience: '', noticePeriod: '', agreePrivacy: false,
   });
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
   const [resumeFile, setResumeFile] = useState(null);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -212,6 +317,181 @@ export default function CareersPage({ onNavigate }) {
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
   const toggleFaq = (index) => setOpenFaqIndex(prev => prev === index ? null : index);
+
+  // Measure track overflow and compute responsive, proportional pinned scroll range
+  useEffect(() => {
+    const updateMetrics = () => {
+      const isLargeScreen = window.innerWidth > 992;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!isLargeScreen || prefersReducedMotion) {
+        setIsPinnedEnabled(false);
+        setMaxHorizontalOverflow(0);
+        setPinnedScrollDistance(0);
+        return;
+      }
+
+      setIsPinnedEnabled(true);
+
+      // Measure sticky navbar height dynamically to align sticky viewport
+      const navEl = document.querySelector('.navbar-wrapper');
+      const nh = navEl ? navEl.offsetHeight : 96;
+      setNavHeight(nh);
+      document.documentElement.style.setProperty('--hti-navbar-height', `${nh}px`);
+
+      if (trackRef.current && viewportRef.current) {
+        const track = trackRef.current;
+        const viewport = viewportRef.current;
+        const trackWidth = track.scrollWidth;
+        const viewportWidth = viewport.clientWidth;
+
+        // Exact horizontal travel needed to bring the 6th card comfortably into view
+        const overflow = Math.max(0, trackWidth - viewportWidth);
+        setMaxHorizontalOverflow(overflow);
+
+        // Derive vertical scroll range from actual card step dimensions and track overflow
+        const cardEl = track.querySelector('.why-benefit-card');
+        const cardWidth = cardEl ? cardEl.offsetWidth : 320;
+        const trackStyle = window.getComputedStyle(track);
+        const gap = parseFloat(trackStyle.gap) || 20;
+        const stepWidth = cardWidth + gap;
+        const steps = overflow > 0 ? overflow / stepWidth : 1;
+
+        // Proportional vertical travel adapted to viewport height:
+        // ~140px on short viewports (< 700px), ~160px on standard desktop
+        const vh = window.innerHeight;
+        const perStep = vh < 700 ? 140 : 160;
+        const calculatedDistance = Math.round(steps * perStep);
+        const finalDistance = Math.max(420, Math.min(800, calculatedDistance));
+        setPinnedScrollDistance(finalDistance);
+      }
+    };
+
+    updateMetrics();
+
+    let resizeTimer;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateMetrics, 60);
+    };
+
+    window.addEventListener('resize', onResize);
+
+    const observer = new ResizeObserver(() => {
+      updateMetrics();
+    });
+
+    if (trackRef.current) observer.observe(trackRef.current);
+    if (viewportRef.current) observer.observe(viewportRef.current);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      observer.disconnect();
+    };
+  }, []);
+
+  // Sync vertical scroll with horizontal track translation
+  useEffect(() => {
+    if (!isPinnedEnabled || pinnedScrollDistance <= 0 || maxHorizontalOverflow <= 0) return;
+
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!whySectionRef.current) return;
+      const rect = whySectionRef.current.getBoundingClientRect();
+
+      // Pinning begins when top of section reaches bottom of sticky navbar (navHeight)
+      const scrolledInsidePinned = navHeight - rect.top;
+
+      if (scrolledInsidePinned <= 0) {
+        setScrollProgress(0);
+        setActiveCardIndex(0);
+      } else if (scrolledInsidePinned >= pinnedScrollDistance) {
+        setScrollProgress(1);
+        setActiveCardIndex(BENEFITS.length - 1);
+      } else {
+        // Continuous, proportional progress that reverses smoothly on upward scroll
+        const rawProgress = scrolledInsidePinned / pinnedScrollDistance;
+        setScrollProgress(rawProgress);
+
+        // Update active card counter based on the card closest to focus position
+        const currentTranslateX = rawProgress * maxHorizontalOverflow;
+        const cardEl = trackRef.current?.querySelector('.why-benefit-card');
+        const cardWidth = cardEl ? cardEl.offsetWidth : 320;
+        const trackStyle = trackRef.current ? window.getComputedStyle(trackRef.current) : null;
+        const gap = trackStyle ? parseFloat(trackStyle.gap) || 20 : 20;
+        const stepWidth = cardWidth + gap;
+        const rawIdx = Math.round(currentTranslateX / stepWidth);
+        const activeIdx = Math.max(0, Math.min(BENEFITS.length - 1, rawIdx));
+        setActiveCardIndex(activeIdx);
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [isPinnedEnabled, pinnedScrollDistance, maxHorizontalOverflow, navHeight]);
+
+  // Touch scroll on mobile track
+  const handleMobileTrackScroll = () => {
+    if (isPinnedEnabled || !trackRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = trackRef.current;
+    const max = scrollWidth - clientWidth;
+    if (max <= 0) return;
+    const p = Math.min(1, Math.max(0, scrollLeft / max));
+    setScrollProgress(p);
+    const cardEl = trackRef.current.querySelector('.why-benefit-card');
+    const stepWidth = (cardEl ? cardEl.offsetWidth : 280) + 16;
+    const idx = Math.min(BENEFITS.length - 1, Math.round(scrollLeft / stepWidth));
+    setActiveCardIndex(idx);
+  };
+
+  // Nav arrow click handler - keeps direct navigation and normal scrolling synchronized
+  const handleCardNav = (direction) => {
+    if (!isPinnedEnabled) {
+      if (trackRef.current) {
+        const cardWidth = trackRef.current.querySelector('.why-benefit-card')?.offsetWidth || 300;
+        trackRef.current.scrollBy({ left: direction * (cardWidth + 16), behavior: 'smooth' });
+      }
+      return;
+    }
+
+    if (pinnedScrollDistance <= 0 || !whySectionRef.current || maxHorizontalOverflow <= 0) return;
+
+    const cardEl = trackRef.current?.querySelector('.why-benefit-card');
+    const cardWidth = cardEl ? cardEl.offsetWidth : 320;
+    const trackStyle = trackRef.current ? window.getComputedStyle(trackRef.current) : null;
+    const gap = trackStyle ? parseFloat(trackStyle.gap) || 20 : 20;
+    const stepWidth = cardWidth + gap;
+
+    let targetIndex = activeCardIndex + direction;
+    if (direction > 0 && scrollProgress > 0.95) targetIndex = BENEFITS.length - 1;
+    if (direction < 0 && scrollProgress < 0.05) targetIndex = 0;
+    targetIndex = Math.max(0, Math.min(BENEFITS.length - 1, targetIndex));
+
+    const targetTranslateX = targetIndex === BENEFITS.length - 1
+      ? maxHorizontalOverflow
+      : Math.min(maxHorizontalOverflow, targetIndex * stepWidth);
+
+    const targetProgress = maxHorizontalOverflow > 0 ? targetTranslateX / maxHorizontalOverflow : 0;
+    const sectionDocTop = window.scrollY + whySectionRef.current.getBoundingClientRect().top;
+    const targetY = sectionDocTop - navHeight + (targetProgress * pinnedScrollDistance);
+
+    window.scrollTo({ top: targetY, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => { if (e.key === 'Escape') setSelectedRole(null); };
@@ -232,20 +512,47 @@ export default function CareersPage({ onNavigate }) {
     if (formErrors[name]) setFormErrors(prev => ({ ...prev, [name]: undefined }));
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const processSelectedFile = (file) => {
     const validExt = ['.pdf', '.doc', '.docx'];
     if (!validExt.some(ext => file.name.toLowerCase().endsWith(ext))) {
       setFormErrors(prev => ({ ...prev, resume: 'Only PDF, DOC, or DOCX files are accepted.' }));
-      setResumeFile(null); return;
+      setResumeFile(null);
+      return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setFormErrors(prev => ({ ...prev, resume: 'File size exceeds 5 MB limit.' }));
-      setResumeFile(null); return;
+      setFormErrors(prev => ({ ...prev, resume: 'File size exceeds the 5 MB limit.' }));
+      setResumeFile(null);
+      return;
     }
     setFormErrors(prev => ({ ...prev, resume: undefined }));
     setResumeFile(file);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processSelectedFile(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+    processSelectedFile(file);
   };
 
   const handleRemoveFile = () => {
@@ -255,27 +562,107 @@ export default function CareersPage({ onNavigate }) {
     if (fi) fi.value = '';
   };
 
-  const validateForm = () => {
+  const validateStep1 = () => {
     const errors = {};
-    if (!formData.fullName.trim() || formData.fullName.trim().length < 2) errors.fullName = 'Please enter your full name.';
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = 'Please enter a valid email address.';
+    if (!formData.fullName.trim() || formData.fullName.trim().length < 2) {
+      errors.fullName = 'Please enter your full name (minimum 2 characters).';
+    }
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errors.email = 'Please enter a valid email address.';
+    }
     const cleanPhone = formData.phone.replace(/[\s\-\(\)\.]/g, '');
-    if (!formData.phone.trim() || cleanPhone.length < 7 || cleanPhone.length > 15) errors.phone = 'Please enter a valid phone number.';
-    if (!formData.position) errors.position = 'Please select the position you are applying for.';
-    if (!formData.agreePrivacy) errors.agreePrivacy = 'You must agree to the privacy policy to submit.';
+    if (!formData.phone.trim() || cleanPhone.length < 7 || cleanPhone.length > 15) {
+      errors.phone = 'Please enter a valid phone number (7–15 digits).';
+    }
+    if (!formData.position) {
+      errors.position = 'Please select the position you are applying for.';
+    }
     return errors;
+  };
+
+  const validateStep2 = () => {
+    const errors = {};
+    if (formErrors.resume) {
+      errors.resume = formErrors.resume;
+    }
+    return errors;
+  };
+
+  const validateStep3 = () => {
+    const errors = {};
+    if (!formData.agreePrivacy) {
+      errors.agreePrivacy = 'You must agree to the privacy policy to submit.';
+    }
+    return errors;
+  };
+
+  const handleNextStep = () => {
+    if (currentStep === 1) {
+      const errors = validateStep1();
+      if (Object.keys(errors).length > 0) {
+        setFormErrors(errors);
+        const firstKey = Object.keys(errors)[0];
+        const el = document.getElementById(firstKey);
+        if (el) el.focus();
+        return;
+      }
+      setFormErrors({});
+      setCurrentStep(2);
+    } else if (currentStep === 2) {
+      const errors = validateStep2();
+      if (Object.keys(errors).length > 0) {
+        setFormErrors(errors);
+        return;
+      }
+      setFormErrors({});
+      setCurrentStep(3);
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(prev => prev - 1);
+      setFormErrors({});
+    }
+  };
+
+  const handleGoToStep = (targetStep) => {
+    if (targetStep < currentStep) {
+      setCurrentStep(targetStep);
+      setFormErrors({});
+    } else if (targetStep === 2 && currentStep === 1) {
+      handleNextStep();
+    } else if (targetStep === 3) {
+      const errors1 = validateStep1();
+      if (Object.keys(errors1).length > 0) {
+        setFormErrors(errors1);
+        setCurrentStep(1);
+        return;
+      }
+      setCurrentStep(3);
+    }
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      const firstKey = Object.keys(errors)[0];
+    const errors1 = validateStep1();
+    if (Object.keys(errors1).length > 0) {
+      setFormErrors(errors1);
+      setCurrentStep(1);
+      const firstKey = Object.keys(errors1)[0];
       const el = document.getElementById(firstKey);
       if (el) el.focus();
       return;
     }
+
+    const errors3 = validateStep3();
+    if (Object.keys(errors3).length > 0) {
+      setFormErrors(errors3);
+      const el = document.getElementById('agreePrivacy');
+      if (el) el.focus();
+      return;
+    }
+
     setFormErrors({});
     setIsSubmitting(true);
 
@@ -290,14 +677,9 @@ export default function CareersPage({ onNavigate }) {
       `• Phone: ${formData.phone}`,
       `• Position Applied For: ${formData.position}`,
       `• Years of Experience: ${formData.experience || 'Not specified'}`,
-      `• Current CTC: ${formData.currentCTC || 'Not specified'}`,
       `• Notice Period: ${formData.noticePeriod || 'Not specified'}`,
-      `• LinkedIn: ${formData.linkedinUrl || 'N/A'}`,
       ``,
-      `Cover Note:`,
-      formData.message || 'N/A',
-      ``,
-      resumeFile ? `[Resume "${resumeFile.name}" — please attach this file to your email]` : `[Please attach your resume/CV to this email]`,
+      resumeFile ? `[Resume attached: "${resumeFile.name}" (${(resumeFile.size / 1024).toFixed(1)} KB) — please attach this file to your email]` : `[Please attach your resume/CV to this email]`,
       ``,
       `Best regards,`,
       formData.fullName
@@ -305,15 +687,22 @@ export default function CareersPage({ onNavigate }) {
 
     window.location.href = `mailto:careers@htisystems.in?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    setTimeout(() => { setIsSubmitting(false); setSubmitted(true); }, 800);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitted(true);
+    }, 800);
   };
 
   const handleApplyForRole = (roleTitle) => {
     setSelectedRole(null);
     setFormData(prev => ({ ...prev, position: roleTitle }));
     setFormErrors(prev => ({ ...prev, position: undefined }));
+    setCurrentStep(1);
     setSubmitted(false);
-    setTimeout(() => { const el = document.getElementById('application-form'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 120);
+    setTimeout(() => {
+      const el = document.getElementById('application-form');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 120);
   };
 
   const filteredPositions = activeFilter === 'all' ? JOB_POSITIONS : JOB_POSITIONS.filter(pos => pos.category === activeFilter);
@@ -340,90 +729,150 @@ export default function CareersPage({ onNavigate }) {
         <div className="careers-hero-bg-glow careers-glow-cyan" aria-hidden="true" />
         <div className="careers-hero-bg-glow careers-glow-red" aria-hidden="true" />
         <div className="careers-hero-grid-pattern" aria-hidden="true" />
+        <div className="careers-hero-tech-line" aria-hidden="true" />
         <div className="container">
           <div className="careers-hero-container">
+            {/* Left Column: Text & CTAs */}
             <div className="careers-hero-content">
-              <div className="careers-hero-badge">
-                <Briefcase size={14} className="careers-badge-icon" />
+              <div className="careers-hero-badge hero-entrance-stagger-1">
+                <span className="hero-badge-pulse" aria-hidden="true">
+                  <span className="hero-badge-ping" />
+                  <span className="hero-badge-dot" />
+                </span>
+                <Briefcase size={13} className="careers-badge-icon" aria-hidden="true" />
                 <span>CAREERS AT HTI AUTOMATION</span>
+                <span className="hero-badge-sep" aria-hidden="true">·</span>
+                <span className="hero-badge-tag">ENGINEERING &amp; TECH</span>
               </div>
-              <h1 className="careers-hero-title">
-                Build Your Career at the{' '}
-                <span className="gradient-text-red">Heart of India's Automation Industry</span>
+
+              <h1 className="careers-hero-title hero-entrance-stagger-2">
+                Build Your{' '}
+                <span className="careers-hero-title-highlight">Engineering Career</span>
+                <span className="careers-hero-title-break">at HTI Automation</span>
               </h1>
-              <p className="careers-hero-desc">
+
+              <p className="careers-hero-desc hero-entrance-stagger-3">
                 Join a Mumbai-based engineering team that has been delivering mission-critical industrial
                 automation, pharma cleanroom interlocks, and life-safety infrastructure since 2014.
                 Do meaningful work. Grow fast. Make a real impact.
               </p>
-              <div className="careers-hero-actions">
-                <a href="#open-positions" className="btn-primary careers-cta-primary"
-                  onClick={(e) => { e.preventDefault(); scrollTo('open-positions'); }} id="careers-hero-explore-btn">
+
+              <div className="careers-hero-actions hero-entrance-stagger-4">
+                <a
+                  href="#open-positions"
+                  className="btn-primary careers-cta-primary"
+                  onClick={(e) => { e.preventDefault(); scrollTo('open-positions'); }}
+                  id="careers-hero-explore-btn"
+                >
                   <span>View Open Positions</span>
-                  <ArrowRight size={17} className="btn-arrow-icon" />
+                  <ArrowRight size={17} className="btn-arrow-icon" aria-hidden="true" />
                 </a>
-                <a href="#life-at-hti" className="btn-secondary careers-cta-secondary"
-                  onClick={(e) => { e.preventDefault(); scrollTo('life-at-hti'); }} id="careers-hero-life-btn">
-                  <Heart size={16} /><span>Life at HTI</span>
+                <a
+                  href="#life-at-hti"
+                  className="btn-secondary careers-cta-secondary"
+                  onClick={(e) => { e.preventDefault(); scrollTo('life-at-hti'); }}
+                  id="careers-hero-life-btn"
+                >
+                  <Heart size={16} className="btn-heart-icon" aria-hidden="true" />
+                  <span>Life at HTI</span>
                 </a>
               </div>
-              <div className="careers-hero-pillars">
+
+              <div className="careers-hero-pillars hero-entrance-stagger-5">
                 <div className="careers-pillar-item">
-                  <div className="pillar-icon-shell"><Cpu size={15} /></div>
+                  <div className="pillar-icon-shell"><Cpu size={15} aria-hidden="true" /></div>
                   <span>PLC &amp; Industrial Automation</span>
                 </div>
                 <div className="careers-pillar-item">
-                  <div className="pillar-icon-shell"><ShieldCheck size={15} /></div>
+                  <div className="pillar-icon-shell"><ShieldCheck size={15} aria-hidden="true" /></div>
                   <span>Pharma Cleanroom Systems</span>
                 </div>
                 <div className="careers-pillar-item">
-                  <div className="pillar-icon-shell"><Award size={15} /></div>
+                  <div className="pillar-icon-shell"><Award size={15} aria-hidden="true" /></div>
                   <span>Pan-India Project Deployments</span>
                 </div>
               </div>
             </div>
-            <div className="careers-hero-visual">
+
+            {/* Right Column: Visual Image with Technical Overlays */}
+            <div className="careers-hero-visual hero-visual-entrance">
+              <div className="careers-visual-backdrop-plate" aria-hidden="true" />
+
               <div className="careers-image-frame">
-                <img src="/careers-hero-team.jpg" alt="HTI Automation engineering team at work"
-                  className="careers-hero-image" loading="eager" width="1280" height="720" />
-                <div className="frame-corner corner-tl" aria-hidden="true" />
-                <div className="frame-corner corner-br" aria-hidden="true" />
+                <img
+                  src="/careers-hero-team.jpg"
+                  alt="HTI Automation engineering team at work"
+                  className="careers-hero-image"
+                  loading="eager"
+                  width="1280"
+                  height="720"
+                />
+
+                {/* Protective gradient layer for bottom badges */}
+                <div className="careers-image-gradient-overlay" aria-hidden="true" />
+
+                {/* Moving Technical Line/Scanline */}
+                <div className="tech-scan-line" aria-hidden="true" />
+
+                {/* Engineering Corner Markers (Crosshairs) */}
+                <div className="frame-crosshair crosshair-tl" aria-hidden="true" />
+                <div className="frame-crosshair crosshair-tr" aria-hidden="true" />
+                <div className="frame-crosshair crosshair-bl" aria-hidden="true" />
+                <div className="frame-crosshair crosshair-br" aria-hidden="true" />
+
+                {/* Technical Specification Badge */}
+                <div className="careers-tech-tag" aria-hidden="true">
+                  <span className="tech-tag-dot" />
+                  <span>CAD REF // HTI-ENG-2026</span>
+                </div>
+
+                {/* Top Floating Badge (Team highlight) */}
                 <div className="careers-floating-badge top-floating">
                   <span className="live-status-dot" aria-hidden="true" />
                   <span className="floating-badge-text">Multidisciplinary Engineering Team</span>
                 </div>
-                <div className="careers-floating-card bottom-floating">
+
+                {/* Bottom Left Specification Pill (Pharma & Industrial) */}
+                <div className="careers-spec-badge bottom-left-spec">
+                  <ShieldCheck size={13} className="spec-badge-icon" aria-hidden="true" />
+                  <span className="spec-badge-label">Pharma &amp; Industrial Systems</span>
+                </div>
+
+                {/* Bottom Right Floating Metric Card with subtle float animation */}
+                <div className="careers-floating-card bottom-floating careers-card-float-anim">
                   <div className="floating-metric-row">
+                    <div className="floating-metric-icon-shell" aria-hidden="true">
+                      <Award size={18} />
+                    </div>
                     <div className="floating-metric-num">10+</div>
                     <div className="floating-metric-info">
                       <span className="metric-title">Years of Innovation</span>
                       <span className="metric-sub">Serving India Since 2014</span>
                     </div>
                   </div>
+                  <div className="floating-metric-footer">
+                    <span className="metric-footer-badge">500+ Projects</span>
+                    <span className="metric-footer-sep" aria-hidden="true">·</span>
+                    <span className="metric-footer-text">Pan-India Deployments</span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Engineering Blueprint Axis Line */}
+              <div className="careers-visual-axis-line" aria-hidden="true">
+                <span className="axis-label">AXIS // 19.0760° N, 72.8777° E</span>
+                <span className="axis-dash" />
+                <span className="axis-label">FIELD COMMISSIONING HQ</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── STATS STRIP ──────────────────────────────── */}
-      <section className="careers-stats-strip" aria-label="Company highlights">
-        <div className="container">
-          <div className="stats-strip-grid">
-            {STATS.map((s, i) => (
-              <div key={i} className="stat-strip-item">
-                <div className="stat-strip-value">{s.value}</div>
-                <div className="stat-strip-label">{s.label}</div>
-                <div className="stat-strip-sub">{s.sub}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* ── OPEN POSITIONS ───────────────────────────── */}
-      <section className="careers-positions-section" id="open-positions" aria-label="Open Positions">
+      {/* <section className="careers-positions-section" id="open-positions" aria-label="Open Positions">
         <div className="container">
           <div className="positions-eyebrow">
             <span className="eyebrow-dot" aria-hidden="true" />
@@ -432,7 +881,7 @@ export default function CareersPage({ onNavigate }) {
           <h2 className="positions-heading">Open Positions</h2>
           <div className="positions-intro-grid">
             <div className="positions-intro-lead">
-              We are actively hiring across engineering, sales, and marketing.
+              We are actively hiring across engineering, sales, operations, and marketing.
             </div>
             <div className="positions-intro-desc">
               <p>At HTI Automation, every role contributes directly to real industrial systems that protect pharma cleanrooms, secure corporate campuses, and automate India's most critical facilities.</p>
@@ -455,12 +904,18 @@ export default function CareersPage({ onNavigate }) {
           </div>
 
           <div className="positions-listings-list" role="list">
-            {filteredPositions.map((job) => (
-              <div key={job.id} className="job-row-card" role="listitem" tabIndex={0}
+            {filteredPositions.map((job, idx) => (
+              <div
+                key={`${activeFilter}-${job.id}`}
+                className="job-row-card"
+                role="listitem"
+                tabIndex={0}
+                style={{ '--card-index': idx }}
                 onClick={() => setSelectedRole(job)}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedRole(job); } }}>
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedRole(job); } }}
+              >
                 <div className="job-row-left">
-                  <span className="job-row-badge">{job.categoryLabel}</span>
+                  <span className={`job-row-badge badge-${job.category}`}>{job.categoryLabel}</span>
                   <div className="job-row-content">
                     <h3 className="job-row-title">{job.title}</h3>
                     <div className="job-row-meta">
@@ -488,55 +943,130 @@ export default function CareersPage({ onNavigate }) {
             </p>
           </div>
         </div>
-      </section>
+      </section> */}
 
-      {/* ── LIFE AT HTI ──────────────────────────────── */}
-      <section className="careers-why-section" id="life-at-hti" aria-label="Life at HTI">
-        <div className="container">
-          <div className="why-eyebrow">
-            <span className="why-eyebrow-dot" aria-hidden="true" />
-            <span>LIFE AT HTI AUTOMATION</span>
-          </div>
-          <div className="why-split-grid">
-            <div className="why-text-col">
-              <h2 className="why-heading">
-                Where engineers grow.{' '}
-                <span className="why-heading-highlight">Where work matters.</span>
-              </h2>
-              <p className="why-paragraph">
-                At HTI Automation, you contribute to real industrial systems that safeguard pharmaceutical
-                cleanrooms, protect corporate campuses, and keep India's logistics infrastructure running.
-                Our team is small, skilled, and driven — your work is visible, impactful, and recognized
-                from day one.
-              </p>
-              <div className="why-quote-badge">
-                <span className="why-quote-line" aria-hidden="true" />
-                <span className="why-quote-text">"Engineering rigor. Meaningful work. Collaborative ownership."</span>
-              </div>
-            </div>
-            <div className="why-visual-col">
-              <div className="why-image-card">
-                <img src="/careers-why-work.jpg" alt="HTI Automation team collaborating"
-                  className="why-workplace-image" loading="lazy" width="1200" height="900" />
-                <div className="why-image-tag">
-                  <span className="why-tag-dot" aria-hidden="true" />
-                  <span>Engineering Design Studio · Mumbai HQ</span>
+      {/* ── LIFE AT HTI (Scroll-Driven Pinned Horizontal Track) ── */}
+      <section
+        className={`careers-why-section ${isPinnedEnabled ? 'why-section-pinned-mode' : 'why-section-flow-mode'}`}
+        id="life-at-hti"
+        aria-label="Life at HTI Automation"
+        ref={whySectionRef}
+        style={
+          isPinnedEnabled && pinnedScrollDistance > 0
+            ? { height: `calc(100vh - ${navHeight}px + ${pinnedScrollDistance}px)` }
+            : undefined
+        }
+      >
+        <div className="why-sticky-viewport">
+          <div className="container why-layout-container">
+            <div className="why-horizontal-grid">
+
+              {/* Left Column: Pinned Introduction */}
+              <div className="why-pinned-left-col">
+                <div className="why-pinned-eyebrow">
+                  <span className="why-pinned-dot" aria-hidden="true" />
+                  <span>LIFE AT HTI AUTOMATION</span>
+                </div>
+
+                <h2 className="why-pinned-heading">
+                  Where engineers grow.<br />
+                  <span className="why-heading-highlight">Where work matters.</span>
+                </h2>
+
+                <p className="why-pinned-desc">
+                  At HTI Automation, you contribute to real industrial systems that safeguard pharmaceutical
+                  cleanrooms, protect corporate campuses, and keep India's logistics infrastructure running.
+                  Our team is small, skilled, and driven — your work is visible, impactful, and recognized
+                  from day one.
+                </p>
+
+                {/* Interactive Progress & Nav Controls */}
+                <div className="why-scroll-controls" aria-label="Benefits navigation">
+                  <div className="why-progress-track" aria-hidden="true">
+                    <div
+                      className="why-progress-bar"
+                      style={{ width: `${Math.round(scrollProgress * 100)}%` }}
+                    />
+                  </div>
+
+                  <div className="why-controls-bottom-row">
+                    <div className="why-card-counter">
+                      <span className="counter-current">0{activeCardIndex + 1}</span>
+                      <span className="counter-slash">/</span>
+                      <span className="counter-total">0{BENEFITS.length}</span>
+                      <span className="counter-hint">{isPinnedEnabled ? 'Scroll to explore' : 'Swipe to explore'}</span>
+                    </div>
+
+                    <div className="why-nav-arrows">
+                      <button
+                        type="button"
+                        className="why-nav-btn btn-prev"
+                        onClick={() => handleCardNav(-1)}
+                        disabled={activeCardIndex === 0 && scrollProgress <= 0.02}
+                        aria-label="Previous career benefit"
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
+                      <button
+                        type="button"
+                        className="why-nav-btn btn-next"
+                        onClick={() => handleCardNav(1)}
+                        disabled={scrollProgress >= 0.98}
+                        aria-label="Next career benefit"
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="why-benefits-grid why-benefits-6">
-            {BENEFITS.map((b, i) => {
-              const Icon = b.icon;
-              return (
-                <div key={i} className={`why-benefit-item benefit-color-${b.color}`}>
-                  <div className="benefit-icon-box"><Icon size={22} className="benefit-icon-inner" /></div>
-                  <h3 className="benefit-title">{b.title}</h3>
-                  <p className="benefit-desc">{b.desc}</p>
+              {/* Right Column: Horizontal Cards Viewport & Track */}
+              <div className="why-track-viewport" ref={viewportRef}>
+                <div
+                  className="why-horizontal-track"
+                  ref={trackRef}
+                  onScroll={handleMobileTrackScroll}
+                  style={
+                    isPinnedEnabled && maxHorizontalOverflow > 0
+                      ? { transform: `translate3d(-${(scrollProgress * maxHorizontalOverflow).toFixed(1)}px, 0, 0)` }
+                      : undefined
+                  }
+                  role="list"
+                >
+                  {BENEFITS.map((b, i) => {
+                    const Icon = b.icon;
+                    const isActive = activeCardIndex === i;
+                    return (
+                      <div
+                        key={i}
+                        className={`why-benefit-card benefit-color-${b.color} ${isActive ? 'card-active' : ''}`}
+                        role="listitem"
+                        tabIndex={0}
+                      >
+                        <div className="card-top-row">
+                          <div className={`card-icon-shell shell-color-${b.color}`} aria-hidden="true">
+                            <Icon size={22} className="card-icon-svg" />
+                          </div>
+                          <span className="card-index-num" aria-hidden="true">0{i + 1}</span>
+                        </div>
+
+                        <div className="card-content">
+                          <h3 className="card-title">{b.title}</h3>
+                          <p className="card-desc">{b.desc}</p>
+                        </div>
+
+                        <div className="card-footer-pill">
+                          <span className="card-tag-dot" aria-hidden="true" />
+                          <span className="card-tag-text">{b.tag || 'HTI Core Value'}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
+              </div>
+
+            </div>
           </div>
         </div>
       </section>
@@ -647,193 +1177,547 @@ export default function CareersPage({ onNavigate }) {
             <div className="application-form-col">
               <div className="application-form-card">
                 <div className="form-card-header">
+                  <div className="card-tech-badge" aria-hidden="true">
+                    <span className="tech-badge-dot" />
+                    <span>STEP 0{currentStep} / 03 · APPLICATION PROTOCOL</span>
+                  </div>
                   <h3 className="form-card-title">Submit Your Application</h3>
-                  <p className="form-card-subtitle">Fields marked <span className="required-star">*</span> are required.</p>
+                  <p className="form-card-subtitle">
+                    Step {currentStep} of 3 — {currentStep === 1 ? 'Personal Details' : currentStep === 2 ? 'Experience & Resume' : 'Review & Final Submit'}
+                  </p>
                 </div>
 
                 {submitted ? (
-                  <div className="careers-success-box" role="alert">
+                  <div className="careers-success-box step-fade-in" role="alert">
                     <div className="success-icon-wrap">
-                      <CheckCircle2 size={44} className="success-big-icon" />
+                      <CheckCircle2 size={46} className="success-big-icon" />
+                    </div>
+                    <div className="success-tech-pill" aria-hidden="true">
+                      <span>TRANSMISSION READY</span>
                     </div>
                     <h3 className="success-title">Application Submitted!</h3>
                     <p className="success-desc">
                       Your email client has been opened with your details pre-filled. Please attach your
-                      resume and send the email to complete your application. Our HR team will get back
-                      to you within 3–5 working days.
+                      resume file (if not already attached) and send the email to complete your application.
+                      Our talent acquisition team will review your profile and respond within 3–5 working days.
                     </p>
                     <div className="success-contact-note">
-                      Questions? Email us at <a href="mailto:careers@htisystems.in">careers@htisystems.in</a>
+                      Questions regarding your application? Write to us directly at{' '}
+                      <a href="mailto:careers@htisystems.in">careers@htisystems.in</a>
                     </div>
-                    <button className="btn-apply-again" onClick={() => {
-                      setSubmitted(false);
-                      setFormData({ fullName: '', email: '', phone: '', position: '', experience: '', currentCTC: '', noticePeriod: '', linkedinUrl: '', message: '', agreePrivacy: false });
-                      setResumeFile(null);
-                    }}>
-                      Submit Another Application
+                    <button
+                      type="button"
+                      className="btn-apply-again"
+                      onClick={() => {
+                        setSubmitted(false);
+                        setCurrentStep(1);
+                        setFormData({
+                          fullName: '', email: '', phone: '', position: '',
+                          experience: '', noticePeriod: '', agreePrivacy: false
+                        });
+                        setResumeFile(null);
+                        setFormErrors({});
+                      }}
+                    >
+                      <span>Submit Another Application</span>
+                      <ArrowRight size={16} />
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={handleFormSubmit} noValidate className="application-actual-form">
 
-                    {/* Row 1: Full Name + Email */}
-                    <div className="form-row-2col">
-                      <div className="form-group">
-                        <label htmlFor="fullName" className="form-label">Full Name <span className="required-star">*</span></label>
-                        <input type="text" id="fullName" name="fullName"
-                          className={`form-input ${formErrors.fullName ? 'has-error' : ''}`}
-                          placeholder="e.g. Rahul Sharma" value={formData.fullName}
-                          onChange={handleInputChange} aria-required="true" disabled={isSubmitting} />
-                        {formErrors.fullName && <span className="field-error-msg" role="alert"><AlertCircle size={13} />{formErrors.fullName}</span>}
+                    {/* Guided Multi-Step Progress Indicator */}
+                    <div className="form-step-stepper" aria-label="Application Progress" role="navigation">
+                      <div className="stepper-progress-bar-bg" aria-hidden="true">
+                        <div
+                          className="stepper-progress-bar-fill"
+                          style={{
+                            width: currentStep === 1 ? '0%' : currentStep === 2 ? '50%' : '100%'
+                          }}
+                        />
                       </div>
-                      <div className="form-group">
-                        <label htmlFor="email" className="form-label">Email Address <span className="required-star">*</span></label>
-                        <input type="email" id="email" name="email"
-                          className={`form-input ${formErrors.email ? 'has-error' : ''}`}
-                          placeholder="rahul@example.com" value={formData.email}
-                          onChange={handleInputChange} aria-required="true" disabled={isSubmitting} />
-                        {formErrors.email && <span className="field-error-msg" role="alert"><AlertCircle size={13} />{formErrors.email}</span>}
-                      </div>
-                    </div>
 
-                    {/* Row 2: Phone + Position */}
-                    <div className="form-row-2col">
-                      <div className="form-group">
-                        <label htmlFor="phone" className="form-label">Phone Number <span className="required-star">*</span></label>
-                        <input type="tel" id="phone" name="phone"
-                          className={`form-input ${formErrors.phone ? 'has-error' : ''}`}
-                          placeholder="+91 98201 12345" value={formData.phone}
-                          onChange={handleInputChange} aria-required="true" disabled={isSubmitting} />
-                        {formErrors.phone && <span className="field-error-msg" role="alert"><AlertCircle size={13} />{formErrors.phone}</span>}
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="position" className="form-label">Position Applying For <span className="required-star">*</span></label>
-                        <select id="position" name="position"
-                          className={`form-select ${formErrors.position ? 'has-error' : ''}`}
-                          value={formData.position} onChange={handleInputChange}
-                          aria-required="true" disabled={isSubmitting}>
-                          <option value="">Select a role...</option>
-                          {JOB_POSITIONS.map(pos => <option key={pos.id} value={pos.title}>{pos.title}</option>)}
-                          <option value="General / Open Application">General / Open Application</option>
-                        </select>
-                        {formErrors.position && <span className="field-error-msg" role="alert"><AlertCircle size={13} />{formErrors.position}</span>}
-                      </div>
-                    </div>
-
-                    {/* Row 3: Experience + Current CTC */}
-                    <div className="form-row-2col">
-                      <div className="form-group">
-                        <label htmlFor="experience" className="form-label">Years of Experience <span className="optional-badge">Optional</span></label>
-                        <select id="experience" name="experience" className="form-select" value={formData.experience} onChange={handleInputChange} disabled={isSubmitting}>
-                          <option value="">Select experience...</option>
-                          <option value="Fresher / 0 Years">Fresher / 0 Years</option>
-                          <option value="Less than 1 Year">Less than 1 Year</option>
-                          <option value="1 – 2 Years">1 – 2 Years</option>
-                          <option value="2 – 4 Years">2 – 4 Years</option>
-                          <option value="4 – 6 Years">4 – 6 Years</option>
-                          <option value="6 – 10 Years">6 – 10 Years</option>
-                          <option value="10+ Years">10+ Years</option>
-                        </select>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="currentCTC" className="form-label">Current CTC (per annum) <span className="optional-badge">Optional</span></label>
-                        <input type="text" id="currentCTC" name="currentCTC" className="form-input"
-                          placeholder="e.g. ₹4.5 LPA or Fresher" value={formData.currentCTC}
-                          onChange={handleInputChange} disabled={isSubmitting} />
-                      </div>
-                    </div>
-
-                    {/* Row 4: Notice Period + LinkedIn */}
-                    <div className="form-row-2col">
-                      <div className="form-group">
-                        <label htmlFor="noticePeriod" className="form-label">Notice Period <span className="optional-badge">Optional</span></label>
-                        <select id="noticePeriod" name="noticePeriod" className="form-select" value={formData.noticePeriod} onChange={handleInputChange} disabled={isSubmitting}>
-                          <option value="">Select notice period...</option>
-                          <option value="Immediately Available">Immediately Available</option>
-                          <option value="Within 15 Days">Within 15 Days</option>
-                          <option value="30 Days">30 Days</option>
-                          <option value="45 Days">45 Days</option>
-                          <option value="60 Days">60 Days</option>
-                          <option value="90 Days">90 Days</option>
-                        </select>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="linkedinUrl" className="form-label">LinkedIn Profile URL <span className="optional-badge">Optional</span></label>
-                        <input type="url" id="linkedinUrl" name="linkedinUrl" className="form-input"
-                          placeholder="https://linkedin.com/in/yourname" value={formData.linkedinUrl}
-                          onChange={handleInputChange} disabled={isSubmitting} />
-                      </div>
-                    </div>
-
-                    {/* Resume Upload */}
-                    <div className="form-group">
-                      <label htmlFor="resumeUpload" className="form-label">
-                        Resume / CV <span className="optional-badge">PDF, DOC, DOCX · Max 5 MB</span>
-                      </label>
-                      {resumeFile ? (
-                        <div className="resume-file-selected">
-                          <div className="file-info-group">
-                            <FileText size={20} className="file-selected-icon" />
-                            <div className="file-details">
-                              <span className="file-name">{resumeFile.name}</span>
-                              <span className="file-size">{(resumeFile.size / 1024).toFixed(1)} KB</span>
-                            </div>
+                      <div className="stepper-steps-row">
+                        {/* Step 1 */}
+                        <button
+                          type="button"
+                          className={`stepper-step-btn ${currentStep === 1 ? 'is-active' : ''} ${currentStep > 1 ? 'is-completed' : ''}`}
+                          onClick={() => handleGoToStep(1)}
+                          aria-current={currentStep === 1 ? 'step' : undefined}
+                        >
+                          <div className="step-btn-badge">
+                            {currentStep > 1 ? <Check size={14} className="step-check-icon" /> : <span>1</span>}
                           </div>
-                          <button type="button" className="file-remove-btn" onClick={handleRemoveFile} aria-label="Remove file" disabled={isSubmitting}>
-                            <X size={16} />
+                          <div className="step-btn-text">
+                            <span className="step-btn-label">Step 01</span>
+                            <span className="step-btn-name">Personal Details</span>
+                          </div>
+                        </button>
+
+                        {/* Step 2 */}
+                        <button
+                          type="button"
+                          className={`stepper-step-btn ${currentStep === 2 ? 'is-active' : ''} ${currentStep > 2 ? 'is-completed' : ''}`}
+                          onClick={() => handleGoToStep(2)}
+                          disabled={currentStep < 2}
+                          aria-current={currentStep === 2 ? 'step' : undefined}
+                        >
+                          <div className="step-btn-badge">
+                            {currentStep > 2 ? <Check size={14} className="step-check-icon" /> : <span>2</span>}
+                          </div>
+                          <div className="step-btn-text">
+                            <span className="step-btn-label">Step 02</span>
+                            <span className="step-btn-name">Experience &amp; Resume</span>
+                          </div>
+                        </button>
+
+                        {/* Step 3 */}
+                        <button
+                          type="button"
+                          className={`stepper-step-btn ${currentStep === 3 ? 'is-active' : ''}`}
+                          onClick={() => handleGoToStep(3)}
+                          disabled={currentStep < 3}
+                          aria-current={currentStep === 3 ? 'step' : undefined}
+                        >
+                          <div className="step-btn-badge">
+                            <span>3</span>
+                          </div>
+                          <div className="step-btn-text">
+                            <span className="step-btn-label">Step 03</span>
+                            <span className="step-btn-name">Review &amp; Submit</span>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* ── STEP 1: Personal Details ── */}
+                    {currentStep === 1 && (
+                      <div className="step-content-panel step-fade-in" role="tabpanel" aria-labelledby="step-1">
+                        <div className="step-panel-header">
+                          <h4 className="step-panel-title">Personal Details</h4>
+                          <p className="step-panel-desc">Tell us who you are and which position you'd like to apply for.</p>
+                        </div>
+
+                        <div className="form-row-2col">
+                          <div className="form-group">
+                            <label htmlFor="fullName" className="form-label">
+                              Full Name <span className="required-star">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              id="fullName"
+                              name="fullName"
+                              className={`form-input ${formErrors.fullName ? 'has-error' : ''}`}
+                              placeholder="e.g. Rahul Sharma"
+                              value={formData.fullName}
+                              onChange={handleInputChange}
+                              aria-required="true"
+                              disabled={isSubmitting}
+                            />
+                            {formErrors.fullName && (
+                              <span className="field-error-msg" role="alert">
+                                <AlertCircle size={13} />{formErrors.fullName}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="form-group">
+                            <label htmlFor="email" className="form-label">
+                              Email Address <span className="required-star">*</span>
+                            </label>
+                            <input
+                              type="email"
+                              id="email"
+                              name="email"
+                              className={`form-input ${formErrors.email ? 'has-error' : ''}`}
+                              placeholder="rahul@example.com"
+                              value={formData.email}
+                              onChange={handleInputChange}
+                              aria-required="true"
+                              disabled={isSubmitting}
+                            />
+                            {formErrors.email && (
+                              <span className="field-error-msg" role="alert">
+                                <AlertCircle size={13} />{formErrors.email}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="form-row-2col">
+                          <div className="form-group">
+                            <label htmlFor="phone" className="form-label">
+                              Phone Number <span className="required-star">*</span>
+                            </label>
+                            <input
+                              type="tel"
+                              id="phone"
+                              name="phone"
+                              className={`form-input ${formErrors.phone ? 'has-error' : ''}`}
+                              placeholder="+91 98201 12345"
+                              value={formData.phone}
+                              onChange={handleInputChange}
+                              aria-required="true"
+                              disabled={isSubmitting}
+                            />
+                            {formErrors.phone && (
+                              <span className="field-error-msg" role="alert">
+                                <AlertCircle size={13} />{formErrors.phone}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="form-group">
+                            <label htmlFor="position" className="form-label">
+                              Position Applying For <span className="required-star">*</span>
+                            </label>
+                            <select
+                              id="position"
+                              name="position"
+                              className={`form-select ${formErrors.position ? 'has-error' : ''}`}
+                              value={formData.position}
+                              onChange={handleInputChange}
+                              aria-required="true"
+                              disabled={isSubmitting}
+                            >
+                              <option value="">Select a role...</option>
+                              {JOB_POSITIONS.map(pos => (
+                                <option key={pos.id} value={pos.title}>{pos.title}</option>
+                              ))}
+                              <option value="General / Open Application">General / Open Application</option>
+                            </select>
+                            {formErrors.position && (
+                              <span className="field-error-msg" role="alert">
+                                <AlertCircle size={13} />{formErrors.position}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="step-actions-footer">
+                          <div className="step-actions-spacer" />
+                          <button
+                            type="button"
+                            className="btn-step-primary"
+                            onClick={handleNextStep}
+                          >
+                            <span>Continue to Experience</span>
+                            <ArrowRight size={16} />
                           </button>
                         </div>
-                      ) : (
-                        <div className="resume-upload-zone"
-                          onClick={() => document.getElementById('resumeUpload')?.click()}
-                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); document.getElementById('resumeUpload')?.click(); } }}
-                          tabIndex={0} role="button" aria-label="Upload resume">
-                          <UploadCloud size={28} className="upload-icon" />
-                          <div className="upload-text-group">
-                            <span className="upload-main-text"><strong>Click to browse</strong> or drag &amp; drop your resume</span>
-                            <span className="upload-sub-text">PDF, DOC, DOCX — max 5 MB</span>
-                          </div>
-                          <input type="file" id="resumeUpload" name="resume" accept=".pdf,.doc,.docx"
-                            className="visually-hidden-input" onChange={handleFileChange} disabled={isSubmitting} />
+                      </div>
+                    )}
+
+                    {/* ── STEP 2: Experience & Resume ── */}
+                    {currentStep === 2 && (
+                      <div className="step-content-panel step-fade-in" role="tabpanel" aria-labelledby="step-2">
+                        <div className="step-panel-header">
+                          <h4 className="step-panel-title">Experience &amp; Resume</h4>
+                          <p className="step-panel-desc">Share your background and attach your curriculum vitae for evaluation.</p>
                         </div>
-                      )}
-                      {formErrors.resume && <span className="field-error-msg" role="alert"><AlertCircle size={13} />{formErrors.resume}</span>}
-                    </div>
 
-                    {/* Cover Note */}
-                    <div className="form-group">
-                      <label htmlFor="message" className="form-label">Cover Note <span className="optional-badge">Optional</span></label>
-                      <textarea id="message" name="message" rows={4} className="form-textarea"
-                        placeholder="Tell us about your key projects, skills, and why you'd like to join HTI Automation..."
-                        value={formData.message} onChange={handleInputChange} disabled={isSubmitting} />
-                    </div>
+                        <div className="form-row-2col">
+                          <div className="form-group">
+                            <label htmlFor="experience" className="form-label">
+                              Years of Experience <span className="optional-badge">Optional</span>
+                            </label>
+                            <select
+                              id="experience"
+                              name="experience"
+                              className="form-select"
+                              value={formData.experience}
+                              onChange={handleInputChange}
+                              disabled={isSubmitting}
+                            >
+                              <option value="">Select experience...</option>
+                              <option value="Fresher / 0 Years">Fresher / 0 Years</option>
+                              <option value="Less than 1 Year">Less than 1 Year</option>
+                              <option value="1 – 2 Years">1 – 2 Years</option>
+                              <option value="2 – 4 Years">2 – 4 Years</option>
+                              <option value="4 – 6 Years">4 – 6 Years</option>
+                              <option value="6 – 10 Years">6 – 10 Years</option>
+                              <option value="10+ Years">10+ Years</option>
+                            </select>
+                          </div>
 
-                    {/* Privacy Checkbox */}
-                    <div className="privacy-checkbox-row">
-                      <input type="checkbox" id="agreePrivacy" name="agreePrivacy"
-                        checked={formData.agreePrivacy} onChange={handleInputChange}
-                        className="privacy-checkbox" aria-required="true" disabled={isSubmitting} />
-                      <label htmlFor="agreePrivacy" className="privacy-label">
-                        I agree to HTI Automation processing my application data in accordance with their{' '}
-                        <button type="button" className="privacy-policy-link"
-                          onClick={(e) => { e.preventDefault(); if (onNavigate) onNavigate('about'); }}>Privacy Policy</button>.{' '}
-                        <span className="required-star">*</span>
-                      </label>
-                    </div>
-                    {formErrors.agreePrivacy && <span className="field-error-msg privacy-error" role="alert"><AlertCircle size={13} />{formErrors.agreePrivacy}</span>}
+                          <div className="form-group">
+                            <label htmlFor="noticePeriod" className="form-label">
+                              Notice Period <span className="optional-badge">Optional</span>
+                            </label>
+                            <select
+                              id="noticePeriod"
+                              name="noticePeriod"
+                              className="form-select"
+                              value={formData.noticePeriod}
+                              onChange={handleInputChange}
+                              disabled={isSubmitting}
+                            >
+                              <option value="">Select notice period...</option>
+                              <option value="Immediately Available">Immediately Available</option>
+                              <option value="Within 15 Days">Within 15 Days</option>
+                              <option value="30 Days">30 Days</option>
+                              <option value="45 Days">45 Days</option>
+                              <option value="60 Days">60 Days</option>
+                              <option value="90 Days">90 Days</option>
+                            </select>
+                          </div>
+                        </div>
 
-                    {/* Submit */}
-                    <div className="form-actions-wrapper">
-                      <button type="submit" className="careers-submit-btn" disabled={isSubmitting}>
-                        {isSubmitting
-                          ? <><Loader2 size={18} className="btn-spinner" /><span>Opening Email Client...</span></>
-                          : <><Send size={16} /><span>Submit Application</span></>}
-                      </button>
-                      <p className="form-security-note">
-                        <ShieldCheck size={14} className="security-icon" />
-                        <span>Your information is handled confidentially by our HR team.</span>
-                      </p>
-                    </div>
+                        {/* Compact, Interactive Resume Upload Zone */}
+                        <div className="form-group">
+                          <label htmlFor="resumeUpload" className="form-label">
+                            Resume / CV <span className="optional-badge">PDF, DOC, DOCX · Max 5 MB</span>
+                          </label>
+
+                          {resumeFile ? (
+                            <div className="resume-file-selected">
+                              <div className="file-info-group">
+                                <FileText size={22} className="file-selected-icon" aria-hidden="true" />
+                                <div className="file-details">
+                                  <span className="file-name">{resumeFile.name}</span>
+                                  <span className="file-size">{(resumeFile.size / 1024).toFixed(1)} KB</span>
+                                </div>
+                              </div>
+                              <div className="file-actions-row">
+                                <button
+                                  type="button"
+                                  className="file-replace-btn"
+                                  onClick={() => document.getElementById('resumeUpload')?.click()}
+                                  aria-label="Replace resume"
+                                  disabled={isSubmitting}
+                                >
+                                  Replace
+                                </button>
+                                <button
+                                  type="button"
+                                  className="file-remove-btn"
+                                  onClick={handleRemoveFile}
+                                  aria-label="Remove resume"
+                                  disabled={isSubmitting}
+                                >
+                                  <X size={16} />
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div
+                              className={`resume-upload-zone ${isDragging ? 'is-dragging' : ''}`}
+                              onClick={() => document.getElementById('resumeUpload')?.click()}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  document.getElementById('resumeUpload')?.click();
+                                }
+                              }}
+                              onDragOver={handleDragOver}
+                              onDragLeave={handleDragLeave}
+                              onDrop={handleDrop}
+                              tabIndex={0}
+                              role="button"
+                              aria-label="Upload resume: click or drag and drop your file"
+                            >
+                              <div className="upload-icon-shell">
+                                <UploadCloud size={28} className="upload-icon" aria-hidden="true" />
+                              </div>
+                              <div className="upload-text-group">
+                                <span className="upload-main-text">
+                                  <strong>Click to browse</strong> or drag &amp; drop your resume
+                                </span>
+                                <span className="upload-sub-text">Supported formats: PDF, DOC, DOCX (Max 5 MB)</span>
+                              </div>
+                            </div>
+                          )}
+                          <input
+                            type="file"
+                            id="resumeUpload"
+                            name="resume"
+                            accept=".pdf,.doc,.docx"
+                            className="visually-hidden-input"
+                            onChange={handleFileChange}
+                            disabled={isSubmitting}
+                          />
+                          {formErrors.resume && (
+                            <span className="field-error-msg" role="alert">
+                              <AlertCircle size={13} />{formErrors.resume}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="step-actions-footer">
+                          <button
+                            type="button"
+                            className="btn-step-secondary"
+                            onClick={handlePrevStep}
+                          >
+                            <ArrowLeft size={16} />
+                            <span>Back</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-step-primary"
+                            onClick={handleNextStep}
+                          >
+                            <span>Continue to Review</span>
+                            <ArrowRight size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ── STEP 3: Review & Submit ── */}
+                    {currentStep === 3 && (
+                      <div className="step-content-panel step-fade-in" role="tabpanel" aria-labelledby="step-3">
+                        <div className="step-panel-header">
+                          <h4 className="step-panel-title">Review &amp; Submit</h4>
+                          <p className="step-panel-desc">Verify your information before sending your application to HTI Automation.</p>
+                        </div>
+
+                        <div className="review-cards-container">
+                          {/* Review Card 1: Personal Details */}
+                          <div className="review-summary-card">
+                            <div className="review-card-header">
+                              <div className="review-header-left">
+                                <span className="review-section-tag">STEP 01</span>
+                                <h5 className="review-card-heading">Personal Details</h5>
+                              </div>
+                              <button
+                                type="button"
+                                className="review-edit-btn"
+                                onClick={() => handleGoToStep(1)}
+                                aria-label="Edit personal details"
+                              >
+                                <span>Edit</span>
+                              </button>
+                            </div>
+                            <div className="review-details-grid">
+                              <div className="review-detail-item">
+                                <span className="review-detail-label">Full Name</span>
+                                <span className="review-detail-value">{formData.fullName || '—'}</span>
+                              </div>
+                              <div className="review-detail-item">
+                                <span className="review-detail-label">Email Address</span>
+                                <span className="review-detail-value">{formData.email || '—'}</span>
+                              </div>
+                              <div className="review-detail-item">
+                                <span className="review-detail-label">Phone Number</span>
+                                <span className="review-detail-value">{formData.phone || '—'}</span>
+                              </div>
+                              <div className="review-detail-item">
+                                <span className="review-detail-label">Position</span>
+                                <span className="review-detail-value review-position-value">{formData.position || '—'}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Review Card 2: Experience & Resume */}
+                          <div className="review-summary-card">
+                            <div className="review-card-header">
+                              <div className="review-header-left">
+                                <span className="review-section-tag">STEP 02</span>
+                                <h5 className="review-card-heading">Experience &amp; Resume</h5>
+                              </div>
+                              <button
+                                type="button"
+                                className="review-edit-btn"
+                                onClick={() => handleGoToStep(2)}
+                                aria-label="Edit experience and resume"
+                              >
+                                <span>Edit</span>
+                              </button>
+                            </div>
+                            <div className="review-details-grid">
+                              <div className="review-detail-item">
+                                <span className="review-detail-label">Years of Experience</span>
+                                <span className="review-detail-value">{formData.experience || 'Not specified'}</span>
+                              </div>
+                              <div className="review-detail-item">
+                                <span className="review-detail-label">Notice Period</span>
+                                <span className="review-detail-value">{formData.noticePeriod || 'Not specified'}</span>
+                              </div>
+                              <div className="review-detail-item review-detail-full">
+                                <span className="review-detail-label">Resume / CV</span>
+                                <span className="review-detail-value">
+                                  {resumeFile ? (
+                                    <span className="review-resume-chip">
+                                      <FileText size={14} aria-hidden="true" />
+                                      <span>{resumeFile.name} ({(resumeFile.size / 1024).toFixed(1)} KB)</span>
+                                    </span>
+                                  ) : (
+                                    <span className="review-no-resume">No resume attached (you can attach via email)</span>
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Privacy Checkbox */}
+                        <div className="privacy-checkbox-row">
+                          <input
+                            type="checkbox"
+                            id="agreePrivacy"
+                            name="agreePrivacy"
+                            checked={formData.agreePrivacy}
+                            onChange={handleInputChange}
+                            className="privacy-checkbox"
+                            aria-required="true"
+                            disabled={isSubmitting}
+                          />
+                          <label htmlFor="agreePrivacy" className="privacy-label">
+                            I agree to HTI Automation processing my application data in accordance with their{' '}
+                            <button
+                              type="button"
+                              className="privacy-policy-link"
+                              onClick={(e) => { e.preventDefault(); if (onNavigate) onNavigate('about'); }}
+                            >
+                              Privacy Policy
+                            </button>.{' '}
+                            <span className="required-star">*</span>
+                          </label>
+                        </div>
+                        {formErrors.agreePrivacy && (
+                          <span className="field-error-msg privacy-error" role="alert">
+                            <AlertCircle size={13} />{formErrors.agreePrivacy}
+                          </span>
+                        )}
+
+                        {/* Final Step Actions */}
+                        <div className="step-actions-footer">
+                          <button
+                            type="button"
+                            className="btn-step-secondary"
+                            onClick={handlePrevStep}
+                            disabled={isSubmitting}
+                          >
+                            <ArrowLeft size={16} />
+                            <span>Back</span>
+                          </button>
+
+                          <button
+                            type="submit"
+                            className="careers-submit-btn"
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting ? (
+                              <>
+                                <Loader2 size={18} className="btn-spinner" />
+                                <span>Opening Email Client...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Send size={16} />
+                                <span>Submit Application</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+
+                        <p className="form-security-note">
+                          <ShieldCheck size={14} className="security-icon" />
+                          <span>Your information is handled confidentially by our talent team.</span>
+                        </p>
+                      </div>
+                    )}
                   </form>
                 )}
               </div>
@@ -843,7 +1727,7 @@ export default function CareersPage({ onNavigate }) {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────── */}
-      <section className="careers-faq-section" id="faq" aria-label="Frequently Asked Questions">
+      {/* <section className="careers-faq-section" id="faq" aria-label="Frequently Asked Questions">
         <div className="container">
           <div className="faq-editorial-grid">
             <div className="faq-header-col">
@@ -882,7 +1766,7 @@ export default function CareersPage({ onNavigate }) {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ── ROLE DETAILS MODAL ───────────────────────── */}
       {selectedRole && (
@@ -892,7 +1776,7 @@ export default function CareersPage({ onNavigate }) {
             <div className="role-modal-header">
               <div className="role-modal-title-group">
                 <div className="role-modal-badges">
-                  <span className="role-badge-category">{selectedRole.categoryLabel}</span>
+                  <span className={`role-badge-category badge-${selectedRole.category}`}>{selectedRole.categoryLabel}</span>
                   <span className="role-badge-type">{selectedRole.employmentType}</span>
                 </div>
                 <h3 id="modal-role-title" className="role-modal-title">{selectedRole.title}</h3>
