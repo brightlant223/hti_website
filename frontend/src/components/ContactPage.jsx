@@ -336,6 +336,7 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                             value={formData.fullName}
                             onChange={handleInputChange}
                             className="form-control-input"
+                            style={{ paddingLeft: '38px' }}
                           />
                         </div>
                       </div>
@@ -354,6 +355,7 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                             value={formData.company}
                             onChange={handleInputChange}
                             className="form-control-input"
+                            style={{ paddingLeft: '38px' }}
                           />
                         </div>
                       </div>
@@ -375,6 +377,7 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                             value={formData.email}
                             onChange={handleInputChange}
                             className="form-control-input"
+                            style={{ paddingLeft: '38px' }}
                           />
                         </div>
                       </div>
@@ -393,6 +396,7 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                             value={formData.phone}
                             onChange={handleInputChange}
                             className="form-control-input"
+                            style={{ paddingLeft: '38px' }}
                           />
                         </div>
                       </div>
@@ -609,14 +613,15 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                         HTI Automation &amp; Security Systems Pvt. Ltd.
                       </h3>
                       <p className="office-address-lines">
-                        Goregaon (West), Mumbai – 400104,<br />
-                        Maharashtra, India
+                        Unit No - 825, Plot No C-3C, Goodwill Bizhubb,<br />
+                        Next to Ikea, TTC Industrial Area Estate,<br />
+                        Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703
                       </p>
                     </div>
                   </div>
 
                   <a
-                    href="https://www.google.com/maps/search/?api=1&query=Goregaon+West+Mumbai+400104"
+                    href="https://www.google.com/maps/search/?api=1&query=Goodwill+Bizhubb+Next+to+Ikea+Turbhe+MIDC+Navi+Mumbai+Maharashtra+400703"
                     target="_blank"
                     rel="noreferrer"
                     className="btn-gmaps-pill"
@@ -644,66 +649,66 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                   {/* Background Land */}
                   <rect width="540" height="280" fill="#f1f5f9" />
 
-                  {/* Aarey Colony Green Area */}
+                  {/* Parsik Hills / Thane Creek Green Belt */}
                   <path d="M430,0 L540,0 L540,280 L440,280 C400,200 420,100 430,0 Z" fill="#dcfce7" />
 
-                  {/* Western Express Highway (Yellow/Golden central corridor) */}
+                  {/* Thane-Belapur Road (Primary Industrial Arterial Highway) */}
                   <path d="M340,0 L360,280" stroke="#fef08a" strokeWidth="12" strokeLinecap="round" />
                   <path d="M340,0 L360,280" stroke="#eab308" strokeWidth="7" strokeLinecap="round" />
 
-                  {/* S.V. Road */}
+                  {/* Sion-Panvel Highway */}
                   <path d="M190,0 L210,280" stroke="#ffffff" strokeWidth="8" strokeLinecap="round" />
                   <path d="M190,0 L210,280" stroke="#cbd5e1" strokeWidth="5" strokeLinecap="round" />
 
-                  {/* Link Road */}
+                  {/* Turbhe MIDC Internal Spine */}
                   <path d="M60,0 L80,280" stroke="#ffffff" strokeWidth="7" strokeLinecap="round" />
 
-                  {/* Ram Mandir Road */}
+                  {/* TTC Industrial Corridor */}
                   <path d="M20,120 Q 200,115 350,115 T 540,130" stroke="#fed7aa" strokeWidth="8" strokeLinecap="round" />
                   <path d="M20,120 Q 200,115 350,115 T 540,130" stroke="#fb923c" strokeWidth="4" strokeLinecap="round" />
 
-                  {/* Secondary Streets */}
+                  {/* Secondary Connecting Roads */}
                   <path d="M30,60 L300,70" stroke="#ffffff" strokeWidth="4" />
                   <path d="M150,40 L170,240" stroke="#ffffff" strokeWidth="3" />
                   <path d="M260,80 L280,260" stroke="#ffffff" strokeWidth="4" />
                   <path d="M360,160 L520,240" stroke="#ffffff" strokeWidth="4" />
 
-                  {/* Western Railway Line */}
+                  {/* Harbour Railway Corridor */}
                   <path d="M245,0 L265,280" stroke="#94a3b8" strokeWidth="3" strokeDasharray="6 4" />
                 </svg>
 
-                {/* POI Labels matching Screenshot */}
+                {/* POI Labels matching Turbhe / Navi Mumbai */}
                 <div className="map-poi-item poi-goregaon-west">
-                  <span>GOREGAON WEST</span>
+                  <span>TURBHE MIDC</span>
                 </div>
 
                 <div className="map-poi-item poi-oberoi">
-                  <span>🛍️ Oberoi Mall</span>
+                  <span>🏬 IKEA Navi Mumbai</span>
                 </div>
 
                 <div className="map-poi-item poi-aarey">
-                  <span>AAREY COLONY</span>
+                  <span>TTC INDUSTRIAL AREA</span>
                 </div>
 
                 <div className="map-poi-item poi-oarey">
-                  <span>OAREY COLONY</span>
+                  <span>THANE-BELAPUR RD</span>
                 </div>
 
                 <div className="map-poi-item poi-gare-galony">
-                  <span>GARE GALONY</span>
+                  <span>TURBHE STATION</span>
                 </div>
 
                 <div className="map-poi-item poi-filmcity">
-                  <span>🎬 Film City</span>
+                  <span>GOODWILL BIZHUBB</span>
                 </div>
 
-                {/* HTI Red Pin with Label matching Screenshot */}
+                {/* HTI Red Pin with Label */}
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=Goregaon+West+Mumbai+400104"
+                  href="https://www.google.com/maps/search/?api=1&query=Goodwill+Bizhubb+Next+to+Ikea+Turbhe+MIDC+Navi+Mumbai+Maharashtra+400703"
                   target="_blank"
                   rel="noreferrer"
                   className="map-hti-marker"
-                  title="Click to view in Google Maps"
+                  title="Click to view Goodwill Bizhubb in Google Maps"
                 >
                   <MapPin size={28} className="map-pin-red" fill="#dc2626" color="#ffffff" />
                   <div className="map-marker-label">

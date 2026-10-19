@@ -2957,15 +2957,15 @@ export default function AdminPanel({
                     <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '16px', marginTop: '14px' }}>
                       <div className="admin-form-group">
                         <label className="admin-label">Street Address</label>
-                        <input name="address_line" className="admin-input" defaultValue={websiteContent['contact_details']?.data?.address_line || '407 DR-4 Ram Mandir Road, Goregaon (West)'} />
+                        <input name="address_line" className="admin-input" defaultValue={websiteContent['contact_details']?.data?.address_line || 'Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate, Turbhe MIDC'} />
                       </div>
                       <div className="admin-form-group">
                         <label className="admin-label">City</label>
-                        <input name="city" className="admin-input" defaultValue={websiteContent['contact_details']?.data?.city || 'Mumbai'} />
+                        <input name="city" className="admin-input" defaultValue={websiteContent['contact_details']?.data?.city || 'Turbhe, Navi Mumbai'} />
                       </div>
                       <div className="admin-form-group">
                         <label className="admin-label">PIN Code</label>
-                        <input name="pincode" className="admin-input" defaultValue={websiteContent['contact_details']?.data?.pincode || '400104'} />
+                        <input name="pincode" className="admin-input" defaultValue={websiteContent['contact_details']?.data?.pincode || '400703'} />
                       </div>
                     </div>
 

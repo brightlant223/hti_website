@@ -13427,6 +13427,10 @@
   transition: border-color 0.2s;
 }
 
+.form-field-group .input-with-icon-wrap input {
+  padding-left: 38px !important;
+}
+
 .form-field-group input:focus,
 .form-field-group select:focus,
 .form-field-group textarea:focus {

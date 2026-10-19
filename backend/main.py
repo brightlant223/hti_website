@@ -445,10 +445,10 @@ def get_company_info():
         "tagline": "Innovative Automation, Hygiene & Security Solutions Since 2014",
         "established_year": 2014,
         "address": {
-            "street": "407 DR-4 Ram Mandir Road",
-            "locality": "Goregaon (West)",
-            "city": "Mumbai",
-            "pincode": "400104",
+            "street": "Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate",
+            "locality": "Turbhe MIDC, Turbhe",
+            "city": "Navi Mumbai",
+            "pincode": "400703",
             "state": "Maharashtra",
             "country": "India"
         },

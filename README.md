@@ -14,7 +14,7 @@
 
 **HTI Automation & Security Systems Pvt. Ltd.** is an engineering enterprise headquartered in Mumbai, India. We deliver high-reliability turnkey automation, perimeter security, life-safety fire protection, and pharmaceutical-grade hygiene infrastructure.
 
-* **Registered Office**: 407 DR-4 Ram Mandir Road, Goregaon (West), Mumbai 400104, Maharashtra, India
+* **Corporate & Registered Office**: Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate, Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703, India
 * **Direct Contact**: +91 9892756077 / +91 9594917010
 * **Inquiries**: hti@htisystems.in | sales@htisystems.in
 * **Website**: [www.htisystems.in](https://www.htisystems.in)

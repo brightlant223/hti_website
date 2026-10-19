@@ -1351,10 +1351,10 @@ def seed_db():
                 "secondary_phone": "+91 9594917010",
                 "sales_email": "sales@htisystems.in",
                 "support_email": "hti@htisystems.in",
-                "address_line": "407 DR-4 Ram Mandir Road, Goregaon (West)",
-                "city": "Mumbai",
+                "address_line": "Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate, Turbhe MIDC",
+                "city": "Turbhe, Navi Mumbai",
                 "state": "Maharashtra",
-                "pincode": "400104",
+                "pincode": "400703",
                 "country": "India",
                 "working_hours": "Monday - Saturday: 9:00 AM - 6:30 PM"
             }),
