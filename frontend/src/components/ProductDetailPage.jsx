@@ -238,11 +238,16 @@ export default function ProductDetailPage({
     'automatic-sliding-swing-gates',
     'telescopic-cantilever-gates',
     'pvc-rapid-roll-up-doors',
-    'motorized-rolling-shutters'
+    'motorized-rolling-shutters',
+    'door-interlock-systems',
+    'pharma-cleanroom-door-interlock-system',
+    'cleanroom-door-interlock-system'
   ];
 
   if (
     ACCESS_AUTOMATION_REDESIGNED_SLUGS.includes(product?.slug) ||
+    product?.id === 17 ||
+    product?.id === 'door-interlock-systems' ||
     product?.id === 'automatic-doors' ||
     product?.id === 'automatic-sliding-swing-doors' ||
     product?.id === 'automatic-sliding-swing-gates' ||

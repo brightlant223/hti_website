@@ -560,5 +560,133 @@ export const ACCESS_AUTOMATION_CONFIGS = {
         }
       ]
     }
+  },
+
+  'door-interlock-systems': {
+    slug: 'door-interlock-systems',
+    name: 'Pharma Cleanroom Door Interlock System',
+    breadcrumbName: 'Pharma Cleanroom Door Interlock System',
+    categoryName: 'Products',
+    categoryRoute: 'cleanroom-interlocks',
+    badges: [
+      { text: 'PHARMA CLEANROOM', type: 'solid-blue' },
+      { text: 'DOOR INTERLOCKING', type: 'soft-blue' },
+      { text: 'ACCESS CONTROL', type: 'soft-blue' }
+    ],
+    heading: 'Pharma Cleanroom Door Interlock System',
+    heroDescription: 'Intelligent door interlocking solutions designed to control access between pharmaceutical cleanroom areas, helping maintain controlled entry sequences and supporting contamination-control procedures.',
+    heroImage: '/products/cleanroom-interlocks.jpg',
+    trustIndicators: [
+      { text: 'Controlled Door Sequencing', icon: 'Lock' },
+      { text: 'Cleanroom Integration Support', icon: 'ShieldCheck' },
+      { text: 'Installation & Service Support', icon: 'Wrench' }
+    ],
+    hasBrochure: false,
+    video: {
+      isInteractiveDemo: true,
+      hasVideoFile: false,
+      poster: '/products/cleanroom-interlocks.jpg',
+      badge: 'PRODUCT OVERVIEW',
+      heading: 'Pharma Cleanroom Door Interlock System Overview',
+      description: 'Explore how door interlocking can coordinate access between cleanroom zones, support controlled personnel movement, and integrate with suitable access-control and cleanroom systems.',
+      bullets: [
+        'Controlled door-opening sequence',
+        'Door-status monitoring',
+        'Integration with compatible access-control systems',
+        'Configurable operation for suitable cleanroom applications'
+      ]
+    },
+    engineering: {
+      heading: 'Engineering & Technical Overview',
+      description: 'The Pharma Cleanroom Door Interlock System coordinates the opening and closing permissions of connected doors according to configured interlock logic. Depending on the installation, it can support controlled movement between cleanroom zones and integration with compatible access-control and monitoring systems.',
+      cards: [
+        {
+          title: '1. Door Sequencing',
+          desc: 'Coordinates access according to the configured interlock logic.',
+          iconName: 'Layers',
+          circleClass: 'circle-cyan',
+          iconClass: 'text-cyan-600'
+        },
+        {
+          title: '2. Status Indication',
+          desc: 'Communicates door status through supported indicators.',
+          iconName: 'Radio',
+          circleClass: 'circle-red',
+          iconClass: 'text-red-500'
+        },
+        {
+          title: '3. Access-Control Integration',
+          desc: 'Supports compatible access-control interfaces where configured.',
+          iconName: 'Cpu',
+          circleClass: 'circle-blue',
+          iconClass: 'text-sky-600'
+        },
+        {
+          title: '4. Cleanroom Applications',
+          desc: 'Designed for suitable pharmaceutical and controlled-environment applications.',
+          iconName: 'ShieldCheck',
+          circleClass: 'circle-green',
+          iconClass: 'text-emerald-500'
+        }
+      ]
+    },
+    specs: {
+      heading: 'Technical Specifications & System Configuration',
+      description: 'Review the available system configuration and integration requirements for your cleanroom door interlocking application.',
+      tableRows: [
+        { label: 'System Type:', value: 'Cleanroom Door Interlocking System' },
+        { label: 'Number of Interlocked Doors:', value: '2 to 12 doors (configurable per central controller)' },
+        { label: 'Controller Type:', value: 'Microprocessor-based programmable logic controller' },
+        { label: 'Enclosure Variants:', value: 'Flameproof (Ex-d Group IIA, IIB) / Stainless Steel SS304 Flush Mount' },
+        { label: 'Locking Interface:', value: 'Electromagnetic Lock (600 / 1200 lbs EM-Lock) with status output' },
+        { label: 'Door-Status Inputs:', value: 'Magnetic door position contacts & push-button / sensor inputs' },
+        { label: 'Access-Control Interface:', value: 'Compatible with biometric terminals, RFID card readers & touchless sensors' },
+        { label: 'Status Indicators:', value: 'Dual-color LED indicators (Red / Green) & integrated audio buzzer' },
+        { label: 'Power Supply:', value: '230V AC input, 12V / 24V DC regulated internal power supply' },
+        { label: 'Emergency Release Configuration:', value: 'Instant auto-release on Fire Alarm (FACP) signal & emergency push-buttons' },
+        { label: 'Integration Options:', value: 'BMS / SCADA relay contacts & differential pressure monitoring interface' }
+      ],
+      complianceTitle: 'System Integration & Application',
+      complianceItems: [
+        'Personnel airlock applications across cleanroom classifications (ISO 5 – ISO 8)',
+        'Pharmaceutical cleanroom and controlled-environment entry cascades',
+        'Compatible door hardware, electromagnetic locks, and controller integration',
+        'Configurable access-control interfaces and touchless credential triggers',
+        'Installation, wiring, and commissioning according to site cleanroom protocols',
+        'Periodic preventive maintenance and emergency fail-safe testing considerations',
+        'Note: Cleanroom suitability and regulatory compliance depend on complete installation design and applicable site requirements.'
+      ]
+    },
+    relatedImages: {
+      heading: 'Related Images',
+      description: 'Explore cleanroom door interlock applications, access-control components, and controlled-environment installations.',
+      images: [
+        {
+          id: 1,
+          src: '/hero-cleanroom-interlock-chamber.jpg',
+          caption: 'Pharmaceutical Cleanroom Personnel Airlock'
+        },
+        {
+          id: 2,
+          src: '/products/cleanroom-interlocks.jpg',
+          caption: 'Cleanroom Door Interlock and Status Indicators'
+        },
+        {
+          id: 3,
+          src: '/services/service-cleanroom.jpg',
+          caption: 'Stainless-Steel Cleanroom Pass Box'
+        },
+        {
+          id: 4,
+          src: '/hero-cleanroom-automation.jpg',
+          caption: 'Controlled-Environment Cleanroom Facility'
+        }
+      ]
+    }
   }
 };
+
+// Aliases for alternate slug resolutions
+ACCESS_AUTOMATION_CONFIGS['pharma-cleanroom-door-interlock-system'] = ACCESS_AUTOMATION_CONFIGS['door-interlock-systems'];
+ACCESS_AUTOMATION_CONFIGS['cleanroom-door-interlock-system'] = ACCESS_AUTOMATION_CONFIGS['door-interlock-systems'];
+

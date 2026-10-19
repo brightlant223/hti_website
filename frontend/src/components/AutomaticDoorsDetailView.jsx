@@ -18,7 +18,13 @@ import {
   X,
   CheckCircle2,
   Zap,
-  Layers
+  Layers,
+  Lock,
+  Cpu,
+  RotateCcw,
+  Activity,
+  AlertCircle,
+  Sparkles
 } from 'lucide-react';
 import '../AutomaticDoorsDetail.css';
 import { ACCESS_AUTOMATION_CONFIGS } from '../data/accessAutomationDetailData';
@@ -44,10 +50,273 @@ const renderDynamicIcon = (name, className = 'text-sky-600', size = 22) => {
       return <Award size={size} className={className} />;
     case 'FileText':
       return <FileText size={size} className={className} />;
+    case 'Lock':
+      return <Lock size={size} className={className} />;
+    case 'Cpu':
+      return <Cpu size={size} className={className} />;
+    case 'Activity':
+      return <Activity size={size} className={className} />;
+    case 'CheckCircle2':
+      return <CheckCircle2 size={size} className={className} />;
     default:
       return <Settings size={size} className={className} />;
   }
 };
+
+// ── Interactive Cleanroom Door Interlock Demonstration ──
+function CleanroomInterlockDemo() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [warningMsg, setWarningMsg] = useState(null);
+
+  const INTERLOCK_STEPS = [
+    {
+      stepNum: 1,
+      shortTitle: '01 Request',
+      label: 'Stage 1: Access Request via Sensor',
+      detail: 'A user requests entry at Door 1 (Corridor Side) using a touchless wave sensor or push button.',
+      controllerText: 'ACCESS REQUEST: Pulse detected at Door 1. Central PLC evaluates interlock conditions...',
+      door1: { state: 'requesting', statusText: 'Requesting Access', isLocked: false, isAjar: false, emLock: 'Ready to Release' },
+      door2: { state: 'locked', statusText: 'Interlocked & Locked', isLocked: true, isAjar: false, emLock: '600 lbs EM-Lock Active' },
+      pressure: '+10 Pa (Normal Baseline)',
+      activePill: 'ACCESS REQUEST RECEIVED'
+    },
+    {
+      stepNum: 2,
+      shortTitle: '02 Check',
+      label: 'Stage 2: Controller Checks Interlock Conditions',
+      detail: 'The controller verifies Door 2 magnetic reed contacts are closed, airlock is clear, and emergency fire trip is normal.',
+      controllerText: 'CONDITION CHECK: Door 2 verified CLOSED & LOCKED. Mutual exclusion safety condition satisfied.',
+      door1: { state: 'verifying', statusText: 'Verification Passed', isLocked: false, isAjar: false, emLock: 'Release Permitted' },
+      door2: { state: 'locked', statusText: 'Held Locked (Interlocked)', isLocked: true, isAjar: false, emLock: '600 lbs EM-Lock Active' },
+      pressure: '+10 Pa (Stable)',
+      activePill: 'SAFETY INTERLOCK VERIFIED'
+    },
+    {
+      stepNum: 3,
+      shortTitle: '03 Door 1 Open',
+      label: 'Stage 3: Door 1 Opens while Door 2 Remains Interlocked',
+      detail: 'Door 1 electromagnetic lock releases and opens. Door 2 EM-lock is held energized to prevent simultaneous access.',
+      controllerText: 'DOOR 1 OPEN: Door 1 unlocked. Door 2 EM-Lock powered ON (600 lbs hold) to prevent cross-draft.',
+      door1: { state: 'open', statusText: 'Unlocked & Open', isLocked: false, isAjar: true, emLock: 'EM-Lock Released' },
+      door2: { state: 'locked', statusText: 'Held Locked (Interlocked)', isLocked: true, isAjar: false, emLock: '600 lbs EM-Lock Active' },
+      pressure: '+13 Pa (Airlock Pressurized)',
+      activePill: 'DOOR 1 OPEN · DOOR 2 INTERLOCKED'
+    },
+    {
+      stepNum: 4,
+      shortTitle: '04 Door 1 Close',
+      label: 'Stage 4: Door 1 Closes & Controller Evaluates Status',
+      detail: 'Door 1 closes via hydraulic closer. Controller verifies magnetic contacts and runs delay timer for pressure retention.',
+      controllerText: 'STATUS CHECK: Door 1 closed & sealed. Running pressure stabilization delay timer (3s)...',
+      door1: { state: 'closed', statusText: 'Closed & Locked', isLocked: true, isAjar: false, emLock: 'EM-Lock Re-Energized' },
+      door2: { state: 'standby', statusText: 'Awaiting Purge Timer', isLocked: true, isAjar: false, emLock: 'EM-Lock Energized' },
+      pressure: '+15 Pa (Differential Peak)',
+      activePill: 'PRESSURE STABILIZATION CHECK'
+    },
+    {
+      stepNum: 5,
+      shortTitle: '05 Door 2 Open',
+      label: 'Stage 5: Door 2 Permitted to Open into Cleanroom',
+      detail: 'Configured delay satisfied. Door 2 EM-lock releases; personnel enters cleanroom while Door 1 remains locked.',
+      controllerText: 'ACCESS PERMITTED: Door 2 unlocked. Door 1 firmly locked. Controlled entry into cleanroom permitted.',
+      door1: { state: 'locked', statusText: 'Interlocked & Locked', isLocked: true, isAjar: false, emLock: '600 lbs EM-Lock Active' },
+      door2: { state: 'open', statusText: 'Unlocked & Open', isLocked: false, isAjar: true, emLock: 'EM-Lock Released' },
+      pressure: '+15 Pa (ISO Iso Level)',
+      activePill: 'CLEANROOM ENTRY PERMITTED'
+    }
+  ];
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setCurrentStep(prev => (prev >= 5 ? 1 : prev + 1));
+    }, 2800);
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  const activeStage = INTERLOCK_STEPS[currentStep - 1];
+
+  const handleTestDoorClick = (doorNum) => {
+    if (doorNum === 2 && currentStep === 3) {
+      setWarningMsg('INTERLOCK ACTIVE: Door 2 is locked because Door 1 is currently open!');
+      setTimeout(() => setWarningMsg(null), 2500);
+      return;
+    }
+    if (doorNum === 1) {
+      setCurrentStep(1);
+    } else {
+      setCurrentStep(5);
+    }
+  };
+
+  const handleReplay = () => {
+    setCurrentStep(1);
+    setIsPlaying(true);
+  };
+
+  return (
+    <div className="cleanroom-demo-panel">
+      {/* Top Header Bar */}
+      <div className="demo-top-bar">
+        <div className="demo-badge-wrap">
+          <span className="demo-live-dot" />
+          <span className="demo-pill-tag">ILLUSTRATIVE PRODUCT DEMONSTRATION</span>
+        </div>
+        <div className="demo-controls-btns">
+          <button
+            type="button"
+            className="demo-ctrl-btn"
+            onClick={() => setIsPlaying(p => !p)}
+            aria-label={isPlaying ? 'Pause interlock demonstration' : 'Play interlock demonstration'}
+          >
+            {isPlaying ? (
+              <>
+                <Pause size={12} />
+                <span>Pause</span>
+              </>
+            ) : (
+              <>
+                <Play size={12} />
+                <span>Play</span>
+              </>
+            )}
+          </button>
+          <button
+            type="button"
+            className="demo-ctrl-btn"
+            onClick={handleReplay}
+            aria-label="Replay interlock demonstration sequence"
+          >
+            <RotateCcw size={12} />
+            <span>Replay</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Warning Alert if User Tests Blocked Condition */}
+      {warningMsg && (
+        <div className="demo-warning-banner" role="alert">
+          <AlertCircle size={14} className="text-amber-400 flex-shrink-0" />
+          <span>{warningMsg}</span>
+        </div>
+      )}
+
+      {/* Two-Door Airlock Graphic Stage */}
+      <div className="demo-airlock-stage">
+        
+        {/* Door 1 (Corridor Entry) */}
+        <div className={`demo-door-box ${activeStage.door1.isAjar ? 'is-open' : 'is-locked'}`}>
+          <div className="demo-door-header">
+            <span className="demo-door-label">DOOR 1 · ENTRY</span>
+            <span 
+              className={`demo-door-led ${activeStage.door1.isAjar ? 'led-green' : 'led-red'}`} 
+              title={activeStage.door1.isAjar ? 'Door 1 Unlocked (Green LED)' : 'Door 1 Locked (Red LED)'}
+            />
+          </div>
+
+          <div className="demo-door-graphic">
+            <div className={`demo-door-leaf ${activeStage.door1.isAjar ? 'open' : ''}`} />
+          </div>
+
+          <span className={`demo-door-status-text ${activeStage.door1.isAjar ? 'text-green' : 'text-red'}`}>
+            {activeStage.door1.statusText}
+          </span>
+          <span className="demo-door-em-lock">{activeStage.door1.emLock}</span>
+
+          <button
+            type="button"
+            className="demo-door-trigger-btn"
+            onClick={() => handleTestDoorClick(1)}
+            title="Click to simulate touchless sensor trigger on Door 1"
+          >
+            Trigger Door 1
+          </button>
+        </div>
+
+        {/* Central Controller & Airlock Chamber */}
+        <div className="demo-chamber-box">
+          <div className="demo-chamber-top">
+            <span className="demo-chamber-badge">AIRLOCK ZONE</span>
+            <div className="demo-pressure-badge">
+              <Activity size={12} />
+              <span>{activeStage.pressure}</span>
+            </div>
+          </div>
+
+          <div className="demo-controller-screen">
+            <p className="demo-controller-text">{activeStage.controllerText}</p>
+          </div>
+
+          <div className="demo-sequence-pill">
+            <span>{activeStage.activePill}</span>
+          </div>
+        </div>
+
+        {/* Door 2 (Cleanroom Suite) */}
+        <div className={`demo-door-box ${activeStage.door2.isAjar ? 'is-open' : 'is-locked'}`}>
+          <div className="demo-door-header">
+            <span className="demo-door-label">DOOR 2 · CLEANROOM</span>
+            <span 
+              className={`demo-door-led ${activeStage.door2.isAjar ? 'led-green' : 'led-red'}`} 
+              title={activeStage.door2.isAjar ? 'Door 2 Unlocked (Green LED)' : 'Door 2 Locked (Red LED)'}
+            />
+          </div>
+
+          <div className="demo-door-graphic">
+            <div className={`demo-door-leaf ${activeStage.door2.isAjar ? 'open' : ''}`} />
+          </div>
+
+          <span className={`demo-door-status-text ${activeStage.door2.isAjar ? 'text-green' : 'text-red'}`}>
+            {activeStage.door2.statusText}
+          </span>
+          <span className="demo-door-em-lock">{activeStage.door2.emLock}</span>
+
+          <button
+            type="button"
+            className="demo-door-trigger-btn"
+            onClick={() => handleTestDoorClick(2)}
+            title="Click to simulate sensor trigger on Door 2"
+          >
+            Trigger Door 2
+          </button>
+        </div>
+
+      </div>
+
+      {/* Step Description Row */}
+      <div className="demo-stage-desc-row">
+        <span className="demo-stage-title">{activeStage.label}</span>
+        <p className="demo-stage-detail">{activeStage.detail}</p>
+      </div>
+
+      {/* 5-Step Timeline Navigation Rail */}
+      <div className="demo-steps-rail" role="tablist" aria-label="Interlock Sequence Steps">
+        {INTERLOCK_STEPS.map(s => (
+          <button
+            key={s.stepNum}
+            type="button"
+            role="tab"
+            aria-selected={currentStep === s.stepNum}
+            className={`demo-step-pill-btn ${currentStep === s.stepNum ? 'active' : ''}`}
+            onClick={() => {
+              setCurrentStep(s.stepNum);
+              setIsPlaying(false);
+            }}
+          >
+            {s.shortTitle}
+          </button>
+        ))}
+      </div>
+
+      {/* Technical Disclaimer Note */}
+      <p className="demo-disclaimer-note">
+        Illustrative sequence demonstration. System controllers support 2 to 12 doors with configurable sequential or priority logic, AHU delay timers, and emergency fire-trip release per cleanroom specification.
+      </p>
+    </div>
+  );
+}
+
 
 export default function AutomaticDoorsDetailView({ 
   product, 
@@ -173,9 +442,9 @@ export default function AutomaticDoorsDetailView({
         <span className="auto-breadcrumb-sep">&gt;</span>
         <button 
           className="auto-breadcrumb-btn"
-          onClick={() => onNavigate && onNavigate('automation')}
+          onClick={() => onNavigate && onNavigate(cfg.categoryRoute || 'automation')}
         >
-          Automation
+          {cfg.categoryName || 'Automation'}
         </button>
         <span className="auto-breadcrumb-sep">&gt;</span>
         <span className="auto-breadcrumb-curr">{cfg.breadcrumbName}</span>
@@ -210,13 +479,15 @@ export default function AutomaticDoorsDetailView({
                 <span>Request Instant Quotation</span>
               </button>
 
-              <button 
-                className="auto-btn-secondary"
-                onClick={handleBrochureDownload}
-              >
-                <Download size={16} />
-                <span>Download Specs PDF</span>
-              </button>
+              {cfg.hasBrochure !== false && (
+                <button 
+                  className="auto-btn-secondary"
+                  onClick={handleBrochureDownload}
+                >
+                  <Download size={16} />
+                  <span>Download Specs PDF</span>
+                </button>
+              )}
             </div>
 
             <div className="auto-trust-row">
@@ -248,55 +519,59 @@ export default function AutomaticDoorsDetailView({
         </div>
       </section>
 
-      {/* 3. Product Video Section */}
+      {/* 3. Product Demonstration / Video Section */}
       <section className="auto-wide-card">
         <div className="auto-doors-video-grid">
           
-          {/* Left Column: Video Player or Polished Preview Fallback */}
-          <div className="auto-video-wrapper">
-            {cfg.video.hasVideoFile ? (
-              <>
-                <video 
-                  ref={videoRef}
-                  src={cfg.video.videoSrc} 
-                  poster={cfg.video.poster}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  className="auto-html5-video"
-                  onPlay={() => setIsVideoPlaying(true)}
-                  onPause={() => setIsVideoPlaying(false)}
-                />
-                {!isVideoPlaying && (
-                  <button 
-                    className="auto-video-play-overlay"
-                    onClick={handleVideoPlayToggle}
-                    aria-label={`Play ${cfg.name} Video`}
-                  >
-                    <div className="auto-play-circle">
+          {/* Left Column: Interactive Cleanroom Demonstration OR Video Player */}
+          {cfg.video.isInteractiveDemo ? (
+            <CleanroomInterlockDemo />
+          ) : (
+            <div className="auto-video-wrapper">
+              {cfg.video.hasVideoFile ? (
+                <>
+                  <video 
+                    ref={videoRef}
+                    src={cfg.video.videoSrc} 
+                    poster={cfg.video.poster}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="auto-html5-video"
+                    onPlay={() => setIsVideoPlaying(true)}
+                    onPause={() => setIsVideoPlaying(false)}
+                  />
+                  {!isVideoPlaying && (
+                    <button 
+                      className="auto-video-play-overlay"
+                      onClick={handleVideoPlayToggle}
+                      aria-label={`Play ${cfg.name} Video`}
+                    >
+                      <div className="auto-play-circle">
+                        <Play size={28} className="fill-white text-white ml-1" />
+                      </div>
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
+                  <img 
+                    src={cfg.video.poster} 
+                    alt={`${cfg.name} Video Preview`}
+                    className="auto-html5-video" 
+                  />
+                  <div className="auto-video-play-overlay" style={{ cursor: 'default' }}>
+                    <div className="auto-play-circle" style={{ opacity: 0.9 }}>
                       <Play size={28} className="fill-white text-white ml-1" />
                     </div>
-                  </button>
-                )}
-              </>
-            ) : (
-              <>
-                <img 
-                  src={cfg.video.poster} 
-                  alt={`${cfg.name} Video Preview`}
-                  className="auto-html5-video" 
-                />
-                <div className="auto-video-play-overlay" style={{ cursor: 'default' }}>
-                  <div className="auto-play-circle" style={{ opacity: 0.9 }}>
-                    <Play size={28} className="fill-white text-white ml-1" />
                   </div>
-                </div>
-                <div className="auto-video-fallback-pill">
-                  HD Product Showcase
-                </div>
-              </>
-            )}
-          </div>
+                  <div className="auto-video-fallback-pill">
+                    HD Product Showcase
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Right Column: Video Details & Features */}
           <div className="auto-doors-video-content">
