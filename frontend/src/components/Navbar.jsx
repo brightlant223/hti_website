@@ -287,21 +287,21 @@ export default function Navbar({
         { 
           title: 'Pass Box Systems',
           description: 'Static & dynamic material transfer hatches with UV disinfection.',
-          image: '/hero-cleanroom-automation.jpg',
+          image: '/products/pass-box-system.jpg',
           icon: Layers,
           slug: 'pass-box-systems'
         },
         { 
           title: 'Digital Clocks',
           description: 'GPS master-slave synchronized clocks with flameproof housings.',
-          image: '/case-studies/case-cleanroom.jpg',
+          image: '/products/digital-clock-hero.jpg',
           icon: Activity,
-          slug: 'door-interlock-systems'
+          slug: 'digital-gps-clocks'
         },
         { 
-          title: 'Cleanroom Doors',
-          description: 'Hermetically sealed flush doors preventing airborne particulate leaks.',
-          image: '/services/services-touchless-entry.jpg',
+          title: 'Chiller & Cleanroom Doors',
+          description: 'Insulated chiller doors and hermetically sealed flush cleanroom doors.',
+          image: '/products/chiller-door-hero.jpg',
           icon: DoorClosed,
           slug: 'chiller-clean-room-doors'
         },

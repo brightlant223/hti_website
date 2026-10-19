@@ -3,7 +3,8 @@ import {
   ArrowLeft, Briefcase, ArrowRight, Users, Cpu, ShieldCheck, Award,
   X, MapPin, Clock, Building2, CheckCircle2, Mail, Send, TrendingUp,
   Sparkles, Phone, FileText, UploadCloud, AlertCircle, Loader2,
-  Plus, Minus, Heart, Zap, Globe, Target, ChevronLeft, ChevronRight, Check
+  Plus, Minus, Heart, Zap, Globe, Target, ChevronLeft, ChevronRight, Check,
+  Truck
 } from 'lucide-react';
 import './Careers.css';
 
@@ -238,56 +239,70 @@ const STATS = [
   { value: `${JOB_POSITIONS.length}`, label: 'Open Positions', sub: 'Join our growing team today' },
 ];
 
-const BENEFITS = [
+const CAREER_ROLES = [
   {
+    id: 'site-supervisor',
     num: '01',
-    icon: TrendingUp,
+    title: 'Site Supervisor',
+    category: 'Engineering & Projects',
+    roleTitle: 'Site Supervisor',
+    icon: ShieldCheck,
     color: 'cyan',
-    title: 'Career Growth',
-    tag: 'Progression Path',
-    desc: 'Clear progression paths from Engineer to Senior, Project Lead, and Department Head. We invest in your long-term professional development.'
+    summary: 'Supervise on-site mechanical fitting and electrical cabling of automated entry systems while leading field crews, subcontractors, and safety compliance.'
   },
   {
+    id: 'site-engineer',
     num: '02',
-    icon: Globe,
+    title: 'Site Engineer',
+    category: 'Engineering & Projects',
+    roleTitle: 'Site Engineer',
+    icon: Cpu,
     color: 'blue',
-    title: 'Pan-India Exposure',
-    tag: 'Pan-India Sites',
-    desc: 'Work on projects at premier pharma facilities, corporate campuses, and industrial parks across India. Expand your professional network significantly.'
+    summary: 'Execute on-site installation, termination, wiring, testing, and commissioning of automated entry systems, access control units, and security solutions.'
   },
   {
+    id: 'sales-executive',
     num: '03',
-    icon: Zap,
+    title: 'Sales Executive',
+    category: 'Sales',
+    roleTitle: 'Sales Executive',
+    icon: TrendingUp,
     color: 'amber',
-    title: 'Cutting-Edge Technology',
-    tag: 'Industrial Automation',
-    desc: 'Get hands-on with the latest industrial PLCs, AI surveillance systems, cleanroom interlock controllers, and IoT telemetry platforms.'
+    summary: 'Drive B2B sales for automatic doors and cleanroom interlocks by qualifying prospective inquiries, presenting solutions, and closing commercial quotes.'
   },
   {
+    id: 'accountant',
     num: '04',
-    icon: Users,
-    color: 'red',
-    title: 'Collaborative Culture',
-    tag: 'Transparent Team',
-    desc: 'A flat, transparent team where ideas are heard, challenges are shared, and every member\'s contribution is recognized and valued.'
-  },
-  {
-    num: '05',
-    icon: Heart,
-    color: 'rose',
-    title: 'Work-Life Balance',
-    tag: 'Structured Hours',
-    desc: 'Structured working hours (Mon–Sat), defined leave policies, and management that genuinely respects your personal time and wellbeing.'
-  },
-  {
-    num: '06',
-    icon: Target,
+    title: 'Accountant',
+    category: 'Finance & Administration',
+    roleTitle: 'Accountant',
+    icon: FileText,
     color: 'emerald',
-    title: 'Meaningful Impact',
-    tag: 'Mission-Critical',
-    desc: 'Every system you build protects lives — from pharma cleanroom interlocks preventing contamination to fire alarms safeguarding industrial workers.'
+    summary: 'Manage daily accounting transactions, vendor invoices, client billing, bank reconciliations, and statutory GST and TDS tax compliance in Tally Prime.'
+  },
+  {
+    id: 'office-boy',
+    num: '05',
+    title: 'Office Boy',
+    category: 'Office Support',
+    roleTitle: 'Office Boy',
+    icon: Building2,
+    color: 'rose',
+    summary: 'Ensure smooth daily office operations through workspace upkeep, pantry management, document handling, and administrative assistance for the team.'
+  },
+  {
+    id: 'dispatch-manager',
+    num: '06',
+    title: 'Dispatch Manager',
+    category: 'Logistics & Operations',
+    roleTitle: 'Dispatch Manager',
+    icon: Truck,
+    color: 'red',
+    summary: 'Oversee warehouse dispatch operations, equipment packing, e-Way bills, and transporter logistics to ensure timely and damage-free site deliveries.'
   }
 ];
+
+const BENEFITS = CAREER_ROLES;
 
 export default function CareersPage({ onNavigate }) {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -408,21 +423,17 @@ export default function CareersPage({ onNavigate }) {
         setActiveCardIndex(0);
       } else if (scrolledInsidePinned >= pinnedScrollDistance) {
         setScrollProgress(1);
-        setActiveCardIndex(BENEFITS.length - 1);
+        setActiveCardIndex(CAREER_ROLES.length - 1);
       } else {
         // Continuous, proportional progress that reverses smoothly on upward scroll
         const rawProgress = scrolledInsidePinned / pinnedScrollDistance;
         setScrollProgress(rawProgress);
 
-        // Update active card counter based on the card closest to focus position
-        const currentTranslateX = rawProgress * maxHorizontalOverflow;
-        const cardEl = trackRef.current?.querySelector('.why-benefit-card');
-        const cardWidth = cardEl ? cardEl.offsetWidth : 320;
-        const trackStyle = trackRef.current ? window.getComputedStyle(trackRef.current) : null;
-        const gap = trackStyle ? parseFloat(trackStyle.gap) || 20 : 20;
-        const stepWidth = cardWidth + gap;
-        const rawIdx = Math.round(currentTranslateX / stepWidth);
-        const activeIdx = Math.max(0, Math.min(BENEFITS.length - 1, rawIdx));
+        // Update active card counter based on proportional scroll progress
+        const activeIdx = Math.min(
+          CAREER_ROLES.length - 1,
+          Math.max(0, Math.round(rawProgress * (CAREER_ROLES.length - 1)))
+        );
         setActiveCardIndex(activeIdx);
       }
     };
@@ -455,7 +466,7 @@ export default function CareersPage({ onNavigate }) {
     setScrollProgress(p);
     const cardEl = trackRef.current.querySelector('.why-benefit-card');
     const stepWidth = (cardEl ? cardEl.offsetWidth : 280) + 16;
-    const idx = Math.min(BENEFITS.length - 1, Math.round(scrollLeft / stepWidth));
+    const idx = Math.min(CAREER_ROLES.length - 1, Math.round(scrollLeft / stepWidth));
     setActiveCardIndex(idx);
   };
 
@@ -471,22 +482,10 @@ export default function CareersPage({ onNavigate }) {
 
     if (pinnedScrollDistance <= 0 || !whySectionRef.current || maxHorizontalOverflow <= 0) return;
 
-    const cardEl = trackRef.current?.querySelector('.why-benefit-card');
-    const cardWidth = cardEl ? cardEl.offsetWidth : 320;
-    const trackStyle = trackRef.current ? window.getComputedStyle(trackRef.current) : null;
-    const gap = trackStyle ? parseFloat(trackStyle.gap) || 20 : 20;
-    const stepWidth = cardWidth + gap;
-
     let targetIndex = activeCardIndex + direction;
-    if (direction > 0 && scrollProgress > 0.95) targetIndex = BENEFITS.length - 1;
-    if (direction < 0 && scrollProgress < 0.05) targetIndex = 0;
-    targetIndex = Math.max(0, Math.min(BENEFITS.length - 1, targetIndex));
+    targetIndex = Math.max(0, Math.min(CAREER_ROLES.length - 1, targetIndex));
 
-    const targetTranslateX = targetIndex === BENEFITS.length - 1
-      ? maxHorizontalOverflow
-      : Math.min(maxHorizontalOverflow, targetIndex * stepWidth);
-
-    const targetProgress = maxHorizontalOverflow > 0 ? targetTranslateX / maxHorizontalOverflow : 0;
+    const targetProgress = targetIndex / (CAREER_ROLES.length - 1);
     const sectionDocTop = window.scrollY + whySectionRef.current.getBoundingClientRect().top;
     const targetY = sectionDocTop - navHeight + (targetProgress * pinnedScrollDistance);
 
@@ -965,23 +964,19 @@ export default function CareersPage({ onNavigate }) {
               <div className="why-pinned-left-col">
                 <div className="why-pinned-eyebrow">
                   <span className="why-pinned-dot" aria-hidden="true" />
-                  <span>LIFE AT HTI AUTOMATION</span>
+                  <span>JOIN OUR TEAM</span>
                 </div>
 
                 <h2 className="why-pinned-heading">
-                  Where engineers grow.<br />
-                  <span className="why-heading-highlight">Where work matters.</span>
+                  Find your place at <span className="why-heading-highlight">HTI.</span>
                 </h2>
 
                 <p className="why-pinned-desc">
-                  At HTI Automation, you contribute to real industrial systems that safeguard pharmaceutical
-                  cleanrooms, protect corporate campuses, and keep India's logistics infrastructure running.
-                  Our team is small, skilled, and driven — your work is visible, impactful, and recognized
-                  from day one.
+                  Explore opportunities to join our team at HTI Automation. From on-site engineering and operations to sales and administration, discover a role where you can contribute and grow.
                 </p>
 
                 {/* Interactive Progress & Nav Controls */}
-                <div className="why-scroll-controls" aria-label="Benefits navigation">
+                <div className="why-scroll-controls" aria-label="Job opportunities navigation">
                   <div className="why-progress-track" aria-hidden="true">
                     <div
                       className="why-progress-bar"
@@ -993,7 +988,7 @@ export default function CareersPage({ onNavigate }) {
                     <div className="why-card-counter">
                       <span className="counter-current">0{activeCardIndex + 1}</span>
                       <span className="counter-slash">/</span>
-                      <span className="counter-total">0{BENEFITS.length}</span>
+                      <span className="counter-total">0{CAREER_ROLES.length}</span>
                       <span className="counter-hint">{isPinnedEnabled ? 'Scroll to explore' : 'Swipe to explore'}</span>
                     </div>
 
@@ -1003,7 +998,7 @@ export default function CareersPage({ onNavigate }) {
                         className="why-nav-btn btn-prev"
                         onClick={() => handleCardNav(-1)}
                         disabled={activeCardIndex === 0 && scrollProgress <= 0.02}
-                        aria-label="Previous career benefit"
+                        aria-label="Previous job role"
                       >
                         <ChevronLeft size={18} />
                       </button>
@@ -1011,8 +1006,8 @@ export default function CareersPage({ onNavigate }) {
                         type="button"
                         className="why-nav-btn btn-next"
                         onClick={() => handleCardNav(1)}
-                        disabled={scrollProgress >= 0.98}
-                        aria-label="Next career benefit"
+                        disabled={activeCardIndex === CAREER_ROLES.length - 1 || scrollProgress >= 0.98}
+                        aria-label="Next job role"
                       >
                         <ChevronRight size={18} />
                       </button>
@@ -1034,31 +1029,43 @@ export default function CareersPage({ onNavigate }) {
                   }
                   role="list"
                 >
-                  {BENEFITS.map((b, i) => {
-                    const Icon = b.icon;
+                  {CAREER_ROLES.map((role, i) => {
+                    const Icon = role.icon;
                     const isActive = activeCardIndex === i;
                     return (
                       <div
-                        key={i}
-                        className={`why-benefit-card benefit-color-${b.color} ${isActive ? 'card-active' : ''}`}
+                        key={role.id || i}
+                        className={`why-benefit-card benefit-color-${role.color} ${isActive ? 'card-active' : ''}`}
                         role="listitem"
                         tabIndex={0}
+                        aria-label={`${role.title} — ${role.category}`}
                       >
                         <div className="card-top-row">
-                          <div className={`card-icon-shell shell-color-${b.color}`} aria-hidden="true">
+                          <div className={`card-icon-shell shell-color-${role.color}`} aria-hidden="true">
                             <Icon size={22} className="card-icon-svg" />
                           </div>
-                          <span className="card-index-num" aria-hidden="true">0{i + 1}</span>
+                          <span className="card-index-num" aria-hidden="true">{role.num}</span>
                         </div>
 
                         <div className="card-content">
-                          <h3 className="card-title">{b.title}</h3>
-                          <p className="card-desc">{b.desc}</p>
+                          <div className="card-role-category-tag">
+                            <span className="card-tag-dot" aria-hidden="true" />
+                            <span className="card-tag-text">{role.category}</span>
+                          </div>
+                          <h3 className="card-title">{role.title}</h3>
+                          <p className="card-desc">{role.summary}</p>
                         </div>
 
-                        <div className="card-footer-pill">
-                          <span className="card-tag-dot" aria-hidden="true" />
-                          <span className="card-tag-text">{b.tag || 'HTI Core Value'}</span>
+                        <div className="card-action-row">
+                          <button
+                            type="button"
+                            className="card-apply-btn"
+                            onClick={() => handleApplyForRole(role.roleTitle)}
+                            aria-label={`Apply for ${role.title}`}
+                          >
+                            <span>Apply Now</span>
+                            <ArrowRight size={14} className="card-apply-arrow" aria-hidden="true" />
+                          </button>
                         </div>
                       </div>
                     );
@@ -1113,22 +1120,9 @@ export default function CareersPage({ onNavigate }) {
                 <span>APPLY NOW</span>
               </div>
               <h2 className="application-heading">Let's build something great together.</h2>
-              <p className="application-lead">
-                Whether you're a seasoned systems engineer, a PLC specialist, a driven sales professional,
-                or a creative marketer — we'd love to hear from you. Fill in your details and we'll be in
-                touch within 3–5 working days.
-              </p>
 
-              <div className="application-encouragement-card">
-                <div className="encouragement-header">
-                  <Sparkles size={18} className="encouragement-icon" aria-hidden="true" />
-                  <h3 className="encouragement-title">Don't meet every requirement?</h3>
-                </div>
-                <p className="encouragement-text">
-                  Apply anyway. We value a strong work ethic, eagerness to learn, and genuine passion for
-                  engineering over a perfect resume. Fresh graduates and career changers are welcome.
-                </p>
-              </div>
+
+
 
               <div className="hr-contact-card">
                 <div className="hr-card-badge">HR &amp; TALENT TEAM</div>

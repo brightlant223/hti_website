@@ -283,14 +283,14 @@ const CLEANROOM_SERVICES = [
       'Dynamic mini-pleat HEPA (99.997% @ 0.3μm)',
       'UV-C timer cutoff with interlocking doors'
     ],
-    image: '/hero-cleanroom-automation.jpg',
+    image: '/products/pass-box-system.jpg',
     brochure: true
   },
   {
     num: '03',
     id: 3,
-    slug: 'door-interlock-systems',
-    title: 'Digital Clock / Synchronization Systems',
+    slug: 'digital-gps-clocks',
+    title: 'Digital Clocks & Industrial Time Display Systems',
     categoryBadge: 'Audit Compliance',
     categoryFilters: ['All', 'Audit Compliance', 'Emergency Safety'],
     description: 'GPS master-slave synchronized digital clocks ensuring uniform time-stamped batch records for 21 CFR Part 11.',
@@ -299,24 +299,24 @@ const CLEANROOM_SERVICES = [
       'Flameproof & SS flush cleanroom enclosures',
       'USFDA 21 CFR Part 11 audit compliance'
     ],
-    image: '/case-studies/case-cleanroom.jpg',
-    brochure: true
+    image: '/products/digital-clock-hero.jpg',
+    brochure: false
   },
   {
     num: '04',
     id: 4,
-    slug: 'door-interlock-systems',
-    title: 'Cleanroom Doors',
-    categoryBadge: 'Pressure Containment',
+    slug: 'chiller-clean-room-doors',
+    title: 'Chiller Doors & Cleanroom Doors',
+    categoryBadge: 'Pressure & Thermal Containment',
     categoryFilters: ['All', 'Pressure Containment', 'Airlock Control'],
-    description: 'Hermetically sealed flush cleanroom doors preventing particulate infiltration and air leakage across pressure zones.',
+    description: 'Specialized insulated chiller doors and hermetically sealed flush cleanroom doors for temperature and contamination control.',
     features: [
-      'Hermetic perimeter silicone drop seals',
-      'Flush double-glazed vision view panels',
+      'Injected CFC-free PUF core (40/60/80mm)',
+      'Multi-layer EPDM rubber & perimeter drop seals',
       'Seamless SS304 / powder-coated GI construction'
     ],
-    image: '/about-hero-cleanroom.jpg',
-    brochure: true
+    image: '/products/chiller-door-hero.jpg',
+    brochure: false
   },
   {
     num: '05',

@@ -27,6 +27,9 @@ import {
 } from 'lucide-react';
 import '../AutomaticDoorsDetail.css';
 import { ACCESS_AUTOMATION_CONFIGS } from '../data/accessAutomationDetailData';
+import PassBoxDemo from './PassBoxDemo';
+import DigitalClockDemo from './DigitalClockDemo';
+import ChillerCleanroomDoorDemo from './ChillerCleanroomDoorDemo';
 
 // Helper to render dynamic icons cleanly
 const renderDynamicIcon = (name, className = 'text-sky-600', size = 22) => {
@@ -508,9 +511,17 @@ export default function AutomaticDoorsDetailView({
       <section className="auto-wide-card">
         <div className="auto-doors-video-grid">
           
-          {/* Left Column: Interactive Cleanroom Demonstration OR Video Player */}
+          {/* Left Column: Interactive Demonstration (Cleanroom Pass Box OR Door Interlock) OR Video Player */}
           {cfg.video.isInteractiveDemo ? (
-            <CleanroomInterlockDemo />
+            cfg.video.demoType === 'pass-box' ? (
+              <PassBoxDemo />
+            ) : cfg.video.demoType === 'digital-clock' ? (
+              <DigitalClockDemo />
+            ) : cfg.video.demoType === 'chiller-cleanroom-door' ? (
+              <ChillerCleanroomDoorDemo />
+            ) : (
+              <CleanroomInterlockDemo />
+            )
           ) : (
             <div className="auto-video-wrapper">
               {cfg.video.hasVideoFile ? (

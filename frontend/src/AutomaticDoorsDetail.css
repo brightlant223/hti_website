@@ -1269,3 +1269,738 @@
   }
 }
 
+/* ==========================================================================
+   DIGITAL CLOCK & TIME DISPLAY DEMONSTRATION STYLES
+   ========================================================================== */
+
+.clock-demo-panel {
+  gap: 16px;
+}
+
+.clock-master-frame {
+  background: radial-gradient(circle at 50% 20%, #151e32 0%, #0a0f1d 100%);
+  border: 2px solid #2a374f;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.05), 0 8px 20px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.clock-frame-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.clock-brand-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.clock-brand-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 6px #38bdf8;
+}
+
+.clock-sync-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(14, 165, 233, 0.3);
+  color: #38bdf8;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.clock-sync-pill.pulse-sync {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #fbbf24;
+}
+
+.spin-icon {
+  animation: spinSlow 2s linear infinite;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Recessed 7-Segment Screen */
+.clock-screen-bezel {
+  background: #030712;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.8);
+  min-height: 96px;
+}
+
+.clock-digit-group {
+  display: flex;
+  align-items: center;
+}
+
+.clock-digit {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 3.2rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.clock-colon {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 3.2rem;
+  font-weight: 900;
+  line-height: 1;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.clock-colon.blink {
+  animation: colonBlink 1s infinite steps(1);
+}
+
+@keyframes colonBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.15; }
+}
+
+/* Red LED Color Theme */
+.led-theme-red .clock-digit,
+.led-theme-red .clock-colon,
+.led-theme-red .zone-ampm {
+  color: #ff334b;
+  text-shadow: 0 0 10px rgba(255, 51, 75, 0.75), 0 0 22px rgba(255, 51, 75, 0.45);
+}
+
+/* Green LED Color Theme */
+.led-theme-green .clock-digit,
+.led-theme-green .clock-colon,
+.led-theme-green .zone-ampm {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.75), 0 0 22px rgba(16, 185, 129, 0.45);
+}
+
+.clock-ampm-badge {
+  position: absolute;
+  right: 20px;
+  top: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ampm-text {
+  font-family: 'Consolas', monospace;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #cbd5e1;
+}
+
+/* Metadata Ribbon Below Readout */
+.clock-meta-ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  flex-wrap: wrap;
+}
+
+.clock-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+}
+
+.clock-meta-key {
+  color: #64748b;
+  font-weight: 700;
+}
+
+.clock-meta-val {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.clock-meta-val.highlight {
+  color: #38bdf8;
+}
+
+/* Interactive Toolbar */
+.clock-interactive-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 14px;
+  flex-wrap: wrap;
+}
+
+.clock-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.clock-toolbar-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-right: 2px;
+}
+
+.clock-tool-btn {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.clock-tool-btn:hover {
+  background: #283548;
+  color: #f8fafc;
+}
+
+.clock-tool-btn.active {
+  background: #0284c7;
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.color-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.swatch-red {
+  background: #ff334b;
+  box-shadow: 0 0 6px #ff334b;
+}
+
+.swatch-green {
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.clock-sync-trigger-btn {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid #f59e0b;
+  color: #f8fafc;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.clock-sync-trigger-btn:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.15);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+}
+
+.clock-sync-trigger-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Multi-Zone Topologies */
+.clock-multi-zones-section {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.clock-multi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.clock-multi-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+.clock-multi-tag {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.clock-zones-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.clock-zone-card {
+  background: #080d1a;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.clock-zone-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.zone-name {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zone-badge {
+  font-size: 0.58rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  color: #38bdf8;
+  padding: 1px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.clock-zone-readout {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.zone-ampm {
+  font-size: 0.65rem;
+  margin-left: 2px;
+}
+
+.zone-status-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.62rem;
+  color: #64748b;
+}
+
+.zone-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #64748b;
+}
+
+.zone-dot.active {
+  background: #10b981;
+  box-shadow: 0 0 5px #10b981;
+}
+
+/* Mobile adjustments for Digital Clock Demo */
+@media (max-width: 640px) {
+  .clock-digit, .clock-colon {
+    font-size: 2.2rem;
+  }
+  .clock-screen-bezel {
+    padding: 14px 10px;
+    min-height: 76px;
+    gap: 4px;
+  }
+  .clock-interactive-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .clock-zones-grid {
+    grid-template-columns: 1fr;
+  }
+  .clock-ampm-badge {
+    position: static;
+    margin-left: 6px;
+  }
+}
+
+/* ==========================================================================
+   CHILLER DOORS & CLEANROOM DOORS DEMONSTRATION STYLES
+   ========================================================================== */
+
+.door-demo-panel {
+  gap: 16px;
+}
+
+.door-demo-mode-switcher {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.door-mode-btn {
+  flex: 1;
+  min-width: 170px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: #111a2e;
+  border: 1px solid #1e293b;
+  color: #94a3b8;
+  transition: all 0.25s ease;
+}
+
+.door-mode-btn:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+.door-mode-btn.active {
+  background: rgba(14, 165, 233, 0.15);
+  border-color: #0284c7;
+  color: #38bdf8;
+  box-shadow: 0 0 14px rgba(2, 132, 199, 0.25);
+}
+
+.door-sim-stage {
+  background: radial-gradient(circle at 50% 20%, #151e33 0%, #070d1a 100%);
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.04);
+}
+
+.door-env-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 8px 14px;
+  flex-wrap: wrap;
+}
+
+.door-env-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.door-sim-frame {
+  height: 210px;
+  background: #040814;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.7);
+  perspective: 700px;
+}
+
+.door-wall-left,
+.door-wall-right {
+  width: 50px;
+  background: #0f172a;
+  border-right: 2px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.door-wall-right {
+  border-right: none;
+  border-left: 2px solid #334155;
+}
+
+.wall-tag {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+.door-leaf-container {
+  flex: 1;
+  margin: 12px 16px;
+  transform-origin: left center;
+  transition: transform 0.65s cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 0.65s ease;
+  position: relative;
+}
+
+.door-leaf-container.leaf-sealed {
+  transform: perspective(700px) rotateY(0deg);
+}
+
+.door-leaf-container.leaf-ajar {
+  transform: perspective(700px) rotateY(-48deg);
+  box-shadow: -15px 0 25px rgba(0, 0, 0, 0.6);
+}
+
+.door-leaf-body {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 50%, #64748b 100%);
+  border-radius: 6px;
+  border: 2px solid #475569;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4), 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.stage-chiller .door-leaf-body {
+  background: linear-gradient(145deg, #e2e8f0 0%, #94a3b8 40%, #475569 100%);
+  border: 3px solid #334155;
+}
+
+.stage-cleanroom .door-leaf-body {
+  background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 60%, #cbd5e1 100%);
+  border: 2px solid #94a3b8;
+}
+
+.door-cleanroom-window {
+  width: 55px;
+  height: 85px;
+  background: rgba(14, 165, 233, 0.18);
+  border: 2px solid #0284c7;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 10px rgba(2, 132, 199, 0.3);
+}
+
+.window-glaze {
+  font-size: 0.55rem;
+  font-weight: 800;
+  color: #0369a1;
+  letter-spacing: 0.05em;
+}
+
+.door-chiller-handle {
+  position: absolute;
+  right: 18px;
+  top: 45%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.chiller-lever {
+  width: 28px;
+  height: 9px;
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.chiller-label {
+  font-size: 0.5rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.door-kickplate {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 26px;
+  background: #334155;
+  border-top: 1px solid #475569;
+  border-radius: 0 0 4px 4px;
+}
+
+.stage-cleanroom .door-kickplate {
+  background: #cbd5e1;
+  border-top-color: #94a3b8;
+}
+
+.door-status-pill {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.status-sealed {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid #10b981;
+  color: #34d399;
+}
+
+.status-open {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid #f59e0b;
+  color: #fbbf24;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.door-sim-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.door-trigger-btn {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid #38bdf8;
+  color: #f8fafc;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.door-trigger-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.door-specs-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.door-spec-box {
+  background: #080d1a;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.spec-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.spec-val {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+@media (max-width: 640px) {
+  .door-demo-mode-switcher {
+    flex-direction: column;
+  }
+  .door-specs-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+

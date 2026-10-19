@@ -361,11 +361,12 @@ export const productsData = [
   {
     id: 12,
     slug: 'chiller-clean-room-doors',
-    name: 'Chiller & Clean Room Doors',
+    name: 'Chiller Doors & Cleanroom Doors',
     category: 'Automation',
     subcategory: 'Pharma Cleanroom & Cold Storage',
     tagline: 'Hermetically sealed insulated doors for pharmaceutical labs & cold storage rooms',
     badge: 'Hermetic Seal',
+    image: '/products/chiller-door-hero.jpg',
     workSummary: 'Hermetically sealed cold storage & pharma cleanroom airlock barriers',
     description: 'Airtight and hermetically sealed doors engineered specifically for pharmaceutical cleanrooms, medical laboratories, and industrial chiller rooms. Features multi-layer EPDM rubber gaskets that seal tightly against the frame upon closure to preserve differential pressure.',
     features: [
@@ -621,13 +622,13 @@ export const productsData = [
   {
     id: 18,
     slug: 'pass-box-systems',
-    name: 'Pass Box Systems (Static & Dynamic)',
+    name: 'Pharmaceutical Cleanroom Pass Box System',
     category: 'Security System',
     subcategory: 'Pharma Cleanroom Airlock',
     tagline: 'Contamination-free material transfer hatches with UV germicidal sterilization',
     badge: 'Pharma Grade',
     workSummary: 'Contamination-free material transfer hatches with UV sterilization',
-    description: 'Pass boxes facilitate contamination-free material transfer between cleanrooms of different air classifications without personnel movement. Available in Static models for rooms of equal cleanliness and Dynamic models equipped with HEPA filtration and laminar airflow for sterile transfer.',
+    description: 'Designed for controlled material transfer between cleanroom areas, pass box systems help support contamination-control procedures while reducing the need for personnel to move between different cleanroom zones.',
     features: [
       'Heavy-duty Stainless Steel SS304 / SS316 internal and external construction',
       'Electromagnetic interlocking doors prevent both doors from opening simultaneously',
@@ -715,11 +716,12 @@ export const productsData = [
   {
     id: 21,
     slug: 'digital-gps-clocks',
-    name: 'Digital Clocks (GPS Synchronized)',
+    name: 'Digital Clocks & Industrial Time Display Systems',
     category: 'Security System',
     subcategory: 'Precision Timing & USFDA Compliance',
     tagline: 'Master-slave synchronized digital clocks for pharmaceutical audit compliance',
     badge: 'USFDA Compliant',
+    image: '/products/digital-clock-hero.jpg',
     workSummary: 'GPS master-slave pharma time synchronization for batch compliance',
     description: 'High-visibility master-slave digital clocks synchronized automatically via GPS satellite receiver or NTP Ethernet server. Essential for USFDA 21 CFR Part 11 and WHO-GMP compliance across pharmaceutical manufacturing batches, testing labs, and hospital operation theatres.',
     features: [
@@ -1284,8 +1286,71 @@ export const getProductMedia = (productOrSlug) => {
     });
   }
 
-  // 5. Cleanroom Door Interlocks / Pass Box / Clocks / Cleanroom Doors
-  if (slug.includes('interlock') || slug.includes('pass-box') || slug.includes('clock') || slug.includes('clean-room') || slug.includes('acoustic') || slug.includes('sound-proof')) {
+  // 5a. Pharmaceutical Cleanroom Pass Box System
+  if (slug.includes('pass-box')) {
+    return withDirectImage({
+      primaryImage: '/products/pass-box-system.jpg',
+      badge: 'Pharma Grade',
+      caption: 'Pharmaceutical Cleanroom Static & Dynamic Pass Box System',
+      gallery: [
+        { url: '/products/pass-box-system.jpg', title: 'Pharmaceutical Cleanroom Pass Box', subtitle: 'Flush-Mounted SS 304 Material Transfer Hatch' },
+        { url: '/products/pass-box-chamber.jpg', title: 'Stainless-Steel Material Transfer Chamber', subtitle: 'Hygienic Coved Corners with UV-C Decontamination' },
+        { url: '/products/pass-box-installed.jpg', title: 'Pass Box Installed Between Cleanroom Zones', subtitle: 'Interlocked Material Flow between Production Areas' }
+      ],
+      video: {
+        title: 'Pharmaceutical Cleanroom Pass Box Material Transfer Demonstration',
+        duration: '01:40',
+        resolution: '4K UHD 60fps',
+        type: 'Pass Box Simulation',
+        simType: 'pass_box_demo'
+      }
+    });
+  }
+
+  // 5b. Digital Clocks & Industrial Time Display Systems
+  if (slug.includes('clock') || slug === 'digital-gps-clocks') {
+    return withDirectImage({
+      primaryImage: '/products/digital-clock-hero.jpg',
+      badge: 'Time Synchronization',
+      caption: 'Digital Clocks & Industrial Time Display Systems',
+      gallery: [
+        { url: '/products/digital-clock-hero.jpg', title: 'Industrial Digital LED Clock', subtitle: 'High-Visibility Industrial Time Display' },
+        { url: '/products/digital-clock-wall.jpg', title: 'Wall-Mounted Digital Time Display', subtitle: 'Flush Wall-Mounted Healthcare & Corporate Display' },
+        { url: '/products/digital-clock-industrial.jpg', title: 'Digital Clock in an Operational Environment', subtitle: 'Large-Format Manufacturing & Warehouse Display' }
+      ],
+      video: {
+        title: 'Digital Clocks & Industrial Time Display Demonstration',
+        duration: '01:30',
+        resolution: '4K UHD 60fps',
+        type: 'Digital Clock Simulation',
+        simType: 'digital_clock_demo'
+      }
+    });
+  }
+
+  // 5c. Chiller Doors & Cleanroom Doors
+  if (slug.includes('chiller') || slug === 'chiller-clean-room-doors' || slug === 'cleanroom-doors') {
+    return withDirectImage({
+      primaryImage: '/products/chiller-door-hero.jpg',
+      badge: 'Hermetic & Insulated',
+      caption: 'Chiller Doors & Cleanroom Doors for Controlled Environments',
+      gallery: [
+        { url: '/products/chiller-door-hero.jpg', title: 'Insulated Chiller Door – Cold Storage Application', subtitle: 'Heavy-Duty Insulated Door with Cam-Lift Hardware' },
+        { url: '/products/cleanroom-door-pharma.jpg', title: 'Cleanroom Door – Pharmaceutical Facility', subtitle: 'Flush Double-Glazed Vision Panel with Seamless SS Face' },
+        { url: '/products/industrial-door-assembly.jpg', title: 'Industrial Door Assembly – Controlled Environment', subtitle: 'Sealed Thermal Break Frame with Perimeter Gasket' }
+      ],
+      video: {
+        title: 'Chiller Doors & Cleanroom Doors Operation & Sealing Demo',
+        duration: '01:30',
+        resolution: '4K UHD 60fps',
+        type: 'Door Sealing Simulation',
+        simType: 'chiller_cleanroom_door_demo'
+      }
+    });
+  }
+
+  // 5d. Cleanroom Door Interlocks / Acoustic Doors
+  if (slug.includes('interlock') || slug.includes('acoustic') || slug.includes('sound-proof')) {
     return withDirectImage({
       primaryImage: '/products/cleanroom-interlocks.jpg',
       badge: '21 CFR Part 11',

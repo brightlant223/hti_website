@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  ArrowLeft, CheckCircle2, ShieldCheck, Download, Send, PhoneCall, 
+import {
+  ArrowLeft, CheckCircle2, ShieldCheck, Download, Send, PhoneCall,
   MessageSquare, Layers, Cpu, Flame, Wrench, Share2, Sparkles, Building2,
   Check, FileText, ExternalLink, ArrowRight, AlertTriangle, BatteryCharging,
   Settings, CheckSquare, Zap, Clock, Play, Pause, RotateCcw, Volume2, VolumeX,
@@ -27,10 +27,10 @@ export const SERVICE_CARD_IMAGES = {
   'hangar-doors': '/services/service-hangar-doors.jpg'
 };
 
-export default function ProductDetailPage({ 
-  product, 
-  onNavigate, 
-  onQuoteSubmit 
+export default function ProductDetailPage({
+  product,
+  onNavigate,
+  onQuoteSubmit
 }) {
   const [formData, setFormData] = useState({
     name: '',
@@ -47,10 +47,10 @@ export default function ProductDetailPage({
 
   // Media & Gallery state
   const media = getProductMedia(product);
-  const gallery = media.gallery && media.gallery.length > 0 
-    ? media.gallery 
+  const gallery = media.gallery && media.gallery.length > 0
+    ? media.gallery
     : [{ url: media.primaryImage, title: 'Corporate Facade', subtitle: 'Turnkey Installation' }];
-  
+
   const [activeImgIdx, setActiveImgIdx] = useState(0);
 
   // Video & Simulation Player State
@@ -112,7 +112,7 @@ export default function ProductDetailPage({
         <div className="container text-center py-16">
           <h2 className="text-2xl font-bold mb-4 text-slate-800">Product Not Found</h2>
           <p className="text-slate-500 mb-6">The product you are looking for is either archived or unavailable.</p>
-          <button 
+          <button
             className="btn btn-primary"
             onClick={() => onNavigate('home', 'catalog')}
           >
@@ -149,7 +149,7 @@ export default function ProductDetailPage({
       alert('Please fill in your Name, Email, and Phone number.');
       return;
     }
-    
+
     // Simulate inquiry dispatch
     fetch('/api/inquiries', {
       method: 'POST',
@@ -257,6 +257,11 @@ export default function ProductDetailPage({
     REDESIGNED_PRODUCT_SLUGS.includes(product?.slug) ||
     REDESIGNED_PRODUCT_SLUGS.includes(product?.id) ||
     product?.id === 17 ||
+    product?.id === 18 ||
+    product?.id === 21 ||
+    product?.id === 'chiller-clean-room-doors' ||
+    product?.id === 'digital-gps-clocks' ||
+    product?.id === 'pass-box-systems' ||
     product?.id === 'door-interlock-systems' ||
     product?.id === 'automatic-doors'
   ) {
@@ -275,21 +280,21 @@ export default function ProductDetailPage({
       <div className="detail-breadcrumb-bar">
         <div className="container">
           <div className="breadcrumb-nav">
-            <button 
-              className="breadcrumb-link" 
+            <button
+              className="breadcrumb-link"
               onClick={() => onNavigate('home')}
             >
               Home
             </button>
             <span className="breadcrumb-separator">/</span>
-            <button 
+            <button
               className="breadcrumb-link"
               onClick={() => {
-                const catPage = product.category.toLowerCase().includes('automation') 
-                  ? 'automation' 
-                  : product.category.toLowerCase().includes('security') 
-                  ? 'security-systems' 
-                  : 'hygiene';
+                const catPage = product.category.toLowerCase().includes('automation')
+                  ? 'automation'
+                  : product.category.toLowerCase().includes('security')
+                    ? 'security-systems'
+                    : 'hygiene';
                 onNavigate(catPage);
               }}
             >
@@ -299,7 +304,7 @@ export default function ProductDetailPage({
             <span className="breadcrumb-current">{product.name}</span>
           </div>
 
-          <button 
+          <button
             className="back-btn"
             onClick={() => {
               if (product.category?.toLowerCase().includes('automation')) {
@@ -319,7 +324,7 @@ export default function ProductDetailPage({
       <div className="detail-hero-banner">
         <div className="container">
           <div className="detail-hero-grid">
-            
+
             {/* Left Col: Info & Badges */}
             <div className="detail-hero-content">
               <div className="detail-tag-row">
@@ -341,7 +346,7 @@ export default function ProductDetailPage({
               <p className="detail-tagline">{product.tagline}</p>
 
               <div className="detail-hero-cta-row">
-                <a 
+                <a
                   href="#quote-form"
                   className="btn btn-primary"
                   onClick={(e) => {
@@ -353,7 +358,7 @@ export default function ProductDetailPage({
                   <span>Request Instant Quotation</span>
                 </a>
 
-                <button 
+                <button
                   className="btn btn-secondary"
                   onClick={handleBrochureDownload}
                 >
@@ -361,8 +366,8 @@ export default function ProductDetailPage({
                   <span>Download Specs PDF</span>
                 </button>
 
-                <button 
-                  className="btn-share-icon" 
+                <button
+                  className="btn-share-icon"
                   onClick={handleCopyShare}
                   title="Share Product Page"
                 >
@@ -391,13 +396,13 @@ export default function ProductDetailPage({
               <div className="detail-gallery-container">
                 {/* Primary Large Image Viewer */}
                 <div className="detail-gallery-main">
-                  <img 
-                    src={activeImage.url} 
+                  <img
+                    src={activeImage.url}
                     alt={activeImage.title}
-                    className="gallery-main-img" 
+                    className="gallery-main-img"
                   />
                   <div className="gallery-img-gradient" />
-                  
+
                   <div className="gallery-caption-overlay">
                     <div className="gallery-caption-title">{activeImage.title}</div>
                     <div className="gallery-caption-sub">{activeImage.subtitle}</div>
@@ -434,7 +439,7 @@ export default function ProductDetailPage({
       {/* 3. INTERACTIVE 4K CORPORATE VIDEO & 3D SIMULATION PLAYER */}
       <section className="detail-video-section section">
         <div className="container">
-          
+
           <div className="video-section-header">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -456,28 +461,28 @@ export default function ProductDetailPage({
             <div className="scenario-switcher-bar">
               <span className="scenario-lbl">Test Scenario:</span>
               <div className="scenario-btns-group">
-                <button 
+                <button
                   className={`scenario-btn ${simScenario === 'standard' ? 'scenario-active' : ''}`}
                   onClick={() => setSimScenario('standard')}
                 >
                   <Activity size={13} />
                   <span>Standard 100% Cycle</span>
                 </button>
-                <button 
+                <button
                   className={`scenario-btn ${simScenario === 'obstacle' ? 'scenario-active' : ''}`}
                   onClick={() => setSimScenario('obstacle')}
                 >
                   <Zap size={13} />
                   <span>Anti-Pinch Reversal</span>
                 </button>
-                <button 
+                <button
                   className={`scenario-btn ${simScenario === 'fire' ? 'scenario-active' : ''}`}
                   onClick={() => setSimScenario('fire')}
                 >
                   <Flame size={13} />
                   <span>FACP Fire Alarm Release</span>
                 </button>
-                <button 
+                <button
                   className={`scenario-btn ${simScenario === 'battery' ? 'scenario-active' : ''}`}
                   onClick={() => setSimScenario('battery')}
                 >
@@ -492,16 +497,16 @@ export default function ProductDetailPage({
           <div className="video-player-container">
             {/* Video Canvas / Visual Area */}
             <div className="video-canvas-stage">
-              <img 
-                src={activeImage.url} 
-                alt="Product in Action" 
+              <img
+                src={activeImage.url}
+                alt="Product in Action"
                 className="video-bg-media"
               />
               <div className="video-cinematic-dim" />
 
               {/* Live Telemetry Heads-Up Display (HUD) */}
               <div className="video-hud-overlay">
-                
+
                 {/* Top HUD Bar */}
                 <div className="hud-top-bar">
                   <div className={`hud-badge ${telemetry.badgeColor}`}>
@@ -567,7 +572,7 @@ export default function ProductDetailPage({
               </div>
 
               {/* Play / Pause Big Center Trigger */}
-              <button 
+              <button
                 className={`video-center-play-btn ${isPlaying ? 'btn-faded' : ''}`}
                 onClick={() => setIsPlaying(!isPlaying)}
                 title={isPlaying ? "Pause Demonstration" : "Play Demonstration"}
@@ -578,14 +583,14 @@ export default function ProductDetailPage({
 
             {/* Video Controls Bar */}
             <div className="video-controls-bar">
-              <button 
+              <button
                 className="v-ctrl-btn"
                 onClick={() => setIsPlaying(!isPlaying)}
               >
                 {isPlaying ? <Pause size={17} /> : <Play size={17} />}
               </button>
 
-              <button 
+              <button
                 className="v-ctrl-btn"
                 onClick={() => setSimProgress(0)}
                 title="Replay from start"
@@ -594,7 +599,7 @@ export default function ProductDetailPage({
               </button>
 
               {/* Interactive Scrub Bar */}
-              <div 
+              <div
                 className="v-timeline-wrapper"
                 onClick={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -604,11 +609,11 @@ export default function ProductDetailPage({
                 }}
               >
                 <div className="v-timeline-rail">
-                  <div 
+                  <div
                     className="v-timeline-fill"
                     style={{ width: `${simProgress}%` }}
                   />
-                  <div 
+                  <div
                     className="v-timeline-thumb"
                     style={{ left: `${simProgress}%` }}
                   />
@@ -621,7 +626,7 @@ export default function ProductDetailPage({
                 <span className="text-slate-400">{media.video?.duration || '01:45'}</span>
               </div>
 
-              <button 
+              <button
                 className="v-ctrl-btn"
                 onClick={() => setIsMuted(!isMuted)}
                 title={isMuted ? "Unmute Audio Track" : "Mute Audio Track"}
@@ -643,10 +648,10 @@ export default function ProductDetailPage({
       <div className="detail-main-body section pt-0">
         <div className="container">
           <div className="detail-columns-grid">
-            
+
             {/* Left 65%: Overview, Features, Specs, Safety & Applications */}
             <div className="detail-info-column">
-              
+
               {/* Engineering Overview */}
               <div className="detail-card">
                 <h2 className="detail-section-title">
@@ -801,7 +806,7 @@ export default function ProductDetailPage({
                     <p className="success-desc">
                       Thank you, <strong>{formData.name}</strong>. Our industrial project engineering team has received your request for <strong>{product.name}</strong> and will contact you at <strong>{formData.phone}</strong> shortly.
                     </p>
-                    <button 
+                    <button
                       className="btn btn-outline-primary w-full mt-4"
                       onClick={() => setSubmitted(false)}
                     >
@@ -810,43 +815,43 @@ export default function ProductDetailPage({
                   </div>
                 ) : (
                   <form className="quote-form-body" onSubmit={handleSubmit}>
-                    
+
                     <div className="form-group">
                       <label className="form-label">Full Name *</label>
-                      <input 
-                        type="text" 
-                        name="name" 
+                      <input
+                        type="text"
+                        name="name"
                         value={formData.name}
                         onChange={handleInputChange}
                         placeholder="e.g. Rajesh Sharma"
-                        className="form-input" 
-                        required 
+                        className="form-input"
+                        required
                       />
                     </div>
 
                     <div className="form-grid-2">
                       <div className="form-group">
                         <label className="form-label">Work Email *</label>
-                        <input 
-                          type="email" 
-                          name="email" 
+                        <input
+                          type="email"
+                          name="email"
                           value={formData.email}
                           onChange={handleInputChange}
                           placeholder="rajesh@company.com"
-                          className="form-input" 
-                          required 
+                          className="form-input"
+                          required
                         />
                       </div>
                       <div className="form-group">
                         <label className="form-label">Phone / WhatsApp *</label>
-                        <input 
-                          type="tel" 
-                          name="phone" 
+                        <input
+                          type="tel"
+                          name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
                           placeholder="+91 98765 43210"
-                          className="form-input" 
-                          required 
+                          className="form-input"
+                          required
                         />
                       </div>
                     </div>
@@ -854,32 +859,32 @@ export default function ProductDetailPage({
                     <div className="form-grid-2">
                       <div className="form-group">
                         <label className="form-label">Company / Client</label>
-                        <input 
-                          type="text" 
-                          name="company" 
+                        <input
+                          type="text"
+                          name="company"
                           value={formData.company}
                           onChange={handleInputChange}
                           placeholder="e.g. Cipla / L&T"
-                          className="form-input" 
+                          className="form-input"
                         />
                       </div>
                       <div className="form-group">
                         <label className="form-label">Site Location</label>
-                        <input 
-                          type="text" 
-                          name="location" 
+                        <input
+                          type="text"
+                          name="location"
                           value={formData.location}
                           onChange={handleInputChange}
                           placeholder="e.g. Mumbai / Pan-India"
-                          className="form-input" 
+                          className="form-input"
                         />
                       </div>
                     </div>
 
                     <div className="form-group">
                       <label className="form-label">Project Scope / Quantity</label>
-                      <select 
-                        name="quantity" 
+                      <select
+                        name="quantity"
                         value={formData.quantity}
                         onChange={handleInputChange}
                         className="form-input form-select"
@@ -897,7 +902,7 @@ export default function ProductDetailPage({
                       <div className="accessories-checklist">
                         {availableAccessories.map((acc, idx) => (
                           <label key={idx} className="accessory-checkbox-item">
-                            <input 
+                            <input
                               type="checkbox"
                               checked={formData.accessories.includes(acc)}
                               onChange={() => handleAccessoryToggle(acc)}
@@ -911,8 +916,8 @@ export default function ProductDetailPage({
 
                     <div className="form-group">
                       <label className="form-label">Technical Notes & Requirements</label>
-                      <textarea 
-                        name="message" 
+                      <textarea
+                        name="message"
                         rows="3"
                         value={formData.message}
                         onChange={handleInputChange}
@@ -975,10 +980,10 @@ export default function ProductDetailPage({
                 return (
                   <div key={relProd.id} className="related-prod-card">
                     <div className="related-prod-media">
-                      <img 
-                        src={relMedia.primaryImage} 
-                        alt={relProd.name} 
-                        className="related-prod-img" 
+                      <img
+                        src={relMedia.primaryImage}
+                        alt={relProd.name}
+                        className="related-prod-img"
                       />
                       <span className="related-cat-badge">{relProd.category}</span>
                       <div className="related-video-tag">
@@ -989,7 +994,7 @@ export default function ProductDetailPage({
                     <div className="related-prod-body">
                       <h4 className="related-prod-name">{relProd.name}</h4>
                       <p className="related-prod-work">{relProd.workSummary}</p>
-                      <button 
+                      <button
                         className="btn-related-link"
                         onClick={() => onNavigate('product', relProd.slug)}
                       >

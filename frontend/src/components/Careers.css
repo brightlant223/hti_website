@@ -1354,16 +1354,16 @@
   will-change: transform;
 }
 
-/* Horizontal Benefit Cards - Responsive dimensions for all viewport heights */
+/* Horizontal Job Opportunity Cards - Responsive dimensions for all viewport heights */
 .why-benefit-card {
-  flex: 0 0 clamp(280px, 22vw, 340px);
-  width: clamp(280px, 22vw, 340px);
-  height: clamp(260px, 46vh, 360px);
-  min-height: 260px;
+  flex: 0 0 clamp(285px, 22vw, 340px);
+  width: clamp(285px, 22vw, 340px);
+  height: clamp(300px, 48vh, 380px);
+  min-height: 290px;
   background: #ffffff;
   border: 1px solid var(--border-subtle, #e2e8f0);
   border-radius: 20px;
-  padding: clamp(16px, 2.2vh, 26px) clamp(16px, 1.8vw, 24px);
+  padding: clamp(16px, 2.2vh, 24px) clamp(16px, 1.8vw, 24px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1393,17 +1393,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: clamp(10px, 1.8vh, 18px);
+  margin-bottom: clamp(10px, 1.6vh, 16px);
 }
 
 .card-icon-shell {
-  width: clamp(38px, 4.6vh, 48px);
-  height: clamp(38px, 4.6vh, 48px);
+  width: clamp(38px, 4.4vh, 46px);
+  height: clamp(38px, 4.4vh, 46px);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.24s ease;
+}
+
+.why-benefit-card:hover .card-icon-shell {
+  transform: scale(1.05);
 }
 
 .card-icon-svg {
@@ -1435,46 +1439,29 @@
 .card-content {
   display: flex;
   flex-direction: column;
-  gap: clamp(6px, 1vh, 10px);
   flex-grow: 1;
 }
 
-.card-title {
-  font-family: var(--font-heading, 'Outfit', sans-serif);
-  font-size: clamp(1.1rem, 1.35vw, 1.25rem);
-  font-weight: 700;
-  color: var(--text-main, #0f172a);
-  line-height: 1.25;
-  margin: 0;
-}
-
-.card-desc {
-  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: clamp(0.82rem, 0.95vw, 0.92rem);
-  color: var(--text-muted, #475569);
-  line-height: 1.55;
-  margin: 0;
-}
-
-/* Card Footer Pill */
-.card-footer-pill {
+/* Category Tag */
+.card-role-category-tag {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: clamp(3px, 0.7vh, 6px) clamp(8px, 1vw, 12px);
-  border-radius: var(--radius-full, 9999px);
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 9999px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  margin-top: clamp(8px, 1.5vh, 16px);
-  align-self: flex-start;
-  font-size: clamp(0.68rem, 0.8vw, 0.74rem);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(0.68rem, 0.78vw, 0.74rem);
   font-weight: 600;
   color: #64748b;
   letter-spacing: 0.02em;
+  margin-bottom: clamp(6px, 1vh, 10px);
+  align-self: flex-start;
   transition: all 0.2s ease;
 }
 
-.why-benefit-card:hover .card-footer-pill {
+.why-benefit-card:hover .card-role-category-tag {
   background: #ffffff;
   border-color: #cbd5e1;
   color: var(--text-main, #0f172a);
@@ -1484,6 +1471,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .benefit-color-cyan .card-tag-dot { background: #0284c7; }
@@ -1492,6 +1480,80 @@
 .benefit-color-red .card-tag-dot { background: #dc2626; }
 .benefit-color-rose .card-tag-dot { background: #e11d48; }
 .benefit-color-emerald .card-tag-dot { background: #059669; }
+
+/* Job Title */
+.card-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: clamp(1.15rem, 1.4vw, 1.35rem);
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  line-height: 1.25;
+  margin: 0 0 clamp(6px, 1vh, 8px) 0;
+  letter-spacing: -0.015em;
+}
+
+/* Job Role Short Summary */
+.card-desc {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(0.8rem, 0.92vw, 0.88rem);
+  color: var(--text-muted, #475569);
+  line-height: 1.55;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card Action Row with Apply Now Button */
+.card-action-row {
+  margin-top: clamp(12px, 1.6vh, 16px);
+  padding-top: clamp(10px, 1.3vh, 14px);
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.card-apply-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: var(--text-main, #0f172a);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.card-apply-arrow {
+  transition: transform 0.2s ease;
+  color: var(--accent-cyan, #0284c7);
+}
+
+.card-apply-btn:hover {
+  background: var(--text-main, #0f172a);
+  border-color: var(--text-main, #0f172a);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+  transform: translateY(-1px);
+}
+
+.card-apply-btn:hover .card-apply-arrow {
+  transform: translateX(3px);
+  color: #ffffff;
+}
+
+.card-apply-btn:focus-visible {
+  outline: 2px solid var(--accent-cyan, #0284c7);
+  outline-offset: 2px;
+}
 
 /* Short Viewport Adaptations (e.g. 1836x556 or browser with inspector open) */
 @media (max-height: 720px) {
@@ -1510,6 +1572,30 @@
     padding: 10px 14px;
     gap: 8px;
     margin-top: 10px;
+  }
+  .why-benefit-card {
+    height: clamp(280px, 48vh, 340px);
+    padding: 14px 18px;
+  }
+  .card-top-row {
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-size: 1.15rem;
+    margin-bottom: 4px;
+  }
+  .card-desc {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    -webkit-line-clamp: 3;
+  }
+  .card-action-row {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+  .card-apply-btn {
+    padding: 6px 12px;
+    font-size: 0.78rem;
   }
 }
 
@@ -1534,6 +1620,32 @@
   }
   .counter-hint {
     display: none;
+  }
+  .why-benefit-card {
+    height: clamp(255px, 46vh, 290px);
+    min-height: 250px;
+    padding: 12px 14px;
+  }
+  .card-icon-shell {
+    width: 34px;
+    height: 34px;
+  }
+  .card-role-category-tag {
+    padding: 2px 7px;
+    font-size: 0.66rem;
+    margin-bottom: 4px;
+  }
+  .card-title {
+    font-size: 1.05rem;
+  }
+  .card-desc {
+    -webkit-line-clamp: 2;
+    font-size: 0.76rem;
+    line-height: 1.35;
+  }
+  .card-action-row {
+    margin-top: 6px;
+    padding-top: 6px;
   }
 }
 
@@ -4483,6 +4595,7 @@
   .why-benefit-card,
   .why-progress-bar,
   .why-nav-btn,
+  .card-apply-btn,
   .process-step-item,
   .process-step-item::before,
   .step-large-num,

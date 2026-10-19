@@ -35,13 +35,21 @@ const parseUrlRoute = () => {
   const path = window.location.pathname.toLowerCase();
   const hash = window.location.hash.toLowerCase();
 
-  // Check product detail route /product/:slug
+  // Check product detail route /product/:slug or /products/:slug
   if (path.startsWith('/product/')) {
     const slug = path.replace('/product/', '').replace(/\/$/, '');
     return { page: 'product', param: slug };
   }
+  if (path.startsWith('/products/')) {
+    const slug = path.replace('/products/', '').replace(/\/$/, '');
+    return { page: 'product', param: slug };
+  }
   if (hash.startsWith('#/product/')) {
     const slug = hash.replace('#/product/', '');
+    return { page: 'product', param: slug };
+  }
+  if (hash.startsWith('#/products/')) {
+    const slug = hash.replace('#/products/', '');
     return { page: 'product', param: slug };
   }
 
