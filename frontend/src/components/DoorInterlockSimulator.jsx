@@ -210,7 +210,7 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
   ];
 
   return (
-    <section id="interlock-and-why" className="interlock-why-section">
+    <section id="interlock-demo" className="interlock-why-section">
       <div className="container">
         <div className="interlock-why-grid">
           {/* Left Column: Door Interlock Logic Simulator */}

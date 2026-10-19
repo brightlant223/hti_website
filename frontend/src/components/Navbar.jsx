@@ -95,6 +95,21 @@ export default function Navbar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Lock body scroll and set class when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.classList.add('mobile-menu-active');
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.classList.remove('mobile-menu-active');
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.classList.remove('mobile-menu-active');
+    };
+  }, [mobileMenuOpen]);
+
   // Close dropdowns on escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -1084,165 +1099,181 @@ export default function Navbar({
           </div>
         )}
 
-        {/* 3. Mobile Slide-down Navigation Drawer */}
+        {/* 3. Mobile Slide-down Navigation Drawer with Backdrop */}
         {mobileMenuOpen && (
-          <div className="bright-mobile-drawer">
-            {/* Accordion Item: Services */}
-            <div className="mobile-accordion-group">
-              <button
-                className="mobile-accordion-header"
-                onClick={() => setMobileAccordion(mobileAccordion === 'services' ? null : 'services')}
-              >
-                <div className="flex-center-gap">
-                  <span className="mobile-pill-tag">SERVICES</span>
-                  <span className="font-semibold text-slate-900">Automation & Cleanroom</span>
-                </div>
-                {mobileAccordion === 'services' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-              </button>
+          <>
+            <div
+              className="bright-mobile-backdrop"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-hidden="true"
+            />
+            <div className="bright-mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
+              {/* Accordion Item: Services */}
+              <div className="mobile-accordion-group">
+                <button
+                  className="mobile-accordion-header"
+                  onClick={() => setMobileAccordion(mobileAccordion === 'services' ? null : 'services')}
+                  aria-expanded={mobileAccordion === 'services'}
+                >
+                  <div className="flex-center-gap">
+                    <span className="mobile-pill-tag">SERVICES</span>
+                    <span className="mobile-accordion-title">Automation & Cleanroom</span>
+                  </div>
+                  {mobileAccordion === 'services' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
 
-              {mobileAccordion === 'services' && (
-                <div className="mobile-accordion-body">
-                  {serviceGroups.map((g) => (
-                    <button
-                      key={g.id}
-                      className="mobile-service-sublink"
-                      onClick={() => {
-                        if (g.page) {
-                          handleNavClick(g.page);
-                        } else if (g.section) {
-                          handleNavClick('home', g.section);
-                        } else {
-                          handleCategoryClick(g.category);
-                        }
-                      }}
-                    >
-                      <g.icon size={16} style={{ color: g.color }} />
-                      <div className="text-left">
-                        <div className="font-medium text-slate-800 text-sm">{g.title}</div>
-                        <div className="text-xs text-slate-500">{g.tagline}</div>
-                      </div>
+                {mobileAccordion === 'services' && (
+                  <div className="mobile-accordion-body">
+                    {serviceGroups.map((g) => (
+                      <button
+                        key={g.id}
+                        className="mobile-service-sublink"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          if (g.page) {
+                            handleNavClick(g.page);
+                          } else if (g.section) {
+                            handleNavClick('home', g.section);
+                          } else {
+                            handleCategoryClick(g.category);
+                          }
+                        }}
+                      >
+                        <g.icon size={16} style={{ color: g.color }} />
+                        <div className="text-left">
+                          <div className="mobile-service-title">{g.title}</div>
+                          <div className="mobile-service-tagline">{g.tagline}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Accordion Item: Products */}
+              <div className="mobile-accordion-group">
+                <button
+                  className="mobile-accordion-header"
+                  onClick={() => setMobileAccordion(mobileAccordion === 'products' ? null : 'products')}
+                  aria-expanded={mobileAccordion === 'products'}
+                >
+                  <span className="mobile-accordion-title">Products Catalog</span>
+                  {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
+
+                {mobileAccordion === 'products' && (
+                  <div className="mobile-accordion-body">
+                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleCategoryClick('Automation'); }}>
+                      Automation Solutions
                     </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Accordion Item: Products */}
-            <div className="mobile-accordion-group">
-              <button
-                className="mobile-accordion-header"
-                onClick={() => setMobileAccordion(mobileAccordion === 'products' ? null : 'products')}
-              >
-                <span className="font-semibold text-slate-900">Products Catalog</span>
-                {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-              </button>
-
-              {mobileAccordion === 'products' && (
-                <div className="mobile-accordion-body">
-                  <button className="mobile-sublink" onClick={() => handleCategoryClick('Automation')}>
-                    Automation Solutions
-                  </button>
-                  <button className="mobile-sublink" onClick={() => handleCategoryClick('Security System')}>
-                    Security & Life Safety Systems
-                  </button>
-                  <button className="mobile-sublink" onClick={() => handleCategoryClick('Hygiene')}>
-                    Hygiene & Cleanroom Automation
-                  </button>
-                  <button className="mobile-sublink text-cyan font-semibold" onClick={() => handleNavClick('home', 'interlock-demo')}>
-                    Interactive Cleanroom Interlock Demo ↗
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Accordion Item: Company */}
-            <div className="mobile-accordion-group">
-              <button
-                className="mobile-accordion-header"
-                onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
-              >
-                <span className="font-semibold text-slate-900">Company & Clients</span>
-                {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-              </button>
-
-              {mobileAccordion === 'company' && (
-                <div className="mobile-accordion-body">
-                  <button className="mobile-sublink" onClick={() => handleNavClick('about')}>
-                    About HTI Automation
-                  </button>
-                  <button className="mobile-sublink" onClick={() => handleNavClick('clients')}>
-                    Our Clients (100+ Pharma & Commercial)
-                  </button>
-                  <button
-                    className="mobile-sublink"
-                    onClick={() => handleNavClick('careers')}
-                  >
-                    Careers
-                  </button>
-                  <button className="mobile-sublink" onClick={() => handleNavClick('partners')}>
-                    Technology Partners
-                  </button>
-                  <button className="mobile-sublink" onClick={() => handleNavClick('blogs')}>
-                    Technical Blogs
-                  </button>
-                  <button className="mobile-sublink font-semibold text-orange-600" onClick={() => handleNavClick('contact')}>
-                    Contact Office (Turbhe, Navi Mumbai)
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Brochure Direct Link */}
-            <button
-              className="mobile-direct-link"
-              onClick={handleDownloadBrochure}
-            >
-              <div className="flex-center-gap">
-                <Download size={16} className="text-cyan" />
-                <span>Download Product Brochure</span>
-              </div>
-              <ArrowRight size={16} />
-            </button>
-
-            {/* Mobile CTAs */}
-            <div className="mobile-drawer-footer">
-              {/* Mobile Theme Bar */}
-              <div className="mobile-theme-bar">
-                <span className="mobile-theme-label">Theme Mode</span>
-                <div className="mobile-theme-segments">
-                  <button
-                    className={`mobile-theme-pill ${theme === 'light' ? 'active' : ''}`}
-                    onClick={() => onThemeChange && onThemeChange('light')}
-                  >
-                    <Sun size={14} className="sun-icon" />
-                    <span>Light</span>
-                  </button>
-                  <button
-                    className={`mobile-theme-pill ${theme === 'dark' ? 'active' : ''}`}
-                    onClick={() => onThemeChange && onThemeChange('dark')}
-                  >
-                    <Moon size={14} className="moon-icon" />
-                    <span>Dark</span>
-                  </button>
-
-                </div>
+                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleCategoryClick('Security System'); }}>
+                      Security & Life Safety Systems
+                    </button>
+                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleCategoryClick('Hygiene'); }}>
+                      Hygiene & Cleanroom Automation
+                    </button>
+                    <button className="mobile-sublink text-cyan font-semibold" onClick={() => { setMobileMenuOpen(false); handleNavClick('home', 'interlock-demo'); }}>
+                      Interactive Cleanroom Interlock Demo ↗
+                    </button>
+                  </div>
+                )}
               </div>
 
+              {/* Accordion Item: Company */}
+              <div className="mobile-accordion-group">
+                <button
+                  className="mobile-accordion-header"
+                  onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
+                  aria-expanded={mobileAccordion === 'company'}
+                >
+                  <span className="mobile-accordion-title">Company & Clients</span>
+                  {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
+
+                {mobileAccordion === 'company' && (
+                  <div className="mobile-accordion-body">
+                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}>
+                      About HTI Automation
+                    </button>
+                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleNavClick('clients'); }}>
+                      Our Clients (100+ Pharma & Commercial)
+                    </button>
+                    <button
+                      className="mobile-sublink"
+                      onClick={() => { setMobileMenuOpen(false); handleNavClick('careers'); }}
+                    >
+                      Careers
+                    </button>
+                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleNavClick('partners'); }}>
+                      Technology Partners
+                    </button>
+                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleNavClick('blogs'); }}>
+                      Technical Blogs
+                    </button>
+                    <button className="mobile-sublink font-semibold text-orange-600" onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}>
+                      Contact Office (Turbhe, Navi Mumbai)
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Brochure Direct Link */}
               <button
-                className="bright-admin-btn w-full justify-center py-3"
-                onClick={() => {
+                className="mobile-direct-link"
+                onClick={(e) => {
                   setMobileMenuOpen(false);
-                  if (onOpenAdmin) onOpenAdmin();
+                  handleDownloadBrochure(e);
                 }}
               >
-                <User size={17} />
-                <span>Open Admin Portal</span>
-                {inquiryCount > 0 && (
-                  <span className="admin-badge-count">{inquiryCount}</span>
-                )}
+                <div className="flex-center-gap">
+                  <Download size={16} className="text-cyan" />
+                  <span>Download Product Brochure</span>
+                </div>
+                <ArrowRight size={16} />
               </button>
+
+              {/* Mobile CTAs */}
+              <div className="mobile-drawer-footer">
+                {/* Mobile Theme Bar */}
+                <div className="mobile-theme-bar">
+                  <span className="mobile-theme-label">Theme Mode</span>
+                  <div className="mobile-theme-segments">
+                    <button
+                      className={`mobile-theme-pill ${theme === 'light' ? 'active' : ''}`}
+                      onClick={() => onThemeChange && onThemeChange('light')}
+                      type="button"
+                    >
+                      <Sun size={14} className="sun-icon" />
+                      <span>Light</span>
+                    </button>
+                    <button
+                      className={`mobile-theme-pill ${theme === 'dark' ? 'active' : ''}`}
+                      onClick={() => onThemeChange && onThemeChange('dark')}
+                      type="button"
+                    >
+                      <Moon size={14} className="moon-icon" />
+                      <span>Dark</span>
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  className="bright-admin-btn w-full justify-center py-3"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (onOpenAdmin) onOpenAdmin();
+                  }}
+                  type="button"
+                >
+                  <User size={17} />
+                  <span>Open Admin Portal</span>
+                  {inquiryCount > 0 && (
+                    <span className="admin-badge-count">{inquiryCount}</span>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </nav>
     </header>
