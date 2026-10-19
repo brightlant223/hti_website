@@ -204,6 +204,7 @@ export const productsData = [
     subcategory: 'Industrial Access',
     tagline: 'High-gauge cold-rolled galvanized steel rolling shutters for heavy bay security',
     badge: 'Heavy Gauge',
+    image: '/services/services-heavy-security.jpg',
     workSummary: 'Heavy-gauge galvanized steel security barrier for warehouses & shops',
     description: 'Robust motorized rolling shutters crafted from interlocked cold-rolled galvanized or stainless steel slats. Provides dependable security and weather shielding for commercial shop fronts, industrial storage bays, and factory perimeters.',
     features: [
@@ -234,6 +235,7 @@ export const productsData = [
     subcategory: 'Traffic & Vehicle Access',
     tagline: 'High-frequency electromechanical and hydraulic barriers for toll and parking gates',
     badge: 'High Speed',
+    image: '/services/service-boom-barrier.jpg',
     workSummary: 'High-frequency corporate parking, toll & security checkpoint barrier',
     description: 'Continuous-duty automatic boom barriers designed for parking access, toll plazas, residential societies, and corporate entrance gates. Available in high-speed 1.5s models with integrated LED lighting strips and anti-collision loop sensors.',
     features: [
@@ -266,6 +268,7 @@ export const productsData = [
     subcategory: 'Material Handling & Logistics',
     tagline: 'Heavy-duty electro-hydraulic dock bridges for seamless loading bay logistics',
     badge: 'Industrial Grade',
+    image: '/services/services-logistics-bridge.jpg',
     workSummary: 'Logistics loading bridge between trucks & warehouse bay floor',
     description: 'Electro-hydraulic dock levellers bridge the elevation and gap variance between warehouse loading bays and transport trailers. Supports forklifts up to 8,000 kg dynamic load, while surrounding dock shelters seal out rain, dust, and temperature leakage.',
     features: [
@@ -330,6 +333,7 @@ export const productsData = [
     subcategory: 'Anti-Ram Perimeter Defense',
     tagline: 'Crash-rated rising hydraulic bollards, tyre spike barriers & vehicle scissor elevators',
     badge: 'Anti-Ram Defense',
+    image: '/services/service-bollards-blockers.jpg',
     workSummary: 'Anti-ram vehicle defense & multi-level hydraulic car elevators',
     description: 'High-security crash-rated rising hydraulic bollards, electro-mechanical tyre killer spike barriers, and heavy-duty hydraulic car lifts for multi-level parking efficiency. Provides physical protection against hostile vehicle attacks.',
     features: [
@@ -448,6 +452,72 @@ export const productsData = [
     ],
     isFeatured: true
   },
+  {
+    id: 34,
+    slug: 'high-speed-industrial-doors',
+    name: 'High-Speed Industrial Doors',
+    category: 'Automation',
+    subcategory: 'Vertical Access & High-Cycle Doors',
+    tagline: 'High-cycle fast operating fabric and spiral doors for logistics bays & manufacturing plants',
+    badge: 'High Cycle',
+    image: '/services/service-high-speed-doors.jpg',
+    workSummary: 'High-speed flexible industrial doors preserving thermal & clean air barriers',
+    description: 'Engineered for high-frequency industrial environments, warehouses, and clean bays where continuous forklift and pedestrian movement demands minimal air exchange time. Incorporates frequency-inverter drives, safety light curtains, and durable wind-resistant curtains.',
+    features: [
+      'High cycle frequency with up to 2.0 m/s rapid opening speed',
+      'Wind bar reinforced tear-resistant PVC curtain with clear vision window',
+      'Integrated multi-beam active infrared safety light curtain',
+      'Soft-start and soft-stop inverter drive ensuring whisper-quiet cycle',
+      'Emergency manual hand chain override for power-failure continuity'
+    ],
+    specs: {
+      'Opening / Closing Speed': 'Opening up to 2.0 m/sec | Closing 0.8 m/sec (Inverter controlled)',
+      'Curtain Material': '900 g/m² high-density PVC polyester (DIN 4102 B1 flame retardant)',
+      'Wind Load Resistance': 'Class 2 / Class 3 (EN 12424) wind pressure resistance',
+      'Frame Construction': 'Heavy-gauge galvanized steel or optional Stainless Steel SS304',
+      'Safety Systems': 'Infrared optical safety light grid and bottom wireless contact edge'
+    },
+    applications: [
+      'Manufacturing Plants & High-Traffic Logistics Bays',
+      'Automotive Production & Assembly Lines',
+      'FMCG, Food Processing & Cold Chain Distribution Hubs',
+      'Pharmaceutical Secondary Packaging & Warehouse Airlocks'
+    ],
+    isFeatured: true
+  },
+  {
+    id: 35,
+    slug: 'hangar-doors',
+    name: 'Hangar Doors',
+    category: 'Automation',
+    subcategory: 'Special Applications & Heavy Industry',
+    tagline: 'Custom-engineered structural steel multi-leaf sliding and vertical bi-fold doors for aviation & shipyards',
+    badge: 'Heavy Engineering',
+    image: '/services/service-hangar-doors.jpg',
+    workSummary: 'Extra-wide clear span structural doors for aviation hangars & heavy shipyards',
+    description: 'Specialized large-span industrial entrance solutions designed for aircraft hangars, shipyard dry docks, and heavy industrial assembly halls. Engineered to withstand extreme structural wind loads, supporting bottom-rolling multi-leaf motorized configurations up to 60+ meters wide.',
+    features: [
+      'Clear opening spans from 15 meters to over 60 meters wide',
+      'Bottom-rolling heavy forged steel wheels operating on embedded rail tracks',
+      'Independent electro-mechanical dual drive units with electromagnetic fail-safe brakes',
+      'Engineered structural wind truss design tested for extreme coastal weather',
+      'Acoustic sirens, strobe warning beacons, and dead-man safety controls'
+    ],
+    specs: {
+      'Clear Opening Span': '15 meters up to 60+ meters custom engineered span',
+      'Drive Mechanism': 'Heavy-duty bottom-rolling motorized rack & pinion or gear drive',
+      'Structural Steel': 'High-tensile Grade 350 structural steel hollow truss section',
+      'Wind Load Rating': 'Tested to withstand wind speeds up to 150 km/h (IS 875 Part 3)',
+      'Safety Controls': 'Dual optical travel limit switches, warning sirens, emergency stops'
+    },
+    applications: [
+      'Commercial & Military Aviation Aircraft Hangars',
+      'Shipyards, Dry Docks & Marine Heavy Fabrication Sheds',
+      'Locomotive Maintenance & Railway Workshop Halls',
+      'Mining Equipment Maintenance Bays & Steel Mill Sheds'
+    ],
+    isFeatured: true
+  },
 
   // --- 2. SECURITY SYSTEMS & SURVEILLANCE ---
   {
@@ -522,6 +592,7 @@ export const productsData = [
     subcategory: 'Cleanroom Airlock Engineering',
     tagline: 'Multi-door airlock logic controllers for pharmaceutical cleanrooms & bio-safety labs',
     badge: 'Flagship Pharma Tech',
+    image: '/services/service-cleanroom.jpg',
     workSummary: 'USFDA 21 CFR Part 11 compliant 2-8 door interlocking logic',
     description: 'Engineered specifically for sterile pharmaceutical cleanrooms, hospital OT suites, and containment laboratories where maintaining differential air pressure is paramount. Interlocks 2 to 12 doors electrically so adjacent airlock doors cannot be opened simultaneously, preventing cross-contamination.',
     features: [
@@ -963,6 +1034,7 @@ export const productsData = [
     subcategory: 'Air Barriers & Thermal Isolation',
     tagline: 'Flameproof & non-flameproof aerodynamic barriers keeping insects, dust & heat out',
     badge: 'Thermo Zone',
+    image: '/services/service-air-curtain.jpg',
     workSummary: 'Aerodynamic air barrier preserving conditioned air & blocking insects',
     description: 'Precision engineered industrial air curtains that produce an invisible, high-velocity aerodynamic barrier across open doorways. Traps chilled air conditioning inside while repelling external summer heat, dust, fumes, and flying insects. Available in Flameproof (Ex-d) and Non-Flameproof specifications.',
     features: [
@@ -1057,9 +1129,76 @@ export const getProductMedia = (productOrSlug) => {
     ? productOrSlug.toLowerCase() 
     : productOrSlug?.slug?.toLowerCase() || '';
 
+  const directImage = typeof productOrSlug === 'object' && productOrSlug?.image ? productOrSlug.image : null;
+
+  const withDirectImage = (mediaConfig) => {
+    if (!directImage) return mediaConfig;
+    const gallery = mediaConfig.gallery ? [...mediaConfig.gallery] : [];
+    const existingIdx = gallery.findIndex(item => item.url === directImage);
+    if (existingIdx > 0) {
+      const [item] = gallery.splice(existingIdx, 1);
+      gallery.unshift(item);
+    } else if (existingIdx === -1) {
+      gallery.unshift({
+        url: directImage,
+        title: typeof productOrSlug === 'object' && productOrSlug?.name ? productOrSlug.name : 'Engineering System',
+        subtitle: typeof productOrSlug === 'object' && productOrSlug?.workSummary ? productOrSlug.workSummary : 'Turnkey Installation'
+      });
+    }
+    return {
+      ...mediaConfig,
+      primaryImage: directImage,
+      gallery
+    };
+  };
+
+  // Dedicated Media for High-Speed Industrial Doors
+  if (slug === 'high-speed-industrial-doors') {
+    return withDirectImage({
+      primaryImage: '/services/service-high-speed-doors.jpg',
+      badge: 'High Cycle Rapid',
+      caption: 'High-Cycle Fast Operating Fabric & Spiral Doors for Logistics & Clean Bays',
+      gallery: [
+        { url: '/services/service-high-speed-doors.jpg', title: 'High-Speed Rapid Industrial Door', subtitle: 'Frequency Inverter Drive with Active Light Grid' },
+        { url: '/services/services-rapid-airlock.jpg', title: 'Pharma Airlock Partition', subtitle: 'Grade A Fire-Retardant PVC with Vision Window' },
+        { url: '/products/rapid-doors.jpg', title: 'Logistics Airlock Installation', subtitle: 'Rapid Thermal Retention & Dust Barrier Isolation' },
+        { url: '/services/service-sectional-doors.jpg', title: 'Heavy Insulated Sectional Bay', subtitle: 'PUF Sandwich Panels for Acoustic & Thermal Seal' },
+      ],
+      video: {
+        title: 'High-Speed Industrial Door 2.0 m/s Cycle & Safety Light Curtain Demo',
+        duration: '01:30',
+        resolution: '4K UHD 60fps',
+        type: 'High-Speed Curtain Simulation',
+        simType: 'rapid_doors'
+      }
+    });
+  }
+
+  // Dedicated Media for Hangar Doors
+  if (slug === 'hangar-doors') {
+    return withDirectImage({
+      primaryImage: '/services/service-hangar-doors.jpg',
+      badge: 'Heavy Engineering',
+      caption: 'Custom-Engineered Structural Multi-Leaf Sliding Doors for Aviation & Shipyards',
+      gallery: [
+        { url: '/services/service-hangar-doors.jpg', title: 'Aviation Hangar Clear Span Door', subtitle: 'Bottom-Rolling Multi-Leaf Structural Steel Configuration' },
+        { url: '/services/services-perimeter-gate.jpg', title: 'Heavy Industrial Drive', subtitle: 'Dual Motorized Pinion Drive with Electromagnetic Brakes' },
+        { url: '/services/services-trackless-gate.jpg', title: 'Engineered Wind Truss Design', subtitle: 'Tested for Extreme 150 km/h Coastal Wind Loads' },
+        { url: '/products/boom-barriers.jpg', title: 'Warning & Beacon System', subtitle: 'Acoustic Sirens, Strobe Warning Beacons & Dead-Man Controls' },
+      ],
+      video: {
+        title: 'Heavy Structural Hangar Door 60m Span Traversal & Fail-Safe Test',
+        duration: '02:30',
+        resolution: '4K UHD 60fps',
+        type: 'Heavy Engineering Simulation',
+        simType: 'perimeter_gates'
+      }
+    });
+  }
+
   // 1. Automatic Sliding & Swing Doors
   if (slug.includes('sliding-swing-doors') || slug.includes('sliding-door') || slug.includes('swing-door')) {
-    return {
+    return withDirectImage({
       primaryImage: '/products/automatic-doors.jpg',
       badge: '4K Corporate Vision',
       caption: 'Architectural Touchless Entry with Smart Infrared & Radar Sensing',
@@ -1076,12 +1215,12 @@ export const getProductMedia = (productOrSlug) => {
         type: 'Electromechanical Simulation',
         simType: 'sliding_doors'
       }
-    };
+    });
   }
 
   // 2. Heavy Duty Sliding & Swing Gates / Telescopic Cantilever
   if (slug.includes('gates') || slug.includes('cantilever') || slug.includes('telescopic')) {
-    return {
+    return withDirectImage({
       primaryImage: '/services/services-perimeter-gate.jpg',
       badge: 'Heavy Industrial',
       caption: 'High-Torque Oil-Bath Motorized Perimeter Defense Gates',
@@ -1098,12 +1237,12 @@ export const getProductMedia = (productOrSlug) => {
         type: 'Industrial Drive Simulation',
         simType: 'perimeter_gates'
       }
-    };
+    });
   }
 
   // 3. High Speed Rapid Doors / Shutters / Sectional Doors
   if (slug.includes('rapid') || slug.includes('roll-up') || slug.includes('shutter') || slug.includes('sectional')) {
-    return {
+    return withDirectImage({
       primaryImage: '/products/rapid-doors.jpg',
       badge: '1.5 m/s Rapid Cycle',
       caption: 'Self-Repairing High-Speed PVC Curtain for Cleanroom & Logistics Isolation',
@@ -1120,12 +1259,12 @@ export const getProductMedia = (productOrSlug) => {
         type: 'High-Speed Curtain Simulation',
         simType: 'rapid_doors'
       }
-    };
+    });
   }
 
   // 4. Boom Barriers / Dock Levellers / Turnstiles / Bollards / Parking
   if (slug.includes('boom-barrier') || slug.includes('dock') || slug.includes('turnstile') || slug.includes('bollard') || slug.includes('visitor')) {
-    return {
+    return withDirectImage({
       primaryImage: '/products/boom-barriers.jpg',
       badge: 'Continuous Duty',
       caption: 'High-Frequency Intelligent Toll & Corporate Parking Access Control',
@@ -1142,12 +1281,12 @@ export const getProductMedia = (productOrSlug) => {
         type: 'Traffic Automation Simulation',
         simType: 'boom_barriers'
       }
-    };
+    });
   }
 
   // 5. Cleanroom Door Interlocks / Pass Box / Clocks / Cleanroom Doors
   if (slug.includes('interlock') || slug.includes('pass-box') || slug.includes('clock') || slug.includes('clean-room') || slug.includes('acoustic') || slug.includes('sound-proof')) {
-    return {
+    return withDirectImage({
       primaryImage: '/products/cleanroom-interlocks.jpg',
       badge: '21 CFR Part 11',
       caption: 'USFDA 21 CFR Part 11 Compliant Intelligent Interlocking System',
@@ -1164,12 +1303,12 @@ export const getProductMedia = (productOrSlug) => {
         type: 'Pharma Logic Simulation',
         simType: 'cleanroom_interlocks'
       }
-    };
+    });
   }
 
   // 6. Fire Alarm / Hydrant / Fire Rated Doors / PA System / Gas Detection
   if (slug.includes('fire') || slug.includes('public-address') || slug.includes('gas-detection')) {
-    return {
+    return withDirectImage({
       primaryImage: '/products/fire-alarm.jpg',
       badge: 'Life Safety UL/FM',
       caption: 'Intelligent Multi-Loop Addressable Fire Detection & Auto-Suppression',
@@ -1186,12 +1325,12 @@ export const getProductMedia = (productOrSlug) => {
         type: 'Safety Matrix Simulation',
         simType: 'fire_safety'
       }
-    };
+    });
   }
 
   // 7. CCTV / Biometrics / Video Door Phones / Server Monitoring / Fault Alarms
   if (slug.includes('cctv') || slug.includes('biometric') || slug.includes('video-door') || slug.includes('server-room') || slug.includes('fault') || slug.includes('intrusion')) {
-    return {
+    return withDirectImage({
       primaryImage: '/products/cctv-biometrics.jpg',
       badge: 'AI 4K Analytics',
       caption: 'Deep-Learning Facial Biometrics & Ultra-HD Command Center CCTV',
@@ -1208,11 +1347,11 @@ export const getProductMedia = (productOrSlug) => {
         type: 'AI Vision Simulation',
         simType: 'surveillance_ai'
       }
-    };
+    });
   }
 
   // 8. Hygiene Solutions / Air Curtains / Dispensers / Strip Curtains
-  return {
+  return withDirectImage({
     primaryImage: '/services/service-air-curtain.jpg',
     badge: 'Industrial Grade',
     caption: 'High-Velocity Environmental Air Barrier & Touchless Hygiene Technology',
@@ -1229,7 +1368,7 @@ export const getProductMedia = (productOrSlug) => {
       type: 'Airflow Barrier Simulation',
       simType: 'hygiene_barrier'
     }
-  };
+  });
 };
 
 // Helper: Get product by slug (with intelligent fallback)

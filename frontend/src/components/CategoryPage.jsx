@@ -204,12 +204,12 @@ const INDUSTRIAL_AUTOMATION_SERVICES = [
   },
   {
     num: '13',
-    id: 12,
-    slug: 'pvc-rapid-roll-up-doors',
+    id: 34,
+    slug: 'high-speed-industrial-doors',
     title: 'High-Speed Industrial Doors',
     categoryBadge: 'Special Applications',
     categoryFilters: ['All', 'Vertical Access', 'High Speed', 'Custom Solutions'],
-    description: 'Advanced doors for specialized applications.',
+    description: 'High-cycle fast operating fabric and spiral doors for logistics bays and manufacturing.',
     features: [
       'High cycle performance',
       'Insulated & durable',
@@ -220,12 +220,12 @@ const INDUSTRIAL_AUTOMATION_SERVICES = [
   },
   {
     num: '14',
-    id: 3,
-    slug: 'telescopic-cantilever-gates',
+    id: 35,
+    slug: 'hangar-doors',
     title: 'Hangar Doors',
     categoryBadge: 'Special Applications',
     categoryFilters: ['All', 'Vertical Access', 'Heavy Duty', 'Custom Solutions'],
-    description: 'Large span doors for aviation and heavy industrial facilities.',
+    description: 'Large span doors for aviation, shipyard, and heavy industrial facilities.',
     features: [
       'Custom engineered design',
       'Wide opening solutions',

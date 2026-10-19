@@ -8,6 +8,24 @@ import {
 } from 'lucide-react';
 import { productsData, getProductMedia } from '../data/productsData';
 
+// Exact 1:1 image mapping for all 14 Industrial Access Automation services
+export const SERVICE_CARD_IMAGES = {
+  'automatic-sliding-swing-doors': '/services/services-touchless-entry.jpg',
+  'automatic-sliding-swing-gates': '/services/services-perimeter-gate.jpg',
+  'telescopic-cantilever-gates': '/services/services-trackless-gate.jpg',
+  'pvc-rapid-roll-up-doors': '/services/services-rapid-airlock.jpg',
+  'sectional-overhead-doors': '/services/service-sectional-doors.jpg',
+  'fire-rated-doors-shutters': '/services/service-fire-doors.jpg',
+  'motorized-rolling-shutters': '/services/services-heavy-security.jpg',
+  'boom-barriers': '/services/service-boom-barrier.jpg',
+  'dock-levellers-dock-shelters': '/services/services-logistics-bridge.jpg',
+  'industrial-air-curtains': '/services/service-air-curtain.jpg',
+  'door-interlock-systems': '/services/service-cleanroom.jpg',
+  'bollards-tyre-killers-car-lifts': '/services/service-bollards-blockers.jpg',
+  'high-speed-industrial-doors': '/services/service-high-speed-doors.jpg',
+  'hangar-doors': '/services/service-hangar-doors.jpg'
+};
+
 export default function ProductDetailPage({ 
   product, 
   onNavigate, 
@@ -246,10 +264,16 @@ export default function ProductDetailPage({
 
           <button 
             className="back-btn"
-            onClick={() => onNavigate('home', 'catalog')}
+            onClick={() => {
+              if (product.category?.toLowerCase().includes('automation')) {
+                onNavigate('automation');
+              } else {
+                onNavigate('home', 'catalog');
+              }
+            }}
           >
             <ArrowLeft size={15} />
-            <span>Back to All Products</span>
+            <span>{product.category?.toLowerCase().includes('automation') ? 'Back to Services' : 'Back to All Products'}</span>
           </button>
         </div>
       </div>
