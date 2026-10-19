@@ -233,27 +233,32 @@ export default function ProductDetailPage({
   const telemetry = getTelemetryData();
   const activeImage = gallery[activeImgIdx] || gallery[0];
 
-  const ACCESS_AUTOMATION_REDESIGNED_SLUGS = [
+  const REDESIGNED_PRODUCT_SLUGS = [
+    // Access Automation Products
     'automatic-sliding-swing-doors',
     'automatic-sliding-swing-gates',
     'telescopic-cantilever-gates',
     'pvc-rapid-roll-up-doors',
     'motorized-rolling-shutters',
+    // Cleanroom Products
     'door-interlock-systems',
     'pharma-cleanroom-door-interlock-system',
-    'cleanroom-door-interlock-system'
+    'cleanroom-door-interlock-system',
+    // Traffic & Perimeter Products
+    'boom-barriers',
+    'dock-levellers-dock-shelters',
+    'turnstiles-flap-barriers-speed-gates',
+    'bollards-tyre-killers-car-lifts',
+    'visitor-management-system',
+    'parking-intrusion-alarms'
   ];
 
   if (
-    ACCESS_AUTOMATION_REDESIGNED_SLUGS.includes(product?.slug) ||
+    REDESIGNED_PRODUCT_SLUGS.includes(product?.slug) ||
+    REDESIGNED_PRODUCT_SLUGS.includes(product?.id) ||
     product?.id === 17 ||
     product?.id === 'door-interlock-systems' ||
-    product?.id === 'automatic-doors' ||
-    product?.id === 'automatic-sliding-swing-doors' ||
-    product?.id === 'automatic-sliding-swing-gates' ||
-    product?.id === 'telescopic-cantilever-gates' ||
-    product?.id === 'pvc-rapid-roll-up-doors' ||
-    product?.id === 'motorized-rolling-shutters'
+    product?.id === 'automatic-doors'
   ) {
     return (
       <AutomaticDoorsDetailView

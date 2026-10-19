@@ -4,9 +4,11 @@
    ========================================================================== */
 
 .auto-doors-page-container {
-  max-width: 1200px;
+  max-width: 1440px;
+  width: 100%;
   margin: 0 auto;
-  padding: 20px 24px 70px;
+  padding: 18px 32px 70px;
+  box-sizing: border-box;
   font-family: inherit;
   color: #0f172a;
 }
@@ -18,7 +20,7 @@
   gap: 8px;
   font-size: 0.82rem;
   color: #64748b;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .auto-breadcrumb-btn {
@@ -48,13 +50,13 @@
 
 /* 2. Hero Section */
 .auto-doors-hero-section {
-  margin-bottom: 44px;
+  margin-bottom: 40px;
 }
 
 .auto-doors-hero-grid {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
-  gap: 44px;
+  gap: 48px;
   align-items: center;
 }
 
@@ -113,19 +115,17 @@
 }
 
 .auto-doors-hero-desc {
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   color: #475569;
   line-height: 1.6;
-  margin: 0 0 28px;
-  max-width: 530px;
+  margin: 0 0 24px;
+  max-width: 620px;
 }
 
 .auto-btn-row {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
+  margin-bottom: 26px;
 }
 
 .auto-btn-primary {
@@ -134,9 +134,9 @@
   gap: 9px;
   background: #e11d48;
   color: #ffffff;
-  padding: 13px 24px;
+  padding: 13px 26px;
   border-radius: 8px;
-  font-size: 0.94rem;
+  font-size: 0.95rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
@@ -150,40 +150,20 @@
   box-shadow: 0 6px 18px rgba(225, 29, 72, 0.38);
 }
 
-.auto-btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #ffffff;
-  color: #0f172a;
-  padding: 12px 22px;
-  border-radius: 8px;
-  font-size: 0.94rem;
-  font-weight: 600;
-  border: 1.5px solid #cbd5e1;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.auto-btn-secondary:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
-}
-
 .auto-trust-row {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 26px;
   flex-wrap: wrap;
   border-top: 1px solid #f1f5f9;
-  padding-top: 18px;
+  padding-top: 20px;
 }
 
 .auto-trust-item {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.81rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: #334155;
 }
@@ -199,7 +179,7 @@
 
 .auto-hero-main-img {
   width: 100%;
-  height: 380px;
+  height: 410px;
   object-fit: cover;
   display: block;
 }
@@ -234,8 +214,8 @@
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 22px;
-  padding: 36px 40px;
-  margin-bottom: 40px;
+  padding: 36px 44px;
+  margin-bottom: 38px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
 }
 
@@ -275,7 +255,7 @@
 .auto-doors-video-grid {
   display: grid;
   grid-template-columns: 1.35fr 1fr;
-  gap: 36px;
+  gap: 44px;
   align-items: center;
 }
 
@@ -361,7 +341,7 @@
 .auto-doors-engineering-grid {
   display: grid;
   grid-template-columns: 1fr 1.25fr;
-  gap: 40px;
+  gap: 44px;
   align-items: center;
 }
 
@@ -431,8 +411,8 @@
 /* 5. Technical Specifications & Standards Section */
 .auto-doors-specs-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 40px;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 44px;
   align-items: flex-start;
 }
 
@@ -553,7 +533,7 @@
 .auto-related-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 28px;
 }
 
 .auto-related-card {
@@ -563,7 +543,7 @@
 
 .auto-related-media {
   width: 100%;
-  height: 230px;
+  height: 250px;
   border-radius: 16px;
   overflow: hidden;
   background: #0f172a;
@@ -736,6 +716,27 @@
    RESPONSIVE DESIGN (Desktop, Tablet, Mobile)
    ========================================================================== */
 
+@media (max-width: 1280px) {
+  .auto-doors-page-container {
+    padding: 16px 24px 60px;
+  }
+
+  .auto-hero-main-img {
+    height: 380px;
+  }
+
+  .auto-doors-hero-grid,
+  .auto-doors-video-grid,
+  .auto-doors-engineering-grid,
+  .auto-doors-specs-grid {
+    gap: 36px;
+  }
+
+  .auto-related-media {
+    height: 230px;
+  }
+}
+
 @media (max-width: 1024px) {
   .auto-doors-hero-grid {
     grid-template-columns: 1fr;
@@ -786,8 +787,7 @@
     gap: 12px;
   }
 
-  .auto-btn-primary,
-  .auto-btn-secondary {
+  .auto-btn-primary {
     width: 100%;
     justify-content: center;
   }

@@ -4,7 +4,6 @@ import {
   Wrench, 
   Settings, 
   Send, 
-  Download, 
   Play, 
   Pause, 
   Check, 
@@ -329,7 +328,7 @@ export default function AutomaticDoorsDetailView({
   const [modalSubmitted, setModalSubmitted] = useState(false);
 
   // Match configuration for current product, fallback to automatic-sliding-swing-doors
-  const cfg = ACCESS_AUTOMATION_CONFIGS[product?.slug] || ACCESS_AUTOMATION_CONFIGS['automatic-sliding-swing-doors'];
+  const cfg = ACCESS_AUTOMATION_CONFIGS[product?.slug] || ACCESS_AUTOMATION_CONFIGS[product?.id] || ACCESS_AUTOMATION_CONFIGS['automatic-sliding-swing-doors'];
 
   const [formData, setFormData] = useState({
     name: '',
@@ -371,10 +370,6 @@ export default function AutomaticDoorsDetailView({
         setIsVideoPlaying(false);
       }
     }
-  };
-
-  const handleBrochureDownload = () => {
-    alert(`Technical specification dossier & CAD schematic for "${cfg.name}" is being prepared. Our engineering office will email the PDF package to your registered address.`);
   };
 
   const handleInputChange = (e) => {
@@ -442,7 +437,7 @@ export default function AutomaticDoorsDetailView({
         <span className="auto-breadcrumb-sep">&gt;</span>
         <button 
           className="auto-breadcrumb-btn"
-          onClick={() => onNavigate && onNavigate(cfg.categoryRoute || 'automation')}
+          onClick={() => onNavigate && onNavigate(cfg.categoryRoute || cfg.categoryPage || 'automation')}
         >
           {cfg.categoryName || 'Automation'}
         </button>
@@ -478,16 +473,6 @@ export default function AutomaticDoorsDetailView({
                 <Send size={16} />
                 <span>Request Instant Quotation</span>
               </button>
-
-              {cfg.hasBrochure !== false && (
-                <button 
-                  className="auto-btn-secondary"
-                  onClick={handleBrochureDownload}
-                >
-                  <Download size={16} />
-                  <span>Download Specs PDF</span>
-                </button>
-              )}
             </div>
 
             <div className="auto-trust-row">

@@ -1,7 +1,9 @@
+import { TRAFFIC_PERIMETER_CONFIGS } from './trafficPerimeterDetailData';
+
 // Detailed Product Configuration Data for Access Automation Products
 // Perfectly aligns with the reference design for Automatic Sliding & Swing Doors
 
-export const ACCESS_AUTOMATION_CONFIGS = {
+const ACCESS_AUTOMATION_INTERNAL_CONFIGS = {
   'automatic-sliding-swing-doors': {
     slug: 'automatic-sliding-swing-doors',
     name: 'Automatic Sliding & Swing Doors',
@@ -686,7 +688,11 @@ export const ACCESS_AUTOMATION_CONFIGS = {
   }
 };
 
+export const ACCESS_AUTOMATION_CONFIGS = {
+  ...ACCESS_AUTOMATION_INTERNAL_CONFIGS,
+  ...TRAFFIC_PERIMETER_CONFIGS
+};
+
 // Aliases for alternate slug resolutions
 ACCESS_AUTOMATION_CONFIGS['pharma-cleanroom-door-interlock-system'] = ACCESS_AUTOMATION_CONFIGS['door-interlock-systems'];
 ACCESS_AUTOMATION_CONFIGS['cleanroom-door-interlock-system'] = ACCESS_AUTOMATION_CONFIGS['door-interlock-systems'];
-
