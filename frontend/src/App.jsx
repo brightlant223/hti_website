@@ -27,7 +27,8 @@ import BlogsPage from './components/BlogsPage';
 import CareersPage from './components/CareersPage';
 
 // Complete static seed data fallback for resilient offline loading
-import { productsData, getProductBySlug } from './data/productsData';
+import { productsData } from './data/productsData';
+import { getProductBySlug } from './data/productCatalogueData';
 
 // Helper to determine initial page and parameter from URL path
 const parseUrlRoute = () => {
@@ -485,7 +486,8 @@ export default function App() {
               loading={loading}
               selectedCategory={selectedCategory}
               onCategoryChange={setSelectedCategory}
-              onSelectProduct={(p) => navigateTo('product', p.slug)}
+              onSelectProduct={(p) => navigateTo('product', typeof p === 'string' ? p : (p?.slug || 'automatic-sliding-swing-doors'))}
+              onNavigate={navigateTo}
               onQuickQuote={handleQuickQuote}
             />
 

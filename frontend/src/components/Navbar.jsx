@@ -988,11 +988,9 @@ export default function Navbar({
             <div className="bright-container">
               <div className="products-horizontal-grid">
                 {productColumns.map((col, idx) => {
-                  const IconComp = col.icon;
                   return (
                     <div key={idx} className="prod-col-group">
                       <div className={`prod-col-header ${col.colorClass}`}>
-                        <IconComp size={16} />
                         <span>{col.title}</span>
                       </div>
                       <div className="prod-col-items">
@@ -1157,24 +1155,73 @@ export default function Navbar({
                   onClick={() => setMobileAccordion(mobileAccordion === 'products' ? null : 'products')}
                   aria-expanded={mobileAccordion === 'products'}
                 >
-                  <span className="mobile-accordion-title">Products Catalog</span>
+                  <span className="mobile-accordion-title">Products Catalog (25 Systems)</span>
                   {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
 
                 {mobileAccordion === 'products' && (
-                  <div className="mobile-accordion-body">
-                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleCategoryClick('Automation'); }}>
-                      Automation Solutions
+                  <div className="mobile-accordion-body mobile-products-accordion">
+                    <button
+                      className="mobile-sublink font-bold flex items-center justify-between"
+                      onClick={() => { setMobileMenuOpen(false); handleNavClick('home', 'catalog'); }}
+                      style={{ 
+                        color: '#0284c7', 
+                        fontWeight: 700, 
+                        background: 'rgba(2, 132, 199, 0.08)',
+                        padding: '10px 12px',
+                        borderRadius: '8px',
+                        marginBottom: '8px'
+                      }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Layers size={16} />
+                        <span>Open 25-Product Interactive Catalog</span>
+                      </div>
+                      <ArrowRight size={14} />
                     </button>
-                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleCategoryClick('Security System'); }}>
-                      Security & Life Safety Systems
-                    </button>
-                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleCategoryClick('Hygiene'); }}>
-                      Hygiene & Cleanroom Automation
-                    </button>
-                    <button className="mobile-sublink text-cyan font-semibold" onClick={() => { setMobileMenuOpen(false); handleNavClick('home', 'interlock-demo'); }}>
-                      Interactive Cleanroom Interlock Demo ↗
-                    </button>
+
+                    {productColumns.map((col, cIdx) => (
+                      <div key={cIdx} className="mobile-prod-category-group" style={{ marginBottom: '12px' }}>
+                        <div 
+                          className={`mobile-prod-category-title ${col.colorClass}`}
+                          style={{
+                            fontSize: '0.74rem',
+                            fontWeight: 800,
+                            letterSpacing: '0.06em',
+                            padding: '6px 8px',
+                            borderBottom: '1px solid #e2e8f0',
+                            marginBottom: '4px',
+                            textTransform: 'uppercase'
+                          }}
+                        >
+                          {col.title}
+                        </div>
+                        <div className="mobile-prod-links-list" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                          {col.items.map((item) => (
+                            <button
+                              key={item.slug}
+                              className="mobile-sublink"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                handleProductClick(item.slug);
+                              }}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                padding: '9px 12px',
+                                fontSize: '0.86rem',
+                                borderRadius: '6px'
+                              }}
+                            >
+                              <span>{item.name}</span>
+                              <ArrowRight size={13} style={{ opacity: 0.5, flexShrink: 0 }} />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
