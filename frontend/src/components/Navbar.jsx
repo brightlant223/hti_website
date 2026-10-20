@@ -22,6 +22,7 @@ import {
   Activity,
   CheckCircle2,
   Building2,
+  Briefcase,
   Users,
   User,
   Handshake,
@@ -128,7 +129,11 @@ export default function Navbar({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const handleNavClick = (page, sectionId = null) => {
+  const handleNavClick = (page, sectionId = null, e = null) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
     setActiveDropdown(null);
     setMobileMenuOpen(false);
     if (onNavigate) {
@@ -207,6 +212,9 @@ export default function Navbar({
   };
 
   const toggleDropdown = (name) => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
     setActiveDropdown(prev => prev === name ? null : name);
   };
 
@@ -1344,51 +1352,82 @@ export default function Navbar({
 
         {/* 3. COMPANY HORIZONTAL DROPDOWN (Dedicated Separate Pages) */}
         {activeDropdown === 'company' && (
-          <div className="bright-horizontal-dropdown desktop-only">
+          <div 
+            className="bright-horizontal-dropdown desktop-only"
+            onMouseEnter={() => handleMouseEnterDropdown('company')}
+            onMouseLeave={handleMouseLeaveDropdown}
+          >
             <div className="bright-container">
               <div className="horizontal-columns-grid">
                 <button
+                  type="button"
                   className="horiz-col-item"
-                  onClick={() => handleNavClick('about')}
+                  onClick={(e) => handleNavClick('about', null, e)}
                 >
-                  <div className="horiz-col-title">About Us</div>
-                  <div className="horiz-col-desc">Our story, values & engineering ethos since 2014</div>
-                </button>
-
-                <button
-                  className="horiz-col-item"
-                  onClick={() => handleNavClick('clients')}
-                >
-                  <div className="horiz-col-title">Our Clients</div>
-                  <div className="horiz-col-desc">100+ prestigious pharma & commercial corporate installations</div>
-                </button>
-
-
-                <button
-                  className="horiz-col-item"
-                  onClick={() => handleNavClick('careers')}
-                >
-                  <div className="horiz-col-title">Careers</div>
-                  <div className="horiz-col-desc">
-                    Explore career opportunities and grow with HTI Automation
+                  <div className="horiz-col-icon-box">
+                    <Building2 size={18} />
+                  </div>
+                  <div className="horiz-col-text">
+                    <div className="horiz-col-title">About Us</div>
+                    <div className="horiz-col-desc">Our story, values &amp; engineering ethos since 2014</div>
                   </div>
                 </button>
 
-
                 <button
+                  type="button"
                   className="horiz-col-item"
-                  onClick={() => handleNavClick('blogs')}
+                  onClick={(e) => handleNavClick('clients', null, e)}
                 >
-                  <div className="horiz-col-title">Blogs</div>
-                  <div className="horiz-col-desc">Cleanroom standards, USFDA compliance & engineering notes</div>
+                  <div className="horiz-col-icon-box">
+                    <Users size={18} />
+                  </div>
+                  <div className="horiz-col-text">
+                    <div className="horiz-col-title">Our Clients</div>
+                    <div className="horiz-col-desc">100+ prestigious pharma &amp; commercial installations</div>
+                  </div>
                 </button>
 
                 <button
-                  className="horiz-col-item horiz-col-contact"
-                  onClick={() => handleNavClick('contact')}
+                  type="button"
+                  className="horiz-col-item"
+                  onClick={(e) => handleNavClick('careers', null, e)}
                 >
-                  <div className="horiz-col-title">Contact Us</div>
-                  <div className="horiz-col-desc">Talk to our engineering team in Turbhe, Navi Mumbai</div>
+                  <div className="horiz-col-icon-box">
+                    <Briefcase size={18} />
+                  </div>
+                  <div className="horiz-col-text">
+                    <div className="horiz-col-title">Careers</div>
+                    <div className="horiz-col-desc">Explore engineering careers &amp; join our growing team</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  className="horiz-col-item"
+                  onClick={(e) => handleNavClick('blogs', null, e)}
+                >
+                  <div className="horiz-col-icon-box">
+                    <BookOpen size={18} />
+                  </div>
+                  <div className="horiz-col-text">
+                    <div className="horiz-col-title">Blogs</div>
+                    <div className="horiz-col-desc">Cleanroom standards, USFDA compliance &amp; notes</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  className="horiz-col-item horiz-col-contact"
+                  onClick={(e) => handleNavClick('contact', null, e)}
+                >
+                  <div className="horiz-col-icon-box contact-icon-box">
+                    <PhoneCall size={18} />
+                  </div>
+                  <div className="horiz-col-text">
+                    <div className="horiz-col-title">Contact Us</div>
+                    <div className="horiz-col-desc">Talk to our engineering team in Navi Mumbai</div>
+                  </div>
+                  <ArrowRight size={14} className="horiz-col-arrow" />
                 </button>
               </div>
             </div>

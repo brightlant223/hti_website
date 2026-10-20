@@ -780,38 +780,65 @@
 .horizontal-columns-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 16px;
-  padding: 12px 0 14px;
+  gap: 14px;
+  padding: 16px 0 18px;
   height: auto;
   align-items: stretch;
 }
 
 .horiz-col-item {
-  background: transparent;
-  border: 1px solid transparent;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   text-align: left;
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 12px 14px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 12px;
   height: auto;
-  min-height: auto;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
 .horiz-col-item:hover {
   background: #f8fafc;
-  border-color: #f1f5f9;
-  transform: translateY(-1px);
+  border-color: #93c5fd;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.10);
+}
+
+.horiz-col-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: #f0f9ff;
+  border: 1px solid #dbeafe;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.horiz-col-item:hover .horiz-col-icon-box {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  transform: scale(1.05);
+}
+
+.horiz-col-text {
+  flex: 1;
+  min-width: 0;
 }
 
 .horiz-col-title {
-  font-size: 0.9rem;
+  font-size: 0.90rem;
   font-weight: 700;
   color: #0f172a;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
   line-height: 1.25;
   transition: color 0.18s ease;
 }
@@ -821,47 +848,115 @@
 }
 
 .horiz-col-desc {
-  font-size: 0.77rem;
+  font-size: 0.72rem;
   color: #64748b;
   line-height: 1.35;
   margin: 0;
 }
 
-/* Contact Us Card - Sized Naturally with Content-Driven Height */
+/* Contact Us Card - Highlighted Accent */
 .horiz-col-item.horiz-col-contact {
-  background: #f0f9ff;
-  border: 1px solid #e0f2fe;
-  border-radius: 8px;
-  height: auto;
-  min-height: auto;
+  background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+  border: 1.5px solid #bfdbfe;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);
+}
+
+.horiz-col-item.horiz-col-contact .horiz-col-icon-box {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
 }
 
 .horiz-col-item.horiz-col-contact .horiz-col-title {
   color: #0284c7;
+  font-weight: 800;
 }
 
 .horiz-col-item.horiz-col-contact:hover {
-  background: #e0f2fe;
-  border-color: #bae6fd;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #dbeafe 0%, #bae6fd 100%);
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.18);
+}
+
+.horiz-col-arrow {
+  color: #0284c7;
+  flex-shrink: 0;
+  margin-top: 4px;
+  transition: transform 0.2s ease;
+}
+
+.horiz-col-item.horiz-col-contact:hover .horiz-col-arrow {
+  transform: translateX(3px);
+}
+
+/* Dark mode for Company dropdown */
+[data-theme="dark"] .bright-horizontal-dropdown {
+  background: #0b1324;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .horiz-col-item {
+  background: #111a2e;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .horiz-col-item:hover {
+  background: #17233d;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .horiz-col-icon-box {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .horiz-col-item:hover .horiz-col-icon-box {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .horiz-col-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .horiz-col-desc {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .horiz-col-item.horiz-col-contact {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.15) 0%, rgba(30, 58, 138, 0.25) 100%);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+[data-theme="dark"] .horiz-col-item.horiz-col-contact:hover {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(30, 58, 138, 0.4) 100%);
+  border-color: #38bdf8;
 }
 
 @media (max-width: 1150px) and (min-width: 1025px) {
   .horizontal-columns-grid {
     gap: 10px;
-    padding: 10px 0 12px;
+    padding: 12px 0 14px;
   }
 
   .horiz-col-item {
-    padding: 6px 8px;
+    padding: 10px 10px;
+    gap: 8px;
+  }
+
+  .horiz-col-icon-box {
+    width: 32px;
+    height: 32px;
   }
 
   .horiz-col-title {
-    font-size: 0.85rem;
+    font-size: 0.84rem;
   }
 
   .horiz-col-desc {
-    font-size: 0.73rem;
+    font-size: 0.68rem;
   }
 }
 
