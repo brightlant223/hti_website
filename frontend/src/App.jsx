@@ -4,6 +4,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Segments from './components/Segments';
+import ProductShowcase from './components/ProductShowcase';
 import ProductsCatalog from './components/ProductsCatalog';
 import ProductModal from './components/ProductModal';
 import DoorInterlockSimulator from './components/DoorInterlockSimulator';
@@ -52,6 +53,11 @@ const parseUrlRoute = () => {
   if (hash.startsWith('#/products/')) {
     const slug = hash.replace('#/products/', '');
     return { page: 'product', param: slug };
+  }
+
+  // Check dedicated product catalogue route (/catalog or /products)
+  if (path === '/catalog' || path === '/catalog/' || path === '/catalogue' || path === '/products' || path === '/products/' || hash === '#/catalog' || hash === '#catalog') {
+    return { page: 'catalog', param: null };
   }
 
   // Check dedicated category pages
@@ -319,6 +325,13 @@ export default function App() {
     if (page === 'product') {
       targetUrl = `/product/${paramOrSection}`;
       targetParam = paramOrSection;
+    } else if (page === 'catalog') {
+      targetUrl = '/catalog';
+      targetParam = paramOrSection;
+    } else if (page === 'home' && paramOrSection === 'catalog') {
+      targetUrl = '/catalog';
+      targetPage = 'catalog';
+      targetParam = 'all';
     } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
       targetUrl = `/${page}`;
     } else if (page === 'home') {
@@ -378,7 +391,7 @@ export default function App() {
   };
 
   const scrollToCatalog = () => {
-    navigateTo('home', 'catalog');
+    navigateTo('catalog', 'all');
   };
 
   const scrollToDemo = () => {
@@ -418,6 +431,19 @@ export default function App() {
             onNavigate={navigateTo}
             onQuoteSubmit={handleInquirySubmitted}
           />
+        )}
+
+        {/* ROUTE 2: Dedicated Full Product Catalogue (/catalog) */}
+        {routeState.page === 'catalog' && (
+          <div className="dedicated-catalog-page-wrapper">
+            <ProductsCatalog
+              initialCategory={routeState.param || selectedCategory || 'all'}
+              isDedicatedPage={true}
+              onSelectProduct={(p) => navigateTo('product', typeof p === 'string' ? p : (p?.slug || 'automatic-sliding-swing-doors'))}
+              onNavigate={navigateTo}
+              onQuickQuote={handleQuickQuote}
+            />
+          </div>
         )}
 
         {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /perimeter-defense, /fire-protection, /hygiene) */}
@@ -477,19 +503,17 @@ export default function App() {
               onQuoteClick={scrollToContact}
             />
 
-            {/* 3 Core Product Segments */}
-            <Segments onSelectSegment={handleSelectSegment} />
-
-            {/* Product Catalog with Realtime Search & Category Tabs */}
-            <ProductsCatalog
-              products={products}
-              loading={loading}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-              onSelectProduct={(p) => navigateTo('product', typeof p === 'string' ? p : (p?.slug || 'automatic-sliding-swing-doors'))}
+            {/* Concise, Image-Led Homepage Product Showcase */}
+            <ProductShowcase
+              onSelectCategory={(catId) => navigateTo('catalog', catId)}
+              onSelectProduct={(slug) => navigateTo('product', slug)}
+              onExploreCatalog={() => navigateTo('catalog', 'all')}
               onNavigate={navigateTo}
               onQuickQuote={handleQuickQuote}
             />
+
+            {/* 3 Core Product Segments */}
+            <Segments onSelectSegment={handleSelectSegment} />
 
             {/* Door Interlock Logic Simulator & Why Choose HTI */}
             <DoorInterlockSimulator

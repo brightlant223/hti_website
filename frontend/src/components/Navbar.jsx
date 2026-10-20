@@ -37,6 +37,15 @@ import {
 } from 'lucide-react';
 import ProductHoverPopup from './ProductHoverPopup';
 import { getProductBySlug, getProductMedia } from '../data/productsData';
+import { PRODUCT_CATEGORIES } from '../data/productCatalogueData';
+
+const categoryIconMap = {
+  'access-automation': Cpu,
+  'traffic-perimeter': ShieldCheck,
+  'pharma-cleanroom': Lock,
+  'fire-life-safety': Flame,
+  'surveillance-alerts': Activity
+};
 
 export default function Navbar({
   currentPage = 'home',
@@ -551,69 +560,6 @@ export default function Navbar({
     }
   ];
 
-  const productColumns = [
-    {
-      title: 'ACCESS AUTOMATION',
-      icon: Cpu,
-      colorClass: 'text-blue',
-      items: [
-        { slug: 'automatic-sliding-swing-doors', name: 'Automatic Sliding & Swing Doors', work: 'Touchless sensor entry for offices & hospitals' },
-        { slug: 'automatic-sliding-swing-gates', name: 'Automatic Sliding & Swing Gates', work: 'Motorized perimeter gates for factory estates' },
-        { slug: 'telescopic-cantilever-gates', name: 'Telescopic & Cantilever Gates', work: 'Trackless space-saving sliding barriers' },
-        { slug: 'pvc-rapid-roll-up-doors', name: 'High Speed Roll Up & Sectional Doors', work: 'Rapid thermal & airlock environmental retention' },
-        { slug: 'motorized-rolling-shutters', name: 'Motorized Rolling Shutters', work: 'Heavy-gauge galvanized security bay protection' },
-      ]
-    },
-    {
-      title: 'TRAFFIC & PERIMETER',
-      icon: ShieldCheck,
-      colorClass: 'text-amber',
-      items: [
-        { slug: 'boom-barriers', name: 'Boom Barriers (Electro / Hydraulic)', work: 'High-frequency corporate parking & toll gates' },
-        { slug: 'dock-levellers-dock-shelters', name: 'Dock Levellers & Dock Shelters', work: 'Logistics loading bridge between trucks & bay' },
-        { slug: 'turnstiles-flap-barriers-speed-gates', name: 'Turnstiles & Flap Barriers', work: 'Pedestrian biometric lobby speed gates' },
-        { slug: 'bollards-tyre-killers-car-lifts', name: 'Bollards, Tyre Killers & Car Lifts', work: 'Anti-ram vehicle defense & multi-level elevators' },
-        { slug: 'visitor-management-system', name: 'Parking & Visitor Management', work: 'Automated RFID guidance & QR digital pass' },
-      ]
-    },
-    {
-      title: 'PHARMA CLEANROOM',
-      icon: Lock,
-      colorClass: 'text-red',
-      items: [
-        { slug: 'door-interlock-systems', name: 'Door Interlock System (Ex-d & Safe)', work: 'USFDA 21 CFR Part 11 compliant 2–8 door logic' },
-        { slug: 'pass-box-systems', name: 'Pass Box System (Static & Dynamic)', work: 'Contamination-free material transfer with UV' },
-        { slug: 'digital-gps-clocks', name: 'Digital Clocks (Flameproof / Safe)', work: 'GPS master-slave pharma time synchronization' },
-        { slug: 'chiller-clean-room-doors', name: 'Chiller Doors & Clean Room Doors', work: 'Hermetically sealed cold storage & lab barriers' },
-        { slug: 'sound-proof-doors', name: 'Sound Proof Acoustic Doors', work: 'Heavy acoustic decibel dampening for machinery' },
-      ]
-    },
-    {
-      title: 'FIRE & LIFE SAFETY',
-      icon: Flame,
-      colorClass: 'text-orange',
-      items: [
-        { slug: 'fire-alarm-system', name: 'Fire Alarm (Conventional & Addr)', work: 'Multi-loop smoke, heat & flame sensor network' },
-        { slug: 'fire-hydrant-sprinkler-systems', name: 'Fire Hydrant & Sprinkler System', work: 'Turnkey industrial fire fighting water distribution' },
-        { slug: 'fire-rated-doors-shutters', name: 'Fire Rated Door & Fire Rated Shutter', work: 'Certified 120/240 min containment barrier' },
-        { slug: 'public-address-system', name: 'Public Address (PA) System', work: 'Zoned emergency voice evacuation broadcast' },
-        { slug: 'gas-detection-systems', name: 'Gas Detection Systems', work: 'Toxic, combustible LPG/CNG & VOC leak alerts' },
-      ]
-    },
-    {
-      title: 'SURVEILLANCE & ALERTS',
-      icon: Activity,
-      colorClass: 'text-emerald',
-      items: [
-        { slug: 'cctv-surveillance-system', name: 'CCTV Surveillance (Analogue & IP 4K)', work: 'Ultra-HD AI analytics & flameproof camera arrays' },
-        { slug: 'biometric-access-attendance', name: 'Biometric Access & Time Attendance', work: 'Facial recognition & fingerprint shift logging' },
-        { slug: 'video-door-phones', name: 'Video Door Phone (IP & Non-IP)', work: '2-way video intercom with remote door release' },
-        { slug: 'server-room-monitoring', name: 'Server Room Monitoring', work: '24/7 Temp, RH, water leak & fire SMS dialer' },
-        { slug: 'fault-alarm-systems', name: 'Fault & Intrusion Alarm Systems', work: 'Central pump trip & perimeter breach annunciator' },
-      ]
-    }
-  ];
-
   const currentGroup = serviceGroups[selectedServiceGroup] || serviceGroups[0];
 
   const handleDownloadBrochure = (e) => {
@@ -982,33 +928,81 @@ export default function Navbar({
           </div>
         )}
 
-        {/* 2. PRODUCTS HORIZONTAL DROPDOWN (Direct Link to Each Product's Dedicated Page) */}
+        {/* 2. PRODUCTS VISUAL CATEGORY DISCOVERY MEGA MENU */}
         {activeDropdown === 'products' && (
-          <div className="bright-horizontal-dropdown products-mega-dropdown desktop-only">
+          <div 
+            className="bright-horizontal-dropdown products-visual-mega-dropdown desktop-only"
+            onMouseEnter={() => handleMouseEnterDropdown('products')}
+            onMouseLeave={handleMouseLeaveDropdown}
+          >
             <div className="bright-container">
-              <div className="products-horizontal-grid">
-                {productColumns.map((col, idx) => {
+              {/* Top Discovery Bar */}
+              <div className="prod-discovery-topbar">
+                <div className="prod-discovery-left">
+                  <span className="prod-discovery-badge">PRODUCT DISCOVERY</span>
+                  <span className="prod-discovery-title">
+                    5 Specialized Engineering Divisions • 25 Certified Industrial Systems
+                  </span>
+                </div>
+                <button
+                  className="btn-open-full-catalog"
+                  onClick={() => {
+                    setActiveDropdown(null);
+                    if (onNavigate) onNavigate('catalog', 'all');
+                  }}
+                  title="Explore all 25 systems with interactive filtering"
+                >
+                  <span>Explore Full Catalogue</span>
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+
+              {/* 5 Visual Category Discovery Tiles Grid */}
+              <div className="prod-visual-tiles-grid">
+                {PRODUCT_CATEGORIES.map((cat) => {
+                  const IconComp = categoryIconMap[cat.id] || Cpu;
                   return (
-                    <div key={idx} className="prod-col-group">
-                      <div className={`prod-col-header ${col.colorClass}`}>
-                        <span>{col.title}</span>
+                    <div
+                      key={cat.id}
+                      className="prod-visual-tile-card"
+                      onClick={() => {
+                        setActiveDropdown(null);
+                        if (onNavigate) onNavigate('catalog', cat.id);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setActiveDropdown(null);
+                          if (onNavigate) onNavigate('catalog', cat.id);
+                        }
+                      }}
+                      title={`Explore ${cat.title} systems`}
+                    >
+                      {/* Image Preview with Aspect Ratio */}
+                      <div className="prod-tile-image-wrap">
+                        <img
+                          src={cat.image}
+                          alt={cat.title}
+                          className="prod-tile-img"
+                          loading="eager"
+                        />
+                        <div className="prod-tile-badge">
+                          <IconComp size={11} />
+                          <span>5 Systems</span>
+                        </div>
                       </div>
-                      <div className="prod-col-items">
-                        {col.items.map((item) => {
-                          const isHovered = hoveredProductInfo?.slug === item.slug;
-                          return (
-                            <button
-                              key={item.slug}
-                              className={`prod-item-btn ${isHovered ? 'is-active-hover' : ''}`}
-                              onClick={() => handleProductClick(item.slug)}
-                              onMouseEnter={(e) => handleProductHover(item.slug, e)}
-                              onMouseLeave={handleProductLeave}
-                            >
-                              <div className="prod-item-name">{item.name}</div>
-                              <div className="prod-item-work">{item.work}</div>
-                            </button>
-                          );
-                        })}
+
+                      {/* Tile Text Details */}
+                      <div className="prod-tile-content">
+                        <h4 className="prod-tile-title">{cat.title}</h4>
+                        <p className="prod-tile-desc">{cat.shortDescription}</p>
+
+                        <div className="prod-tile-cta">
+                          <span>Explore Category</span>
+                          <ArrowRight size={13} className="tile-arrow" />
+                        </div>
                       </div>
                     </div>
                   );
@@ -1016,31 +1010,36 @@ export default function Navbar({
               </div>
 
               {/* Bottom Quick Bar */}
-              <div className="prod-mega-bottom">
-                <div className="flex-center-gap">
-                  <span className="prod-badge-tag">OFFICIAL CATALOG</span>
-                  <span className="prod-count-text">33+ Precision Systems Installed Across India • Certified Compliance</span>
+              <div className="prod-discovery-bottom-bar">
+                <div className="prod-discovery-bottom-left">
+                  <span className="prod-catalog-pill">OFFICIAL CATALOGUE</span>
+                  <span className="prod-catalog-tagline">
+                    33+ Precision Systems Installed Across India • Certified Compliance
+                  </span>
                 </div>
-                <button className="btn-explore-catalog-link" onClick={() => handleNavClick('home', 'catalog')}>
-                  <span>Open Interactive Product Catalog</span>
-                  <ArrowRight size={14} />
-                </button>
+                <div className="prod-discovery-bottom-right">
+                  <button 
+                    className="btn-prod-quick-quote"
+                    onClick={() => {
+                      setActiveDropdown(null);
+                      if (onNavigate) onNavigate('contact');
+                    }}
+                  >
+                    <span>Request Proposal</span>
+                  </button>
+                  <button 
+                    className="btn-explore-catalog-link" 
+                    onClick={() => {
+                      setActiveDropdown(null);
+                      if (onNavigate) onNavigate('catalog', 'all');
+                    }}
+                  >
+                    <span>View All 25 Products</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
               </div>
             </div>
-
-            {/* Rich Hover Popup with Corporate Generated Images & Technical Specs */}
-            {hoveredProductInfo && (
-              <ProductHoverPopup
-                product={hoveredProductInfo.product}
-                media={hoveredProductInfo.media}
-                position={popupPos}
-                onNavigate={handleProductClick}
-                onMouseEnter={() => {
-                  if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-                }}
-                onMouseLeave={handleProductLeave}
-              />
-            )}
           </div>
         )}
 
@@ -1081,15 +1080,15 @@ export default function Navbar({
                   className="horiz-col-item"
                   onClick={() => handleNavClick('blogs')}
                 >
-                  <div className="horiz-col-title">Technical Blogs</div>
+                  <div className="horiz-col-title">Blogs</div>
                   <div className="horiz-col-desc">Cleanroom standards, USFDA compliance & engineering notes</div>
                 </button>
 
                 <button
-                  className="horiz-col-item"
+                  className="horiz-col-item horiz-col-contact"
                   onClick={() => handleNavClick('contact')}
                 >
-                  <div className="horiz-col-title">Contact Office</div>
+                  <div className="horiz-col-title">Contact Us</div>
                   <div className="horiz-col-desc">Talk to our engineering team in Turbhe, Navi Mumbai</div>
                 </button>
               </div>
@@ -1155,73 +1154,60 @@ export default function Navbar({
                   onClick={() => setMobileAccordion(mobileAccordion === 'products' ? null : 'products')}
                   aria-expanded={mobileAccordion === 'products'}
                 >
-                  <span className="mobile-accordion-title">Products Catalog (25 Systems)</span>
+                  <div className="flex-center-gap">
+                    <span className="mobile-pill-tag">PRODUCTS</span>
+                    <span className="mobile-accordion-title">5 Categories • 25 Systems</span>
+                  </div>
                   {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
 
                 {mobileAccordion === 'products' && (
                   <div className="mobile-accordion-body mobile-products-accordion">
+                    {/* Primary All Products CTA */}
                     <button
-                      className="mobile-sublink font-bold flex items-center justify-between"
-                      onClick={() => { setMobileMenuOpen(false); handleNavClick('home', 'catalog'); }}
-                      style={{ 
-                        color: '#0284c7', 
-                        fontWeight: 700, 
-                        background: 'rgba(2, 132, 199, 0.08)',
-                        padding: '10px 12px',
-                        borderRadius: '8px',
-                        marginBottom: '8px'
+                      className="mobile-sublink font-bold flex items-center justify-between mobile-catalog-cta-highlight"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        if (onNavigate) onNavigate('catalog', 'all');
                       }}
                     >
                       <div className="flex items-center gap-2">
                         <Layers size={16} />
-                        <span>Open 25-Product Interactive Catalog</span>
+                        <span>View All 25 Products (Full Catalogue)</span>
                       </div>
-                      <ArrowRight size={14} />
+                      <ArrowRight size={15} />
                     </button>
 
-                    {productColumns.map((col, cIdx) => (
-                      <div key={cIdx} className="mobile-prod-category-group" style={{ marginBottom: '12px' }}>
-                        <div 
-                          className={`mobile-prod-category-title ${col.colorClass}`}
-                          style={{
-                            fontSize: '0.74rem',
-                            fontWeight: 800,
-                            letterSpacing: '0.06em',
-                            padding: '6px 8px',
-                            borderBottom: '1px solid #e2e8f0',
-                            marginBottom: '4px',
-                            textTransform: 'uppercase'
-                          }}
-                        >
-                          {col.title}
-                        </div>
-                        <div className="mobile-prod-links-list" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                          {col.items.map((item) => (
-                            <button
-                              key={item.slug}
-                              className="mobile-sublink"
-                              onClick={() => {
-                                setMobileMenuOpen(false);
-                                handleProductClick(item.slug);
-                              }}
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                width: '100%',
-                                padding: '9px 12px',
-                                fontSize: '0.86rem',
-                                borderRadius: '6px'
-                              }}
-                            >
-                              <span>{item.name}</span>
-                              <ArrowRight size={13} style={{ opacity: 0.5, flexShrink: 0 }} />
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                    {/* 5 Compact Visual Category Tiles */}
+                    <div className="mobile-categories-tiles-list">
+                      {PRODUCT_CATEGORIES.map((cat) => {
+                        return (
+                          <button
+                            key={cat.id}
+                            className="mobile-cat-row-card"
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              if (onNavigate) onNavigate('catalog', cat.id);
+                            }}
+                          >
+                            <img
+                              src={cat.image}
+                              alt={cat.title}
+                              className="mobile-cat-row-img"
+                              loading="lazy"
+                            />
+                            <div className="mobile-cat-row-info">
+                              <div className="mobile-cat-row-title-row">
+                                <span className="mobile-cat-row-title">{cat.title}</span>
+                                <span className="mobile-cat-row-count">5 Systems</span>
+                              </div>
+                              <p className="mobile-cat-row-desc">{cat.shortDescription}</p>
+                            </div>
+                            <ArrowRight size={15} className="mobile-cat-row-arrow" />
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </div>
@@ -1255,10 +1241,10 @@ export default function Navbar({
                       Technology Partners
                     </button>
                     <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleNavClick('blogs'); }}>
-                      Technical Blogs
+                      Blogs
                     </button>
-                    <button className="mobile-sublink font-semibold text-orange-600" onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}>
-                      Contact Office (Turbhe, Navi Mumbai)
+                    <button className="mobile-sublink font-semibold text-primary" onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}>
+                      Contact Us
                     </button>
                   </div>
                 )}

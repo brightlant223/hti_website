@@ -9,10 +9,13 @@ export const PRODUCT_CATEGORIES = [
     shortTitle: 'Access Automation',
     page: 'automation',
     tagline: 'Touchless architectural pedestrian entry, motorized security gates & high-speed barriers',
+    shortDescription: 'Touchless sliding glass doors, motorized perimeter gates & high-speed airlock roll-up doors.',
+    image: '/products/automatic-doors.jpg',
     iconName: 'Cpu',
     colorClass: 'text-blue',
-    badge: 'ARCHITECTURAL & INDUSTRIAL AUTOMATION',
-    count: 5
+    badge: 'ARCHITECTURAL & INDUSTRIAL',
+    count: 5,
+    keyHighlights: ['Touchless Sensor Entry', 'Sliding & Cantilever Gates', 'High-Speed Rapid Airlocks']
   },
   {
     id: 'traffic-perimeter',
@@ -20,10 +23,13 @@ export const PRODUCT_CATEGORIES = [
     shortTitle: 'Traffic & Perimeter',
     page: 'perimeter-defense',
     tagline: 'High-frequency boom barriers, logistics dock levellers, optical turnstiles & crash bollards',
+    shortDescription: 'Electro-hydraulic boom barriers, logistics dock levellers, speed gates & anti-ram crash bollards.',
+    image: '/products/boom-barriers.jpg',
     iconName: 'ShieldCheck',
     colorClass: 'text-amber',
-    badge: 'VEHICLE & PERIMETER DEFENSE',
-    count: 5
+    badge: 'VEHICLE ACCESS CONTROL',
+    count: 5,
+    keyHighlights: ['Electro-Hydraulic Barriers', 'Dock Levellers & Shelters', 'Optical Pedestrian Turnstiles']
   },
   {
     id: 'pharma-cleanroom',
@@ -31,10 +37,13 @@ export const PRODUCT_CATEGORIES = [
     shortTitle: 'Pharma Cleanroom',
     page: 'cleanroom-interlocks',
     tagline: 'USFDA 21 CFR Part 11 door interlocks, dynamic pass boxes, GPS clocks & chiller doors',
+    shortDescription: 'USFDA 21 CFR Part 11 door interlock logic, dynamic pass boxes, master GPS clocks & cleanroom doors.',
+    image: '/products/cleanroom-interlocks.jpg',
     iconName: 'Lock',
     colorClass: 'text-red',
-    badge: 'CONTAMINATION CONTROL & AIRLOCKS',
-    count: 5
+    badge: 'USFDA CFR PART 11',
+    count: 5,
+    keyHighlights: ['2–8 Door Programmable Logic', 'Static & Dynamic Pass Boxes', 'Master GPS Slave Clocks']
   },
   {
     id: 'fire-life-safety',
@@ -42,10 +51,13 @@ export const PRODUCT_CATEGORIES = [
     shortTitle: 'Fire & Life Safety',
     page: 'fire-protection',
     tagline: 'Multi-loop addressable fire alarms, turnkey sprinkler networks & 240-min certified fire doors',
+    shortDescription: 'Multi-loop addressable fire alarms, industrial hydrant networks, certified fire doors & gas detection.',
+    image: '/products/fire-alarm.jpg',
     iconName: 'Flame',
     colorClass: 'text-orange',
-    badge: 'TURNKEY LIFE SAFETY INFRASTRUCTURE',
-    count: 5
+    badge: 'TURNKEY LIFE SAFETY',
+    count: 5,
+    keyHighlights: ['Addressable Fire Alarms', 'Hydrant & Deluge Networks', '120/240 Min Fire Rated Doors']
   },
   {
     id: 'surveillance-alerts',
@@ -53,10 +65,56 @@ export const PRODUCT_CATEGORIES = [
     shortTitle: 'Surveillance & Alerts',
     page: 'security-systems',
     tagline: '4K AI IP surveillance, biometric face recognition, server room sensors & annunciators',
+    shortDescription: '4K AI IP surveillance, facial recognition biometrics, server room monitoring & fault annunciators.',
+    image: '/products/cctv-biometrics.jpg',
     iconName: 'Activity',
     colorClass: 'text-emerald',
-    badge: 'INTELLIGENT TELEMETRY & SECURITY',
-    count: 5
+    badge: '4K AI TELEMETRY',
+    count: 5,
+    keyHighlights: ['4K AI IP Surveillance', 'Biometric Shift Attendance', '24/7 Server Room Telemetry']
+  }
+];
+
+export const FEATURED_FLAGSHIP_PRODUCTS = [
+  {
+    slug: 'automatic-sliding-swing-doors',
+    name: 'Automatic Sliding & Swing Doors',
+    category: 'Access Automation',
+    categoryId: 'access-automation',
+    image: '/products/automatic-doors.jpg',
+    tagline: 'Touchless microwave radar entry for corporate offices & healthcare facilities',
+    specs: ['Touchless Microwave Radar', '150 kg/leaf Brushless DC', 'Fire Alarm Interlinked'],
+    badge: 'Touchless Access'
+  },
+  {
+    slug: 'boom-barriers',
+    name: 'Electro-Hydraulic Boom Barriers',
+    category: 'Traffic & Perimeter',
+    categoryId: 'traffic-perimeter',
+    image: '/products/boom-barriers.jpg',
+    tagline: 'High-frequency corporate parking & logistics toll gate access control',
+    specs: ['1.5s High-Speed Opening', '100% Continuous Duty', 'RFID & ANPR Sync'],
+    badge: '100% Duty Cycle'
+  },
+  {
+    slug: 'door-interlock-systems',
+    name: 'Door Interlock System (Ex-d & Safe)',
+    category: 'Pharma Cleanroom',
+    categoryId: 'pharma-cleanroom',
+    image: '/products/cleanroom-interlocks.jpg',
+    tagline: 'USFDA 21 CFR Part 11 compliant 2–8 door programmable airlock interlock logic',
+    specs: ['USFDA 21 CFR Part 11', '2 to 8 Door Airlock Logic', 'Emergency Fire Override'],
+    badge: 'USFDA CFR Part 11'
+  },
+  {
+    slug: 'cctv-surveillance-system',
+    name: 'CCTV Surveillance (Analogue & IP 4K)',
+    category: 'Surveillance & Alerts',
+    categoryId: 'surveillance-alerts',
+    image: '/products/cctv-biometrics.jpg',
+    tagline: 'Ultra-HD 4K AI analytics cameras, perimeter intrusion detection & central VMS',
+    specs: ['4K AI Analytics & ANPR', 'Flameproof Camera Options', '24/7 Central VMS Command'],
+    badge: '4K AI Telemetry'
   }
 ];
 

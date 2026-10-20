@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   ArrowRight, 
   Check, 
@@ -27,12 +27,20 @@ const CATEGORY_TABS = [
 ];
 
 export default function ProductsCatalog({
+  initialCategory = 'all',
+  isDedicatedPage = false,
   onSelectProduct,
   onNavigate,
   onQuickQuote
 }) {
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeCategory, setActiveCategory] = useState(initialCategory || 'all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if (initialCategory) {
+      setActiveCategory(initialCategory);
+    }
+  }, [initialCategory]);
 
   const allProducts = useMemo(() => getAll25Products(), []);
 
@@ -84,7 +92,21 @@ export default function ProductsCatalog({
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
 
-        {/* Header Row */}
+        {/* Breadcrumb if viewed as dedicated catalog page */}
+        {isDedicatedPage && (
+          <nav aria-label="Breadcrumb" style={{ marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: '#64748b' }}>
+              <button 
+                onClick={() => onNavigate && onNavigate('home')}
+                style={{ background: 'none', border: 'none', color: '#0284c7', fontWeight: 600, cursor: 'pointer', padding: 0 }}
+              >
+                Home
+              </button>
+              <span>/</span>
+              <span style={{ color: 'var(--text-main, #0f172a)', fontWeight: 700 }}>Official Product Catalogue (25 Systems)</span>
+            </div>
+          </nav>
+        )}
         <div className="catalog-header-row">
           <div className="catalog-header-left">
             <div className="pill-badge-catalog">
