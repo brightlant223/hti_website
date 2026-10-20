@@ -501,6 +501,7 @@ export default function App() {
               onExploreClick={scrollToCatalog}
               onDemoClick={scrollToDemo}
               onQuoteClick={scrollToContact}
+              onNavigate={navigateTo}
             />
 
             {/* Concise, Image-Led Homepage Product Showcase */}
