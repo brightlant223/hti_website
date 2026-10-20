@@ -1335,3 +1335,259 @@
     text-overflow: ellipsis;
   }
 }
+
+/* =========================================================================
+   4. TECHNOLOGY PARTNERSHIPS - TRAIN MARQUEE ANIMATION (UNIFORM SIZING)
+   ========================================================================= */
+
+.contact-partners-section {
+  padding: 44px 0 54px;
+  background-color: #f8fafc;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid #e2e8f0;
+}
+
+.contact-partners-section .partners-section-header {
+  margin-bottom: 22px;
+}
+
+.contact-partners-section .partners-section-sub {
+  font-size: 13.5px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.contact-partners-section .partners-train-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 8px 0;
+  user-select: none;
+}
+
+.contact-partners-section .partners-train-fade-left {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 120px;
+  background: linear-gradient(to right, #f8fafc 35%, rgba(248, 250, 252, 0) 100%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.contact-partners-section .partners-train-fade-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 120px;
+  background: linear-gradient(to left, #f8fafc 35%, rgba(248, 250, 252, 0) 100%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.contact-partners-section .partners-train-rail {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 14px;
+  display: flex;
+}
+
+.contact-partners-section .partners-train-rail:last-child {
+  margin-bottom: 0;
+}
+
+.contact-partners-section .partners-train-track {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: max-content;
+  will-change: transform;
+}
+
+.contact-partners-section .partners-train-track.train-left {
+  animation: partnerTrainScrollLeft 28s linear infinite;
+}
+
+.contact-partners-section .partners-train-track.train-right {
+  animation: partnerTrainScrollRight 28s linear infinite;
+}
+
+.contact-partners-section .partners-train-wrapper:hover .partners-train-track {
+  animation-play-state: paused;
+}
+
+.contact-partners-section .partner-logo-tile {
+  width: 195px;
+  min-width: 195px;
+  max-width: 195px;
+  height: 70px;
+  min-height: 70px;
+  max-height: 70px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.contact-partners-section .partner-logo-tile:hover {
+  transform: translateY(-3px);
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.contact-partners-section .partner-tile-img {
+  max-width: 130px;
+  max-height: 32px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.25s ease;
+}
+
+.contact-partners-section .partner-logo-tile:hover .partner-tile-img {
+  transform: scale(1.04);
+}
+
+.contact-partners-section .partner-text-mark {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin: 0 auto;
+  text-align: center;
+  transition: transform 0.25s ease;
+}
+
+.contact-partners-section .partner-logo-tile:hover .partner-text-mark {
+  transform: scale(1.04);
+}
+
+.contact-partners-section .partner-text-mark.mark-abb {
+  font-size: 19px;
+  font-weight: 900;
+  color: #ff000f;
+  letter-spacing: 0.04em;
+}
+
+.contact-partners-section .partner-text-mark.mark-ge {
+  font-size: 20px;
+  font-weight: 900;
+  color: #005eb8;
+  letter-spacing: 0.02em;
+}
+
+.contact-partners-section .partner-text-mark.mark-hitachi {
+  font-size: 15.5px;
+  font-weight: 900;
+  color: #e60012;
+  letter-spacing: 0.08em;
+}
+
+.contact-partners-section .partner-text-mark.mark-sick {
+  font-size: 17px;
+  font-weight: 900;
+  color: #007bc0;
+  letter-spacing: 0.05em;
+}
+
+.contact-partners-section .partner-text-mark.mark-legrand {
+  font-size: 18px;
+  font-weight: 800;
+  color: #e60000;
+  letter-spacing: -0.02em;
+}
+
+.contact-partners-section .partner-text-mark.mark-vanderlande {
+  font-size: 13px;
+  font-weight: 900;
+  color: #d4111e;
+  letter-spacing: 0.06em;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .contact-partners-section {
+  background-color: #0b1329;
+  border-top-color: #1e293b;
+}
+
+[data-theme="dark"] .contact-partners-section .partners-train-fade-left {
+  background: linear-gradient(to right, #0b1329 35%, rgba(11, 19, 41, 0) 100%);
+}
+
+[data-theme="dark"] .contact-partners-section .partners-train-fade-right {
+  background: linear-gradient(to left, #0b1329 35%, rgba(11, 19, 41, 0) 100%);
+}
+
+[data-theme="dark"] .contact-partners-section .partner-logo-tile {
+  background-color: #111c38;
+  border-color: #1e293b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .contact-partners-section .partner-logo-tile:hover {
+  border-color: #334155;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .contact-partners-section .partners-section-sub {
+  color: #94a3b8;
+}
+
+@media (max-width: 768px) {
+  .contact-partners-section {
+    padding: 32px 0 40px;
+  }
+
+  .contact-partners-section .partners-train-fade-left,
+  .contact-partners-section .partners-train-fade-right {
+    width: 60px;
+  }
+
+  .contact-partners-section .partner-logo-tile {
+    width: 155px;
+    min-width: 155px;
+    max-width: 155px;
+    height: 56px;
+    min-height: 56px;
+    max-height: 56px;
+    padding: 8px 12px;
+    border-radius: 10px;
+  }
+
+  .contact-partners-section .partner-tile-img {
+    max-width: 105px;
+    max-height: 25px;
+  }
+
+  .contact-partners-section .partners-train-track {
+    gap: 12px;
+  }
+
+  .contact-partners-section .partners-train-rail {
+    margin-bottom: 10px;
+  }
+
+  .contact-partners-section .partner-text-mark.mark-abb { font-size: 15.5px; }
+  .contact-partners-section .partner-text-mark.mark-ge { font-size: 16.5px; }
+  .contact-partners-section .partner-text-mark.mark-hitachi { font-size: 13px; }
+  .contact-partners-section .partner-text-mark.mark-sick { font-size: 14px; }
+  .contact-partners-section .partner-text-mark.mark-legrand { font-size: 15px; }
+  .contact-partners-section .partner-text-mark.mark-vanderlande { font-size: 11px; }
+}

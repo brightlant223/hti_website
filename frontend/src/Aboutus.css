@@ -807,64 +807,244 @@
    6. TECHNOLOGY PARTNERSHIPS (14 Logos in 2 rows of 7)
    ========================================================================= */
 
+/* =========================================================================
+   6. TECHNOLOGY PARTNERSHIPS - TRAIN MARQUEE ANIMATION (UNIFORM SIZING)
+   ========================================================================= */
+
 .about-partners-section {
-  padding: 40px 0 54px;
+  padding: 44px 0 54px;
   background-color: #f8fafc;
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .partners-section-header {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .partners-section-sub {
   font-size: 13.5px;
   color: #64748b;
   margin: 0;
+  line-height: 1.5;
 }
 
-.partners-logos-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
-  margin-top: 18px;
+/* Outer Marquee Container */
+.partners-train-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 8px 0;
+  user-select: none;
 }
 
+/* Left & Right Smooth Edge Fade Masks */
+.partners-train-fade-left {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 120px;
+  background: linear-gradient(to right, #f8fafc 35%, rgba(248, 250, 252, 0) 100%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.partners-train-fade-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 120px;
+  background: linear-gradient(to left, #f8fafc 35%, rgba(248, 250, 252, 0) 100%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Train Rail (each track row) */
+.partners-train-rail {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 14px;
+  display: flex;
+}
+
+.partners-train-rail:last-child {
+  margin-bottom: 0;
+}
+
+/* Track holding the duplicated cards */
+.partners-train-track {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Rail 1: Moves Left smoothly like a train */
+.partners-train-track.train-left {
+  animation: partnerTrainScrollLeft 28s linear infinite;
+}
+
+/* Rail 2: Moves Right smoothly like a train */
+.partners-train-track.train-right {
+  animation: partnerTrainScrollRight 28s linear infinite;
+}
+
+/* Pause animation on hover */
+.partners-train-wrapper:hover .partners-train-track {
+  animation-play-state: paused;
+}
+
+@keyframes partnerTrainScrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes partnerTrainScrollRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* UNIFORM 1-SARKHI CARD SIZING ("company c img size 1 sarkhi thev") */
 .partner-logo-tile {
+  width: 195px;
+  min-width: 195px;
+  max-width: 195px;
+  height: 70px;
+  min-height: 70px;
+  max-height: 70px;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 12px 14px;
+  border-radius: 12px;
+  padding: 10px 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 54px;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  box-sizing: border-box;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
 .partner-logo-tile:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   border-color: #cbd5e1;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
 
+/* UNIFORM IMAGE SIZING */
 .partner-tile-img {
-  max-width: 100%;
-  max-height: 28px;
+  max-width: 130px;
+  max-height: 32px;
+  width: auto;
+  height: auto;
   object-fit: contain;
-  filter: grayscale(20%);
-  transition: filter 0.2s ease;
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.25s ease;
 }
 
 .partner-logo-tile:hover .partner-tile-img {
-  filter: grayscale(0%);
+  transform: scale(1.04);
 }
 
+/* UNIFORM BRAND TEXT MARKS */
 .partner-text-mark {
-  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin: 0 auto;
+  text-align: center;
+  transition: transform 0.25s ease;
+}
+
+.partner-logo-tile:hover .partner-text-mark {
+  transform: scale(1.04);
+}
+
+.partner-text-mark.mark-abb {
+  font-size: 19px;
+  font-weight: 900;
+  color: #ff000f;
+  letter-spacing: 0.04em;
+}
+
+.partner-text-mark.mark-ge {
+  font-size: 20px;
+  font-weight: 900;
+  color: #005eb8;
+  letter-spacing: 0.02em;
+}
+
+.partner-text-mark.mark-hitachi {
+  font-size: 15.5px;
+  font-weight: 900;
+  color: #e60012;
+  letter-spacing: 0.08em;
+}
+
+.partner-text-mark.mark-sick {
+  font-size: 17px;
+  font-weight: 900;
+  color: #007bc0;
+  letter-spacing: 0.05em;
+}
+
+.partner-text-mark.mark-legrand {
+  font-size: 18px;
+  font-weight: 800;
+  color: #e60000;
   letter-spacing: -0.02em;
+}
+
+.partner-text-mark.mark-vanderlande {
+  font-size: 13px;
+  font-weight: 900;
+  color: #d4111e;
+  letter-spacing: 0.06em;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .about-partners-section {
+  background-color: #0b1329;
+}
+
+[data-theme="dark"] .partners-train-fade-left {
+  background: linear-gradient(to right, #0b1329 35%, rgba(11, 19, 41, 0) 100%);
+}
+
+[data-theme="dark"] .partners-train-fade-right {
+  background: linear-gradient(to left, #0b1329 35%, rgba(11, 19, 41, 0) 100%);
+}
+
+[data-theme="dark"] .partner-logo-tile {
+  background-color: #111c38;
+  border-color: #1e293b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .partner-logo-tile:hover {
+  border-color: #334155;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .partners-section-sub {
+  color: #94a3b8;
 }
 
 /* =========================================================================
@@ -879,10 +1059,6 @@
 
   .about-hero-grid {
     gap: 36px;
-  }
-
-  .partners-logos-grid {
-    grid-template-columns: repeat(5, 1fr);
   }
 }
 
@@ -1176,23 +1352,45 @@
     font-size: 13.5px;
   }
 
-  .partners-logos-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+  .about-partners-section {
+    padding: 32px 0 40px;
+  }
+
+  .partners-train-fade-left,
+  .partners-train-fade-right {
+    width: 60px;
   }
 
   .partner-logo-tile {
-    min-height: 48px;
-    padding: 8px 10px;
+    width: 155px;
+    min-width: 155px;
+    max-width: 155px;
+    height: 56px;
+    min-height: 56px;
+    max-height: 56px;
+    padding: 8px 12px;
+    border-radius: 10px;
   }
 
   .partner-tile-img {
-    max-height: 22px;
+    max-width: 105px;
+    max-height: 25px;
   }
 
-  .partner-text-mark {
-    font-size: 12.5px;
+  .partners-train-track {
+    gap: 12px;
   }
+
+  .partners-train-rail {
+    margin-bottom: 10px;
+  }
+
+  .partner-text-mark.mark-abb { font-size: 15.5px; }
+  .partner-text-mark.mark-ge { font-size: 16.5px; }
+  .partner-text-mark.mark-hitachi { font-size: 13px; }
+  .partner-text-mark.mark-sick { font-size: 14px; }
+  .partner-text-mark.mark-legrand { font-size: 15px; }
+  .partner-text-mark.mark-vanderlande { font-size: 11px; }
 }
 
 /* 7. EXTRA SMALL DEVICES (<= 360px) */

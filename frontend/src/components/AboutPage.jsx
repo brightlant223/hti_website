@@ -110,23 +110,30 @@ export default function AboutPage({ onNavigate }) {
     }
   };
 
-  // 14 Global Technology Partners matching the reference design exactly
-  const partnerBrands = [
+  // 14 Global Technology Partners split into two uniform rows for the train marquee animation
+  const partnerBrandsRow1 = [
     { name: 'Honeywell', logo: '/logos/honeywell.png' },
     { name: 'Bosch', logo: '/logos/bosch.png' },
     { name: 'Cisco', logo: '/logos/cisco.png' },
     { name: 'Eaton', logo: '/logos/eaton.png' },
-    { name: 'ABB', type: 'text', color: '#ff000f', text: 'ABB' },
-    { name: 'GE', type: 'text', color: '#005eb8', text: 'GE' },
-    { name: 'Hitachi', type: 'text', color: '#e60012', text: 'HITACHI' },
-    { name: 'SICK', type: 'text', color: '#007bc0', text: 'SICK' },
-    { name: 'Legrand', type: 'text', color: '#e60000', text: 'legrand' },
+    { name: 'ABB', type: 'text', markClass: 'mark-abb', color: '#ff000f', text: 'ABB' },
+    { name: 'GE', type: 'text', markClass: 'mark-ge', color: '#005eb8', text: 'GE' },
+    { name: 'Hitachi', type: 'text', markClass: 'mark-hitachi', color: '#e60012', text: 'HITACHI' }
+  ];
+
+  const partnerBrandsRow2 = [
+    { name: 'SICK', type: 'text', markClass: 'mark-sick', color: '#007bc0', text: 'SICK' },
+    { name: 'Legrand', type: 'text', markClass: 'mark-legrand', color: '#e60000', text: 'legrand' },
     { name: 'Nice', logo: '/logos/nice.png' },
     { name: 'Avtech', logo: '/logos/avtech.png' },
     { name: 'Johnson Controls', logo: '/logos/johnson-controls.png' },
     { name: 'Siemens', logo: '/logos/Siemens.png' },
-    { name: 'Vanderlande', type: 'text', color: '#d4111e', text: 'VANDERLANDE' }
+    { name: 'Vanderlande', type: 'text', markClass: 'mark-vanderlande', color: '#d4111e', text: 'VANDERLANDE' }
   ];
+
+  // Quadruple to guarantee a perfectly seamless infinite loop when translating -50%
+  const trainList1 = [...partnerBrandsRow1, ...partnerBrandsRow1, ...partnerBrandsRow1, ...partnerBrandsRow1];
+  const trainList2 = [...partnerBrandsRow2, ...partnerBrandsRow2, ...partnerBrandsRow2, ...partnerBrandsRow2];
 
   return (
     <div className="about-page-wrapper">
@@ -631,7 +638,7 @@ export default function AboutPage({ onNavigate }) {
       </section>
 
       {/* =====================================================================
-          6. TECHNOLOGY PARTNERSHIPS (14 Logos in 2 rows of 7)
+          6. TECHNOLOGY PARTNERSHIPS (Smooth Train Marquee Animation)
           ===================================================================== */}
       <section className="about-partners-section">
         <div className="about-container">
@@ -644,27 +651,61 @@ export default function AboutPage({ onNavigate }) {
               We collaborate with globally trusted technology partners to deliver the best solutions.
             </p>
           </div>
+        </div>
 
-          <div className="partners-logos-grid">
-            {partnerBrands.map((brand, bIdx) => (
-              <div key={bIdx} className="partner-logo-tile" title={brand.name}>
-                {brand.logo ? (
-                  <img 
-                    src={brand.logo} 
-                    alt={brand.name} 
-                    className="partner-tile-img" 
-                    loading="lazy"
-                  />
-                ) : (
-                  <span 
-                    className="partner-text-mark"
-                    style={{ color: brand.color }}
-                  >
-                    {brand.text || brand.name}
-                  </span>
-                )}
-              </div>
-            ))}
+        {/* Full-width continuous train marquee */}
+        <div className="partners-train-wrapper">
+          <div className="partners-train-fade-left"></div>
+          <div className="partners-train-fade-right"></div>
+
+          {/* Rail 1 - Train moving smoothly to the Left */}
+          <div className="partners-train-rail">
+            <div className="partners-train-track train-left">
+              {trainList1.map((brand, bIdx) => (
+                <div key={`about-r1-${bIdx}`} className="partner-logo-tile" title={brand.name}>
+                  {brand.logo ? (
+                    <img 
+                      src={brand.logo} 
+                      alt={brand.name} 
+                      className="partner-tile-img" 
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span 
+                      className={`partner-text-mark ${brand.markClass || ''}`}
+                      style={{ color: brand.color }}
+                    >
+                      {brand.text || brand.name}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Rail 2 - Train moving smoothly to the Right */}
+          <div className="partners-train-rail">
+            <div className="partners-train-track train-right">
+              {trainList2.map((brand, bIdx) => (
+                <div key={`about-r2-${bIdx}`} className="partner-logo-tile" title={brand.name}>
+                  {brand.logo ? (
+                    <img 
+                      src={brand.logo} 
+                      alt={brand.name} 
+                      className="partner-tile-img" 
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span 
+                      className={`partner-text-mark ${brand.markClass || ''}`}
+                      style={{ color: brand.color }}
+                    >
+                      {brand.text || brand.name}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
