@@ -62,6 +62,7 @@ export default function Navbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'services' | 'products' | 'company' | null
   const [selectedServiceGroup, setSelectedServiceGroup] = useState(0);
+  const [selectedProductGroup, setSelectedProductGroup] = useState(0);
   const [mobileAccordion, setMobileAccordion] = useState(null);
 
   const navRef = useRef(null);
@@ -557,6 +558,267 @@ export default function Navbar({
 
   const currentGroup = serviceGroups[selectedServiceGroup] || serviceGroups[0];
 
+  // 5 Specialized Engineering Product Divisions (Matching Services Architecture - "see like service")
+  const productGroups = [
+    {
+      id: 'access-automation',
+      title: 'Access Automation',
+      tagline: 'Touchless sliding glass doors, motorized perimeter gates & high-speed doors.',
+      icon: Cpu,
+      color: '#0284c7',
+      page: 'automation',
+      categoryId: 'access-automation',
+      badge: 'ARCHITECTURAL ACCESS & GATES',
+      headingPrimary: 'Touchless & Industrial',
+      headingAccent: 'Pedestrian & Gate Automation.',
+      heroImage: '/products/automatic-doors.jpg',
+      overviewDesc: 'High-throughput microprocessor automated sliding & swing doors, heavy motorized perimeter gates, and high-speed rapid airlocks for corporate and pharma facilities.',
+      products: [
+        {
+          title: 'Automatic Sliding & Swing Doors',
+          description: 'Touchless microwave radar entry for corporate offices & healthcare.',
+          image: '/products/automatic-doors.jpg',
+          icon: DoorClosed,
+          slug: 'automatic-sliding-swing-doors'
+        },
+        {
+          title: 'Automatic Sliding & Swing Gates',
+          description: 'Heavy-duty motorized perimeter security gates for commercial sites.',
+          image: '/services/services-perimeter-gate.jpg',
+          icon: ShieldCheck,
+          slug: 'automatic-sliding-swing-gates'
+        },
+        {
+          title: 'Telescopic & Cantilever Gates',
+          description: 'Trackless cantilever and space-saving telescopic automated gates.',
+          image: '/services/services-trackless-gate.jpg',
+          icon: SlidersHorizontal,
+          slug: 'telescopic-cantilever-gates'
+        },
+        {
+          title: 'Motorized Rolling Shutters',
+          description: 'Heavy-gauge motorized roll-up shutters for industrial site defense.',
+          image: '/services/services-heavy-security.jpg',
+          icon: Layers,
+          slug: 'motorized-industrial-rolling-shutters'
+        },
+        {
+          title: 'PVC High Speed Roll Up Doors',
+          description: 'PVC high-speed rapid roll-up airlock doors for logistics & clean areas.',
+          image: '/services/services-rapid-airlock.jpg',
+          icon: Truck,
+          slug: 'high-speed-roll-up-doors'
+        }
+      ]
+    },
+    {
+      id: 'traffic-perimeter',
+      title: 'Traffic & Perimeter',
+      tagline: 'Boom barriers, dock levellers, optical speed turnstiles & crash bollards.',
+      icon: ShieldCheck,
+      color: '#0284c7',
+      page: 'perimeter-defense',
+      categoryId: 'traffic-perimeter',
+      badge: 'VEHICLE & PERIMETER DEFENSE',
+      headingPrimary: 'Industrial Traffic Control &',
+      headingAccent: 'Perimeter Security.',
+      heroImage: '/products/boom-barriers.jpg',
+      overviewDesc: 'Electro-hydraulic high-frequency boom barriers, logistics loading dock levellers, optical turnstiles, and anti-ram hydraulic bollards.',
+      products: [
+        {
+          title: 'Electro-Hydraulic Boom Barriers',
+          description: '1.5s high-speed electromechanical & hydraulic automated barrier arms.',
+          image: '/products/boom-barriers.jpg',
+          icon: SlidersHorizontal,
+          slug: 'boom-barriers'
+        },
+        {
+          title: 'Hydraulic Dock Levellers & Shelters',
+          description: 'Heavy-capacity hydraulic dock bridges and weather-seal dock shelters.',
+          image: '/services/services-logistics-bridge.jpg',
+          icon: Truck,
+          slug: 'dock-levellers-dock-shelters'
+        },
+        {
+          title: 'Optical Speed Flap Turnstiles',
+          description: 'Biometric pedestrian speed gates & optical barriers for corporate lobbies.',
+          image: '/services/services-heavy-security.jpg',
+          icon: Users,
+          slug: 'optical-flap-turnstiles'
+        },
+        {
+          title: 'Anti-Ram Hydraulic Crash Bollards',
+          description: 'K4/K12 crash-certified retractable bollards for high-security portals.',
+          image: '/services/service-bollards-blockers.jpg',
+          icon: Lock,
+          slug: 'hydraulic-crash-bollards'
+        },
+        {
+          title: 'Tyre Killers & Road Blockers',
+          description: 'Heavy-duty electro-hydraulic road blockers and steel tyre shredders.',
+          image: '/case-studies/case-boom-barrier.jpg',
+          icon: Flame,
+          slug: 'tyre-killers-road-blockers'
+        }
+      ]
+    },
+    {
+      id: 'pharma-cleanroom',
+      title: 'Pharma Cleanroom',
+      tagline: 'USFDA 21 CFR Part 11 door interlocks, pass boxes, GPS clocks & chiller doors.',
+      icon: Lock,
+      color: '#0284c7',
+      page: 'cleanroom-interlocks',
+      categoryId: 'pharma-cleanroom',
+      badge: 'USFDA CFR PART 11 CLEANROOM',
+      headingPrimary: 'USFDA 21 CFR Part 11',
+      headingAccent: 'Cleanroom & Interlock Logic.',
+      heroImage: '/products/cleanroom-interlocks.jpg',
+      overviewDesc: 'Certified 2–8 door programmable interlocking logic, dynamic UV pass boxes, GPS synchronized clocks, and hermetic cleanroom doors.',
+      products: [
+        {
+          title: 'Door Interlock System (2-8 Door)',
+          description: 'Flameproof & safe programmable airlock cascading interlock controllers.',
+          image: '/products/cleanroom-interlocks.jpg',
+          icon: Lock,
+          slug: 'door-interlock-systems'
+        },
+        {
+          title: 'Dynamic & Static Pass Boxes',
+          description: 'SS 304/316 cleanroom material transfer hatches with UV disinfection.',
+          image: '/products/pass-box-system.jpg',
+          icon: Layers,
+          slug: 'dynamic-static-pass-boxes'
+        },
+        {
+          title: 'Digital Master GPS Slave Clocks',
+          description: 'GPS synchronized cleanroom digital display clocks with pharma housing.',
+          image: '/products/digital-clock-hero.jpg',
+          icon: Activity,
+          slug: 'digital-gps-clocks'
+        },
+        {
+          title: 'Cold Storage & Chiller Doors',
+          description: 'Heavy thermal-insulated sliding cold storage & refrigeration doors.',
+          image: '/products/chiller-door-hero.jpg',
+          icon: DoorClosed,
+          slug: 'chiller-clean-room-doors'
+        },
+        {
+          title: 'Hermetically Sealed Cleanroom Doors',
+          description: 'Airtight flush-fit antimicrobial cleanroom swing and sliding doors.',
+          image: '/hero-cleanroom-interlock-chamber.jpg',
+          icon: Sparkles,
+          slug: 'hermetic-cleanroom-doors'
+        }
+      ]
+    },
+    {
+      id: 'fire-life-safety',
+      title: 'Fire & Life Safety',
+      tagline: 'Multi-loop addressable fire alarms, turnkey sprinkler networks & fire doors.',
+      icon: Flame,
+      color: '#0284c7',
+      page: 'fire-protection',
+      categoryId: 'fire-life-safety',
+      badge: 'TURNKEY LIFE SAFETY & DETECTION',
+      headingPrimary: 'Addressable Fire Detection &',
+      headingAccent: 'Life-Safety Suppression.',
+      heroImage: '/products/fire-alarm.jpg',
+      overviewDesc: 'Certified multi-loop addressable fire alarms, industrial hydrant networks, 120/240-minute certified fire-rated doors, and gas suppression.',
+      products: [
+        {
+          title: 'Addressable Fire Alarm Systems',
+          description: 'Multi-loop microprocessor addressable fire panels with smoke sensors.',
+          image: '/products/fire-alarm.jpg',
+          icon: Flame,
+          slug: 'addressable-fire-alarm-system'
+        },
+        {
+          title: 'Industrial Fire Hydrant & Sprinklers',
+          description: 'Turnkey diesel hydrant booster pumps, deluge valves & sprinkler piping.',
+          image: '/services/service-emergency-trip.jpg',
+          icon: Activity,
+          slug: 'fire-hydrant-sprinkler-systems'
+        },
+        {
+          title: 'Fire Rated Steel Doors (120/240 Min)',
+          description: 'CBRI/UL certified galvanised steel fire exit doors with panic hardware.',
+          image: '/services/service-fire-doors.jpg',
+          icon: DoorClosed,
+          slug: 'fire-rated-steel-doors'
+        },
+        {
+          title: 'Clean Agent Gas Suppression',
+          description: 'Novec 1230 & FM-200 waterless fire extinguishing for server rooms.',
+          image: '/case-studies/case-fire-hydrant.jpg',
+          icon: Sparkles,
+          slug: 'gas-suppression-systems'
+        },
+        {
+          title: 'Public Address & Voice Evacuation',
+          description: 'Zoned emergency acoustic voice alarm and paging audio networks.',
+          image: '/services/service-fire-alarm.jpg',
+          icon: Settings,
+          slug: 'public-address-system'
+        }
+      ]
+    },
+    {
+      id: 'surveillance-alerts',
+      title: 'Surveillance & Alerts',
+      tagline: '4K AI IP surveillance, biometric face recognition, server room sensors & alerts.',
+      icon: Activity,
+      color: '#0284c7',
+      page: 'security-systems',
+      categoryId: 'surveillance-alerts',
+      badge: '4K AI TELEMETRY & SECURITY',
+      headingPrimary: 'Enterprise 4K AI Surveillance &',
+      headingAccent: 'Biometric Access Control.',
+      heroImage: '/products/cctv-biometrics.jpg',
+      overviewDesc: 'High-resolution AI-powered IP surveillance cameras, facial recognition biometric terminals, and 24/7 server room environment telemetry.',
+      products: [
+        {
+          title: 'CCTV Surveillance (Analogue & IP 4K)',
+          description: 'Ultra-HD 4K AI analytics cameras, perimeter intrusion & central VMS.',
+          image: '/products/cctv-biometrics.jpg',
+          icon: Activity,
+          slug: 'cctv-surveillance-system'
+        },
+        {
+          title: 'Biometric Attendance & Access Terminals',
+          description: 'Multi-modal touchless face recognition, fingerprint & RFID access.',
+          image: '/products/cctv-biometrics.jpg',
+          icon: Users,
+          slug: 'biometric-access-attendance'
+        },
+        {
+          title: 'Server Room Environment Telemetry',
+          description: '24/7 temperature, humidity, water leak, and smoke SNMP sensors.',
+          image: '/hero-security-command-center.jpg',
+          icon: Cpu,
+          slug: 'server-room-monitoring'
+        },
+        {
+          title: 'Microprocessor Alarm Annunciators',
+          description: 'Industrial multi-window visual annunciators with audio buzzer alerts.',
+          image: '/about-security-camera.jpg',
+          icon: ShieldCheck,
+          slug: 'alarm-annunciators'
+        },
+        {
+          title: 'Wireless Intrusion Detection Systems',
+          description: 'Grade-2 perimeter vibration, magnetic reed, and microwave beam barriers.',
+          image: '/services/services-heavy-security.jpg',
+          icon: Lock,
+          slug: 'wireless-intrusion-detection'
+        }
+      ]
+    }
+  ];
+
+  const currentProductGroup = productGroups[selectedProductGroup] || productGroups[0];
+
   const handleDownloadBrochure = (e) => {
     e.preventDefault();
     setActiveDropdown(null);
@@ -900,116 +1162,183 @@ export default function Navbar({
           </div>
         )}
 
-        {/* 2. PRODUCTS VISUAL CATEGORY DISCOVERY MEGA MENU */}
+        {/* 2. PRODUCTS MEGA DROPDOWN (Matches Services Architecture - "see like service") */}
         {activeDropdown === 'products' && (
           <div 
-            className="bright-horizontal-dropdown products-visual-mega-dropdown desktop-only"
+            className="bright-mega-panel-wrapper products-mega-panel desktop-only"
             onMouseEnter={() => handleMouseEnterDropdown('products')}
             onMouseLeave={handleMouseLeaveDropdown}
           >
-            <div className="bright-container">
-              {/* Top Discovery Bar */}
-              <div className="prod-discovery-topbar">
-                <div className="prod-discovery-left">
-                  <span className="prod-discovery-badge">PRODUCT DISCOVERY</span>
-                  <span className="prod-discovery-title">
-                    5 Specialized Engineering Divisions • 25 Certified Industrial Systems
-                  </span>
-                </div>
-                <button
-                  className="btn-open-full-catalog"
-                  onClick={() => {
-                    setActiveDropdown(null);
-                    if (onNavigate) onNavigate('catalog', 'all');
-                  }}
-                  title="Explore all 25 systems with interactive filtering"
-                >
-                  <span>Explore Full Catalogue</span>
-                  <ArrowRight size={14} />
-                </button>
+            {/* Top Discovery Bar */}
+            <div className="mega-top-discovery-bar">
+              <div className="mega-top-discovery-left">
+                <span className="mega-discovery-pill">PRODUCT CATALOGUE</span>
+                <span className="mega-discovery-tagline">
+                  5 Specialized Engineering Divisions • 25 Certified Industrial Systems
+                </span>
               </div>
+              <button
+                className="btn-mega-open-catalog"
+                onClick={() => {
+                  setActiveDropdown(null);
+                  if (onNavigate) onNavigate('catalog', 'all');
+                }}
+                title="Explore all 25 systems with interactive filtering"
+              >
+                <span>Explore Full Catalogue</span>
+                <ArrowRight size={13} />
+              </button>
+            </div>
 
-              {/* 5 Visual Category Discovery Tiles Grid */}
-              <div className="prod-visual-tiles-grid">
-                {PRODUCT_CATEGORIES.map((cat) => {
-                  const IconComp = categoryIconMap[cat.id] || Cpu;
+            <div className="mega-body-grid">
+              {/* Left Column: 5 Product Divisions List */}
+              <div className="mega-left-col">
+                {productGroups.map((group, index) => {
+                  const Icon = group.icon;
+                  const isSelected = selectedProductGroup === index;
                   return (
                     <div
-                      key={cat.id}
-                      className="prod-visual-tile-card"
+                      key={group.id}
+                      className={`mega-service-item ${isSelected ? 'mega-item-active' : ''}`}
+                      onMouseEnter={() => setSelectedProductGroup(index)}
                       onClick={() => {
                         setActiveDropdown(null);
-                        if (onNavigate) onNavigate('catalog', cat.id);
-                      }}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          setActiveDropdown(null);
-                          if (onNavigate) onNavigate('catalog', cat.id);
+                        if (group.page && onNavigate) {
+                          onNavigate(group.page);
+                        } else if (onNavigate) {
+                          onNavigate('catalog', group.categoryId);
                         }
                       }}
-                      title={`Explore ${cat.title} systems`}
                     >
-                      {/* Image Preview with Aspect Ratio */}
-                      <div className="prod-tile-image-wrap">
-                        <img
-                          src={cat.image}
-                          alt={cat.title}
-                          className="prod-tile-img"
-                          loading="eager"
-                        />
-                        <div className="prod-tile-badge">
-                          <IconComp size={11} />
-                          <span>5 Systems</span>
-                        </div>
+                      <div className="mega-item-icon-box">
+                        <Icon size={17} />
                       </div>
-
-                      {/* Tile Text Details */}
-                      <div className="prod-tile-content">
-                        <h4 className="prod-tile-title">{cat.title}</h4>
-                        <p className="prod-tile-desc">{cat.shortDescription}</p>
-
-                        <div className="prod-tile-cta">
-                          <span>Explore Category</span>
-                          <ArrowRight size={13} className="tile-arrow" />
-                        </div>
+                      <div className="mega-item-text">
+                        <div className="mega-item-title">{group.title}</div>
+                        <div className="mega-item-tagline">{group.tagline}</div>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* Bottom Quick Bar */}
-              <div className="prod-discovery-bottom-bar">
-                <div className="prod-discovery-bottom-left">
-                  <span className="prod-catalog-pill">OFFICIAL CATALOGUE</span>
-                  <span className="prod-catalog-tagline">
-                    33+ Precision Systems Installed Across India • Certified Compliance
-                  </span>
+              {/* Right Panel: Header (Text + Feature Image) & 5 Product Cards */}
+              <div className="mega-right-panel">
+                {/* Top Section: Text Info on Left + Hero Feature Image on Right */}
+                <div className="mega-right-header-row">
+                  <div className="mega-right-header-text">
+                    <div className="mega-pill-badge-row">
+                      <div className="mega-pill-badge">
+                        <span className="mega-pulse-dot"></span>
+                        <span>{currentProductGroup.badge}</span>
+                      </div>
+                      <button
+                        className="mega-overview-link"
+                        onClick={() => {
+                          setActiveDropdown(null);
+                          if (currentProductGroup.page && onNavigate) {
+                            onNavigate(currentProductGroup.page);
+                          } else if (onNavigate) {
+                            onNavigate('catalog', currentProductGroup.categoryId);
+                          }
+                        }}
+                        title={`Explore ${currentProductGroup.title} Overview`}
+                      >
+                        <span>View Category</span>
+                        <ArrowRight size={13} />
+                      </button>
+                    </div>
+
+                    <h3 className="mega-panel-heading">
+                      {currentProductGroup.headingPrimary}{' '}
+                      <span className="heading-blue-accent">{currentProductGroup.headingAccent}</span>
+                    </h3>
+                    
+                    <p className="mega-panel-desc">{currentProductGroup.overviewDesc}</p>
+                  </div>
+
+                  {currentProductGroup.heroImage && (
+                    <div className="mega-feature-hero-media">
+                      <img 
+                        src={currentProductGroup.heroImage} 
+                        alt={currentProductGroup.title} 
+                        className="mega-hero-img"
+                        loading="eager"
+                      />
+                    </div>
+                  )}
                 </div>
-                <div className="prod-discovery-bottom-right">
-                  <button 
-                    className="btn-prod-quick-quote"
-                    onClick={() => {
-                      setActiveDropdown(null);
-                      if (onNavigate) onNavigate('contact');
-                    }}
-                  >
-                    <span>Request Proposal</span>
-                  </button>
-                  <button 
-                    className="btn-explore-catalog-link" 
-                    onClick={() => {
-                      setActiveDropdown(null);
-                      if (onNavigate) onNavigate('catalog', 'all');
-                    }}
-                  >
-                    <span>View All 25 Products</span>
-                    <ArrowRight size={14} />
-                  </button>
+
+                {/* 5 Product Cards Grid (3 Columns) */}
+                <div className="mega-subservice-cards-grid">
+                  {currentProductGroup.products.map((prod, pIdx) => {
+                    const CardIcon = prod.icon || Cpu;
+                    return (
+                      <div 
+                        key={pIdx} 
+                        className="mega-subservice-card"
+                        onClick={() => {
+                          handleProductClick(prod.slug);
+                        }}
+                      >
+                        {/* Landscape Image with Overlapping Icon Badge */}
+                        <div className="subservice-card-media">
+                          <img 
+                            src={prod.image || currentProductGroup.heroImage} 
+                            alt={prod.title} 
+                            className="subservice-card-img"
+                            loading="lazy"
+                          />
+                          <div className="subservice-icon-badge">
+                            <CardIcon size={14} />
+                          </div>
+                        </div>
+
+                        {/* Card Content & Action Button */}
+                        <div className="subservice-card-body">
+                          <div className="subservice-text-content">
+                            <h4 className="subservice-card-title">{prod.title}</h4>
+                            <p className="subservice-card-desc">{prod.description}</p>
+                          </div>
+                          <div className="subservice-arrow-btn" aria-hidden="true">
+                            <ArrowRight size={13} />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
+              </div>
+            </div>
+
+            {/* Bottom Quick Bar */}
+            <div className="mega-bottom-quickbar">
+              <div className="mega-bottom-left">
+                <span className="mega-bottom-pill">CERTIFIED ENGINEERING</span>
+                <span className="mega-bottom-text">
+                  33+ Precision Systems Installed Across India • USFDA / cGMP &amp; CE Certified
+                </span>
+              </div>
+              <div className="mega-bottom-right">
+                <button
+                  className="btn-mega-quick-quote"
+                  onClick={() => {
+                    setActiveDropdown(null);
+                    if (onNavigate) onNavigate('contact');
+                  }}
+                >
+                  <span>Request Proposal</span>
+                </button>
+                <button
+                  className="btn-mega-view-all"
+                  onClick={() => {
+                    setActiveDropdown(null);
+                    if (onNavigate) onNavigate('catalog', 'all');
+                  }}
+                >
+                  <span>View All 25 Products</span>
+                  <ArrowRight size={13} />
+                </button>
               </div>
             </div>
           </div>
