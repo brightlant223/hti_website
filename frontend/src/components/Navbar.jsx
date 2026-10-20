@@ -608,6 +608,13 @@ export default function Navbar({
           image: '/services/services-rapid-airlock.jpg',
           icon: Truck,
           slug: 'high-speed-roll-up-doors'
+        },
+        {
+          title: 'Full Division Catalog',
+          description: 'Explore all certified pedestrian & gate automation systems with datasheets.',
+          image: '/products/automatic-doors.jpg',
+          icon: Layers,
+          isCatalogLink: true
         }
       ]
     },
@@ -659,6 +666,13 @@ export default function Navbar({
           image: '/case-studies/case-boom-barrier.jpg',
           icon: Flame,
           slug: 'tyre-killers-road-blockers'
+        },
+        {
+          title: 'Full Division Catalog',
+          description: 'Explore crash-rated barriers, bollards, tyre killers & parking systems.',
+          image: '/products/boom-barriers.jpg',
+          icon: Layers,
+          isCatalogLink: true
         }
       ]
     },
@@ -710,6 +724,13 @@ export default function Navbar({
           image: '/hero-cleanroom-interlock-chamber.jpg',
           icon: Sparkles,
           slug: 'hermetic-cleanroom-doors'
+        },
+        {
+          title: 'Full Division Catalog',
+          description: 'Explore cGMP & USFDA 21 CFR Part 11 interlocking and contamination equipment.',
+          image: '/hero-cleanroom-interlock-chamber.jpg',
+          icon: Layers,
+          isCatalogLink: true
         }
       ]
     },
@@ -761,6 +782,13 @@ export default function Navbar({
           image: '/services/service-fire-alarm.jpg',
           icon: Settings,
           slug: 'public-address-system'
+        },
+        {
+          title: 'Full Division Catalog',
+          description: 'Explore multi-loop addressable fire panels, hydrants & UL certified doors.',
+          image: '/products/fire-alarm.jpg',
+          icon: Layers,
+          isCatalogLink: true
         }
       ]
     },
@@ -812,6 +840,13 @@ export default function Navbar({
           image: '/services/services-heavy-security.jpg',
           icon: Lock,
           slug: 'wireless-intrusion-detection'
+        },
+        {
+          title: 'Full Division Catalog',
+          description: 'Explore 4K AI IP cameras, facial biometric terminals & telemetry arrays.',
+          image: '/hero-security-command-center.jpg',
+          icon: Layers,
+          isCatalogLink: true
         }
       ]
     }
@@ -914,8 +949,12 @@ export default function Navbar({
               </button>
             </div>
 
-            {/* Products Dropdown (Horizontal) */}
-            <div className="nav-item-dropdown">
+            {/* Products Dropdown (Horizontal Mega Menu) */}
+            <div 
+              className="nav-item-dropdown"
+              onMouseEnter={() => handleMouseEnterDropdown('products')}
+              onMouseLeave={handleMouseLeaveDropdown}
+            >
               <button
                 className={`bright-nav-btn ${activeDropdown === 'products' ? 'services-pill-btn is-active-pill' : ''}`}
                 onClick={() => toggleDropdown('products')}
@@ -931,7 +970,11 @@ export default function Navbar({
             </div>
 
             {/* Company Dropdown (Horizontal - exactly like Brightlant screenshot) */}
-            <div className="nav-item-dropdown">
+            <div 
+              className="nav-item-dropdown"
+              onMouseEnter={() => handleMouseEnterDropdown('company')}
+              onMouseLeave={handleMouseLeaveDropdown}
+            >
               <button
                 className={`bright-nav-btn ${activeDropdown === 'company' ? 'services-pill-btn is-active-pill' : ''}`}
                 onClick={() => toggleDropdown('company')}
@@ -1162,34 +1205,13 @@ export default function Navbar({
           </div>
         )}
 
-        {/* 2. PRODUCTS MEGA DROPDOWN (Matches Services Architecture - "see like service") */}
+        {/* 2. PRODUCTS MEGA DROPDOWN (Reference-Matched Premium Panel - Exactly like Services) */}
         {activeDropdown === 'products' && (
           <div 
-            className="bright-mega-panel-wrapper products-mega-panel desktop-only"
+            className="bright-mega-panel-wrapper"
             onMouseEnter={() => handleMouseEnterDropdown('products')}
             onMouseLeave={handleMouseLeaveDropdown}
           >
-            {/* Top Discovery Bar */}
-            <div className="mega-top-discovery-bar">
-              <div className="mega-top-discovery-left">
-                <span className="mega-discovery-pill">PRODUCT CATALOGUE</span>
-                <span className="mega-discovery-tagline">
-                  5 Specialized Engineering Divisions • 25 Certified Industrial Systems
-                </span>
-              </div>
-              <button
-                className="btn-mega-open-catalog"
-                onClick={() => {
-                  setActiveDropdown(null);
-                  if (onNavigate) onNavigate('catalog', 'all');
-                }}
-                title="Explore all 25 systems with interactive filtering"
-              >
-                <span>Explore Full Catalogue</span>
-                <ArrowRight size={13} />
-              </button>
-            </div>
-
             <div className="mega-body-grid">
               {/* Left Column: 5 Product Divisions List */}
               <div className="mega-left-col">
@@ -1222,7 +1244,7 @@ export default function Navbar({
                 })}
               </div>
 
-              {/* Right Panel: Header (Text + Feature Image) & 5 Product Cards */}
+              {/* Right Panel: Header (Text + Feature Image) & 6 Product Cards */}
               <div className="mega-right-panel">
                 {/* Top Section: Text Info on Left + Hero Feature Image on Right */}
                 <div className="mega-right-header-row">
@@ -1242,9 +1264,9 @@ export default function Navbar({
                             onNavigate('catalog', currentProductGroup.categoryId);
                           }
                         }}
-                        title={`Explore ${currentProductGroup.title} Overview`}
+                        title={`View ${currentProductGroup.title} Overview`}
                       >
-                        <span>View Category</span>
+                        <span>Overview</span>
                         <ArrowRight size={13} />
                       </button>
                     </div>
@@ -1269,7 +1291,7 @@ export default function Navbar({
                   )}
                 </div>
 
-                {/* 5 Product Cards Grid (3 Columns) */}
+                {/* 6 Product Cards Grid (3 Columns x 2 Rows) */}
                 <div className="mega-subservice-cards-grid">
                   {currentProductGroup.products.map((prod, pIdx) => {
                     const CardIcon = prod.icon || Cpu;
@@ -1278,7 +1300,14 @@ export default function Navbar({
                         key={pIdx} 
                         className="mega-subservice-card"
                         onClick={() => {
-                          handleProductClick(prod.slug);
+                          setActiveDropdown(null);
+                          if (prod.isCatalogLink) {
+                            if (onNavigate) onNavigate('catalog', currentProductGroup.categoryId);
+                          } else if (prod.slug) {
+                            handleProductClick(prod.slug);
+                          } else {
+                            if (onNavigate) onNavigate('catalog', currentProductGroup.categoryId);
+                          }
                         }}
                       >
                         {/* Landscape Image with Overlapping Icon Badge */}
@@ -1308,37 +1337,6 @@ export default function Navbar({
                     );
                   })}
                 </div>
-              </div>
-            </div>
-
-            {/* Bottom Quick Bar */}
-            <div className="mega-bottom-quickbar">
-              <div className="mega-bottom-left">
-                <span className="mega-bottom-pill">CERTIFIED ENGINEERING</span>
-                <span className="mega-bottom-text">
-                  33+ Precision Systems Installed Across India • USFDA / cGMP &amp; CE Certified
-                </span>
-              </div>
-              <div className="mega-bottom-right">
-                <button
-                  className="btn-mega-quick-quote"
-                  onClick={() => {
-                    setActiveDropdown(null);
-                    if (onNavigate) onNavigate('contact');
-                  }}
-                >
-                  <span>Request Proposal</span>
-                </button>
-                <button
-                  className="btn-mega-view-all"
-                  onClick={() => {
-                    setActiveDropdown(null);
-                    if (onNavigate) onNavigate('catalog', 'all');
-                  }}
-                >
-                  <span>View All 25 Products</span>
-                  <ArrowRight size={13} />
-                </button>
               </div>
             </div>
           </div>
