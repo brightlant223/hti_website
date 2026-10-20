@@ -62,11 +62,9 @@ export default function Navbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'services' | 'products' | 'company' | null
   const [selectedServiceGroup, setSelectedServiceGroup] = useState(0);
-  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [mobileAccordion, setMobileAccordion] = useState(null);
 
   const navRef = useRef(null);
-  const themeMenuRef = useRef(null);
   const dropdownTimeoutRef = useRef(null);
 
   const handleMouseEnterDropdown = (name) => {
@@ -95,9 +93,6 @@ export default function Navbar({
     const handleClickOutside = (e) => {
       if (navRef.current && !navRef.current.contains(e.target)) {
         setActiveDropdown(null);
-      }
-      if (themeMenuRef.current && !themeMenuRef.current.contains(e.target)) {
-        setThemeDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -702,61 +697,22 @@ export default function Navbar({
 
           {/* Right Action Group: Theme Toggle + Consultation CTA */}
           {/* Right Action Group: Theme Toggle + Admin Portal */}
+          {/* Right Action Group: Theme Toggle + Admin Portal */}
           <div className="bright-nav-actions desktop-only">
-            {/* Theme / Mode Switcher with Interactive Dropdown */}
-            <div className="theme-toggle-container" ref={themeMenuRef}>
-              <button
-                className={`bright-theme-toggle ${themeDropdownOpen ? 'active' : ''} ${resolvedTheme === 'dark' ? 'is-dark' : 'is-light'}`}
-                onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
-                title={`Current theme: ${theme.charAt(0).toUpperCase() + theme.slice(1)} mode (Click to switch)`}
-                aria-label="Toggle display theme"
-                aria-expanded={themeDropdownOpen}
-              >
-                {resolvedTheme === 'dark' ? (
-                  <Moon size={16} className="sun-icon moon-icon" />
-                ) : (
-                  <Sun size={16} className="sun-icon" />
-                )}
-                <ChevronDown size={12} className={`theme-chevron ${themeDropdownOpen ? 'rotated' : ''}`} />
-              </button>
-
-              {themeDropdownOpen && (
-                <div className="theme-dropdown-menu" role="menu">
-                  <div className="theme-menu-header">Display Theme</div>
-                  <button
-                    className={`theme-menu-item ${theme === 'light' ? 'selected' : ''}`}
-                    onClick={() => {
-                      if (onThemeChange) onThemeChange('light');
-                      setThemeDropdownOpen(false);
-                    }}
-                    role="menuitem"
-                  >
-                    <div className="theme-item-left">
-                      <Sun size={15} className="sun-icon" />
-                      <span>Light Mode</span>
-                    </div>
-                    {theme === 'light' && <Check size={14} className="theme-check-icon" />}
-                  </button>
-
-                  <button
-                    className={`theme-menu-item ${theme === 'dark' ? 'selected' : ''}`}
-                    onClick={() => {
-                      if (onThemeChange) onThemeChange('dark');
-                      setThemeDropdownOpen(false);
-                    }}
-                    role="menuitem"
-                  >
-                    <div className="theme-item-left">
-                      <Moon size={15} className="moon-icon" />
-                      <span>Dark Mode</span>
-                    </div>
-                    {theme === 'dark' && <Check size={14} className="theme-check-icon" />}
-                  </button>
-
-
-                </div>
+            {/* Direct 1-Click Theme Toggle: Only 1 Icon, Instant Dark/Light Switch */}
+            <button
+              className={`bright-theme-toggle ${resolvedTheme === 'dark' ? 'is-dark' : 'is-light'}`}
+              onClick={() => onThemeChange && onThemeChange(resolvedTheme === 'dark' ? 'light' : 'dark')}
+              title={resolvedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              aria-label={resolvedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              type="button"
+            >
+              {resolvedTheme === 'dark' ? (
+                <Sun size={21} className="sun-icon" />
+              ) : (
+                <Moon size={21} className="moon-icon" />
               )}
-            </div>
+            </button>
 
             {/* Sleek Admin Icon Portal Button */}
             <button
@@ -774,14 +730,30 @@ export default function Navbar({
             </button>
           </div>
 
-          {/* Mobile Hamburger Toggle */}
-          <button
-            className="bright-mobile-toggle mobile-only"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle navigation"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Actions: 1-Click Theme Toggle + Hamburger Menu */}
+          <div className="bright-mobile-actions mobile-only">
+            <button
+              className={`bright-theme-toggle ${resolvedTheme === 'dark' ? 'is-dark' : 'is-light'}`}
+              onClick={() => onThemeChange && onThemeChange(resolvedTheme === 'dark' ? 'light' : 'dark')}
+              title={resolvedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              aria-label={resolvedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              type="button"
+            >
+              {resolvedTheme === 'dark' ? (
+                <Sun size={20} className="sun-icon" />
+              ) : (
+                <Moon size={20} className="moon-icon" />
+              )}
+            </button>
+            <button
+              className="bright-mobile-toggle"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation"
+              type="button"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* =========================================================================

@@ -1490,118 +1490,65 @@
 }
 
 .bright-theme-toggle {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 9999px;
-  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  width: auto;
+  height: auto;
+  padding: 6px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
   color: #64748b;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+  box-shadow: none;
+  outline: none;
+  flex-shrink: 0;
+  user-select: none;
 }
 
-.bright-theme-toggle:hover,
-.bright-theme-toggle.active {
-  border-color: #0284c7;
-  color: #0284c7;
-  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+.bright-theme-toggle:hover {
+  background: transparent;
+  border: none;
+  box-shadow: none;
   transform: translateY(-1px);
+}
+
+.bright-theme-toggle:active {
+  transform: scale(0.9);
 }
 
 .sun-icon {
   color: #f59e0b;
-  transition: transform 0.25s ease;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+  filter: drop-shadow(0 1px 3px rgba(245, 158, 11, 0.3));
 }
 
 .moon-icon {
-  color: #38bdf8;
-  transition: transform 0.25s ease;
-}
-
-.theme-chevron {
-  color: #94a3b8;
-  transition: transform 0.2s ease;
-}
-
-.theme-chevron.rotated {
-  transform: rotate(180deg);
-}
-
-/* Floating Theme Selection Menu */
-.theme-dropdown-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  min-width: 175px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 6px;
-  box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.08);
-  z-index: 1100;
-  animation: themeMenuPop 0.16s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes themeMenuPop {
-  from {
-    opacity: 0;
-    transform: translateY(-6px) scale(0.96);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.theme-menu-header {
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #94a3b8;
-  padding: 6px 10px 4px;
-}
-
-.theme-menu-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: transparent;
-  color: #334155;
-  font-size: 0.84rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  border: none;
-}
-
-.theme-menu-item:hover {
-  background: #f1f5f9;
   color: #0284c7;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+  filter: drop-shadow(0 1px 3px rgba(2, 132, 199, 0.25));
 }
 
-.theme-menu-item.selected {
-  background: #f0f9ff;
-  color: #0284c7;
-  font-weight: 600;
+.bright-theme-toggle:hover .sun-icon {
+  transform: rotate(45deg) scale(1.15);
+  color: #fbbf24;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.65));
 }
 
-.theme-item-left {
+.bright-theme-toggle:hover .moon-icon {
+  transform: rotate(-15deg) scale(1.15);
+  color: #0369a1;
+  filter: drop-shadow(0 0 8px rgba(2, 132, 199, 0.5));
+}
+
+.bright-mobile-actions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.theme-check-icon {
-  color: #0284c7;
-}
 
 /* Mobile Theme Bar in Drawer */
 .mobile-theme-bar {
@@ -14947,42 +14894,17 @@
 }
 
 [data-theme="dark"] .bright-theme-toggle {
-  background: #111a2e;
-  border-color: #1e293b;
-  color: #38bdf8;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #fbbf24;
 }
 
-[data-theme="dark"] .bright-theme-toggle:hover,
-[data-theme="dark"] .bright-theme-toggle.active {
-  border-color: #38bdf8;
-  background: #162444;
-  color: #38bdf8;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
-}
-
-[data-theme="dark"] .theme-dropdown-menu {
-  background: #0d1527;
-  border-color: #1e293b;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.06);
-}
-
-[data-theme="dark"] .theme-menu-header {
-  color: #64748b;
-}
-
-[data-theme="dark"] .theme-menu-item {
-  color: #cbd5e1;
-}
-
-[data-theme="dark"] .theme-menu-item:hover {
-  background: #16233f;
-  color: #38bdf8;
-}
-
-[data-theme="dark"] .theme-menu-item.selected {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
+[data-theme="dark"] .bright-theme-toggle:hover {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #fde047;
 }
 
 [data-theme="dark"] .bright-admin-icon-btn {
