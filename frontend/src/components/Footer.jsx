@@ -1,7 +1,10 @@
 import React from 'react';
-import { Phone, Mail, Globe, MapPin, ChevronRight } from 'lucide-react';
+import { Phone, Mail, Globe, MapPin, ChevronRight, ShieldCheck, ExternalLink } from 'lucide-react';
+import './Footer.css';
 
 export default function Footer({ onCategoryClick, onNavigate }) {
+  const currentYear = new Date().getFullYear();
+
   const handleLinkClick = (page, sectionId = null) => {
     if (onNavigate) {
       onNavigate(page, sectionId);
@@ -15,7 +18,7 @@ export default function Footer({ onCategoryClick, onNavigate }) {
     <footer className="footer-wrap">
       <div className="container footer-container">
         <div className="footer-grid">
-          {/* Column 1: Company Profile & Description matching Image 2 */}
+          {/* Column 1: Company Profile & Trust */}
           <div className="footer-col col-brand-summary">
             <div className="footer-logo-row">
               <img 
@@ -30,73 +33,90 @@ export default function Footer({ onCategoryClick, onNavigate }) {
             </div>
 
             <p className="footer-summary-text">
-              A reliable automation and security system provider, serving clients since 2014. Committed to quality, innovation and exceptional service.
+              Reliable automation & security system provider since 2014. Committed to quality and 24/7 service.
             </p>
+
+            <div className="footer-trust-pill">
+              <ShieldCheck size={11} className="footer-pill-icon" />
+              <span>Certified Integrator • Since 2014</span>
+            </div>
           </div>
 
           {/* Column 2: Quick Links */}
-          <div className="footer-col">
+          <div className="footer-col col-quick-links">
             <h4 className="footer-column-heading">Quick Links</h4>
             <ul className="footer-nav-list">
               <li>
                 <button onClick={() => handleLinkClick('home', 'hero')}>
-                  <ChevronRight size={13} className="inline mr-1 text-slate-400" />
-                  Home
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Home</span>
                 </button>
               </li>
               <li>
                 <button onClick={() => handleLinkClick('about')}>
-                  <ChevronRight size={13} className="inline mr-1 text-slate-400" />
-                  About Us
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>About Us</span>
                 </button>
               </li>
               <li>
                 <button onClick={() => handleLinkClick('automation')}>
-                  <ChevronRight size={13} className="inline mr-1 text-slate-400" />
-                  Our Solutions
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Our Solutions</span>
                 </button>
               </li>
               <li>
                 <button onClick={() => handleLinkClick('clients')}>
-                  <ChevronRight size={13} className="inline mr-1 text-slate-400" />
-                  Projects
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Projects</span>
                 </button>
               </li>
               <li>
                 <button onClick={() => handleLinkClick('careers')}>
-                  <ChevronRight size={13} className="inline mr-1 text-slate-400" />
-                  Careers
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Careers</span>
                 </button>
               </li>
               <li>
                 <button onClick={() => handleLinkClick('contact')}>
-                  <ChevronRight size={13} className="inline mr-1 text-slate-400" />
-                  Contact Us
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Contact Us</span>
                 </button>
               </li>
             </ul>
           </div>
 
           {/* Column 3: Product Segments */}
-          <div className="footer-col">
+          <div className="footer-col col-product-segments">
             <h4 className="footer-column-heading">Product Segments</h4>
             <ul className="footer-nav-list">
               <li>
                 <button onClick={() => handleLinkClick('automation')}>
-                  <ChevronRight size={13} className="inline mr-1 text-slate-400" />
-                  Automation
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Automation</span>
                 </button>
               </li>
               <li>
                 <button onClick={() => handleLinkClick('security-systems')}>
-                  <ChevronRight size={13} className="inline mr-1 text-slate-400" />
-                  Security Systems
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Security Systems</span>
                 </button>
               </li>
               <li>
                 <button onClick={() => handleLinkClick('hygiene')}>
-                  <ChevronRight size={13} className="inline mr-1 text-slate-400" />
-                  Hygiene Solutions
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Hygiene Solutions</span>
+                </button>
+              </li>
+              <li>
+                <button onClick={() => handleLinkClick('automation', 'access-control')}>
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Access Control</span>
+                </button>
+              </li>
+              <li>
+                <button onClick={() => handleLinkClick('security-systems', 'cctv')}>
+                  <ChevronRight size={13} className="nav-arrow-icon" />
+                  <span>Surveillance & CCTV</span>
                 </button>
               </li>
             </ul>
@@ -107,29 +127,44 @@ export default function Footer({ onCategoryClick, onNavigate }) {
             <h4 className="footer-column-heading">Contact Us</h4>
             <div className="footer-contact-entries">
               <div className="contact-entry-item">
-                <Phone size={15} className="contact-entry-icon text-orange-500" />
-                <a href="tel:9892756077" className="hover:text-white">9892756077</a>
-                <span>/</span>
-                <a href="tel:9594917010" className="hover:text-white">9594917010</a>
+                <div className="contact-icon-box">
+                  <Phone size={12} />
+                </div>
+                <div className="contact-entry-body">
+                  <a href="tel:9892756077" className="contact-link">9892756077</a>
+                  <span className="contact-sep">/</span>
+                  <a href="tel:9594917010" className="contact-link">9594917010</a>
+                </div>
               </div>
 
               <div className="contact-entry-item">
-                <Mail size={15} className="contact-entry-icon text-orange-500" />
-                <a href="mailto:hti@htisystems.in" className="hover:text-white">hti@htisystems.in</a>
+                <div className="contact-icon-box">
+                  <Mail size={12} />
+                </div>
+                <div className="contact-entry-body">
+                  <a href="mailto:hti@htisystems.in" className="contact-link">hti@htisystems.in</a>
+                </div>
               </div>
 
               <div className="contact-entry-item">
-                <Globe size={15} className="contact-entry-icon text-orange-500" />
-                <a href="https://www.htisystems.in" target="_blank" rel="noreferrer" className="hover:text-white">
-                  www.htisystems.in
-                </a>
+                <div className="contact-icon-box">
+                  <Globe size={12} />
+                </div>
+                <div className="contact-entry-body">
+                  <a href="https://www.htisystems.in" target="_blank" rel="noreferrer" className="contact-link">
+                    www.htisystems.in
+                    <ExternalLink size={10} className="contact-ext-icon" />
+                  </a>
+                </div>
               </div>
 
-              <div className="contact-entry-item">
-                <MapPin size={15} className="contact-entry-icon text-orange-500 flex-shrink-0 mt-1" />
-                <span>
-                  Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate, Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703
-                </span>
+              <div className="contact-entry-item contact-address-item">
+                <div className="contact-icon-box contact-pin-box">
+                  <MapPin size={11} />
+                </div>
+                <div className="contact-entry-body contact-address-text">
+                  825, Goodwill Bizhubb, Next to Ikea, Turbhe MIDC, Navi Mumbai - 400703
+                </div>
               </div>
             </div>
           </div>
@@ -138,7 +173,7 @@ export default function Footer({ onCategoryClick, onNavigate }) {
         {/* Bottom Copyright */}
         <div className="footer-bottom-bar">
           <div className="footer-copyright">
-            © 2024 HTI Automation and Security System Pvt Ltd. All Rights Reserved.
+            © {currentYear} HTI Automation and Security System Pvt Ltd. All Rights Reserved.
           </div>
 
           <div className="footer-legal-links">
