@@ -12,6 +12,11 @@ echo [2/2] Starting React Vite Frontend Server on port 3000...
 start "HTI Frontend Dev" cmd /k "cd frontend && npm.cmd run dev"
 
 echo.
+echo [3/3] Opening Frontend Web Portal in default browser...
+timeout /t 2 /nobreak >nul
+start http://localhost:3000/
+
+echo.
 echo Servers are launching:
 echo  - Frontend Web Portal: http://localhost:3000/
 echo  - Backend API & Docs:  http://127.0.0.1:8000/docs
