@@ -121,7 +121,7 @@ export default function InsightsAndQuote({ onInquirySubmitted, onNavigate }) {
             </div>
 
             {/* 3 Articles Grid with Instant Local Images */}
-            <div className="articles-tri-grid">
+            <div className="articles-tri-grid reveal-stagger">
               {articles.map((art) => (
                 <div key={art.id} className="article-preview-card">
                   <div className="article-thumb-wrap">

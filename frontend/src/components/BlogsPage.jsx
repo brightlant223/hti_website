@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import './BlogsPage.css';
 import { 
   Home, 
   ChevronRight, 
@@ -21,7 +22,8 @@ import {
   Sparkles,
   Wind,
   ScanLine,
-  SprayCan
+  SprayCan,
+  X
 } from 'lucide-react';
 
 export default function BlogsPage({ onNavigate, blogs = [] }) {
@@ -239,8 +241,23 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
     return defaultArticles;
   }, [blogs]);
 
-  // Normalize category comparison for robust filtering
+  // Fast category counts memoization
+  const categoryCounts = useMemo(() => {
+    const counts = { All: articles.length };
+    categories.forEach(cat => {
+      if (cat === 'All') return;
+      const catNorm = cat.toLowerCase().replace(/[^a-z]/g, '');
+      counts[cat] = articles.filter(art => {
+        const artCat = (art.category || '').toLowerCase().replace(/[^a-z]/g, '');
+        return artCat.includes(catNorm) || catNorm.includes(artCat);
+      }).length;
+    });
+    return counts;
+  }, [articles, categories]);
+
+  // Normalize category comparison and search for instant filtering
   const filteredArticles = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
     return articles.filter(art => {
       // Category match
       let matchesCat = true;
@@ -250,20 +267,42 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
         matchesCat = artCat.includes(selCat) || selCat.includes(artCat);
       }
 
-      // Optional search query match
+      // Search query match across title, excerpt, author, category, and tags
       let matchesSearch = true;
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase().trim();
+      if (query) {
+        const tagsString = (art.tags || []).join(' ').toLowerCase();
         matchesSearch = 
           art.title.toLowerCase().includes(query) ||
           art.excerpt.toLowerCase().includes(query) ||
           art.author.toLowerCase().includes(query) ||
-          (art.category || '').toLowerCase().includes(query);
+          (art.category || '').toLowerCase().includes(query) ||
+          tagsString.includes(query);
       }
 
       return matchesCat && matchesSearch;
     });
   }, [articles, selectedCategory, searchQuery]);
+
+  // Escape key listener to close active article
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && selectedArticle) {
+        setSelectedArticle(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedArticle]);
+
+  const handleSelectArticle = (art) => {
+    setSelectedArticle(art);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  };
+
+  const handleBackToArticles = () => {
+    setSelectedArticle(null);
+    window.scrollTo({ top: 320, behavior: 'smooth' });
+  };
 
   return (
     <div className="blogs-dedicated-page">
@@ -275,6 +314,7 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
               <button 
                 className="blogs-breadcrumb-link" 
                 onClick={() => onNavigate && onNavigate('home')}
+                title="Navigate to Home"
               >
                 <Home size={13} className="breadcrumb-home-icon" />
                 <span>Home</span>
@@ -284,6 +324,9 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
                 Engineering Insights & Technical Articles
               </span>
             </nav>
+            <div className="blogs-breadcrumb-stats">
+              <span>{articles.length} Authoritative Whitepapers Available</span>
+            </div>
           </div>
         </div>
       </div>
@@ -342,6 +385,8 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
                     alt="Cleanroom Engineering pharmaceutical facility" 
                     className="skew-panel-img"
                     loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
                   />
                   <div className="skew-panel-gradient-overlay"></div>
                   <div className="skew-panel-pill pill-navy">
@@ -357,6 +402,7 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
                     alt="Fire and Life Safety hydrant piping network" 
                     className="skew-panel-img"
                     loading="eager"
+                    decoding="async"
                   />
                   <div className="skew-panel-gradient-overlay"></div>
                   <div className="skew-panel-pill pill-red">
@@ -372,6 +418,7 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
                     alt="Entrance Automation automatic sliding glass doors" 
                     className="skew-panel-img"
                     loading="eager"
+                    decoding="async"
                   />
                   <div className="skew-panel-gradient-overlay"></div>
                   <div className="skew-panel-pill pill-navy">
@@ -388,31 +435,65 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
         </div>
       </section>
 
-      {/* 3. Horizontal Engineering Discipline Filter Bar */}
+      {/* 3. Search Bar & Horizontal Engineering Discipline Filter Bar */}
       {!selectedArticle && (
         <section className="blogs-filter-bar-section">
           <div className="container">
-            <div className="blogs-filter-bar-card">
-              <div className="filter-lead-label">
-                <Filter size={15} className="filter-lead-icon" />
-                <span>Filter by Engineering Discipline:</span>
+            <div className="blogs-control-hub">
+              {/* Search Row */}
+              <div className="blogs-search-row">
+                <div className="blogs-search-input-box">
+                  <Search size={16} className="search-input-icon" />
+                  <input
+                    type="text"
+                    className="blogs-search-input"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search whitepapers, standards (USFDA, ISO, NBC 2016), systems..."
+                    aria-label="Search technical whitepapers"
+                  />
+                  {searchQuery && (
+                    <button
+                      className="btn-clear-search"
+                      onClick={() => setSearchQuery('')}
+                      title="Clear search"
+                      aria-label="Clear search query"
+                    >
+                      <X size={13} />
+                    </button>
+                  )}
+                </div>
+                <div className="blogs-search-status-badge">
+                  <BookOpen size={13} />
+                  <span>Showing {filteredArticles.length} of {articles.length} Whitepapers</span>
+                </div>
               </div>
 
-              <div className="filter-pills-scroll-track" role="tablist">
-                {categories.map((cat) => {
-                  const isActive = selectedCategory === cat;
-                  return (
-                    <button
-                      key={cat}
-                      role="tab"
-                      aria-selected={isActive}
-                      className={`discipline-filter-pill ${isActive ? 'is-active' : ''}`}
-                      onClick={() => setSelectedCategory(cat)}
-                    >
-                      {cat}
-                    </button>
-                  );
-                })}
+              {/* Discipline Filter Card */}
+              <div className="blogs-filter-bar-card">
+                <div className="filter-lead-label">
+                  <Filter size={15} className="filter-lead-icon" />
+                  <span>Engineering Discipline:</span>
+                </div>
+
+                <div className="filter-pills-scroll-track" role="tablist">
+                  {categories.map((cat) => {
+                    const isActive = selectedCategory === cat;
+                    const count = categoryCounts[cat] || 0;
+                    return (
+                      <button
+                        key={cat}
+                        role="tab"
+                        aria-selected={isActive}
+                        className={`discipline-filter-pill ${isActive ? 'is-active' : ''}`}
+                        onClick={() => setSelectedCategory(cat)}
+                      >
+                        <span>{cat}</span>
+                        <span className="pill-count-bubble">{count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
@@ -422,119 +503,121 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
       {/* 4. Article Detail Reader View (when user opens a whitepaper) */}
       {selectedArticle && (
         <section className="article-reader-section">
-          <div className="article-reader-container">
-            <div className="article-reading-sheet">
-              <button 
-                className="btn-back-to-articles"
-                onClick={() => {
-                  setSelectedArticle(null);
-                  window.scrollTo({ top: 350, behavior: 'smooth' });
-                }}
-              >
-                <ArrowLeft size={14} />
-                <span>Back to All Articles</span>
-              </button>
+          <div className="container">
+            <div className="article-reader-container">
+              <div className="article-reading-sheet">
+                <button 
+                  className="btn-back-to-articles"
+                  onClick={handleBackToArticles}
+                  aria-label="Return to all whitepapers"
+                >
+                  <ArrowLeft size={14} />
+                  <span>Back to All Articles</span>
+                </button>
 
-              <div className="reader-badge-row">
-                <span className="reader-category-pill">
-                  {selectedArticle.category.toUpperCase()}
-                </span>
-                {selectedArticle.badge && (
-                  <span className="reader-special-badge">{selectedArticle.badge}</span>
+                <div className="reader-badge-row">
+                  <span className="reader-category-pill">
+                    {selectedArticle.category.toUpperCase()}
+                  </span>
+                  {selectedArticle.badge && (
+                    <span className="reader-special-badge">{selectedArticle.badge}</span>
+                  )}
+                  <span className="reader-time-pill">
+                    <Clock size={12} /> {selectedArticle.readTime}
+                  </span>
+                </div>
+
+                <h1 className="reader-title">{selectedArticle.title}</h1>
+                
+                <div className="reader-meta-row">
+                  <div className="reader-author-info">
+                    <div className="reader-author-avatar">
+                      <User size={15} />
+                    </div>
+                    <div className="reader-author-text">
+                      <span className="author-name">{selectedArticle.author}</span>
+                      <span className="author-role">{selectedArticle.authorRole}</span>
+                    </div>
+                  </div>
+                  <div className="reader-date-stamp">{selectedArticle.date}</div>
+                </div>
+
+                {/* Header Image if available */}
+                {selectedArticle.image && (
+                  <div className="reader-featured-media">
+                    <img 
+                      src={selectedArticle.image} 
+                      alt={selectedArticle.title} 
+                      className="reader-cover-img"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  </div>
                 )}
-                <span className="reader-time-pill">
-                  <Clock size={12} /> {selectedArticle.readTime}
-                </span>
-              </div>
 
-              <h1 className="reader-title">{selectedArticle.title}</h1>
-              
-              <div className="reader-meta-row">
-                <div className="reader-author-info">
-                  <div className="reader-author-avatar">
-                    <User size={15} />
+                {/* Key Takeaways Card */}
+                {selectedArticle.takeaways && selectedArticle.takeaways.length > 0 && (
+                  <div className="reader-takeaways-card">
+                    <h4 className="takeaways-header-title">
+                      <CheckCircle2 size={18} className="takeaways-green-icon" />
+                      <span>Key Engineering Takeaways</span>
+                    </h4>
+                    <ul className="takeaways-checklist">
+                      {selectedArticle.takeaways.map((item, idx) => (
+                        <li key={idx} className="takeaways-check-item">
+                          <span className="takeaway-bullet">✓</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="reader-author-text">
-                    <span className="author-name">{selectedArticle.author}</span>
-                    <span className="author-role">{selectedArticle.authorRole}</span>
-                  </div>
-                </div>
-                <div className="reader-date-stamp">{selectedArticle.date}</div>
-              </div>
+                )}
 
-              {/* Header Image if available */}
-              {selectedArticle.image && (
-                <div className="reader-featured-media">
-                  <img 
-                    src={selectedArticle.image} 
-                    alt={selectedArticle.title} 
-                    className="reader-cover-img"
-                  />
-                </div>
-              )}
-
-              {/* Key Takeaways Card */}
-              {selectedArticle.takeaways && selectedArticle.takeaways.length > 0 && (
-                <div className="reader-takeaways-card">
-                  <h4 className="takeaways-header-title">
-                    <CheckCircle2 size={18} className="takeaways-green-icon" />
-                    <span>Key Engineering Takeaways</span>
-                  </h4>
-                  <ul className="takeaways-checklist">
-                    {selectedArticle.takeaways.map((item, idx) => (
-                      <li key={idx} className="takeaways-check-item">
-                        <span className="takeaway-bullet">✓</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Body Text */}
-              <div className="reader-content-body">
-                {selectedArticle.content.split('\n\n').map((paragraph, pIdx) => (
-                  <p key={pIdx} className="reader-body-p">{paragraph}</p>
-                ))}
-              </div>
-
-              {/* Tags */}
-              {selectedArticle.tags && selectedArticle.tags.length > 0 && (
-                <div className="reader-tags-strip">
-                  {selectedArticle.tags.map((tag, tIdx) => (
-                    <span key={tIdx} className="reader-tag-chip">#{tag}</span>
+                {/* Body Text */}
+                <div className="reader-content-body">
+                  {selectedArticle.content.split('\n\n').map((paragraph, pIdx) => (
+                    <p key={pIdx} className="reader-body-p">{paragraph}</p>
                   ))}
                 </div>
-              )}
 
-              {/* Inquiry CTA */}
-              <div className="reader-inquiry-box">
-                <div className="inquiry-text-col">
-                  <h4>Have an Industrial or Pharma Project Requiring This Technology?</h4>
-                  <p>Discuss statutory codes, equipment specs, and custom engineering with HTI specialists.</p>
+                {/* Tags */}
+                {selectedArticle.tags && selectedArticle.tags.length > 0 && (
+                  <div className="reader-tags-strip">
+                    {selectedArticle.tags.map((tag, tIdx) => (
+                      <span key={tIdx} className="reader-tag-chip">#{tag}</span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Inquiry CTA */}
+                <div className="reader-inquiry-box">
+                  <div className="inquiry-text-col">
+                    <h4>Have an Industrial or Pharma Project Requiring This Technology?</h4>
+                    <p>Discuss statutory codes, equipment specs, and custom engineering with HTI specialists.</p>
+                  </div>
+                  <button 
+                    className="btn-inquire-engineering"
+                    onClick={() => onNavigate && onNavigate('contact')}
+                  >
+                    <Send size={15} />
+                    <span>Inquire with Engineering Directorate</span>
+                  </button>
                 </div>
-                <button 
-                  className="btn-inquire-engineering"
-                  onClick={() => onNavigate && onNavigate('contact')}
-                >
-                  <Send size={15} />
-                  <span>Inquire with Engineering Directorate</span>
-                </button>
               </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* 5. Articles Grid (3 Columns on Desktop matching reference screenshot) */}
+      {/* 5. Articles Grid (3 Cols on Desktop/Laptop, 2 Cols on Tablet, 1 Col on Mobile) */}
       {!selectedArticle && (
         <section className="blogs-cards-grid-section">
           <div className="container">
             {filteredArticles.length === 0 ? (
               <div className="blogs-empty-state-card">
                 <BookOpen size={42} className="empty-icon text-muted" />
-                <h3>No whitepapers found in this discipline</h3>
-                <p>Try switching to another engineering discipline or clear your search.</p>
+                <h3>No whitepapers found matching your criteria</h3>
+                <p>Try switching to another discipline or clear your search term.</p>
                 <button 
                   className="btn-reset-filters"
                   onClick={() => {
@@ -550,13 +633,16 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
                 {filteredArticles.map((art) => {
                   return (
                     <article key={art.id} className="engineering-whitepaper-card">
-                      {/* Landscape Thumbnail (16:8 aspect ratio) */}
+                      {/* Landscape Thumbnail (16:9 aspect ratio) */}
                       <div className="card-media-frame">
                         <img 
                           src={art.image} 
                           alt={art.title} 
                           className="card-media-image"
                           loading="lazy"
+                          decoding="async"
+                          width="480"
+                          height="270"
                         />
                         {/* Overlay Badge (e.g. NBC 2016 Compliance on Card 2) */}
                         {art.badge && (
@@ -607,10 +693,7 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
 
                           <button 
                             className="btn-read-whitepaper-pill"
-                            onClick={() => {
-                              setSelectedArticle(art);
-                              window.scrollTo({ top: 120, behavior: 'smooth' });
-                            }}
+                            onClick={() => handleSelectArticle(art)}
                             aria-label={`Read whitepaper: ${art.title}`}
                           >
                             <span>Read Whitepaper</span>
