@@ -1877,9 +1877,4 @@ html:not(.dark) .success-title {
   .form-sla-guarantees-bar {
     grid-template-columns: 1fr;
   }
-  .procurement-form-card input,
-  .procurement-form-card select,
-  .procurement-form-card textarea {
-    font-size: 16px !important;
-  }
 }
