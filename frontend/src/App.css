@@ -624,28 +624,122 @@
 
 
 
-@media (max-width: 1200px) {
+/* =========================================================================
+   RESPONSIVE MEGA PANEL ADAPTATION (Services & Products)
+   ========================================================================= */
+@media (max-width: 1360px) {
+  .bright-mega-panel-wrapper {
+    width: min(96vw, 1300px);
+  }
+
+  .mega-body-grid {
+    grid-template-columns: 280px 1fr;
+  }
+
   .mega-feature-hero-media {
-    width: 250px;
-    height: 115px;
+    width: 270px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 1240px) {
+  .bright-mega-panel-wrapper {
+    width: 96vw;
+    border-radius: 16px;
+  }
+
+  .mega-body-grid {
+    grid-template-columns: 250px 1fr;
+  }
+
+  .mega-left-col {
+    padding: 14px 10px;
+    gap: 4px;
+  }
+
+  .mega-service-item {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .mega-item-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .mega-item-title {
+    font-size: 0.82rem;
+  }
+
+  .mega-item-tagline {
+    font-size: 0.68rem;
+  }
+
+  .mega-right-panel {
+    padding: 16px 18px;
+  }
+
+  .mega-panel-heading {
+    font-size: 1.25rem;
+  }
+
+  .mega-panel-desc {
+    font-size: 0.76rem;
+    max-width: 440px;
+  }
+
+  .mega-feature-hero-media {
+    width: 220px;
+    height: 100px;
   }
 
   .mega-subservice-cards-grid {
     gap: 10px;
   }
 
-  .mega-left-col {
-    width: 260px;
+  .subservice-card-media {
+    height: 92px;
+  }
+
+  .subservice-card-title {
+    font-size: 0.82rem;
+  }
+
+  .subservice-card-desc {
+    font-size: 0.68rem;
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1140px) {
+  .mega-body-grid {
+    grid-template-columns: 230px 1fr;
+  }
+
   .mega-feature-hero-media {
-    display: none;
+    display: none !important;
+  }
+
+  .mega-panel-heading {
+    font-size: 1.18rem;
+  }
+
+  .mega-panel-desc {
+    font-size: 0.74rem;
   }
 
   .mega-subservice-cards-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .subservice-card-body {
+    padding: 12px 10px 10px;
+  }
+
+  .subservice-arrow-btn {
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -1864,27 +1958,7 @@
   transition: opacity 0.2s ease, transform 0.2s ease !important;
 }
 
-@media (max-width: 1280px) {
-  .bright-mega-menu {
-    width: calc(100vw - 40px);
-    padding: 20px 22px 14px;
-  }
-
-  .mega-body-grid {
-    grid-template-columns: 280px 1fr;
-    gap: 16px;
-  }
-
-  .mega-features-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .mega-panel-heading {
-    font-size: 1.4rem;
-  }
-}
-
-@media (max-width: 1120px) {
+@media (max-width: 1140px) {
   .bright-nav-links {
     gap: 4px;
   }
@@ -1913,8 +1987,128 @@
     display: none !important;
   }
 
+  .bright-mega-panel-wrapper,
   .bright-horizontal-dropdown {
     display: none !important;
+  }
+
+  .bright-mobile-backdrop {
+    top: 60px;
+  }
+
+  .bright-mobile-drawer {
+    top: 60px;
+    height: calc(100dvh - 60px);
+    max-height: calc(100dvh - 60px);
+    padding: 16px 16px 40px;
+  }
+}
+
+/* Mobile Products Category Blocks & Chips */
+.mobile-category-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mobile-cat-product-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0 2px 4px 2px;
+}
+
+.mobile-product-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.70rem;
+  font-weight: 500;
+  color: #334155;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-product-chip:hover,
+.mobile-product-chip:active {
+  color: #0284c7;
+  background: #e0f2fe;
+  border-color: #bae6fd;
+}
+
+[data-theme="dark"] .mobile-product-chip {
+  color: #94a3b8;
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .mobile-product-chip:hover,
+[data-theme="dark"] .mobile-product-chip:active {
+  color: #38bdf8;
+  background: rgba(2, 132, 199, 0.2);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+@media (max-width: 480px) {
+  .bright-container {
+    padding: 0 14px;
+  }
+
+  .hti-logo-img {
+    height: 32px;
+  }
+
+  .brand-word-bold {
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+  }
+
+  .bright-brand-sub {
+    font-size: 0.55rem;
+    gap: 4px;
+  }
+
+  .brand-badge-pill {
+    font-size: 0.50rem;
+    padding: 1px 3px;
+  }
+
+  .bright-theme-toggle {
+    width: 34px;
+    height: 34px;
+  }
+
+  .bright-mobile-toggle {
+    padding: 6px;
+  }
+
+  .mobile-accordion-header {
+    padding: 8px 0;
+  }
+
+  .mobile-accordion-title {
+    font-size: 0.90rem;
+  }
+
+  .mobile-cat-row-card {
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .mobile-cat-row-img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .mobile-cat-row-title {
+    font-size: 0.82rem;
+  }
+
+  .mobile-cat-row-desc {
+    font-size: 0.68rem;
   }
 }
 

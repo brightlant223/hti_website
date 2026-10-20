@@ -1477,33 +1477,57 @@ export default function Navbar({
                       <ArrowRight size={15} />
                     </button>
 
-                    {/* 5 Compact Visual Category Tiles */}
+                    {/* 5 Compact Visual Category Tiles with Quick Product Chips */}
                     <div className="mobile-categories-tiles-list">
-                      {PRODUCT_CATEGORIES.map((cat) => {
+                      {productGroups.map((group) => {
                         return (
-                          <button
-                            key={cat.id}
-                            className="mobile-cat-row-card"
-                            onClick={() => {
-                              setMobileMenuOpen(false);
-                              if (onNavigate) onNavigate('catalog', cat.id);
-                            }}
-                          >
-                            <img
-                              src={cat.image}
-                              alt={cat.title}
-                              className="mobile-cat-row-img"
-                              loading="lazy"
-                            />
-                            <div className="mobile-cat-row-info">
-                              <div className="mobile-cat-row-title-row">
-                                <span className="mobile-cat-row-title">{cat.title}</span>
-                                <span className="mobile-cat-row-count">5 Systems</span>
+                          <div key={group.id} className="mobile-category-block">
+                            <button
+                              className="mobile-cat-row-card"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                if (group.page && onNavigate) {
+                                  onNavigate(group.page);
+                                } else if (onNavigate) {
+                                  onNavigate('catalog', group.categoryId);
+                                }
+                              }}
+                            >
+                              <img
+                                src={group.heroImage}
+                                alt={group.title}
+                                className="mobile-cat-row-img"
+                                loading="lazy"
+                              />
+                              <div className="mobile-cat-row-info">
+                                <div className="mobile-cat-row-title-row">
+                                  <span className="mobile-cat-row-title">{group.title}</span>
+                                  <span className="mobile-cat-row-count">5 Systems</span>
+                                </div>
+                                <p className="mobile-cat-row-desc">{group.tagline}</p>
                               </div>
-                              <p className="mobile-cat-row-desc">{cat.shortDescription}</p>
+                              <ArrowRight size={15} className="mobile-cat-row-arrow" />
+                            </button>
+                            <div className="mobile-cat-product-chips">
+                              {group.products.filter(p => !p.isCatalogLink).map((prod, pIdx) => (
+                                <span
+                                  key={pIdx}
+                                  className="mobile-product-chip"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setMobileMenuOpen(false);
+                                    if (prod.slug) {
+                                      handleProductClick(prod.slug);
+                                    } else {
+                                      if (onNavigate) onNavigate('catalog', group.categoryId);
+                                    }
+                                  }}
+                                >
+                                  {prod.title}
+                                </span>
+                              ))}
                             </div>
-                            <ArrowRight size={15} className="mobile-cat-row-arrow" />
-                          </button>
+                          </div>
                         );
                       })}
                     </div>
