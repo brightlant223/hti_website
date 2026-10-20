@@ -1550,55 +1550,6 @@
 }
 
 
-/* Mobile Theme Bar in Drawer */
-.mobile-theme-bar {
-  padding: 12px 14px;
-  margin-bottom: 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-}
-
-.mobile-theme-label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 8px;
-}
-
-.mobile-theme-segments {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  background: #e2e8f0;
-  padding: 3px;
-  border-radius: 9px;
-}
-
-.mobile-theme-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 7px 6px;
-  border-radius: 7px;
-  border: none;
-  background: transparent;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.mobile-theme-pill.active {
-  background: #ffffff;
-  color: #0284c7;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
 
 .bright-btn-blue {
   background: #0284c7;
@@ -1901,52 +1852,6 @@
   padding-bottom: 20px;
 }
 
-.mobile-theme-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 10px 14px;
-}
-
-.mobile-theme-label {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #475569;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.mobile-theme-segments {
-  display: flex;
-  background: #e2e8f0;
-  border-radius: 8px;
-  padding: 3px;
-  gap: 4px;
-}
-
-.mobile-theme-pill {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #64748b;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.mobile-theme-pill.active {
-  background: #ffffff;
-  color: #0284c7;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
 
 /* Hide floating actions when mobile menu is active */
 .mobile-menu-active .hti-floating-actions-container {
@@ -15203,28 +15108,6 @@
   border-color: #38bdf8;
 }
 
-[data-theme="dark"] .mobile-theme-bar {
-  background: #111a2e;
-  border-color: #1e293b;
-}
-
-[data-theme="dark"] .mobile-theme-label {
-  color: #94a3b8;
-}
-
-[data-theme="dark"] .mobile-theme-segments {
-  background: #080d17;
-}
-
-[data-theme="dark"] .mobile-theme-pill {
-  color: #94a3b8;
-}
-
-[data-theme="dark"] .mobile-theme-pill.active {
-  background: #1e293b;
-  color: #38bdf8;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-}
 
 /* 3. Hero Section in Dark Mode */
 [data-theme="dark"] .hero-section {

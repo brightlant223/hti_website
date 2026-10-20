@@ -1239,28 +1239,6 @@ export default function Navbar({
 
               {/* Mobile CTAs */}
               <div className="mobile-drawer-footer">
-                {/* Mobile Theme Bar */}
-                <div className="mobile-theme-bar">
-                  <span className="mobile-theme-label">Theme Mode</span>
-                  <div className="mobile-theme-segments">
-                    <button
-                      className={`mobile-theme-pill ${theme === 'light' ? 'active' : ''}`}
-                      onClick={() => onThemeChange && onThemeChange('light')}
-                      type="button"
-                    >
-                      <Sun size={14} className="sun-icon" />
-                      <span>Light</span>
-                    </button>
-                    <button
-                      className={`mobile-theme-pill ${theme === 'dark' ? 'active' : ''}`}
-                      onClick={() => onThemeChange && onThemeChange('dark')}
-                      type="button"
-                    >
-                      <Moon size={14} className="moon-icon" />
-                      <span>Dark</span>
-                    </button>
-                  </div>
-                </div>
 
                 <button
                   className="bright-admin-btn w-full justify-center py-3"
