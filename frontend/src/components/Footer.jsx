@@ -146,13 +146,12 @@ export default function Footer({ onNavigate }) {
           </div>
         </div>
 
-        {/* Bottom Copyright */}
+        {/* Bottom Copyright & Credits */}
         <div className="footer-bottom-bar">
           <div className="footer-copyright">
             © {CURRENT_YEAR} HTI Automation and Security System Pvt Ltd. All Rights Reserved.
           </div>
 
-          <div className="footer-legal-links">
             {/* Real destinations so middle-click / "copy link" behaves sensibly.
                 The SPA handler keeps the transition instant. */}
             <a
@@ -161,14 +160,14 @@ export default function Footer({ onNavigate }) {
             >
               Privacy Policy
             </a>
-            <span className="footer-dot-sep" aria-hidden="true">|</span>
+            <span className="footer-dot-sep" aria-hidden="true">•</span>
             <a
               href="/about"
               onClick={(e) => { e.preventDefault(); handleLinkClick('about'); }}
             >
               Terms of Use
             </a>
-            <span className="footer-dot-sep" aria-hidden="true">|</span>
+            <span className="footer-dot-sep" aria-hidden="true">•</span>
             <a
               href="/"
               onClick={(e) => { e.preventDefault(); handleLinkClick('home'); }}
@@ -186,6 +185,19 @@ export default function Footer({ onNavigate }) {
               <ArrowUp size={13} />
               <span>Back to top</span>
             </button>
+          </div>
+
+          <div className="footer-credit">
+            Designed with <span className="credit-heart" aria-label="love">❤️</span> by{' '}
+            <a
+              href="https://brightlant.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="brightlant-credit-link"
+              title="Brightlant - Innovative Web Engineering & Design"
+            >
+              Brightlant
+            </a>
           </div>
         </div>
       </div>

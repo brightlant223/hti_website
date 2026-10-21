@@ -263,12 +263,57 @@
 .brochure-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: #334155;
+  gap: 7px;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(14, 165, 233, 0.14) 100%);
+  border: 1.5px solid rgba(2, 132, 199, 0.28);
+  border-radius: 9999px;
+  padding: 7px 16px;
+  font-weight: 650;
+  font-size: 0.88rem;
+  color: #0369a1;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .brochure-icon {
   color: #0284c7;
+  transition: transform 0.22s ease, color 0.22s ease;
+}
+
+.brochure-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+.brochure-btn:hover {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  border-color: #0284c7;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.38);
+}
+
+.brochure-btn:hover .brochure-icon {
+  color: #ffffff;
+  transform: translateY(2px);
+}
+
+.brochure-btn:hover .brochure-shimmer {
+  animation: brochureSweep 0.75s ease-in-out;
+}
+
+@keyframes brochureSweep {
+  0% { left: -100%; }
+  100% { left: 200%; }
 }
 
 /* 3. PREMIUM SERVICES MEGA-MENU DROPDOWN (Matches Reference Screenshot) */
@@ -1992,7 +2037,7 @@
 
 .mobile-accordion-group {
   border-bottom: 1px solid #f1f5f9;
-  padding-bottom: 10px;
+  padding-bottom: 6px;
 }
 
 .mobile-accordion-header {
@@ -2002,18 +2047,24 @@
   justify-content: space-between;
   background: none;
   border: none;
-  padding: 12px 6px;
-  font-size: 0.96rem;
+  padding: 10px 4px;
+  font-size: 0.95rem;
   cursor: pointer;
   color: #0f172a;
-  /* Comfortable touch target & zero edge clipping */
-  min-height: 46px;
+  min-height: 44px;
   box-sizing: border-box;
+  border-radius: 8px;
+  transition: background 0.18s ease;
+}
+
+.mobile-accordion-header:hover,
+.mobile-accordion-header:active {
+  background: #f8fafc;
 }
 
 .mobile-accordion-title {
   font-weight: 700;
-  font-size: 0.96rem;
+  font-size: 0.95rem;
   color: #0f172a;
   transition: color 0.2s ease;
 }
@@ -2038,42 +2089,97 @@
 .mobile-accordion-body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 6px 0 12px 6px;
+  gap: 6px;
+  padding: 4px 2px 10px 2px;
+  /* Compact max-height keeps sublinks neatly contained so they never spill way down */
+  max-height: 275px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  animation: mobileAccordionFade 0.22s ease-out;
+}
+
+@keyframes mobileAccordionFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-accordion-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mobile-accordion-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
 }
 
 .mobile-service-sublink {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: 8px;
+  padding: 8px 10px;
   cursor: pointer;
   text-align: left;
   width: 100%;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
+  min-height: 44px;
+  box-sizing: border-box;
 }
 
 .mobile-service-sublink:hover,
 .mobile-service-sublink:active {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
+  background: #f0f9ff;
+  border-color: #7dd3fc;
+  transform: translateX(2px);
+}
+
+.mobile-sublink-icon-box {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
+}
+
+.mobile-sublink-text {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
 }
 
 .mobile-service-title {
-  font-weight: 600;
-  font-size: 0.88rem;
+  font-weight: 650;
+  font-size: 0.84rem;
   color: #0f172a;
-  margin-bottom: 2px;
+  line-height: 1.25;
+  margin-bottom: 1px;
   transition: color 0.2s ease;
 }
 
 .mobile-service-tagline {
-  font-size: 0.75rem;
+  font-size: 0.69rem;
   color: #64748b;
-  line-height: 1.35;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: color 0.2s ease;
 }
 
@@ -2083,14 +2189,14 @@
   text-align: left;
   font-size: 0.9rem;
   color: #475569;
-  padding: 12px 6px;
+  padding: 10px 6px;
   cursor: pointer;
   font-weight: 500;
   border-radius: 6px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 42px;
   width: 100%;
 }
 
@@ -2100,6 +2206,119 @@
   background: rgba(2, 132, 199, 0.05);
 }
 
+/* Premium Attractive Brochure Card on Mobile */
+.mobile-brochure-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1.5px solid #7dd3fc;
+  border-radius: 12px;
+  padding: 11px 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 3px 12px rgba(2, 132, 199, 0.12);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.mobile-brochure-card:hover,
+.mobile-brochure-card:active {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(2, 132, 199, 0.24);
+}
+
+.mobile-brochure-icon-wrap {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+  flex-shrink: 0;
+}
+
+.mobile-brochure-icon {
+  color: #ffffff;
+  transition: transform 0.2s ease;
+}
+
+.mobile-brochure-card:hover .mobile-brochure-icon,
+.mobile-brochure-card:active .mobile-brochure-icon {
+  transform: translateY(2px);
+}
+
+.mobile-brochure-pulse {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 0 rgba(56, 189, 248, 0.6);
+  animation: brochureDotPulse 2s infinite;
+}
+
+@keyframes brochureDotPulse {
+  0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(56, 189, 248, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+}
+
+.mobile-brochure-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-brochure-title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #0c4a6e;
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.mobile-brochure-sub {
+  font-size: 0.70rem;
+  color: #0284c7;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.mobile-brochure-arrow {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.mobile-brochure-card:hover .mobile-brochure-arrow,
+.mobile-brochure-card:active .mobile-brochure-arrow {
+  transform: translateX(3px);
+  background: #0284c7;
+  color: #ffffff;
+}
+
+/* Backward-compatible fallback for .mobile-direct-link if referenced elsewhere */
 .mobile-direct-link {
   display: flex;
   align-items: center;
@@ -2107,9 +2326,9 @@
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 13px 16px;
+  padding: 12px 16px;
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.90rem;
   color: #0f172a;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -2124,12 +2343,10 @@
 .mobile-drawer-footer {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  /* Push the admin action to the bottom of the drawer so the empty space is
-     used intentionally instead of leaving a large blank area. */
-  margin-top: auto;
-  padding-top: 12px;
-  padding-bottom: 20px;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 4px;
+  padding-bottom: 16px;
 }
 
 /* Primary CTA inside the mobile drawer */
@@ -16198,16 +16415,20 @@
   background: rgba(56, 189, 248, 0.12);
 }
 
+[data-theme="dark"] .brochure-btn,
 [data-theme="dark"] .bright-brochure-btn {
-  background: #111a2e;
-  border-color: #1e293b;
-  color: #cbd5e1;
+  background: rgba(2, 132, 199, 0.16);
+  border-color: rgba(56, 189, 248, 0.42);
+  color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.16);
 }
 
+[data-theme="dark"] .brochure-btn:hover,
 [data-theme="dark"] .bright-brochure-btn:hover {
   border-color: #38bdf8;
-  color: #ffffff;
-  background: #162444;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%) !important;
+  box-shadow: 0 0 22px rgba(56, 189, 248, 0.45);
 }
 
 [data-theme="dark"] .bright-theme-toggle {
@@ -16481,6 +16702,11 @@
   color: #38bdf8;
 }
 
+[data-theme="dark"] .mobile-sublink-icon-box {
+  background: #0d1527;
+  border-color: #1e293b;
+}
+
 [data-theme="dark"] .mobile-service-sublink {
   background: #111a2e;
   border-color: #1e293b;
@@ -16507,6 +16733,32 @@
 [data-theme="dark"] .mobile-sublink:hover {
   color: #38bdf8;
   background: rgba(56, 189, 248, 0.08);
+}
+
+[data-theme="dark"] .mobile-brochure-card {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.16) 0%, rgba(14, 165, 233, 0.10) 100%);
+  border-color: rgba(56, 189, 248, 0.38);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .mobile-brochure-card:hover,
+[data-theme="dark"] .mobile-brochure-card:active {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.28) 0%, rgba(14, 165, 233, 0.20) 100%);
+  border-color: #38bdf8;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.35);
+}
+
+[data-theme="dark"] .mobile-brochure-title {
+  color: #f0f9ff;
+}
+
+[data-theme="dark"] .mobile-brochure-sub {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .mobile-brochure-arrow {
+  background: #0f172a;
+  color: #38bdf8;
 }
 
 [data-theme="dark"] .mobile-direct-link {
