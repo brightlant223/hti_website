@@ -131,7 +131,7 @@ export default function InsightsAndQuote({ onInquirySubmitted, onNavigate }) {
                       className="article-thumb-img"
                       loading="eager"
                       decoding="async"
-                      fetchpriority="high"
+                      fetchPriority="high"
                     />
                   </div>
 
@@ -175,26 +175,30 @@ export default function InsightsAndQuote({ onInquirySubmitted, onNavigate }) {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="quote-form-element">
+            <form onSubmit={handleSubmit} className="quote-form-element" noValidate={false}>
               {/* Row 1: Full Name & Company Name */}
               <div className="form-two-col">
                 <div className="form-field-group">
-                  <label>Full Name *</label>
+                  <label htmlFor="quote-full-name">Full Name *</label>
                   <input
+                    id="quote-full-name"
                     type="text"
                     name="fullName"
                     required
+                    autoComplete="name"
                     placeholder="Full name"
                     value={formData.fullName}
                     onChange={handleChange}
                   />
                 </div>
                 <div className="form-field-group">
-                  <label>Company Name *</label>
+                  <label htmlFor="quote-company">Company Name *</label>
                   <input
+                    id="quote-company"
                     type="text"
                     name="companyName"
                     required
+                    autoComplete="organization"
                     placeholder="Company Name"
                     value={formData.companyName}
                     onChange={handleChange}
@@ -205,22 +209,27 @@ export default function InsightsAndQuote({ onInquirySubmitted, onNavigate }) {
               {/* Row 2: Email Address & Phone Number */}
               <div className="form-two-col">
                 <div className="form-field-group">
-                  <label>Email Address *</label>
+                  <label htmlFor="quote-email">Email Address *</label>
                   <input
+                    id="quote-email"
                     type="email"
                     name="email"
                     required
+                    autoComplete="email"
                     placeholder="Email Address"
                     value={formData.email}
                     onChange={handleChange}
                   />
                 </div>
                 <div className="form-field-group">
-                  <label>Phone Number *</label>
+                  <label htmlFor="quote-phone">Phone Number *</label>
                   <input
+                    id="quote-phone"
                     type="tel"
                     name="phone"
                     required
+                    autoComplete="tel"
+                    inputMode="tel"
                     placeholder="Contact / WhatsApp"
                     value={formData.phone}
                     onChange={handleChange}
@@ -231,8 +240,9 @@ export default function InsightsAndQuote({ onInquirySubmitted, onNavigate }) {
               {/* Row 3: Product Interest & Project Location */}
               <div className="form-two-col">
                 <div className="form-field-group">
-                  <label>Product Interest</label>
+                  <label htmlFor="quote-category">Product Interest</label>
                   <select
+                    id="quote-category"
                     name="productCategory"
                     value={formData.productCategory}
                     onChange={handleChange}
@@ -246,11 +256,13 @@ export default function InsightsAndQuote({ onInquirySubmitted, onNavigate }) {
                   </select>
                 </div>
                 <div className="form-field-group">
-                  <label>Project Location *</label>
+                  <label htmlFor="quote-location">Project Location *</label>
                   <input
+                    id="quote-location"
                     type="text"
                     name="projectLocation"
                     required
+                    autoComplete="address-level2"
                     placeholder="City / Site Location"
                     value={formData.projectLocation}
                     onChange={handleChange}
@@ -260,8 +272,9 @@ export default function InsightsAndQuote({ onInquirySubmitted, onNavigate }) {
 
               {/* Row 4: Message */}
               <div className="form-field-group">
-                <label>Message</label>
+                <label htmlFor="quote-message">Message</label>
                 <textarea
+                  id="quote-message"
                   name="message"
                   rows={3}
                   placeholder="Tell us about your requirement..."

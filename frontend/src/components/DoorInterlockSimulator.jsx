@@ -7,14 +7,9 @@ import {
   Compass, 
   Shield, 
   Users, 
-  Camera, 
   PhoneCall, 
-  Check,
   ShieldCheck,
   Sparkles,
-  Award,
-  ArrowUpRight,
-  CheckCircle2,
   AlertTriangle,
   Activity,
   Wind,
@@ -231,6 +226,7 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
                 <div className="door-graphic-frame">
                   <div className={`door-graphic-leaf ${doorAOpen ? 'graphic-open' : ''}`}>
                     <div className="door-glass-window"></div>
+                    <div className="door-handle"></div>
                   </div>
                 </div>
                 <button 
@@ -262,6 +258,7 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
                 <div className="door-graphic-frame">
                   <div className={`door-graphic-leaf ${doorBOpen ? 'graphic-open' : ''}`}>
                     <div className="door-glass-window"></div>
+                    <div className="door-handle"></div>
                   </div>
                 </div>
                 <button 
@@ -383,10 +380,11 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
           {/* Right Column: Why Choose HTI? */}
           <div className="why-choose-column-card">
             <div className="why-choose-backdrop-wrap">
-              <img 
-                src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80" 
-                alt="Corporate Architecture" 
+              <img
+                src="/hero-hti-building-collage.png"
+                alt="HTI corporate facility and engineering team"
                 className="why-backdrop-img"
+                loading="lazy"
               />
               <div className="why-backdrop-overlay"></div>
             </div>

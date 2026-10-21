@@ -33,13 +33,20 @@ export default function ProductsCatalog({
   onNavigate,
   onQuickQuote
 }) {
-  const [activeCategory, setActiveCategory] = useState(initialCategory || 'all');
+  // Category ids are lower-case slugs ('all', 'access-automation', ...).
+  // Callers may pass a display label such as 'All', which used to silently
+  // filter everything out and render an empty catalogue.
+  const normalizeCategory = (value) => {
+    if (!value) return 'all';
+    const slug = String(value).trim().toLowerCase();
+    return slug === '' || slug === 'all' ? 'all' : slug;
+  };
+
+  const [activeCategory, setActiveCategory] = useState(normalizeCategory(initialCategory));
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    if (initialCategory) {
-      setActiveCategory(initialCategory);
-    }
+    setActiveCategory(normalizeCategory(initialCategory));
   }, [initialCategory]);
 
   const allProducts = useMemo(() => getAll25Products(), []);
@@ -230,7 +237,7 @@ export default function ProductsCatalog({
             marginBottom: '18px'
           }}>
             <span>
-              Showing <strong>{filteredProducts.length}</strong> of 25 industrial systems
+              Showing <strong>{filteredProducts.length}</strong> of {allProducts.length} industrial systems
               {searchQuery && ` matching "${searchQuery}"`}
             </span>
             {(activeCategory !== 'all' || searchQuery) && (

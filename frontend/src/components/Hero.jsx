@@ -97,6 +97,8 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const statsRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
+  const videoRef = useRef(null);
+  const modalCloseRef = useRef(null);
 
   // Close modal on ESC key
   useEffect(() => {
@@ -108,6 +110,8 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
     if (isVideoOpen) {
       window.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
+      // Move focus into the dialog for keyboard / screen-reader users
+      if (modalCloseRef.current) modalCloseRef.current.focus();
     } else {
       document.body.style.overflow = '';
     }
@@ -115,6 +119,13 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
     };
+  }, [isVideoOpen]);
+
+  // Stop playback when the modal closes so audio never continues in the background
+  useEffect(() => {
+    if (!isVideoOpen && videoRef.current) {
+      videoRef.current.pause();
+    }
   }, [isVideoOpen]);
 
   // Observer for stats visibility
@@ -148,6 +159,14 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
       onNavigate(categorySlug);
     } else {
       window.location.href = `/${categorySlug}`;
+    }
+  };
+
+  // Keyboard activation for elements rendered as `role="button"`
+  const handleKeyActivate = (e, callback) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      callback();
     }
   };
 
@@ -210,6 +229,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
             <div
               className="hero-pillar-item"
               onClick={() => handlePillarClick('automation')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('automation'))}
               role="button"
               tabIndex={0}
               title="Explore Automation Solutions"
@@ -227,6 +247,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
             <div
               className="hero-pillar-item"
               onClick={() => handlePillarClick('security-systems')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('security-systems'))}
               role="button"
               tabIndex={0}
               title="Explore Security Systems"
@@ -244,6 +265,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
             <div
               className="hero-pillar-item"
               onClick={() => handlePillarClick('hygiene')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('hygiene'))}
               role="button"
               tabIndex={0}
               title="Explore Hygiene Solutions"
@@ -273,8 +295,10 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
             <div
               className="hero-hotspot hotspot-doors"
               onClick={() => handlePillarClick('automation')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('automation'))}
               role="button"
               tabIndex={0}
+              aria-label="View Automatic Doors and Gates"
               title="View Automatic Doors & Gates"
             >
               <span className="hotspot-tooltip">View Doors &amp; Gates →</span>
@@ -284,8 +308,10 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
             <div
               className="hero-hotspot hotspot-security"
               onClick={() => handlePillarClick('security-systems')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('security-systems'))}
               role="button"
               tabIndex={0}
+              aria-label="View CCTV and Access Control"
               title="View CCTV & Access Control"
             >
               <span className="hotspot-tooltip">View Security Systems →</span>
@@ -295,8 +321,10 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
             <div
               className="hero-hotspot hotspot-hygiene"
               onClick={() => handlePillarClick('hygiene')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('hygiene'))}
               role="button"
               tabIndex={0}
+              aria-label="View Cleanroom Hygiene Solutions"
               title="View Cleanroom Hygiene Solutions"
             >
               <span className="hotspot-tooltip">View Hygiene Solutions →</span>
@@ -369,6 +397,9 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
         <div
           className="hero-video-modal-backdrop"
           onClick={() => setIsVideoOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="HTI Corporate Automation and Facility Tour"
         >
           <div
             className="hero-video-modal-box"
@@ -383,14 +414,17 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
                 className="hero-video-close-btn"
                 onClick={() => setIsVideoOpen(false)}
                 aria-label="Close Video"
+                ref={modalCloseRef}
               >
                 <X size={20} />
               </button>
             </div>
             <video
+              ref={videoRef}
               src="/gemini_generated_video_02f233ca.mp4"
               controls
               autoPlay
+              playsInline
               className="hero-video-element"
             />
           </div>

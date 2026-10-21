@@ -488,3 +488,40 @@
     font-size: 0.64rem;
   }
 }
+
+/* ==========================================================================
+   TOUCH TARGET PASS
+   The footer is visually dense on phones, but the nav items were only ~15px
+   tall which made them very hard to hit. Give every footer control a usable
+   hit area without changing the typography.
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .footer-nav-list {
+    gap: 0;
+  }
+
+  .footer-nav-list li button {
+    min-height: 40px;
+    padding: 8px 0;
+  }
+
+  .contact-link {
+    min-height: 30px;
+    padding: 5px 0;
+  }
+
+  .footer-legal-links {
+    gap: 10px;
+  }
+
+  .footer-legal-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 2px;
+  }
+
+  .footer-dot-sep {
+    align-self: center;
+  }
+}

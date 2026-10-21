@@ -2852,15 +2852,6 @@
   border-color: #10b981;
 }
 
-.door-glass-window {
-  width: 40px;
-  height: 60px;
-  background: rgba(2, 132, 199, 0.15);
-  border: 1px solid rgba(2, 132, 199, 0.4);
-  border-radius: 4px;
-  margin: 20px auto 0;
-}
-
 .door-handle {
   width: 8px;
   height: 16px;
@@ -10744,21 +10735,6 @@
    ========================================================================== */
 
 /* Typography & Common Utilities */
-.pill-badge-blue {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 14px;
-  background: #e0f2fe;
-  color: #0284c7;
-  border: 1px solid #bae6fd;
-  border-radius: 9999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
 
 .section-header-center {
   text-align: center;
@@ -10766,18 +10742,7 @@
   margin: 0 auto 36px;
 }
 
-.section-title-large {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #0b1a30;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
-  margin-bottom: 10px;
-}
 
-.title-highlight-blue {
-  color: #0284c7;
-}
 
 .section-subtitle-center {
   font-size: 0.95rem;
@@ -11468,6 +11433,7 @@
   cursor: pointer;
   transition: gap 0.2s;
   align-self: flex-start;
+  min-height: 24px;
 }
 
 .pillar-explore-link:hover {
@@ -11882,33 +11848,82 @@
 }
 
 .door-graphic-frame {
-  width: 60px;
-  height: 75px;
+  width: 88px;
+  height: 116px;
   border: 3px solid #cbd5e1;
-  border-radius: 6px;
-  background: #f1f5f9;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f8fafc 0%, #e8eef5 100%);
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* 3D perspective so the leaf can visibly swing open */
+  perspective: 520px;
+  box-shadow: inset 0 0 0 4px #ffffff, 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+/* Floor line under the door frame for depth */
+.door-graphic-frame::after {
+  content: '';
+  position: absolute;
+  left: -14px;
+  right: -14px;
+  bottom: -9px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #cbd5e1 20%, #cbd5e1 80%, transparent);
 }
 
 .door-graphic-leaf {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backface-visibility: visible;
 }
 
-.door-glass-window {
-  width: 34px;
-  height: 32px;
-  background: #e0f2fe;
-  border: 1px solid #bae6fd;
-  border-radius: 3px;
+/* The leaf actually swings open on its hinge */
+.door-graphic-leaf.graphic-open {
+  transform: rotateY(-64deg);
+}
+
+.door-graphic-leaf::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, #ffffff 0%, #f1f5f9 55%, #dfe7f0 100%);
+  border-radius: 5px;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 2px 2px 6px rgba(15, 23, 42, 0.12);
+}
+
+.door-graphic-frame .door-glass-window {
+  position: relative;
+  width: 46px;
+  height: 42px;
+  margin-top: -22px;
+  background: linear-gradient(160deg, #e0f2fe 0%, #bae6fd 100%);
+  border: 1.5px solid #7dd3fc;
+  border-radius: 4px;
+  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.75);
+}
+
+/* Door handle */
+.door-handle {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 18px;
+  border-radius: 2px;
+  background: #94a3b8;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.2);
 }
 
 .btn-door-status {
@@ -12537,176 +12552,6 @@
   .btn-why-consult {
     width: 100%;
     justify-content: center;
-  }
-}
-
-/* ==========================================================================
-   ESTEEMED CLIENTS AUTOMATIC HORIZONTAL MARQUEE
-   ========================================================================== */
-.clients-marquee-section {
-  padding: 60px 0 54px;
-  background: radial-gradient(circle at 50% 0%, #f0f9ff 0%, #ffffff 80%);
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
-  overflow: hidden;
-  position: relative;
-}
-
-.clients-marquee-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 24px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-}
-
-.clients-header-left {
-  max-width: 780px;
-}
-
-.clients-section-desc {
-  font-size: 0.95rem;
-  color: #64748b;
-  line-height: 1.55;
-  margin-top: 8px;
-}
-
-.btn-view-all-clients-pill {
-  background: #ffffff;
-  border: 1.5px solid #0284c7;
-  color: #0284c7;
-  padding: 10px 22px;
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 0.88rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);
-}
-
-.btn-view-all-clients-pill:hover {
-  background: #0284c7;
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.25);
-}
-
-/* Infinite Automatic Horizontal Marquee Wrapper */
-.clients-marquee-wrapper {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  padding: 10px 0;
-  user-select: none;
-}
-
-/* Left and Right Fade Edge Masks */
-.marquee-edge-fade-left {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 120px;
-  background: linear-gradient(to right, #ffffff 30%, transparent 100%);
-  z-index: 5;
-  pointer-events: none;
-}
-
-.marquee-edge-fade-right {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 120px;
-  background: linear-gradient(to left, #ffffff 30%, transparent 100%);
-  z-index: 5;
-  pointer-events: none;
-}
-
-/* Continuous Horizontal Scrolling Track */
-.clients-marquee-track {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  width: max-content;
-  animation: continuousClientMarquee 36s linear infinite;
-  will-change: transform;
-}
-
-.clients-marquee-wrapper:hover .clients-marquee-track {
-  animation-play-state: paused;
-}
-
-@keyframes continuousClientMarquee {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* Individual Client Tile in Marquee */
-.marquee-client-tile {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 12px 24px;
-  height: 72px;
-  min-width: 170px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: default;
-}
-
-.marquee-client-tile:hover {
-  transform: translateY(-4px) scale(1.03);
-  border-color: #0284c7;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12);
-}
-
-.marquee-client-img {
-  max-height: 44px;
-  max-width: 130px;
-  object-fit: contain;
-  filter: grayscale(15%);
-  transition: filter 0.25s ease;
-}
-
-.marquee-client-tile:hover .marquee-client-img {
-  filter: grayscale(0%);
-}
-
-@media (max-width: 768px) {
-  .clients-marquee-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .marquee-client-tile {
-    height: 60px;
-    min-width: 130px;
-    padding: 8px 16px;
-  }
-
-  .marquee-client-img {
-    max-height: 36px;
-    max-width: 105px;
-  }
-
-  .marquee-edge-fade-left,
-  .marquee-edge-fade-right {
-    width: 40px;
   }
 }
 
@@ -16944,5 +16789,132 @@
 
   .detail-preview-card-body {
     padding: 16px 14px 16px;
+  }
+}
+/* ==========================================================================
+   TOUCH TARGET ACCESSIBILITY PASS
+   Inline text-links and small icon buttons were under the 44px recommended
+   minimum on touch devices. Bump their hit area without changing the
+   desktop visual weight.
+   ========================================================================== */
+@media (hover: none) and (pointer: coarse) {
+  .pillar-explore-link,
+  .btn-read-article,
+  .btn-panel-action,
+  .btn-terminal-action,
+  .btn-door-status,
+  .btn-telemetry-toggle,
+  .btn-telemetry-reset,
+  .btn-view-all-clients-pill {
+    min-height: 44px;
+  }
+
+  /* Text-style links keep their baseline but gain vertical padding */
+  .pillar-explore-link,
+  .btn-read-article,
+  .btn-panel-action {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+  }
+
+  .btn-door-status {
+    padding: 9px 16px;
+  }
+}
+
+/* Same treatment for narrow viewports (catches devices that report a fine
+   pointer but are still used with a finger). */
+@media (max-width: 1024px) {
+  .pillar-explore-link,
+  .btn-read-article,
+  .btn-panel-action,
+  .btn-terminal-action,
+  .btn-door-status,
+  .btn-telemetry-toggle,
+  .btn-telemetry-reset,
+  .btn-view-all-clients-pill {
+    min-height: 44px;
+  }
+
+  .pillar-explore-link,
+  .btn-read-article,
+  .btn-panel-action {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+  }
+}
+
+/* ==========================================================================
+   HOME PAGE - INTERLOCK SIMULATOR MOBILE LAYOUT
+   The three-module stage stacked into a very tall column on phones.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .interlock-stages-row {
+    gap: 12px;
+  }
+
+  .door-module-box {
+    padding: 14px 12px;
+  }
+
+  .door-graphic-frame {
+    width: 72px;
+    height: 96px;
+  }
+
+  .door-graphic-frame .door-glass-window {
+    width: 38px;
+    height: 34px;
+    margin-top: -18px;
+  }
+
+  /* Telemetry header stacks so the long tag never collides with the badge */
+  .telemetry-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .telemetry-tag {
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+  }
+
+  .telemetry-metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .telemetry-control-strip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .telemetry-action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .telemetry-action-buttons button {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   HOME PAGE - FLOATING WIDGET OVERLAP GUARD
+   The WhatsApp / chatbot FABs sit over the bottom-right of the viewport and
+   were covering section content on phones. Reserve space at the end of the
+   page and lift the FABs clear of the footer.
+   ========================================================================== */
+@media (max-width: 768px) {
+  .insights-quote-row-section {
+    padding-bottom: 84px;
   }
 }

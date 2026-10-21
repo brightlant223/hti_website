@@ -83,7 +83,9 @@
    ========================================================================= */
 .category-showcase-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  /* 5 equal columns on wide screens, then 3 -> 2 -> 1 as width shrinks.
+     Card copy is clamped to 4 lines so nothing is cut mid-word. */
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 20px;
   margin-bottom: 64px;
   position: relative;
@@ -186,6 +188,10 @@
   font-weight: 700;
   color: var(--text-main, #0f172a);
   line-height: 1.25;
+  /* Reserve two lines so 1-line and 2-line titles stay on a shared baseline */
+  min-height: 2.5em;
+  display: flex;
+  align-items: flex-start;
   transition: color 0.18s ease;
 }
 
@@ -224,9 +230,12 @@
   margin-bottom: 12px;
   flex-grow: 1;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  /* 4 lines so the sentence is not cut mid-word on narrow cards */
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 .category-highlights-row {
@@ -244,6 +253,11 @@
   padding: 2px 7px;
   border-radius: 4px;
   line-height: 1.3;
+  /* Long tags (e.g. "2-8 Door Programmable Logic") must not push out of the card */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-theme="dark"] .category-hl-tag {
@@ -382,15 +396,6 @@
   box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08);
 }
 
-.flagship-card-media {
-  position: relative;
-  width: 100%;
-  height: 165px;
-  overflow: hidden;
-  cursor: pointer;
-  background: #0f172a;
-}
-
 .flagship-card-img {
   width: 100%;
   height: 100%;
@@ -433,6 +438,41 @@
   margin-bottom: 6px;
   cursor: pointer;
   transition: color 0.18s ease;
+  text-align: left;
+}
+
+/* Reset native button chrome so the title still reads as a heading */
+.flagship-title-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  min-height: 24px;
+}
+
+.flagship-title-btn:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.flagship-card-media {
+  position: relative;
+  width: 100%;
+  height: 165px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0f172a;
+  border: none;
+  padding: 0;
+  display: block;
+}
+
+.flagship-card-media:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: -3px;
 }
 
 .flagship-card:hover .flagship-title {
@@ -495,6 +535,7 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.18s ease;
+  min-height: 38px;
 }
 
 [data-theme="dark"] .flagship-btn-primary {
@@ -519,6 +560,7 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.18s ease;
+  min-height: 38px;
 }
 
 [data-theme="dark"] .flagship-btn-secondary {
@@ -656,7 +698,7 @@
 
 @media (max-width: 1280px) {
   .category-showcase-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
   }
 
@@ -695,7 +737,7 @@
   }
 
   .category-showcase-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
     margin-bottom: 44px;
   }
@@ -750,6 +792,30 @@
   }
 
   .category-card-desc {
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+}
+
+/* =========================================================================
+   TOUCH TARGET PASS
+   These rules live here (not in App.css) because ProductShowcase.css is
+   injected after App.css and would otherwise win the cascade.
+   ========================================================================= */
+@media (max-width: 1024px) {
+  .flagship-btn-primary,
+  .flagship-btn-secondary,
+  .flagship-title-btn,
+  .btn-view-all-flagships {
+    min-height: 44px;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .flagship-btn-primary,
+  .flagship-btn-secondary,
+  .flagship-title-btn,
+  .btn-view-all-flagships {
+    min-height: 44px;
   }
 }

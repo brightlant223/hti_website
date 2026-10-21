@@ -244,7 +244,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(10px, 1.5vw, 16px);
   width: 100%;
-  max-width: 640px;
+  max-width: 720px;
 }
 
 .hero-pillar-item {
@@ -318,9 +318,9 @@
   font-weight: 800;
   color: #0f172a;
   line-height: 1.25;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* Allow graceful wrapping instead of an ellipsis mid-word on narrow columns */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .pillar-desc {
@@ -329,6 +329,15 @@
   line-height: 1.35;
   margin-top: 2px;
   white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* On tablet+ there is room for the sub-label on a single line, which keeps
+   the three pillars visually balanced. */
+@media (min-width: 769px) {
+  .pillar-desc {
+    white-space: nowrap;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -593,6 +602,14 @@
   color: #64748b;
   margin-top: 4px;
   white-space: nowrap;
+}
+
+/* Keep stat labels inside their column on narrow screens */
+@media (max-width: 420px) {
+  .stat-label {
+    white-space: normal;
+    line-height: 1.25;
+  }
 }
 
 .stat-divider {

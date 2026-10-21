@@ -9,7 +9,7 @@ export default function Segments({ onSelectSegment }) {
       subtitle: 'Precision access, high-speed industrial gates & logistics handling systems.',
       icon: Cpu,
       iconColor: '#0284c7',
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+      image: '/products/automatic-doors.jpg',
       items: [
         'Automatic Doors, Gates & Barriers',
         'High Speed & Sectional Doors',
@@ -25,7 +25,7 @@ export default function Segments({ onSelectSegment }) {
       subtitle: 'Maintain safety, secure and compliant facilities with integrated security & fire solutions.',
       icon: ShieldCheck,
       iconColor: '#0284c7',
-      image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80',
+      image: '/hero-security-command-center.jpg',
       items: [
         'Access Control & Time Attendance',
         'CCTV Surveillance (HD & IP)',
@@ -41,7 +41,7 @@ export default function Segments({ onSelectSegment }) {
       subtitle: 'Touchless and hygienic solutions for clean rooms, healthcare and industrial facilities.',
       icon: Sparkles,
       iconColor: '#0d9488',
-      image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80',
+      image: '/products/pass-box-system.jpg',
       items: [
         'Hand Dryers, Air Curtains & Air Barrier',
         'Auto Taps & Urinal Flush',

@@ -185,9 +185,11 @@ export default function ProductShowcase({
           <div className="flagships-grid">
             {FEATURED_FLAGSHIP_PRODUCTS.map((prod) => (
               <div key={prod.slug} className="flagship-card">
-                <div 
+                <button
+                  type="button"
                   className="flagship-card-media"
                   onClick={() => handleProductClick(prod.slug)}
+                  aria-label={`View specifications for ${prod.name}`}
                 >
                   <img
                     src={prod.image}
@@ -196,15 +198,16 @@ export default function ProductShowcase({
                     loading="lazy"
                   />
                   <span className="flagship-category-pill">{prod.category}</span>
-                </div>
+                </button>
 
                 <div className="flagship-card-body">
-                  <h4 
-                    className="flagship-title"
+                  <button
+                    type="button"
+                    className="flagship-title flagship-title-btn"
                     onClick={() => handleProductClick(prod.slug)}
                   >
                     {prod.name}
-                  </h4>
+                  </button>
                   <p className="flagship-tagline">{prod.tagline}</p>
 
                   <div className="flagship-specs-list">
