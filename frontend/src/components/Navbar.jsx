@@ -1050,9 +1050,11 @@ export default function Navbar({
               className="bright-nav-btn brochure-btn"
               onClick={handleDownloadBrochure}
               title="Download Product Catalog & Specs"
+              type="button"
             >
-              <span>Brochure</span>
               <Download size={14} className="brochure-icon" />
+              <span>Brochure</span>
+              <span className="brochure-shimmer" aria-hidden="true"></span>
             </button>
           </div>
 
@@ -1083,11 +1085,6 @@ export default function Navbar({
               aria-label="Admin Portal"
             >
               <User size={18} />
-              {inquiryCount > 0 && (
-                <span className="admin-icon-badge" title={`${inquiryCount} active inquiries`}>
-                  {inquiryCount}
-                </span>
-              )}
             </button>
           </div>
 
@@ -1582,8 +1579,10 @@ export default function Navbar({
                           }
                         }}
                       >
-                        <g.icon size={16} style={{ color: g.color }} />
-                        <div className="text-left">
+                        <div className="mobile-sublink-icon-box">
+                          <g.icon size={15} style={{ color: g.color }} />
+                        </div>
+                        <div className="mobile-sublink-text">
                           <div className="mobile-service-title">{g.title}</div>
                           <div className="mobile-service-tagline">{g.tagline}</div>
                         </div>
@@ -1624,8 +1623,10 @@ export default function Navbar({
                             }
                           }}
                         >
-                          <Icon size={16} style={{ color: group.color || '#0284c7' }} />
-                          <div className="text-left">
+                          <div className="mobile-sublink-icon-box">
+                            <Icon size={15} style={{ color: group.color || '#0284c7' }} />
+                          </div>
+                          <div className="mobile-sublink-text">
                             <div className="mobile-service-title">{group.title}</div>
                             <div className="mobile-service-tagline">{group.tagline}</div>
                           </div>
@@ -1639,10 +1640,12 @@ export default function Navbar({
                         if (onNavigate) onNavigate('catalog', 'all');
                       }}
                     >
-                      <Layers size={16} style={{ color: '#0284c7' }} />
-                      <div className="text-left">
+                      <div className="mobile-sublink-icon-box">
+                        <Layers size={15} style={{ color: '#0284c7' }} />
+                      </div>
+                      <div className="mobile-sublink-text">
                         <div className="mobile-service-title">View All {TOTAL_PRODUCT_COUNT} Products</div>
-                        <div className="mobile-service-tagline">Complete industrial automation & security catalogue.</div>
+                        <div className="mobile-service-tagline">Complete industrial automation &amp; security catalogue.</div>
                       </div>
                     </button>
                   </div>
@@ -1669,8 +1672,10 @@ export default function Navbar({
                       className="mobile-service-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}
                     >
-                      <Building2 size={16} style={{ color: '#0284c7' }} />
-                      <div className="text-left">
+                      <div className="mobile-sublink-icon-box">
+                        <Building2 size={15} style={{ color: '#0284c7' }} />
+                      </div>
+                      <div className="mobile-sublink-text">
                         <div className="mobile-service-title">About Us</div>
                         <div className="mobile-service-tagline">Our story, values &amp; engineering ethos since 2014</div>
                       </div>
@@ -1680,8 +1685,10 @@ export default function Navbar({
                       className="mobile-service-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('clients'); }}
                     >
-                      <Users size={16} style={{ color: '#059669' }} />
-                      <div className="text-left">
+                      <div className="mobile-sublink-icon-box">
+                        <Users size={15} style={{ color: '#059669' }} />
+                      </div>
+                      <div className="mobile-sublink-text">
                         <div className="mobile-service-title">Our Clients</div>
                         <div className="mobile-service-tagline">100+ prestigious pharma &amp; commercial installations</div>
                       </div>
@@ -1691,8 +1698,10 @@ export default function Navbar({
                       className="mobile-service-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('careers'); }}
                     >
-                      <Briefcase size={16} style={{ color: '#7c3aed' }} />
-                      <div className="text-left">
+                      <div className="mobile-sublink-icon-box">
+                        <Briefcase size={15} style={{ color: '#7c3aed' }} />
+                      </div>
+                      <div className="mobile-sublink-text">
                         <div className="mobile-service-title">Careers</div>
                         <div className="mobile-service-tagline">Explore engineering careers &amp; join our growing team</div>
                       </div>
@@ -1700,21 +1709,12 @@ export default function Navbar({
 
                     <button
                       className="mobile-service-sublink"
-                      onClick={() => { setMobileMenuOpen(false); handleNavClick('partners'); }}
-                    >
-                      <ShieldCheck size={16} style={{ color: '#ea580c' }} />
-                      <div className="text-left">
-                        <div className="mobile-service-title">Technology Partners</div>
-                        <div className="mobile-service-tagline">Authorized global engineering &amp; hardware alliances</div>
-                      </div>
-                    </button>
-
-                    <button
-                      className="mobile-service-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('blogs'); }}
                     >
-                      <BookOpen size={16} style={{ color: '#2563eb' }} />
-                      <div className="text-left">
+                      <div className="mobile-sublink-icon-box">
+                        <BookOpen size={15} style={{ color: '#2563eb' }} />
+                      </div>
+                      <div className="mobile-sublink-text">
                         <div className="mobile-service-title">Blogs</div>
                         <div className="mobile-service-tagline">Cleanroom standards, USFDA compliance &amp; notes</div>
                       </div>
@@ -1724,8 +1724,10 @@ export default function Navbar({
                       className="mobile-service-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
                     >
-                      <PhoneCall size={16} style={{ color: '#dc2626' }} />
-                      <div className="text-left">
+                      <div className="mobile-sublink-icon-box">
+                        <PhoneCall size={15} style={{ color: '#dc2626' }} />
+                      </div>
+                      <div className="mobile-sublink-text">
                         <div className="mobile-service-title font-semibold text-primary">Contact Us</div>
                         <div className="mobile-service-tagline">Talk to our engineering team in Navi Mumbai</div>
                       </div>
@@ -1734,19 +1736,27 @@ export default function Navbar({
                 )}
               </div>
 
-              {/* Brochure Direct Link */}
+              {/* Premium Attractive Brochure Direct Card */}
               <button
-                className="mobile-direct-link"
+                className="mobile-brochure-card"
                 onClick={(e) => {
                   setMobileMenuOpen(false);
                   handleDownloadBrochure(e);
                 }}
+                type="button"
+                aria-label="Download HTI Product Brochure PDF"
               >
-                <div className="flex-center-gap">
-                  <Download size={16} className="text-cyan" />
-                  <span>Download Product Brochure</span>
+                <div className="mobile-brochure-icon-wrap">
+                  <Download size={16} className="mobile-brochure-icon" />
+                  <span className="mobile-brochure-pulse"></span>
                 </div>
-                <ArrowRight size={16} />
+                <div className="mobile-brochure-content">
+                  <div className="mobile-brochure-title">Download Product Brochure</div>
+                  <div className="mobile-brochure-sub">PDF Specs • Cleanroom &amp; Security Systems</div>
+                </div>
+                <div className="mobile-brochure-arrow">
+                  <ArrowRight size={15} />
+                </div>
               </button>
 
               {/* Primary CTA - Request a Quote */}
@@ -1773,9 +1783,6 @@ export default function Navbar({
                 >
                   <User size={17} />
                   <span>Open Admin Portal</span>
-                  {inquiryCount > 0 && (
-                    <span className="admin-badge-count">{inquiryCount}</span>
-                  )}
                 </button>
               </div>
             </div>

@@ -1435,7 +1435,7 @@ export default function CategoryPage({
           <div className="auto-breadcrumb-nav">
             <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
             <span className="auto-breadcrumb-sep">&gt;</span>
-            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Products</span>
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Industrial Access Automation</span>
           </div>
@@ -1512,15 +1512,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Our Solutions</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -1785,10 +1776,11 @@ export default function CategoryPage({
           <div className="auto-breadcrumb-nav">
             <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
             <span className="auto-breadcrumb-sep">&gt;</span>
-            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Products</span>
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Cleanroom Interlocks &amp; Pass Boxes</span>
           </div>
+
 
           {/* 2. HERO SECTION */}
           <section className="auto-hero-section auto-scroll-reveal in-view">
@@ -1862,15 +1854,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Cleanroom Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -2141,7 +2124,7 @@ export default function CategoryPage({
           <div className="auto-breadcrumb-nav">
             <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
             <span className="auto-breadcrumb-sep">&gt;</span>
-            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Products</span>
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Perimeter Defense &amp; Traffic Control</span>
           </div>
@@ -2218,15 +2201,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Perimeter Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -2497,7 +2471,7 @@ export default function CategoryPage({
           <div className="auto-breadcrumb-nav">
             <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
             <span className="auto-breadcrumb-sep">&gt;</span>
-            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Products</span>
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Fire Protection &amp; Life Safety</span>
           </div>
@@ -2574,15 +2548,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Fire Safety Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -2930,15 +2895,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Surveillance Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -3286,15 +3242,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Monitoring Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
