@@ -1736,7 +1736,7 @@ export default function Navbar({
                 )}
               </div>
 
-              {/* Premium Attractive Brochure Direct Card */}
+              {/* Premium Attractive Brochure Action Card */}
               <button
                 className="mobile-brochure-card"
                 onClick={(e) => {
@@ -1746,17 +1746,16 @@ export default function Navbar({
                 type="button"
                 aria-label="Download HTI Product Brochure PDF"
               >
-                <div className="mobile-brochure-icon-wrap">
-                  <Download size={16} className="mobile-brochure-icon" />
-                  <span className="mobile-brochure-pulse"></span>
+                <div className="mobile-brochure-left">
+                  <div className="mobile-brochure-icon-box">
+                    <Download size={16} />
+                  </div>
+                  <div className="mobile-brochure-labels">
+                    <span className="mobile-brochure-heading">Download Product Brochure</span>
+                    <span className="mobile-brochure-pill">PDF</span>
+                  </div>
                 </div>
-                <div className="mobile-brochure-content">
-                  <div className="mobile-brochure-title">Download Product Brochure</div>
-                  <div className="mobile-brochure-sub">PDF Specs • Cleanroom &amp; Security Systems</div>
-                </div>
-                <div className="mobile-brochure-arrow">
-                  <ArrowRight size={15} />
-                </div>
+                <ArrowRight size={16} className="mobile-brochure-chevron" />
               </button>
 
               {/* Primary CTA - Request a Quote */}
