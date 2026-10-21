@@ -610,16 +610,7 @@ export default function CategoryPage({
   const isCleanroom = categoryKey?.toLowerCase() === 'cleanroom-interlocks' || categoryKey?.toLowerCase() === 'interlocks';
   const isPerimeter = categoryKey?.toLowerCase() === 'perimeter-defense' || categoryKey?.toLowerCase() === 'perimeter';
   const isFire = categoryKey?.toLowerCase() === 'fire-protection' || categoryKey?.toLowerCase() === 'fire' || categoryKey?.toLowerCase() === 'fire-safety';
-  const isSecurity = categoryKey?.toLowerCase() === 'security-systems' || categoryKey?.toLowerCase() === 'security';
-
-  if (isSecurity) {
-    return (
-      <SecuritySystemsPage
-        onNavigate={onNavigate}
-        onQuickQuote={onQuickQuote}
-      />
-    );
-  }
+  const isSecurity = categoryKey?.toLowerCase() === 'security-systems' || categoryKey?.toLowerCase() === 'security' || categoryKey?.toLowerCase() === 'cctv';
 
   // Filter 14 Industrial Automation Services
   const filteredAutomationServices = useMemo(() => {
@@ -954,6 +945,18 @@ export default function CategoryPage({
   const toggleFaq = (idx) => {
     setActiveFaq(prev => prev === idx ? null : idx);
   };
+
+  // =========================================================================
+  // DEDICATED REFERENCE-ACCURATE SECURITY SYSTEMS & CCTV SERVICE PAGE
+  // =========================================================================
+  if (isSecurity) {
+    return (
+      <SecuritySystemsPage
+        onNavigate={onNavigate}
+        onQuickQuote={onQuickQuote}
+      />
+    );
+  }
 
   // =========================================================================
   // DEDICATED REFERENCE-ACCURATE INDUSTRIAL ACCESS AUTOMATION SERVICE PAGE
