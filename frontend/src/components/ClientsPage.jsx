@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import './ClientsPage.css';
 import { 
   Users, 
   Factory, 
@@ -95,7 +96,7 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
       {/* 2. Hero Section */}
       <section className="clients-hero-section">
         <div className="clients-hero-glow-bg"></div>
-        <div className="container clients-hero-content text-center">
+        <div className="container clients-hero-content">
           <div className="clients-badge-pill">
             <Sparkles size={13} className="badge-sparkle-icon" />
             <span>TRUSTED BY 450+ CORPORATE ENTERPRISES</span>
@@ -280,7 +281,7 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
       {/* 5. Why Leaders Trust HTI Strip */}
       <section className="clients-trust-section">
         <div className="container">
-          <div className="trust-section-header text-center">
+          <div className="trust-section-header">
             <span className="trust-tag">ENTERPRISE STANDARDS</span>
             <h2 className="trust-heading">Why Industry Leaders Rely on HTI</h2>
             <p className="trust-subtitle">
