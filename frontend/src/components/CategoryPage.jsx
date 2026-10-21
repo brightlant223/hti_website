@@ -1521,15 +1521,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Our Solutions</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -1895,15 +1886,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Cleanroom Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -2274,15 +2256,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Perimeter Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -2653,15 +2626,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Fire Safety Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -3032,15 +2996,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Surveillance Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -3411,15 +3366,6 @@ export default function CategoryPage({
                     className="auto-hero-image"
                     loading="eager"
                   />
-                  <button
-                    className="auto-watch-video-btn"
-                    onClick={() => setVideoModalOpen(true)}
-                  >
-                    <div className="auto-play-icon-circle">
-                      <Play size={12} fill="#1d4ed8" />
-                    </div>
-                    <span>Watch Monitoring Demo</span>
-                  </button>
                 </div>
               </div>
             </div>
