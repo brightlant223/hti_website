@@ -29,7 +29,8 @@ import {
   PhoneCall, 
   ArrowRight,
   ExternalLink,
-  MessageSquare
+  MessageSquare,
+  FileText
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -452,14 +453,36 @@ export default function Navbar({
             </button>
           </div>
 
-          {/* Mobile Hamburger Toggle */}
-          <button
-            className="bright-mobile-toggle mobile-only"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle navigation"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Actions: Theme Toggle Pill + Circular Menu/Close Toggle (Brightlant Style) */}
+          <div className="bright-mobile-actions mobile-only">
+            <button
+              type="button"
+              className="bright-mobile-theme-pill"
+              onClick={() => {
+                const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
+                if (onThemeChange) onThemeChange(nextTheme);
+              }}
+              title={`Switch theme (Current: ${resolvedTheme})`}
+              aria-label="Toggle display theme"
+            >
+              {resolvedTheme === 'dark' ? (
+                <Moon size={15} className="mobile-theme-icon" />
+              ) : (
+                <Sun size={15} className="mobile-theme-icon" />
+              )}
+              <ChevronDown size={12} className="mobile-theme-chevron" />
+            </button>
+
+            <button
+              type="button"
+              className={`bright-mobile-circle-toggle ${mobileMenuOpen ? 'is-active' : ''}`}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
 
         {/* =========================================================================
@@ -807,150 +830,264 @@ export default function Navbar({
           </div>
         )}
 
-        {/* 3. Mobile Slide-down Navigation Drawer */}
+        {/* 3. Mobile Slide-down Navigation Drawer (Exact Brightlant Design) */}
         {mobileMenuOpen && (
           <div className="bright-mobile-drawer">
-            {/* Accordion Item: Services */}
-            <div className="mobile-accordion-group">
+            {/* 1. SERVICES Accordion (6) */}
+            <div className="mobile-bright-section">
               <button
-                className="mobile-accordion-header"
+                type="button"
+                className="mobile-bright-header"
                 onClick={() => setMobileAccordion(mobileAccordion === 'services' ? null : 'services')}
+                aria-expanded={mobileAccordion === 'services'}
               >
-                <div className="flex-center-gap">
-                  <span className="mobile-pill-tag">SERVICES</span>
-                  <span className="font-semibold text-slate-900">Automation & Cleanroom</span>
+                <div className="mobile-bright-title-wrap">
+                  <span className="mobile-bright-title">SERVICES</span>
+                  <span className="mobile-bright-badge">6</span>
                 </div>
-                {mobileAccordion === 'services' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                {mobileAccordion === 'services' ? (
+                  <ChevronUp size={18} className="mobile-bright-chevron" />
+                ) : (
+                  <ChevronDown size={18} className="mobile-bright-chevron" />
+                )}
               </button>
 
               {mobileAccordion === 'services' && (
-                <div className="mobile-accordion-body">
-                  {serviceGroups.map((g) => (
-                    <button
-                      key={g.id}
-                      className="mobile-service-sublink"
-                      onClick={() => {
-                        if (g.section) {
-                          handleNavClick('home', g.section);
-                        } else {
-                          handleCategoryClick(g.category);
-                        }
-                      }}
-                    >
-                      <g.icon size={16} style={{ color: g.color }} />
-                      <div className="text-left">
-                        <div className="font-medium text-slate-800 text-sm">{g.title}</div>
-                        <div className="text-xs text-slate-500">{g.tagline}</div>
-                      </div>
-                    </button>
-                  ))}
+                <div className="mobile-bright-sublist">
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('automation')}
+                  >
+                    Industrial Access Automation
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('cleanroom-interlocks')}
+                  >
+                    Cleanroom Interlocks & Pass Boxes
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('security-systems')}
+                  >
+                    Traffic & Perimeter Control
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('security-systems')}
+                  >
+                    Fire & Life Safety Systems
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('security-systems')}
+                  >
+                    Surveillance & Biometrics
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('hygiene')}
+                  >
+                    Cold Storage & Cleanroom Doors
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem-all"
+                    onClick={() => handleNavClick('home', 'catalog')}
+                  >
+                    All services
+                  </button>
                 </div>
               )}
             </div>
 
-            {/* Accordion Item: Products */}
-            <div className="mobile-accordion-group">
+            {/* 2. PRODUCTS Accordion (5) */}
+            <div className="mobile-bright-section">
               <button
-                className="mobile-accordion-header"
+                type="button"
+                className="mobile-bright-header"
                 onClick={() => setMobileAccordion(mobileAccordion === 'products' ? null : 'products')}
+                aria-expanded={mobileAccordion === 'products'}
               >
-                <span className="font-semibold text-slate-900">Products Catalog</span>
-                {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                <div className="mobile-bright-title-wrap">
+                  <span className="mobile-bright-title">PRODUCTS</span>
+                  <span className="mobile-bright-badge">5</span>
+                </div>
+                {mobileAccordion === 'products' ? (
+                  <ChevronUp size={18} className="mobile-bright-chevron" />
+                ) : (
+                  <ChevronDown size={18} className="mobile-bright-chevron" />
+                )}
               </button>
 
               {mobileAccordion === 'products' && (
-                <div className="mobile-accordion-body">
-                  <button className="mobile-sublink" onClick={() => handleCategoryClick('Automation')}>
-                    Automation Solutions
+                <div className="mobile-bright-sublist">
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleCategoryClick('Automation')}
+                  >
+                    Access Automation & Doors
                   </button>
-                  <button className="mobile-sublink" onClick={() => handleCategoryClick('Security System')}>
-                    Security & Life Safety Systems
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleCategoryClick('Security System')}
+                  >
+                    Traffic & Perimeter Barriers
                   </button>
-                  <button className="mobile-sublink" onClick={() => handleCategoryClick('Hygiene')}>
-                    Hygiene & Cleanroom Automation
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleCategoryClick('Hygiene')}
+                  >
+                    Cleanroom Interlocks & Pass Boxes
                   </button>
-                  <button className="mobile-sublink text-cyan font-semibold" onClick={() => handleNavClick('home', 'interlock-demo')}>
-                    Interactive Cleanroom Interlock Demo ↗
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleCategoryClick('Fire & Life Safety')}
+                  >
+                    Fire & Life Safety Systems
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleCategoryClick('Surveillance')}
+                  >
+                    Surveillance & Biometrics
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem-all"
+                    onClick={() => handleNavClick('home', 'catalog')}
+                  >
+                    All products
                   </button>
                 </div>
               )}
             </div>
 
-            {/* Accordion Item: Company */}
-            <div className="mobile-accordion-group">
+            {/* 3. COMPANY Accordion (5) */}
+            <div className="mobile-bright-section">
               <button
-                className="mobile-accordion-header"
+                type="button"
+                className="mobile-bright-header"
                 onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
+                aria-expanded={mobileAccordion === 'company'}
               >
-                <span className="font-semibold text-slate-900">Company & Clients</span>
-                {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                <div className="mobile-bright-title-wrap">
+                  <span className="mobile-bright-title">COMPANY</span>
+                  <span className="mobile-bright-badge">5</span>
+                </div>
+                {mobileAccordion === 'company' ? (
+                  <ChevronUp size={18} className="mobile-bright-chevron" />
+                ) : (
+                  <ChevronDown size={18} className="mobile-bright-chevron" />
+                )}
               </button>
 
               {mobileAccordion === 'company' && (
-                <div className="mobile-accordion-body">
-                  <button className="mobile-sublink" onClick={() => handleNavClick('home', 'about')}>
-                    About HTI Automation
+                <div className="mobile-bright-sublist">
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('about')}
+                  >
+                    About Us
                   </button>
-                  <button className="mobile-sublink" onClick={() => handleNavClick('clients')}>
-                    Our Clients (100+ Pharma & Commercial)
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('clients')}
+                  >
+                    Our Clients
                   </button>
-                  <button className="mobile-sublink" onClick={() => handleNavClick('home', 'partners')}>
-                    Technology Partners
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('partners')}
+                  >
+                    Partners & Alliances
                   </button>
-                  <button className="mobile-sublink" onClick={() => handleNavClick('home', 'blogs')}>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('blogs')}
+                  >
                     Technical Blogs
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem"
+                    onClick={() => handleNavClick('contact')}
+                  >
+                    Contact Office
+                  </button>
+                  <button 
+                    type="button"
+                    className="mobile-bright-subitem-all"
+                    onClick={() => handleNavClick('about')}
+                  >
+                    Company overview
                   </button>
                 </div>
               )}
             </div>
 
-            {/* Brochure Direct Link */}
-            <button
-              className="mobile-direct-link"
-              onClick={handleDownloadBrochure}
-            >
-              <div className="flex-center-gap">
-                <Download size={16} className="text-cyan" />
-                <span>Download Product Brochure</span>
+            {/* 4. Brochure Row with PDF Download Pill (Matches screenshot) */}
+            <div className="mobile-bright-brochure-row" onClick={handleDownloadBrochure}>
+              <div className="mobile-brochure-left">
+                <FileText size={18} className="mobile-brochure-icon" />
+                <span className="mobile-brochure-text">Brochure</span>
               </div>
-              <ArrowRight size={16} />
+              <button 
+                type="button"
+                className="mobile-brochure-pdf-pill"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDownloadBrochure(e);
+                }}
+                aria-label="Download PDF Brochure"
+              >
+                <Download size={13} />
+                <span>PDF</span>
+              </button>
+            </div>
+
+            {/* 5. Primary CTA: Get Free Consultation (Matches screenshot) */}
+            <button
+              type="button"
+              className="mobile-bright-consultation-btn"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleNavClick('home', 'contact');
+              }}
+            >
+              <span>Get Free Consultation</span>
+              <ArrowUpRight size={18} />
             </button>
 
-            {/* Mobile CTAs */}
-            <div className="mobile-drawer-footer">
-              {/* Mobile Theme Bar */}
-              <div className="mobile-theme-bar">
-                <span className="mobile-theme-label">Theme Mode</span>
-                <div className="mobile-theme-segments">
-                  <button
-                    className={`mobile-theme-pill ${theme === 'light' ? 'active' : ''}`}
-                    onClick={() => onThemeChange && onThemeChange('light')}
-                  >
-                    <Sun size={14} className="sun-icon" />
-                    <span>Light</span>
-                  </button>
-                  <button
-                    className={`mobile-theme-pill ${theme === 'dark' ? 'active' : ''}`}
-                    onClick={() => onThemeChange && onThemeChange('dark')}
-                  >
-                    <Moon size={14} className="moon-icon" />
-                    <span>Dark</span>
-                  </button>
-
-                </div>
-              </div>
-
+            {/* 6. Admin Portal link */}
+            <div className="mobile-bright-admin-wrap">
               <button
-                className="bright-admin-btn w-full justify-center py-3"
+                type="button"
+                className="mobile-bright-admin-btn"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   if (onOpenAdmin) onOpenAdmin();
                 }}
               >
-                <User size={17} />
-                <span>Open Admin Portal</span>
+                <User size={15} />
+                <span>Admin Portal</span>
                 {inquiryCount > 0 && (
-                  <span className="admin-badge-count">{inquiryCount}</span>
+                  <span className="mobile-admin-count">{inquiryCount}</span>
                 )}
               </button>
             </div>
