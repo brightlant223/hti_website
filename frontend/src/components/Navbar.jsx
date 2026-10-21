@@ -1560,7 +1560,7 @@ export default function Navbar({
                 >
                   <div className="flex-center-gap">
                     <span className="mobile-pill-tag">SERVICES</span>
-                    <span className="mobile-accordion-title">Automation & Cleanroom</span>
+                    <span className="mobile-accordion-title">Services</span>
                   </div>
                   {mobileAccordion === 'services' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
@@ -1602,7 +1602,7 @@ export default function Navbar({
                 >
                   <div className="flex-center-gap">
                     <span className="mobile-pill-tag">PRODUCTS</span>
-                    <span className="mobile-accordion-title">5 Categories • {TOTAL_PRODUCT_COUNT} Systems</span>
+                    <span className="mobile-accordion-title">Products</span>
                   </div>
                   {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
@@ -1658,33 +1658,77 @@ export default function Navbar({
                 >
                   <div className="flex-center-gap">
                     <span className="mobile-pill-tag">COMPANY</span>
-                    <span className="mobile-accordion-title">Company & Clients</span>
+                    <span className="mobile-accordion-title">Company</span>
                   </div>
                   {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
 
                 {mobileAccordion === 'company' && (
                   <div className="mobile-accordion-body">
-                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}>
-                      About HTI Automation
-                    </button>
-                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleNavClick('clients'); }}>
-                      Our Clients (100+ Pharma & Commercial)
-                    </button>
                     <button
-                      className="mobile-sublink"
+                      className="mobile-service-sublink"
+                      onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}
+                    >
+                      <Building2 size={16} style={{ color: '#0284c7' }} />
+                      <div className="text-left">
+                        <div className="mobile-service-title">About Us</div>
+                        <div className="mobile-service-tagline">Our story, values &amp; engineering ethos since 2014</div>
+                      </div>
+                    </button>
+
+                    <button
+                      className="mobile-service-sublink"
+                      onClick={() => { setMobileMenuOpen(false); handleNavClick('clients'); }}
+                    >
+                      <Users size={16} style={{ color: '#059669' }} />
+                      <div className="text-left">
+                        <div className="mobile-service-title">Our Clients</div>
+                        <div className="mobile-service-tagline">100+ prestigious pharma &amp; commercial installations</div>
+                      </div>
+                    </button>
+
+                    <button
+                      className="mobile-service-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('careers'); }}
                     >
-                      Careers
+                      <Briefcase size={16} style={{ color: '#7c3aed' }} />
+                      <div className="text-left">
+                        <div className="mobile-service-title">Careers</div>
+                        <div className="mobile-service-tagline">Explore engineering careers &amp; join our growing team</div>
+                      </div>
                     </button>
-                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleNavClick('partners'); }}>
-                      Technology Partners
+
+                    <button
+                      className="mobile-service-sublink"
+                      onClick={() => { setMobileMenuOpen(false); handleNavClick('partners'); }}
+                    >
+                      <ShieldCheck size={16} style={{ color: '#ea580c' }} />
+                      <div className="text-left">
+                        <div className="mobile-service-title">Technology Partners</div>
+                        <div className="mobile-service-tagline">Authorized global engineering &amp; hardware alliances</div>
+                      </div>
                     </button>
-                    <button className="mobile-sublink" onClick={() => { setMobileMenuOpen(false); handleNavClick('blogs'); }}>
-                      Blogs
+
+                    <button
+                      className="mobile-service-sublink"
+                      onClick={() => { setMobileMenuOpen(false); handleNavClick('blogs'); }}
+                    >
+                      <BookOpen size={16} style={{ color: '#2563eb' }} />
+                      <div className="text-left">
+                        <div className="mobile-service-title">Blogs</div>
+                        <div className="mobile-service-tagline">Cleanroom standards, USFDA compliance &amp; notes</div>
+                      </div>
                     </button>
-                    <button className="mobile-sublink font-semibold text-primary" onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}>
-                      Contact Us
+
+                    <button
+                      className="mobile-service-sublink"
+                      onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
+                    >
+                      <PhoneCall size={16} style={{ color: '#dc2626' }} />
+                      <div className="text-left">
+                        <div className="mobile-service-title font-semibold text-primary">Contact Us</div>
+                        <div className="mobile-service-tagline">Talk to our engineering team in Navi Mumbai</div>
+                      </div>
                     </button>
                   </div>
                 )}
