@@ -118,10 +118,10 @@ export default function ProductsCatalog({
               <Layers size={13} style={{ marginRight: 6 }} />
               <span>OFFICIAL PRODUCT CATALOGUE</span>
             </div>
-            <h2 className="catalog-section-title">
+            <h1 className="catalog-section-title">
               Precision Automation &amp;{' '}
               <span className="catalog-title-highlight">Security Systems</span>
-            </h2>
+            </h1>
             <p className="catalog-subtitle">
               Engineered for continuous industrial duty, pharmaceutical compliance, and turnkey architectural integration.
             </p>
@@ -381,7 +381,7 @@ export default function ProductsCatalog({
                       flex: 1
                     }}
                   >
-                    <h3 
+                    <h2
                       className="product-card-name"
                       style={{
                         fontSize: '1.08rem',
@@ -392,7 +392,7 @@ export default function ProductsCatalog({
                       }}
                     >
                       {p.name}
-                    </h3>
+                    </h2>
 
                     <p 
                       style={{
@@ -494,9 +494,9 @@ export default function ProductsCatalog({
             marginBottom: '44px'
           }}>
             <Search size={36} style={{ color: '#94a3b8', margin: '0 auto 14px' }} />
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
               No Industrial Systems Found
-            </h3>
+            </h2>
             <p style={{ color: '#64748b', fontSize: '0.92rem', maxWidth: '440px', margin: '0 auto 20px' }}>
               No systems match "{searchQuery}" in the selected category. Try searching for broader terms like "door", "barrier", "camera", or "interlock".
             </p>
@@ -525,9 +525,9 @@ export default function ProductsCatalog({
         <div className="catalog-cta-banner">
           <div>
             <div className="catalog-cta-label">Turnkey System Integration</div>
-            <h3 className="catalog-cta-title">
+            <h2 className="catalog-cta-title">
               Need Custom Technical Sizing or Project BOQ?
-            </h3>
+            </h2>
             <p style={{ margin: '4px 0 0', fontSize: '0.88rem', color: '#475569' }}>
               Our engineering office at Turbhe MIDC, Navi Mumbai provides CAD drawings, FAT compliance, and Pan-India site commissioning.
             </p>
