@@ -1366,9 +1366,9 @@ export default function CategoryPage({
                   <span className="auto-faq-question">{faq.q}</span>
                   <div className="auto-faq-icon-bubble">
                     {isOpen ? (
-                      <ChevronUp size={18} className="text-sky-600" />
+                      <ChevronUp size={18} className="auto-faq-chevron-open" />
                     ) : (
-                      <ChevronDown size={18} className="text-slate-400" />
+                      <ChevronDown size={18} className="auto-faq-chevron-closed" />
                     )}
                   </div>
                 </button>

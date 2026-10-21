@@ -1854,3 +1854,45 @@
   .contact-partners-section .partner-text-mark.mark-legrand { font-size: 15px; }
   .contact-partners-section .partner-text-mark.mark-vanderlande { font-size: 11px; }
 }
+
+/* ==========================================================================
+   CONTACT FORM SUCCESS STATE
+   --------------------------------------------------------------------------
+   The confirmation shown after a successful enquiry relied on .text-center,
+   .mx-auto, .mb-3, .text-xl, .font-bold, .text-slate-900, .text-sm,
+   .text-slate-600, .max-w-md, .mt-2, .mt-6 and .max-w-xs, none of which
+   have a rule in this project. The block therefore rendered left aligned
+   with an inline glyph and unstyled heading and copy.
+   ========================================================================== */
+
+.contact-page-wrap .form-success-state {
+  padding: 32px 0;
+  text-align: center;
+}
+
+.contact-page-wrap .form-success-icon {
+  display: block;
+  margin: 0 auto 12px;
+  color: #10b981;
+}
+
+.contact-page-wrap .form-success-title {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #0f172a;
+}
+
+.contact-page-wrap .form-success-text {
+  max-width: 28rem;
+  margin: 0 auto 24px;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: #475569;
+}
+
+.contact-page-wrap .form-success-reset {
+  max-width: 20rem;
+  margin: 0 auto;
+}

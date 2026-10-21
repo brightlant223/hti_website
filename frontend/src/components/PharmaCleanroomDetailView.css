@@ -1488,3 +1488,20 @@ html.dark .pharma-modal-success p {
     inset: -14px;
   }
 }
+
+/* ==========================================================================
+   TRUST LIST ICON + VIDEO COLUMN
+   --------------------------------------------------------------------------
+   The trust-list glyph relied on .text-sky-600, which has no rule, so it
+   rendered in the inherited slate instead of the intended sky accent.
+   ========================================================================== */
+
+.pharma-trust-item .text-sky-600 {
+  color: #0284c7;
+}
+
+/* Grid child: allow long unbroken text to shrink instead of blowing the
+   column out of the two-column video grid. */
+.pharma-video-content {
+  min-width: 0;
+}

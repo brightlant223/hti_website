@@ -2326,6 +2326,15 @@
   padding-bottom: 16px;
 }
 
+/* The admin button in the mobile drawer relied on .w-full, .justify-center
+   and .py-3, none of which have a rule in this project, so its content sat
+   left aligned in the drawer footer and the vertical padding was short. */
+.mobile-drawer-footer .bright-admin-btn {
+  justify-content: center;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
 /* Primary CTA inside the mobile drawer */
 .mobile-cta-primary {
   display: flex;

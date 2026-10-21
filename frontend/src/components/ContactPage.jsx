@@ -303,14 +303,14 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                 </p>
 
                 {submitted ? (
-                  <div className="form-success-state py-8 text-center">
-                    <CheckCircle2 size={52} className="text-emerald-500 mx-auto mb-3" />
-                    <h3 className="text-xl font-bold text-slate-900">Enquiry Submitted Successfully!</h3>
-                    <p className="text-slate-600 text-sm mt-2 max-w-md mx-auto">
+                  <div className="form-success-state">
+                    <CheckCircle2 size={52} className="form-success-icon" />
+                    <h3 className="form-success-title">Enquiry Submitted Successfully!</h3>
+                    <p className="form-success-text">
                       Thank you for contacting HTI Automation & Security Systems. Our Mumbai engineering desk will review your requirements and reach out to you shortly.
                     </p>
                     <button
-                      className="btn-submit-orange mt-6 max-w-xs mx-auto"
+                      className="btn-submit-orange form-success-reset"
                       onClick={() => {
                         setSubmitted(false);
                         setFormData({

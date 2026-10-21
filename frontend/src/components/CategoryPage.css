@@ -203,3 +203,20 @@
     font-size: 1.125rem;
   }
 }
+
+/* --------------------------------------------------------------------------
+   6. FAQ ACCORDION CHEVRONS
+   --------------------------------------------------------------------------
+   The chevrons relied on .text-sky-600 and .text-slate-400, neither of
+   which has a rule, so both rendered black inside their light bubble.
+   -------------------------------------------------------------------------- */
+
+.auto-service-page .auto-faq-chevron-open,
+.category-dedicated-page .auto-faq-chevron-open {
+  color: #0284c7;
+}
+
+.auto-service-page .auto-faq-chevron-closed,
+.category-dedicated-page .auto-faq-chevron-closed {
+  color: #94a3b8;
+}
