@@ -233,8 +233,8 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
                   className={`btn-door-status ${doorAOpen ? 'status-open' : 'status-btn-action'}`}
                   onClick={handleOpenDoorA}
                 >
-                  {doorAOpen ? <Unlock size={14} /> : <Lock size={14} />}
-                  <span>{doorAOpen ? 'Close Door' : 'Open'}</span>
+                  {doorAOpen ? <Unlock size={12} /> : <Lock size={12} />}
+                  <span>{doorAOpen ? 'Close' : 'Open'}</span>
                 </button>
               </div>
 
@@ -265,8 +265,8 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
                   className={`btn-door-status ${doorBOpen ? 'status-open' : doorAOpen ? 'status-locked' : 'status-btn-action'}`}
                   onClick={handleOpenDoorB}
                 >
-                  {doorBOpen ? <Unlock size={14} /> : <Lock size={14} />}
-                  <span>{doorBOpen ? 'Close Door' : doorAOpen ? 'Locked' : 'Open'}</span>
+                  {doorBOpen ? <Unlock size={12} /> : <Lock size={12} />}
+                  <span>{doorBOpen ? 'Close' : doorAOpen ? 'Locked' : 'Open'}</span>
                 </button>
               </div>
             </div>
