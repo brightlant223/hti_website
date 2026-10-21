@@ -1586,11 +1586,11 @@ export default function CategoryPage({
           <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredAutomationServices.length === 0 ? (
               <div className="auto-empty-state">
-                <Search size={36} className="text-slate-400 mb-2" />
+                <Search size={36} className="auto-empty-icon" />
                 <h3>No services matching "{searchQuery}"</h3>
                 <p>Try searching for doors, gates, roll-up, barriers, or clear filters.</p>
                 <button
-                  className="btn btn-secondary btn-sm mt-3"
+                  className="btn btn-secondary btn-sm auto-empty-reset"
                   onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
                 >
                   Reset Filters
@@ -1665,7 +1665,7 @@ export default function CategoryPage({
                     <div className="auto-cta-inner">
                       <div className="auto-cta-left">
                         <div className="auto-cta-icon-box">
-                          <Cpu size={22} className="text-blue-600" />
+                          <Cpu size={22} className="auto-cta-box-icon" />
                         </div>
 
                         <h3 className="auto-cta-heading">Need a Custom Solution?</h3>
@@ -1675,19 +1675,19 @@ export default function CategoryPage({
 
                         <ul className="auto-cta-checklist">
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Site survey &amp; consultation</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Custom design &amp; manufacturing</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Installation &amp; commissioning</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>After-sales support</span>
                           </li>
                         </ul>
@@ -1736,8 +1736,8 @@ export default function CategoryPage({
       <div className="auto-service-page cleanroom-service-page">
         {/* Toast Notification */}
         {brochureToast && (
-          <div className="auto-toast-notification">
-            <CheckCircle2 size={16} className="text-green-500" />
+          <div className="auto-toast-notice">
+            <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
             <span>{brochureToast}</span>
           </div>
         )}
@@ -1928,11 +1928,11 @@ export default function CategoryPage({
           <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredCleanroomServices.length === 0 ? (
               <div className="auto-empty-state">
-                <Search size={36} className="text-slate-400 mb-2" />
+                <Search size={36} className="auto-empty-icon" />
                 <h3>No cleanroom services matching "{searchQuery}"</h3>
                 <p>Try searching for interlocks, pass box, clocks, doors, or reset filters.</p>
                 <button
-                  className="btn btn-secondary btn-sm mt-3"
+                  className="btn btn-secondary btn-sm auto-empty-reset"
                   onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
                 >
                   Reset Filters
@@ -2011,7 +2011,7 @@ export default function CategoryPage({
                     <div className="auto-cta-inner">
                       <div className="auto-cta-left">
                         <div className="auto-cta-icon-box">
-                          <Lock size={22} className="text-blue-600" />
+                          <Lock size={22} className="auto-cta-box-icon" />
                         </div>
 
                         <h3 className="auto-cta-heading">Need Custom Cleanroom Airlock Logic?</h3>
@@ -2021,19 +2021,19 @@ export default function CategoryPage({
 
                         <ul className="auto-cta-checklist">
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Cleanroom layout review</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Custom interlock logic programming</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>DQ, IQ &amp; OQ documentation</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>On-site commissioning</span>
                           </li>
                         </ul>
@@ -2275,11 +2275,11 @@ export default function CategoryPage({
           <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredPerimeterServices.length === 0 ? (
               <div className="auto-empty-state">
-                <Search size={36} className="text-slate-400 mb-2" />
+                <Search size={36} className="auto-empty-icon" />
                 <h3>No perimeter services matching "{searchQuery}"</h3>
                 <p>Try searching for boom barriers, bollards, tyre killers, turnstiles, parking, or reset filters.</p>
                 <button
-                  className="btn btn-secondary btn-sm mt-3"
+                  className="btn btn-secondary btn-sm auto-empty-reset"
                   onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
                 >
                   Reset Filters
@@ -2358,7 +2358,7 @@ export default function CategoryPage({
                     <div className="auto-cta-inner">
                       <div className="auto-cta-left">
                         <div className="auto-cta-icon-box">
-                          <ShieldCheck size={22} className="text-blue-600" />
+                          <ShieldCheck size={22} className="auto-cta-box-icon" />
                         </div>
 
                         <h3 className="auto-cta-heading">Need Custom Perimeter Defense Architecture?</h3>
@@ -2368,19 +2368,19 @@ export default function CategoryPage({
 
                         <ul className="auto-cta-checklist">
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Perimeter threat &amp; traffic survey</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Crash-rated bollard &amp; barrier engineering</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Turnkey civil, electrical &amp; hydraulic works</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Comprehensive AMC &amp; maintenance support</span>
                           </li>
                         </ul>
@@ -2622,11 +2622,11 @@ export default function CategoryPage({
           <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredFireServices.length === 0 ? (
               <div className="auto-empty-state">
-                <Search size={36} className="text-slate-400 mb-2" />
+                <Search size={36} className="auto-empty-icon" />
                 <h3>No fire safety services matching "{searchQuery}"</h3>
                 <p>Try searching for fire alarms, hydrants, sprinklers, fire doors, gas detection, or reset filters.</p>
                 <button
-                  className="btn btn-secondary btn-sm mt-3"
+                  className="btn btn-secondary btn-sm auto-empty-reset"
                   onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
                 >
                   Reset Filters
@@ -2705,7 +2705,7 @@ export default function CategoryPage({
                     <div className="auto-cta-inner">
                       <div className="auto-cta-left">
                         <div className="auto-cta-icon-box">
-                          <Flame size={22} className="text-blue-600" />
+                          <Flame size={22} className="auto-cta-box-icon" />
                         </div>
 
                         <h3 className="auto-cta-heading">Need Turnkey Fire Protection Architecture?</h3>
@@ -2715,19 +2715,19 @@ export default function CategoryPage({
 
                         <ul className="auto-cta-checklist">
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Site survey &amp; fire hazard risk assessment</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Hydraulic pipe sizing &amp; FACP loop design</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Turnkey mechanical, electrical &amp; civil execution</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Mandatory CFO sign-off &amp; annual maintenance</span>
                           </li>
                         </ul>
@@ -2969,11 +2969,11 @@ export default function CategoryPage({
           <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredSecurityServices.length === 0 ? (
               <div className="auto-empty-state">
-                <Search size={36} className="text-slate-400 mb-2" />
+                <Search size={36} className="auto-empty-icon" />
                 <h3>No surveillance services matching "{searchQuery}"</h3>
                 <p>Try searching for CCTV, IP cameras, biometrics, facial recognition, VMS, video intercom, or reset filters.</p>
                 <button
-                  className="btn btn-secondary btn-sm mt-3"
+                  className="btn btn-secondary btn-sm auto-empty-reset"
                   onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
                 >
                   Reset Filters
@@ -3052,7 +3052,7 @@ export default function CategoryPage({
                     <div className="auto-cta-inner">
                       <div className="auto-cta-left">
                         <div className="auto-cta-icon-box">
-                          <Cpu size={22} className="text-blue-600" />
+                          <Cpu size={22} className="auto-cta-box-icon" />
                         </div>
 
                         <h3 className="auto-cta-heading">Need Enterprise CCTV &amp; Biometric Architecture?</h3>
@@ -3062,19 +3062,19 @@ export default function CategoryPage({
 
                         <ul className="auto-cta-checklist">
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Site risk assessment &amp; camera coverage modeling</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>NVR storage calculation &amp; fiber network planning</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Turnkey cabling, rack mounting &amp; camera installation</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Central VMS server setup &amp; client workstation training</span>
                           </li>
                         </ul>
@@ -3316,11 +3316,11 @@ export default function CategoryPage({
           <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredMonitoringServices.length === 0 ? (
               <div className="auto-empty-state">
-                <Search size={36} className="text-slate-400 mb-2" />
+                <Search size={36} className="auto-empty-icon" />
                 <h3>No monitoring services matching "{searchQuery}"</h3>
                 <p>Try searching for environment monitoring, water leak detection, gas sensors, annunciators, differential pressure, or reset filters.</p>
                 <button
-                  className="btn btn-secondary btn-sm mt-3"
+                  className="btn btn-secondary btn-sm auto-empty-reset"
                   onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
                 >
                   Reset Filters
@@ -3399,7 +3399,7 @@ export default function CategoryPage({
                     <div className="auto-cta-inner">
                       <div className="auto-cta-left">
                         <div className="auto-cta-icon-box">
-                          <Activity size={22} className="text-blue-600" />
+                          <Activity size={22} className="auto-cta-box-icon" />
                         </div>
 
                         <h3 className="auto-cta-heading">Need Turnkey Server Room Monitoring Architecture?</h3>
@@ -3409,19 +3409,19 @@ export default function CategoryPage({
 
                         <ul className="auto-cta-checklist">
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Facility thermal mapping &amp; sensor placement plan</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Underfloor water leak cable layout design</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>SMS / Email alert gateway &amp; cloud dashboard setup</span>
                           </li>
                           <li>
-                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <Check size={13} className="auto-cta-check-icon" />
                             <span>Turnkey integration with PAC chillers &amp; fire panels</span>
                           </li>
                         </ul>

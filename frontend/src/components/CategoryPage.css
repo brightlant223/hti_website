@@ -141,7 +141,38 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. RESPONSIVE
+   5. BESPOKE CATEGORY VARIANTS  (/automation, /cleanroom-interlocks,
+      /perimeter-defense, /fire-protection, /security-systems,
+      /server-room-monitoring)
+   --------------------------------------------------------------------------
+   Scoped to .auto-service-page so the shared fallback layout above and every
+   other template are untouched.
+   -------------------------------------------------------------------------- */
+
+.auto-service-page .auto-cta-box-icon {
+  color: #2563eb;
+}
+
+.auto-service-page .auto-cta-check-icon {
+  flex-shrink: 0;
+  color: #2563eb;
+}
+
+/* The cleanroom variant used a one-off class for its toast, which left the
+   confirmation rendering as unpositioned page-flow text instead of the
+   fixed bottom-right notification used by every other variant. */
+
+.auto-service-page .auto-empty-icon {
+  margin-bottom: 8px;
+  color: #94a3b8;
+}
+
+.auto-service-page .auto-empty-reset {
+  margin-top: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVE
    -------------------------------------------------------------------------- */
 
 @media (max-width: 1024px) {
