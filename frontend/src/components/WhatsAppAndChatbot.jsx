@@ -1,22 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  MessageSquare, 
   X, 
   Send, 
-  Bot, 
-  Sparkles, 
   ArrowRight, 
-  Phone, 
-  CheckCircle2, 
-  User, 
   ExternalLink,
-  Minimize2,
-  Lock,
-  Cpu,
-  Flame,
-  ShieldAlert,
-  Clock,
-  RotateCcw
+  Minus,
+  Paperclip,
+  ShieldCheck,
+  DoorOpen,
+  Layers,
+  Shield,
+  FileText,
+  RotateCcw,
+  Bot
 } from 'lucide-react';
 
 const WHATSAPP_NUMBER = '919892756077';
@@ -107,9 +103,8 @@ export default function WhatsAppAndChatbot({ onNavigate, onQuoteClick }) {
     {
       id: 1,
       sender: 'bot',
-      text: 'Hello! 👋 Welcome to HTI Automation & Security Systems Pvt. Ltd. How can our engineering team assist you with your industrial or pharma facility today?',
-      time: 'Just now',
-      pills: ['Chat on WhatsApp ↗', 'Cleanroom Interlocks', 'Industrial Gates', 'Get Quotation']
+      text: 'Hello! 👋 Welcome to HTI Automation & Security Systems. How can I assist you with your industrial or pharma facility today?',
+      time: 'Just now'
     }
   ]);
   const [inputText, setInputText] = useState('');
@@ -121,7 +116,9 @@ export default function WhatsAppAndChatbot({ onNavigate, onQuoteClick }) {
   useEffect(() => {
     if (chatOpen) {
       setHasUnread(false);
-      scrollToBottom();
+      if (messages.length > 1 || isTyping) {
+        scrollToBottom();
+      }
     }
   }, [chatOpen, messages, isTyping]);
 
@@ -230,9 +227,8 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
       {
         id: Date.now(),
         sender: 'bot',
-        text: 'Chat history cleared. How else can HTI Automation assist your project?',
-        time: getTime(),
-        pills: ['Chat on WhatsApp ↗', 'Cleanroom Interlocks', 'Industrial Gates', 'Get Quotation']
+        text: 'Hello! 👋 Welcome to HTI Automation & Security Systems. How can I assist you with your industrial or pharma facility today?',
+        time: getTime()
       }
     ]);
   };
@@ -283,71 +279,83 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
       </div>
 
       {/* =========================================================================
-          2. INTERACTIVE CHATBOT POPUP WINDOW
+          2. INTERACTIVE CHATBOT POPUP WINDOW (MATCHING EXACT REFERENCE DESIGN)
           ========================================================================= */}
       {chatOpen && (
         <div className="hti-chatbot-window">
-          {/* Header */}
+          {/* 1. Header with HTI Brand Logo, AI LIVE badge and Actions */}
           <div className="chatbot-header">
             <div className="chatbot-brand-col">
-              <div className="bot-avatar-badge">
-                <Bot size={20} />
-                <span className="avatar-online-dot"></span>
-              </div>
+              <img
+                src="/hti-logo.png"
+                alt="HTi Logo"
+                className="chatbot-header-hti-logo"
+              />
               <div className="bot-meta">
                 <div className="bot-name-row">
                   <span className="bot-name">HTI Engineering Assistant</span>
                   <span className="bot-verified-tag">AI LIVE</span>
                 </div>
                 <div className="bot-status-text">
-                  <span>● Online</span> · Instant Specs, Quotes & Compliance
+                  <span className="online-green-dot">●</span> Online · Instant Specs, Quotes &amp; Compliance
                 </div>
               </div>
             </div>
 
             <div className="chatbot-header-actions">
               <button
+                type="button"
                 className="btn-chat-action"
                 onClick={handleResetChat}
                 title="Restart Conversation"
+                aria-label="Restart Conversation"
               >
                 <RotateCcw size={15} />
               </button>
               <button
+                type="button"
                 className="btn-chat-action"
                 onClick={() => setChatOpen(false)}
                 title="Minimize Chat"
+                aria-label="Minimize Chat"
               >
-                <Minimize2 size={16} />
+                <Minus size={16} />
               </button>
             </div>
           </div>
 
-          {/* Quick Notice Bar */}
-          <div className="chatbot-sub-bar">
-            <span>Direct WhatsApp Helpline:</span>
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_DEFAULT_MSG)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="sub-bar-wa-link"
-              aria-label="Chat with us on WhatsApp"
-            >
-              <span>+91 9892756077</span>
-              <ExternalLink size={11} />
-            </a>
+          {/* 2. Hero Architectural Building Banner */}
+          <div className="chat-hero-banner">
+            <img
+              src="/chatbot-building-banner.jpg"
+              alt="HTI Automation &amp; Security Facility"
+              className="chat-hero-img"
+            />
+            <div className="chat-hero-gradient-overlay" />
+            <div className="chat-hero-content">
+              <span className="chat-hero-eyebrow">Your Partner in</span>
+              <h3 className="chat-hero-title">
+                Automation &amp;<br />Security Solutions
+              </h3>
+              <div className="chat-hero-red-line" />
+            </div>
           </div>
 
-          {/* Messages Body */}
+          {/* 3. Messages & Interactive Sheet Body */}
           <div className="chatbot-messages-body">
-            {messages.map((msg) => (
+            {/* Initial Welcome Message with Robot Avatar */}
+            {messages.map((msg, index) => (
               <div
                 key={msg.id}
                 className={`chat-bubble-row ${msg.sender === 'user' ? 'row-user' : 'row-bot'}`}
               >
                 {msg.sender === 'bot' && (
-                  <div className="bot-bubble-avatar">
-                    <Bot size={14} />
+                  <div className="bot-bubble-avatar-img-wrap">
+                    <img
+                      src="/chatbot-robot-avatar.png"
+                      alt="HTI Bot"
+                      className="bot-bubble-avatar-img"
+                    />
                   </div>
                 )}
 
@@ -364,6 +372,7 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
                       {msg.pills.map((pill, pIdx) => (
                         <button
                           key={pIdx}
+                          type="button"
                           className="chat-pill-btn"
                           onClick={() => handlePillClick(pill)}
                         >
@@ -377,15 +386,104 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
               </div>
             ))}
 
+            {/* Direct WhatsApp Helpline Card */}
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_DEFAULT_MSG)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="chat-wa-helpline-card"
+            >
+              <div className="chat-wa-icon-box">
+                <svg className="chat-wa-svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.9C17.18 3.03 14.69 2 12.04 2ZM12.05 20.15C10.57 20.15 9.12 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.68 12.05 3.68C14.25 3.68 16.31 4.54 17.87 6.1C19.42 7.66 20.28 9.72 20.28 11.92C20.28 16.46 16.59 20.15 12.05 20.15ZM16.57 14.37C16.32 14.25 15.1 13.65 14.87 13.56C14.65 13.48 14.48 13.44 14.32 13.69C14.15 13.94 13.68 14.49 13.53 14.66C13.39 14.82 13.24 14.84 12.99 14.72C12.74 14.6 11.94 14.33 11 13.49C10.26 12.83 9.77 12.02 9.63 11.77C9.48 11.52 9.61 11.39 9.74 11.26C9.85 11.15 9.99 10.97 10.11 10.83C10.24 10.69 10.28 10.58 10.36 10.42C10.44 10.26 10.4 10.11 10.34 9.99C10.28 9.87 9.79 8.67 9.58 8.18C9.38 7.7 9.18 7.76 9.02 7.75C8.88 7.74 8.71 7.74 8.55 7.74C8.38 7.74 8.12 7.8 7.89 8.05C7.67 8.3 7.03 8.9 7.03 10.12C7.03 11.34 7.92 12.51 8.04 12.68C8.16 12.84 9.78 15.34 12.26 16.41C12.85 16.66 13.31 16.82 13.67 16.93C14.26 17.12 14.8 17.09 15.22 17.03C15.7 16.96 16.69 16.43 16.9 15.84C17.11 15.25 17.11 14.74 17.04 14.63C16.97 14.52 16.82 14.45 16.57 14.37Z" />
+                </svg>
+              </div>
+              <div className="chat-wa-details">
+                <span className="chat-wa-tag">Direct WhatsApp Helpline:</span>
+                <span className="chat-wa-phone">+91 9892756077</span>
+              </div>
+              <ExternalLink size={14} className="chat-wa-arrow" />
+            </a>
+
+            {/* 4. Explore Popular Topics (2x2 Interactive Cards Grid) */}
+            <div className="chat-explore-section">
+              <h4 className="chat-explore-title">Explore Popular Topics</h4>
+              <div className="chat-explore-grid">
+                <button
+                  type="button"
+                  className="chat-explore-card"
+                  onClick={() => handleSend('Tell me about Cleanroom Door Interlocks & USFDA compliance')}
+                >
+                  <div className="explore-card-icon icon-blue">
+                    <DoorOpen size={16} />
+                  </div>
+                  <div className="explore-card-info">
+                    <span className="explore-card-name">Cleanroom Interlocks</span>
+                    <span className="explore-card-desc">Access &amp; Hygiene Control</span>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  className="chat-explore-card"
+                  onClick={() => handleSend('What industrial automatic gates and boom barriers do you offer?')}
+                >
+                  <div className="explore-card-icon icon-coral">
+                    <Layers size={16} />
+                  </div>
+                  <div className="explore-card-info">
+                    <span className="explore-card-name">Industrial Gates</span>
+                    <span className="explore-card-desc">Perimeter Security</span>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  className="chat-explore-card"
+                  onClick={() => handleSend('Tell me about 4K AI CCTV surveillance & biometric access control')}
+                >
+                  <div className="explore-card-icon icon-sky">
+                    <Shield size={16} />
+                  </div>
+                  <div className="explore-card-info">
+                    <span className="explore-card-name">CCTV &amp; Access Control</span>
+                    <span className="explore-card-desc">Security &amp; Surveillance</span>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  className="chat-explore-card"
+                  onClick={() => {
+                    if (onQuoteClick) onQuoteClick();
+                    else handleSend('How can I get a customized technical quote and proposal?');
+                  }}
+                >
+                  <div className="explore-card-icon icon-red">
+                    <FileText size={16} />
+                  </div>
+                  <div className="explore-card-info">
+                    <span className="explore-card-name">Request a Quote</span>
+                    <span className="explore-card-desc">Get a Customized Solution</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Typing Indicator */}
             {isTyping && (
               <div className="chat-bubble-row row-bot">
-                <div className="bot-bubble-avatar">
-                  <Bot size={14} />
+                <div className="bot-bubble-avatar-img-wrap">
+                  <img
+                    src="/chatbot-robot-avatar.png"
+                    alt="HTI Bot"
+                    className="bot-bubble-avatar-img"
+                  />
                 </div>
                 <div className="chat-bubble bubble-bot typing-indicator">
-                  <span className="typing-dot"></span>
-                  <span className="typing-dot"></span>
-                  <span className="typing-dot"></span>
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
                 </div>
               </div>
             )}
@@ -393,52 +491,46 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Quick Action Suggestion Bar */}
-          <div className="chatbot-quick-chips">
-            <button
-              className="quick-chip"
-              onClick={() => handleSend('Tell me about cleanroom door interlocks & USFDA compliance')}
+          {/* 5. Modern Pill Input Bar & Powered by Branding */}
+          <div className="chat-footer-wrap">
+            <form
+              className="chat-pill-input-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSend();
+              }}
             >
-              🔒 Cleanroom Interlocks
-            </button>
-            <button
-              className="quick-chip"
-              onClick={() => handleSend('What automatic gates & boom barriers do you offer?')}
-            >
-              ⚡ Industrial Gates
-            </button>
-            <button
-              className="quick-chip"
-              onClick={() => handleSend('How can I get a technical proposal and pricing?')}
-            >
-              📄 Request Quote
-            </button>
-          </div>
+              <button
+                type="button"
+                className="chat-attach-btn"
+                onClick={() => openWhatsApp('Hello HTI, I would like to attach our facility CAD layout / BOQ for technical review.')}
+                title="Attach specs / CAD layout via WhatsApp"
+                aria-label="Attach file"
+              >
+                <Paperclip size={16} />
+              </button>
+              <input
+                type="text"
+                className="chat-pill-input"
+                placeholder="Ask anything about HTI products &amp; specs..."
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="chat-pill-send-btn"
+                disabled={!inputText.trim()}
+                aria-label="Send Message"
+              >
+                <Send size={14} />
+              </button>
+            </form>
 
-          {/* Footer Input */}
-          <form
-            className="chatbot-input-bar"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
-          >
-            <input
-              type="text"
-              className="chat-input"
-              placeholder="Ask anything about HTI products & specs..."
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="btn-chat-send"
-              disabled={!inputText.trim()}
-              aria-label="Send Message"
-            >
-              <Send size={16} />
-            </button>
-          </form>
+            <div className="chat-powered-by">
+              <ShieldCheck size={13} className="powered-shield" />
+              <span>Powered by HTI Engineering Assistant</span>
+            </div>
+          </div>
         </div>
       )}
     </>
