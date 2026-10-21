@@ -1500,76 +1500,43 @@ export default function Navbar({
                 </button>
 
                 {mobileAccordion === 'products' && (
-                  <div className="mobile-accordion-body mobile-products-accordion">
-                    {/* Primary All Products CTA */}
+                  <div className="mobile-accordion-body">
+                    {productGroups.map((group) => {
+                      const Icon = group.icon || Cpu;
+                      return (
+                        <button
+                          key={group.id}
+                          className="mobile-service-sublink"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            if (group.page && onNavigate) {
+                              onNavigate(group.page);
+                            } else if (onNavigate) {
+                              onNavigate('catalog', group.categoryId);
+                            }
+                          }}
+                        >
+                          <Icon size={16} style={{ color: group.color || '#0284c7' }} />
+                          <div className="text-left">
+                            <div className="mobile-service-title">{group.title}</div>
+                            <div className="mobile-service-tagline">{group.tagline}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
                     <button
-                      className="mobile-sublink font-bold flex items-center justify-between mobile-catalog-cta-highlight"
+                      className="mobile-service-sublink"
                       onClick={() => {
                         setMobileMenuOpen(false);
                         if (onNavigate) onNavigate('catalog', 'all');
                       }}
                     >
-                      <div className="flex items-center gap-2">
-                        <Layers size={16} />
-                        <span>View All 25 Products (Full Catalogue)</span>
+                      <Layers size={16} style={{ color: '#0284c7' }} />
+                      <div className="text-left">
+                        <div className="mobile-service-title">View All 25 Products</div>
+                        <div className="mobile-service-tagline">Complete industrial automation & security catalogue.</div>
                       </div>
-                      <ArrowRight size={15} />
                     </button>
-
-                    {/* 5 Compact Visual Category Tiles with Quick Product Chips */}
-                    <div className="mobile-categories-tiles-list">
-                      {productGroups.map((group) => {
-                        return (
-                          <div key={group.id} className="mobile-category-block">
-                            <button
-                              className="mobile-cat-row-card"
-                              onClick={() => {
-                                setMobileMenuOpen(false);
-                                if (group.page && onNavigate) {
-                                  onNavigate(group.page);
-                                } else if (onNavigate) {
-                                  onNavigate('catalog', group.categoryId);
-                                }
-                              }}
-                            >
-                              <img
-                                src={group.heroImage}
-                                alt={group.title}
-                                className="mobile-cat-row-img"
-                                loading="lazy"
-                              />
-                              <div className="mobile-cat-row-info">
-                                <div className="mobile-cat-row-title-row">
-                                  <span className="mobile-cat-row-title">{group.title}</span>
-                                  <span className="mobile-cat-row-count">5 Systems</span>
-                                </div>
-                                <p className="mobile-cat-row-desc">{group.tagline}</p>
-                              </div>
-                              <ArrowRight size={15} className="mobile-cat-row-arrow" />
-                            </button>
-                            <div className="mobile-cat-product-chips">
-                              {group.products.filter(p => !p.isCatalogLink).map((prod, pIdx) => (
-                                <span
-                                  key={pIdx}
-                                  className="mobile-product-chip"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setMobileMenuOpen(false);
-                                    if (prod.slug) {
-                                      handleProductClick(prod.slug);
-                                    } else {
-                                      if (onNavigate) onNavigate('catalog', group.categoryId);
-                                    }
-                                  }}
-                                >
-                                  {prod.title}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
                   </div>
                 )}
               </div>

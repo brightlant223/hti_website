@@ -256,12 +256,112 @@
   margin-bottom: 14px;
 }
 
-/* 2x2 Grid Cards */
-.contact-cards-2x2 {
+/* 1. Head Office Dedicated Full Card */
+.contact-card-headoffice {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.contact-card-headoffice:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+.contact-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-card-header-left .contact-card-title {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* 2. Three Quick Action Cards in 1 Line (Square Tiles) */
+.contact-action-squares-row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-bottom: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.contact-card-square {
+  aspect-ratio: 1 / 1;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 0;
+}
+
+.contact-card-square:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+
+.contact-card-square.card-call:hover {
+  border-color: #38bdf8;
+  background: #f0f9ff;
+}
+
+.contact-card-square.card-email:hover {
+  border-color: #c084fc;
+  background: #faf5ff;
+}
+
+.contact-card-square.card-website:hover {
+  border-color: #34d399;
+  background: #ecfdf5;
+}
+
+.contact-card-square .contact-card-icon {
+  width: 34px;
+  height: 34px;
+  margin-bottom: 7px;
+  flex-shrink: 0;
+}
+
+.square-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.square-card-val {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #0284c7;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
 }
 
 .contact-card-item {
@@ -1074,13 +1174,19 @@
   }
 
   .contact-hero-banner {
-    padding: 30px 0 34px;
+    padding: 26px 0 28px;
   }
 
   .contact-hero-content {
     flex-direction: column;
     align-items: flex-start;
-    gap: 18px;
+    gap: 16px;
+  }
+
+  .contact-hero-left {
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: 100%;
   }
 
   .contact-hero-right {
@@ -1090,6 +1196,11 @@
   .hero-call-card {
     width: 100%;
     max-width: 380px;
+  }
+
+  .contact-columns-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .head-office-unified-banner {
@@ -1119,18 +1230,35 @@
   .contact-hero-banner {
     background-image: linear-gradient(
         180deg,
-        rgba(11, 30, 54, 0.96) 0%,
-        rgba(11, 30, 54, 0.88) 55%,
-        rgba(11, 30, 54, 0.75) 100%
+        rgba(11, 30, 54, 0.95) 0%,
+        rgba(11, 30, 54, 0.90) 55%,
+        rgba(11, 30, 54, 0.82) 100%
       ),
       url('/hero-glass-atrium.jpg');
-    padding: 26px 0 30px;
+    background-size: cover;
+    background-position: right center;
+    padding: 22px 0 24px;
+  }
+
+  .contact-hero-left {
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .contact-hero-content {
+    gap: 14px;
   }
 
   .contact-main-grid-section,
   .contact-segments-section,
   .contact-location-section {
     padding: 22px 0;
+  }
+
+  .contact-columns-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .hero-call-card {
@@ -1177,50 +1305,81 @@
   }
 
   .contact-hero-banner {
-    padding: 22px 0 26px;
+    padding: 18px 0 20px;
+    background-image: linear-gradient(
+        180deg,
+        rgba(11, 30, 54, 0.95) 0%,
+        rgba(11, 30, 54, 0.90) 55%,
+        rgba(11, 30, 54, 0.85) 100%
+      ),
+      url('/hero-glass-atrium.jpg');
+    background-size: cover;
+    background-position: right center;
+  }
+
+  .contact-hero-left {
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .contact-hero-content {
+    gap: 12px;
   }
 
   .contact-hero-headline {
-    font-size: 22px;
-    margin-bottom: 8px;
+    font-size: 20px;
+    line-height: 1.22;
+    margin-bottom: 6px;
   }
 
   .contact-hero-subtext {
-    font-size: 12px;
-    margin-bottom: 14px;
+    font-size: 11.5px;
+    line-height: 1.45;
+    margin-bottom: 11px;
   }
 
   .contact-hero-badges-row {
-    gap: 6px;
+    gap: 5px;
   }
 
   .hero-feature-badge {
-    padding: 4px 9px;
-    font-size: 10.5px;
+    padding: 3.5px 8px;
+    font-size: 10px;
   }
 
   .hero-call-card {
-    padding: 10px 12px;
+    padding: 8px 12px;
     gap: 10px;
+    border-radius: 10px;
   }
 
   .call-card-icon-wrap {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
   .call-card-title {
-    font-size: 11.5px;
+    font-size: 11px;
+  }
+
+  .call-card-sub {
+    font-size: 10px;
   }
 
   .call-card-number {
-    font-size: 12px;
+    font-size: 11.5px;
   }
 
   .contact-main-grid-section,
   .contact-segments-section,
   .contact-location-section {
     padding: 18px 0;
+  }
+
+  .contact-columns-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .contact-col-heading,
@@ -1236,20 +1395,42 @@
     margin-bottom: 10px;
   }
 
-  .contact-cards-2x2 {
-    grid-template-columns: 1fr;
-    gap: 9px;
+  .contact-card-headoffice {
+    padding: 12px 14px;
     margin-bottom: 10px;
   }
 
-  .contact-card-item {
-    padding: 11px 12px;
+  .contact-action-squares-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .contact-card-square {
+    padding: 9px 5px;
+    border-radius: 10px;
+  }
+
+  .contact-card-square .contact-card-icon {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 4px;
+  }
+
+  .square-card-title {
+    font-size: 11px;
+    margin-bottom: 1px;
+  }
+
+  .square-card-val {
+    font-size: 9.5px;
   }
 
   .contact-features-4col {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
     padding: 10px 8px;
+    margin-bottom: 4px;
   }
 
   .feature-col-icon {
@@ -1267,21 +1448,33 @@
   }
 
   .contact-form-card-wrap {
-    padding: 15px 13px;
-    border-radius: 10px;
+    padding: 18px 16px;
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .form-control-input,
   .form-control-select,
   .form-control-textarea {
-    font-size: 12px;
-    min-height: 36px;
+    font-size: 13px;
+    min-height: 40px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .form-field-label {
+    font-size: 11.5px;
+    margin-bottom: 4px;
   }
 
   .btn-submit-orange {
-    font-size: 13px;
-    padding: 9px 14px;
-    min-height: 38px;
+    font-size: 14px;
+    padding: 11px 16px;
+    min-height: 44px;
+    border-radius: 8px;
+    width: 100%;
   }
 
   .segment-card-media {

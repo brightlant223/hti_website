@@ -196,78 +196,61 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                 Reach out to our team for project inquiries, technical support, service requests, or partnership opportunities.
               </p>
 
-              {/* 2x2 Grid Cards */}
-              <div className="contact-cards-2x2">
-                {/* 1. Head Office */}
-                <div className="contact-card-item">
-                  <div className="contact-card-top-row">
+              {/* 1. Head Office */}
+              <div className="contact-card-headoffice">
+                <div className="contact-card-top-row">
+                  <div className="contact-card-header-left">
                     <div className="contact-card-icon icon-orange">
                       <MapPin size={18} />
                     </div>
-                    <div className="contact-card-arrow" aria-hidden="true">
-                      <ChevronRight size={14} />
-                    </div>
+                    <h3 className="contact-card-title">Head Office</h3>
                   </div>
-                  <h3 className="contact-card-title">Head Office</h3>
-                  <p className="contact-card-desc">
-                    HTI Automation and Security System Pvt Ltd<br />
-                    Unit No - 825, Plot No C-3C, Goodwill Bizhubb,<br />
-                    Next to Ikea, TTC Industrial Area Estate,<br />
-                    Turbhe MIDC, Turbhe, Navi Mumbai,<br />
-                    Maharashtra - 400703
-                  </p>
+                  <a
+                    href={gmapsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="contact-card-arrow"
+                    title="View on Google Maps"
+                  >
+                    <ChevronRight size={14} />
+                  </a>
                 </div>
+                <p className="contact-card-desc">
+                  HTI Automation and Security System Pvt Ltd<br />
+                  Unit No - 825, Plot No C-3C, Goodwill Bizhubb,<br />
+                  Next to Ikea, TTC Industrial Area Estate,<br />
+                  Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703
+                </p>
+              </div>
 
+              {/* 3 Quick Action Cards in 1 Line (Square) */}
+              <div className="contact-action-squares-row">
                 {/* 2. Call Us */}
-                <div className="contact-card-item">
-                  <div className="contact-card-top-row">
-                    <div className="contact-card-icon icon-blue">
-                      <Phone size={18} />
-                    </div>
-                    <div className="contact-card-arrow" aria-hidden="true">
-                      <ChevronRight size={14} />
-                    </div>
+                <a href="tel:9892756077" className="contact-card-square card-call" title="Call HTI Systems: 9892756077">
+                  <div className="contact-card-icon icon-blue">
+                    <Phone size={18} />
                   </div>
-                  <h3 className="contact-card-title">Call Us</h3>
-                  <p className="contact-card-desc">
-                    <a href="tel:9892756077">9892756077</a><br />
-                    <a href="tel:9594917010">9594917010</a>
-                  </p>
-                </div>
+                  <span className="square-card-title">Call Us</span>
+                  <span className="square-card-val">9892756077</span>
+                </a>
 
                 {/* 3. Email Us */}
-                <div className="contact-card-item">
-                  <div className="contact-card-top-row">
-                    <div className="contact-card-icon icon-purple">
-                      <Mail size={18} />
-                    </div>
-                    <div className="contact-card-arrow" aria-hidden="true">
-                      <ChevronRight size={14} />
-                    </div>
+                <a href="mailto:hti@htisystems.in" className="contact-card-square card-email" title="Email HTI Systems: hti@htisystems.in">
+                  <div className="contact-card-icon icon-purple">
+                    <Mail size={18} />
                   </div>
-                  <h3 className="contact-card-title">Email Us</h3>
-                  <p className="contact-card-desc">
-                    <a href="mailto:hti@htisystems.in">hti@htisystems.in</a>
-                  </p>
-                </div>
+                  <span className="square-card-title">Email Us</span>
+                  <span className="square-card-val">hti@htisystems.in</span>
+                </a>
 
                 {/* 4. Website */}
-                <div className="contact-card-item">
-                  <div className="contact-card-top-row">
-                    <div className="contact-card-icon icon-green">
-                      <Globe size={18} />
-                    </div>
-                    <div className="contact-card-arrow" aria-hidden="true">
-                      <ChevronRight size={14} />
-                    </div>
+                <a href="https://www.htisystems.in" target="_blank" rel="noreferrer" className="contact-card-square card-website" title="Visit Website: www.htisystems.in">
+                  <div className="contact-card-icon icon-green">
+                    <Globe size={18} />
                   </div>
-                  <h3 className="contact-card-title">Website</h3>
-                  <p className="contact-card-desc">
-                    <a href="https://www.htisystems.in" target="_blank" rel="noreferrer">
-                      www.htisystems.in
-                    </a>
-                  </p>
-                </div>
+                  <span className="square-card-title">Website</span>
+                  <span className="square-card-val">htisystems.in</span>
+                </a>
               </div>
 
               {/* 4 Feature Items */}
