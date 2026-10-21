@@ -110,21 +110,6 @@
 }
 
 .hti-logo-container {
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bright-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.hti-logo-container {
   height: 44px;
   display: flex;
   align-items: center;
@@ -265,6 +250,28 @@
 }
 
 /* 3. PREMIUM SERVICES MEGA-MENU DROPDOWN (Matches Reference Screenshot) */
+
+/* Full-bleed veil that dims the page behind an open mega panel so no
+   content peeks out from the sides of the floating panel. */
+.mega-panel-veil {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 78vh;
+  background: rgba(15, 23, 42, 0.28);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 1040;
+  animation: megaVeilFadeIn 0.22s ease;
+  cursor: default;
+}
+
+@keyframes megaVeilFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .bright-mega-panel-wrapper {
   position: absolute;
   top: calc(100% + 6px);
@@ -308,6 +315,9 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  /* Scroll independently so the 6 groups stay reachable on short screens */
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .mega-service-item {
@@ -370,6 +380,7 @@
   margin-bottom: 2px;
   line-height: 1.25;
   transition: color 0.18s ease;
+  overflow-wrap: break-word;
 }
 
 .mega-service-item.mega-item-active .mega-item-title {
@@ -380,9 +391,15 @@
   font-size: 0.72rem;
   color: #64748b;
   line-height: 1.35;
-  white-space: nowrap;
+  /* Let the tagline wrap instead of cutting it off with an ellipsis mid-word
+     inside the 310px sidebar. */
+  white-space: normal;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* Mega Menu Right Panel */
@@ -420,7 +437,7 @@
   background: #ffffff;
   border: 1px solid #dbeafe;
   border-radius: 9999px;
-  padding: 4px 12px;
+  padding: 6px 14px;
   font-size: 0.72rem;
   font-weight: 700;
   color: #1d4ed8;
@@ -430,6 +447,8 @@
   cursor: pointer;
   transition: all 0.18s ease;
   line-height: 1;
+  min-height: 30px;
+  flex-shrink: 0;
 }
 
 .mega-overview-link:hover {
@@ -1815,6 +1834,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
+  min-height: 44px;
 }
 
 .bright-admin-btn:hover {
@@ -1960,10 +1980,12 @@
   justify-content: space-between;
   background: none;
   border: none;
-  padding: 10px 0;
+  padding: 12px 0;
   font-size: 0.96rem;
   cursor: pointer;
   color: #0f172a;
+  /* Comfortable touch target */
+  min-height: 46px;
 }
 
 .mobile-accordion-title {
@@ -2036,11 +2058,15 @@
   text-align: left;
   font-size: 0.9rem;
   color: #475569;
-  padding: 8px 6px;
+  padding: 12px 6px;
   cursor: pointer;
   font-weight: 500;
   border-radius: 6px;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  width: 100%;
 }
 
 .mobile-sublink:hover,
@@ -2074,8 +2100,36 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 12px;
+  /* Push the admin action to the bottom of the drawer so the empty space is
+     used intentionally instead of leaving a large blank area. */
+  margin-top: auto;
+  padding-top: 12px;
   padding-bottom: 20px;
+}
+
+/* Primary CTA inside the mobile drawer */
+.mobile-cta-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 46px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px rgba(220, 38, 38, 0.28);
+}
+
+.mobile-cta-primary:hover,
+.mobile-cta-primary:active {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(220, 38, 38, 0.36);
 }
 
 
@@ -2122,13 +2176,13 @@
   }
 
   .bright-mobile-backdrop {
-    top: 60px;
+    top: 64px;
   }
 
   .bright-mobile-drawer {
-    top: 60px;
-    height: calc(100dvh - 60px);
-    max-height: calc(100dvh - 60px);
+    top: 64px;
+    height: calc(100dvh - 64px);
+    max-height: calc(100dvh - 64px);
     padding: 16px 16px 40px;
   }
 }

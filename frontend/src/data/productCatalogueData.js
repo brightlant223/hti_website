@@ -3348,8 +3348,14 @@ export const getProductsByCategory = (categorySlug) => {
   return all.filter(p => p.categorySlug === categorySlug || p.category.toLowerCase().includes(categorySlug.toLowerCase()));
 };
 
-export const getAll25Products = () => {
+export const getAllProducts = () => {
   return Object.values(PRODUCTS_CATALOGUE).filter((p, idx, self) => 
     self.findIndex(t => t.id === p.id) === idx
   );
 };
+
+// Backwards-compatible alias (the catalogue now holds more than 25 systems)
+export const getAll25Products = getAllProducts;
+
+// Live count so the UI never advertises a stale system total
+export const TOTAL_PRODUCT_COUNT = getAllProducts().length;

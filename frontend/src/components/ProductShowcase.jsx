@@ -10,7 +10,7 @@ import {
   CheckCircle2, 
   Sparkles
 } from 'lucide-react';
-import { PRODUCT_CATEGORIES, FEATURED_FLAGSHIP_PRODUCTS } from '../data/productCatalogueData';
+import { PRODUCT_CATEGORIES, FEATURED_FLAGSHIP_PRODUCTS, TOTAL_PRODUCT_COUNT } from '../data/productCatalogueData';
 import './ProductShowcase.css';
 
 const categoryIconMap = {
@@ -177,7 +177,7 @@ export default function ProductShowcase({
               onClick={handleCatalogClick}
               title="Explore all 25 systems in full catalog"
             >
-              <span>Explore All 25 Systems</span>
+              <span>Explore All {TOTAL_PRODUCT_COUNT} Systems</span>
               <ArrowRight size={15} />
             </button>
           </div>
@@ -255,7 +255,7 @@ export default function ProductShowcase({
               Browse the Complete Range of Industrial Automation &amp; Security Systems
             </h3>
             <p className="catalog-cta-desc">
-              Looking for CAD drawings, USFDA 21 CFR Part 11 airlock schematics, fire certifications, or customized dimensions? Access our complete 25-system engineering catalogue with real-time technical search and filtering.
+              Looking for CAD drawings, USFDA 21 CFR Part 11 airlock schematics, fire certifications, or customized dimensions? Access our complete {TOTAL_PRODUCT_COUNT}-system engineering catalogue with real-time technical search and filtering.
             </p>
           </div>
 

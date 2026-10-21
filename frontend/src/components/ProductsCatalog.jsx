@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { 
   ArrowRight, 
-  Check, 
   Layers, 
   Search, 
   X, 
@@ -11,10 +10,9 @@ import {
   Lock, 
   Flame, 
   Activity,
-  CheckCircle2,
-  Sparkles
+  CheckCircle2
 } from 'lucide-react';
-import { getAll25Products, PRODUCT_CATEGORIES } from '../data/productCatalogueData';
+import { getAllProducts, TOTAL_PRODUCT_COUNT } from '../data/productCatalogueData';
 
 // Category tab configuration
 const CATEGORY_TABS = [
@@ -49,7 +47,7 @@ export default function ProductsCatalog({
     setActiveCategory(normalizeCategory(initialCategory));
   }, [initialCategory]);
 
-  const allProducts = useMemo(() => getAll25Products(), []);
+  const allProducts = useMemo(() => getAllProducts(), []);
 
   // Filter products by selected category and search query
   const filteredProducts = useMemo(() => {
@@ -110,7 +108,7 @@ export default function ProductsCatalog({
                 Home
               </button>
               <span>/</span>
-              <span style={{ color: 'var(--text-main, #0f172a)', fontWeight: 700 }}>Official Product Catalogue (25 Systems)</span>
+              <span style={{ color: 'var(--text-main, #0f172a)', fontWeight: 700 }}>Official Product Catalogue ({TOTAL_PRODUCT_COUNT} Systems)</span>
             </div>
           </nav>
         )}
@@ -514,7 +512,7 @@ export default function ProductsCatalog({
                 cursor: 'pointer'
               }}
             >
-              Reset Filters &amp; View All 25 Systems
+              Reset Filters &amp; View All {TOTAL_PRODUCT_COUNT} Systems
             </button>
           </div>
         )}

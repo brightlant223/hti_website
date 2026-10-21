@@ -7,12 +7,10 @@ import {
   X,
   ChevronDown,
   ChevronUp,
-  ArrowUpRight,
   Download,
   Sun,
   Moon,
   Monitor,
-  Check,
   Settings,
   Cpu,
   Lock,
@@ -25,28 +23,16 @@ import {
   Briefcase,
   Users,
   User,
-  Handshake,
   BookOpen,
   PhoneCall,
   ArrowRight,
-  ExternalLink,
   MessageSquare,
   DoorClosed,
   SlidersHorizontal,
   Layers,
   Truck
 } from 'lucide-react';
-import ProductHoverPopup from './ProductHoverPopup';
-import { getProductBySlug, getProductMedia } from '../data/productsData';
-import { PRODUCT_CATEGORIES } from '../data/productCatalogueData';
-
-const categoryIconMap = {
-  'access-automation': Cpu,
-  'traffic-perimeter': ShieldCheck,
-  'pharma-cleanroom': Lock,
-  'fire-life-safety': Flame,
-  'surveillance-alerts': Activity
-};
+import { TOTAL_PRODUCT_COUNT } from '../data/productCatalogueData';
 
 export default function Navbar({
   currentPage = 'home',
@@ -62,24 +48,43 @@ export default function Navbar({
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'services' | 'products' | 'company' | null
+  // Tracks whether the open panel was opened by a click. A hover-opened panel
+  // must NOT be closed by the subsequent click of the same nav button.
+  const [openedByClick, setOpenedByClick] = useState(false);
   const [selectedServiceGroup, setSelectedServiceGroup] = useState(0);
   const [selectedProductGroup, setSelectedProductGroup] = useState(0);
   const [mobileAccordion, setMobileAccordion] = useState(null);
 
   const navRef = useRef(null);
   const dropdownTimeoutRef = useRef(null);
+  const mobileToggleRef = useRef(null);
+  const mobileDrawerRef = useRef(null);
 
   const handleMouseEnterDropdown = (name) => {
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
     }
-    setActiveDropdown(name);
+    setActiveDropdown((prev) => {
+      if (prev !== name) setOpenedByClick(false);
+      return name;
+    });
   };
 
   const handleMouseLeaveDropdown = () => {
     dropdownTimeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
+      setOpenedByClick(false);
     }, 220);
+  };
+
+  // Keyboard users tabbing to a nav item should get the same panel a mouse
+  // user gets on hover.
+  const handleFocusDropdown = (name) => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
+    setActiveDropdown(name);
+    setOpenedByClick(false);
   };
 
   useEffect(() => {
@@ -95,17 +100,38 @@ export default function Navbar({
     const handleClickOutside = (e) => {
       if (navRef.current && !navRef.current.contains(e.target)) {
         setActiveDropdown(null);
+        setOpenedByClick(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Close the open panel when keyboard focus moves completely outside the nav
+  useEffect(() => {
+    const handleFocusIn = (e) => {
+      if (!activeDropdown) return;
+      if (navRef.current && !navRef.current.contains(e.target)) {
+        setActiveDropdown(null);
+        setOpenedByClick(false);
+      }
+    };
+    document.addEventListener('focusin', handleFocusIn);
+    return () => document.removeEventListener('focusin', handleFocusIn);
+  }, [activeDropdown]);
+
   // Lock body scroll and set class when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
       document.documentElement.classList.add('mobile-menu-active');
+      // Move focus into the drawer so keyboard users are not stranded behind it
+      if (mobileDrawerRef.current) {
+        const firstFocusable = mobileDrawerRef.current.querySelector(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (firstFocusable) firstFocusable.focus();
+      }
     } else {
       document.body.style.overflow = '';
       document.documentElement.classList.remove('mobile-menu-active');
@@ -114,6 +140,13 @@ export default function Navbar({
       document.body.style.overflow = '';
       document.documentElement.classList.remove('mobile-menu-active');
     };
+  }, [mobileMenuOpen]);
+
+  // Return focus to the hamburger button when the drawer closes
+  useEffect(() => {
+    if (!mobileMenuOpen && mobileToggleRef.current && document.activeElement === mobileToggleRef.current) {
+      mobileToggleRef.current.focus();
+    }
   }, [mobileMenuOpen]);
 
   // Close dropdowns on escape key
@@ -135,6 +168,7 @@ export default function Navbar({
       clearTimeout(dropdownTimeoutRef.current);
     }
     setActiveDropdown(null);
+    setOpenedByClick(false);
     setMobileMenuOpen(false);
     if (onNavigate) {
       onNavigate(page, sectionId);
@@ -148,6 +182,7 @@ export default function Navbar({
 
   const handleCategoryClick = (categoryName) => {
     setActiveDropdown(null);
+    setOpenedByClick(false);
     setMobileMenuOpen(false);
     if (onSelectCategory) {
       onSelectCategory(categoryName);
@@ -156,55 +191,17 @@ export default function Navbar({
     }
   };
 
-  const [hoveredProductInfo, setHoveredProductInfo] = useState(null);
-  const [popupPos, setPopupPos] = useState({ top: 120, left: 100, align: 'right' });
-  const hoverTimeoutRef = useRef(null);
-
-  const handleProductHover = (slug, event) => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    const prod = getProductBySlug(slug);
-    const media = getProductMedia(slug);
-    if (!prod) return;
-
-    const rect = event.currentTarget.getBoundingClientRect();
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-
-    // Smart positioning:
-    // If rect is near right edge (>60% of screen width), pop up to the left of the button
-    let left = rect.right + 14;
-    let top = rect.top - 12;
-    let align = 'right';
-
-    if (rect.right + 330 > screenWidth || rect.left > screenWidth * 0.55) {
-      left = Math.max(12, rect.left - 338);
-      align = 'left';
+  // Keyboard activation for elements rendered as `role="button"`
+  const handleKeyActivate = (e, callback) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      callback();
     }
-
-    // Keep top within viewport bounds
-    if (top + 420 > screenHeight) {
-      top = Math.max(14, screenHeight - 430);
-    }
-    if (top < 10) top = 10;
-
-    setPopupPos({ top, left, align });
-    setHoveredProductInfo({
-      product: prod,
-      media: media,
-      slug: slug
-    });
-  };
-
-  const handleProductLeave = () => {
-    hoverTimeoutRef.current = setTimeout(() => {
-      setHoveredProductInfo(null);
-    }, 120);
   };
 
   const handleProductClick = (slug) => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    setHoveredProductInfo(null);
     setActiveDropdown(null);
+    setOpenedByClick(false);
     setMobileMenuOpen(false);
     if (onNavigate) {
       onNavigate('product', slug);
@@ -215,7 +212,15 @@ export default function Navbar({
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
     }
-    setActiveDropdown(prev => prev === name ? null : name);
+    // Clicking the button of an already-hover-opened panel must keep it open
+    // (the user is trying to reach the panel, not dismiss it).
+    if (activeDropdown === name && openedByClick) {
+      setActiveDropdown(null);
+      setOpenedByClick(false);
+    } else {
+      setActiveDropdown(name);
+      setOpenedByClick(true);
+    }
   };
 
   // Mega menu services data matching reference design
@@ -869,7 +874,17 @@ export default function Navbar({
       </div>
 
       {/* 2. Main Navigation Bar */}
-      <nav className={`bright-main-nav ${isScrolled ? 'nav-scrolled' : ''}`}>
+      <nav className={`bright-main-nav ${isScrolled ? 'nav-scrolled' : ''}`} aria-label="Main navigation">
+        {/* Full-bleed veil behind an open mega panel so page content never
+            peeks out from behind it. Sits below the nav bar (z-index 10001). */}
+        {(activeDropdown === 'services' || activeDropdown === 'products') && (
+          <div
+            className="mega-panel-veil"
+            onClick={() => { setActiveDropdown(null); setOpenedByClick(false); }}
+            aria-hidden="true"
+          />
+        )}
+
         <div className="bright-container main-nav-inner">
           {/* Logo Section with User's Uploaded HTI Logo */}
           <a
@@ -908,11 +923,13 @@ export default function Navbar({
               className="nav-item-dropdown"
               onMouseEnter={() => handleMouseEnterDropdown('services')}
               onMouseLeave={handleMouseLeaveDropdown}
+              onFocus={() => handleFocusDropdown('services')}
             >
               <button
                 className={`bright-nav-btn ${activeDropdown === 'services' ? 'services-pill-btn is-active-pill' : ''}`}
                 onClick={() => toggleDropdown('services')}
                 aria-expanded={activeDropdown === 'services'}
+                aria-haspopup="true"
               >
                 <span>Services</span>
                 {activeDropdown === 'services' ? (
@@ -928,11 +945,13 @@ export default function Navbar({
               className="nav-item-dropdown"
               onMouseEnter={() => handleMouseEnterDropdown('products')}
               onMouseLeave={handleMouseLeaveDropdown}
+              onFocus={() => handleFocusDropdown('products')}
             >
               <button
                 className={`bright-nav-btn ${activeDropdown === 'products' ? 'services-pill-btn is-active-pill' : ''}`}
                 onClick={() => toggleDropdown('products')}
                 aria-expanded={activeDropdown === 'products'}
+                aria-haspopup="true"
               >
                 <span>Products</span>
                 {activeDropdown === 'products' ? (
@@ -948,11 +967,13 @@ export default function Navbar({
               className="nav-item-dropdown"
               onMouseEnter={() => handleMouseEnterDropdown('company')}
               onMouseLeave={handleMouseLeaveDropdown}
+              onFocus={() => handleFocusDropdown('company')}
             >
               <button
                 className={`bright-nav-btn ${activeDropdown === 'company' ? 'services-pill-btn is-active-pill' : ''}`}
                 onClick={() => toggleDropdown('company')}
                 aria-expanded={activeDropdown === 'company'}
+                aria-haspopup="true"
               >
                 <span>Company</span>
                 {activeDropdown === 'company' ? (
@@ -1027,7 +1048,10 @@ export default function Navbar({
             <button
               className="bright-mobile-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle navigation"
+              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="hti-mobile-drawer"
+              ref={mobileToggleRef}
               type="button"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -1066,6 +1090,18 @@ export default function Navbar({
                           handleCategoryClick(group.category);
                         }
                       }}
+                      onKeyDown={(e) => handleKeyActivate(e, () => {
+                        if (group.page) {
+                          handleNavClick(group.page);
+                        } else if (group.section) {
+                          handleNavClick('home', group.section);
+                        } else if (group.category) {
+                          handleCategoryClick(group.category);
+                        }
+                      })}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={group.title}
                     >
                       <div className="mega-item-icon-box">
                         <Icon size={17} />
@@ -1146,6 +1182,20 @@ export default function Navbar({
                             handleNavClick('automation');
                           }
                         }}
+                        onKeyDown={(e) => handleKeyActivate(e, () => {
+                          if (feat.slug) {
+                            handleProductClick(feat.slug);
+                          } else if (feat.section) {
+                            handleNavClick('home', feat.section);
+                          } else if (feat.category) {
+                            handleCategoryClick(feat.category);
+                          } else {
+                            handleNavClick('automation');
+                          }
+                        })}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={feat.title}
                       >
                         {/* Landscape Image with Overlapping Icon Badge */}
                         <div className="subservice-card-media">
@@ -1205,6 +1255,17 @@ export default function Navbar({
                           onNavigate('catalog', group.categoryId);
                         }
                       }}
+                      onKeyDown={(e) => handleKeyActivate(e, () => {
+                        setActiveDropdown(null);
+                        if (group.page && onNavigate) {
+                          onNavigate(group.page);
+                        } else if (onNavigate) {
+                          onNavigate('catalog', group.categoryId);
+                        }
+                      })}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={group.title}
                     >
                       <div className="mega-item-icon-box">
                         <Icon size={17} />
@@ -1283,6 +1344,19 @@ export default function Navbar({
                             if (onNavigate) onNavigate('catalog', currentProductGroup.categoryId);
                           }
                         }}
+                        onKeyDown={(e) => handleKeyActivate(e, () => {
+                          setActiveDropdown(null);
+                          if (prod.isCatalogLink) {
+                            if (onNavigate) onNavigate('catalog', currentProductGroup.categoryId);
+                          } else if (prod.slug) {
+                            handleProductClick(prod.slug);
+                          } else {
+                            if (onNavigate) onNavigate('catalog', currentProductGroup.categoryId);
+                          }
+                        })}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={prod.title}
                       >
                         {/* Landscape Image with Overlapping Icon Badge */}
                         <div className="subservice-card-media">
@@ -1408,7 +1482,14 @@ export default function Navbar({
               onClick={() => setMobileMenuOpen(false)}
               aria-hidden="true"
             />
-            <div className="bright-mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
+            <div
+              className="bright-mobile-drawer"
+              id="hti-mobile-drawer"
+              ref={mobileDrawerRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile Navigation Menu"
+            >
               {/* Accordion Item: Services */}
               <div className="mobile-accordion-group">
                 <button
@@ -1460,7 +1541,7 @@ export default function Navbar({
                 >
                   <div className="flex-center-gap">
                     <span className="mobile-pill-tag">PRODUCTS</span>
-                    <span className="mobile-accordion-title">5 Categories • 25 Systems</span>
+                    <span className="mobile-accordion-title">5 Categories • {TOTAL_PRODUCT_COUNT} Systems</span>
                   </div>
                   {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
@@ -1499,7 +1580,7 @@ export default function Navbar({
                     >
                       <Layers size={16} style={{ color: '#0284c7' }} />
                       <div className="text-left">
-                        <div className="mobile-service-title">View All 25 Products</div>
+                        <div className="mobile-service-title">View All {TOTAL_PRODUCT_COUNT} Products</div>
                         <div className="mobile-service-tagline">Complete industrial automation & security catalogue.</div>
                       </div>
                     </button>
@@ -1514,7 +1595,10 @@ export default function Navbar({
                   onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
                   aria-expanded={mobileAccordion === 'company'}
                 >
-                  <span className="mobile-accordion-title">Company & Clients</span>
+                  <div className="flex-center-gap">
+                    <span className="mobile-pill-tag">COMPANY</span>
+                    <span className="mobile-accordion-title">Company & Clients</span>
+                  </div>
                   {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
 
@@ -1557,6 +1641,17 @@ export default function Navbar({
                   <Download size={16} className="text-cyan" />
                   <span>Download Product Brochure</span>
                 </div>
+                <ArrowRight size={16} />
+              </button>
+
+              {/* Primary CTA - Request a Quote */}
+              <button
+                className="mobile-cta-primary"
+                onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
+                type="button"
+              >
+                <PhoneCall size={16} />
+                <span>Request a Technical Quote</span>
                 <ArrowRight size={16} />
               </button>
 
