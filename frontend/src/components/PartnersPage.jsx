@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowLeft, Handshake, ShieldCheck, CheckCircle2, ArrowRight, Award, FileCheck, Layers, Check } from 'lucide-react';
+import './PartnersPage.css';
 
 export default function PartnersPage({ onNavigate }) {
   const partners = [
@@ -129,40 +130,40 @@ export default function PartnersPage({ onNavigate }) {
       </div>
 
       {/* 3. Alliance Quality Assurance Banner */}
-      <div className="partners-quality-banner section-sm">
+      <div className="partners-quality-banner">
         <div className="container">
-          <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center flex-shrink-0">
+          <div className="partners-qa-grid">
+            <div className="partners-qa-item">
+              <div className="partners-qa-icon">
                 <FileCheck size={22} />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-base">Manufacturer Test Certificates (MTC)</h4>
-                <p className="text-slate-600 text-xs mt-1 leading-relaxed">
+                <h2 className="partners-qa-title">Manufacturer Test Certificates (MTC)</h2>
+                <p className="partners-qa-text">
                   Every OEM motor, detector, and valve supplied by HTI is backed by genuine factory test reports and batch compliance certificates.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center flex-shrink-0">
+            <div className="partners-qa-item">
+              <div className="partners-qa-icon">
                 <ShieldCheck size={22} />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-base">Authorized System Integrator</h4>
-                <p className="text-slate-600 text-xs mt-1 leading-relaxed">
+                <h2 className="partners-qa-title">Authorized System Integrator</h2>
+                <p className="partners-qa-text">
                   Certified technicians trained directly at OEM engineering facilities in Mumbai and international manufacturing centers.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center flex-shrink-0">
+            <div className="partners-qa-item">
+              <div className="partners-qa-icon">
                 <Layers size={22} />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-base">Ready OEM Spare Inventory</h4>
-                <p className="text-slate-600 text-xs mt-1 leading-relaxed">
+                <h2 className="partners-qa-title">Ready OEM Spare Inventory</h2>
+                <p className="partners-qa-text">
                   Comprehensive spare parts warehouse maintained in Mumbai ensuring immediate replacement under SLA maintenance contracts.
                 </p>
               </div>
@@ -184,20 +185,20 @@ export default function PartnersPage({ onNavigate }) {
                 <p className="partner-desc-text">{p.desc}</p>
                 
                 {/* Specific Integrated Solutions */}
-                <div className="mb-4 pt-3 border-t border-slate-100">
-                  <span className="text-xs font-bold text-slate-500 uppercase block mb-1.5">Authorized Product Lines:</span>
-                  <div className="flex flex-col gap-1">
+                <div className="partner-solutions">
+                  <span className="partner-solutions-label">Authorized Product Lines:</span>
+                  <div className="partner-solutions-list">
                     {p.solutions.map((sol, sIdx) => (
-                      <div key={sIdx} className="text-xs text-slate-700 flex items-center gap-1.5 font-medium">
-                        <Check size={12} className="text-sky-600 flex-shrink-0" />
+                      <div key={sIdx} className="partner-solution-item">
+                        <Check size={12} className="partner-solution-check" />
                         <span>{sol}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="partner-trust-line pt-3 border-t border-slate-100 mt-auto">
-                  <CheckCircle2 size={14} className="text-sky-600" />
+                <div className="partner-trust-line">
+                  <CheckCircle2 size={14} className="partner-trust-icon" />
                   <span>Certified System Integrator & Distributor</span>
                 </div>
               </div>
@@ -205,10 +206,10 @@ export default function PartnersPage({ onNavigate }) {
           </div>
 
           {/* Bottom Consultation Banner */}
-          <div className="partner-cta-box glass-card mt-16 text-center py-10 bg-white border border-slate-200 rounded-2xl shadow-sm">
-            <ShieldCheck size={36} className="text-sky-600 mx-auto mb-3" />
-            <h3 className="text-2xl font-bold text-slate-900">Need a Specific OEM Specified in Your Project Tender?</h3>
-            <p className="text-slate-600 max-w-xl mx-auto mt-2 mb-6 text-sm leading-relaxed">
+          <div className="partner-cta-box glass-card">
+            <ShieldCheck size={36} className="partner-cta-icon" />
+            <h2 className="partner-cta-title">Need a Specific OEM Specified in Your Project Tender?</h2>
+            <p className="partner-cta-text">
               We supply original OEM components with manufacturer test certificates, warranty sign-offs, and factory authorization letters for corporate and government tenders.
             </p>
             <button 

@@ -1,0 +1,300 @@
+/* ==========================================================================
+   HTI TECHNOLOGY PARTNERS PAGE  (/partners)
+   --------------------------------------------------------------------------
+   Dedicated, page-scoped styles for .partners-dedicated-page.
+
+   Every rule below is nested under .partners-dedicated-page so nothing here
+   can leak into (or be inherited from) the other dedicated pages that share
+   the App.css "light themed" block (.about-dedicated-page,
+   .contact-dedicated-page, .blogs-dedicated-page).
+
+   The page is deliberately light-themed and does NOT follow the global dark
+   palette, so every colour value is pinned explicitly instead of relying on
+   the --bg-* / --border-* design tokens (which flip in dark mode).
+
+   Values reproduce the original Tailwind utility intent exactly:
+     p-6 -> 24px        bg-white -> #ffffff       border-slate-200 -> #e2e8f0
+     rounded-2xl -> 16px rounded-xl -> 12px      shadow-sm -> 0 1px 2px 0 rgb(0 0 0 / 0.05)
+     grid-cols-1 md:grid-cols-3 -> 1 col / 3 cols gap-6 -> 24px
+     w-12 h-12 -> 48px   gap-4 -> 16px           gap-1.5 -> 6px   gap-1 -> 4px
+     text-xs -> 0.75rem  text-sm -> 0.875rem      text-base -> 1rem text-2xl -> 1.5rem
+     text-slate-900 -> #0f172a   text-slate-600 -> #475569  text-slate-700 -> #334155
+     text-slate-500 -> #64748b   bg-sky-100 -> #e0f2fe      text-sky-700 -> #0369a1
+     text-sky-600 -> #0284c7     border-slate-100 -> #f1f5f9
+     p-6/py-10 -> 24px/40px      mt-16 -> 64px     max-w-xl -> 36rem
+     pt-3 -> 12px  mb-4 -> 16px  mb-3 -> 12px     mb-6 -> 24px  mb-1.5 -> 6px
+   ========================================================================== */
+
+.partners-dedicated-page {
+  /* Pin the deliberate light theme for this page and its subtree. */
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   1. HERO
+   -------------------------------------------------------------------------- */
+
+.partners-dedicated-page .partners-hero-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.partners-dedicated-page .partners-hero-title {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 1024px) {
+  .partners-dedicated-page .partners-hero-title {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .partners-dedicated-page .partners-hero-title {
+    font-size: 1.85rem;
+  }
+
+  .partners-dedicated-page .partners-hero-desc {
+    font-size: 1rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. ALLIANCE QUALITY ASSURANCE BANNER
+   -------------------------------------------------------------------------- */
+
+.partners-dedicated-page .partners-quality-banner {
+  padding: 28px 0 0;
+}
+
+.partners-dedicated-page .partners-qa-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.partners-dedicated-page .partners-qa-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+}
+
+.partners-dedicated-page .partners-qa-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.partners-dedicated-page .partners-qa-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  overflow-wrap: break-word;
+}
+
+.partners-dedicated-page .partners-qa-text {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #475569;
+  line-height: 1.65;
+}
+
+/* Tablet: keep the three-up layout but tighten the gutters so the copy
+   never gets squeezed to an unreadable measure. */
+@media (max-width: 1024px) {
+  .partners-dedicated-page .partners-qa-grid {
+    gap: 16px;
+    padding: 18px;
+  }
+}
+
+/* Mobile: stack the three feature rows (matches the original
+   `grid-cols-1 md:grid-cols-3` intent). */
+@media (max-width: 768px) {
+  .partners-dedicated-page .partners-qa-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .partners-dedicated-page .partners-qa-item {
+    gap: 12px;
+  }
+
+  .partners-dedicated-page .partners-qa-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. PARTNERS CARD GRID
+   -------------------------------------------------------------------------- */
+
+.partners-dedicated-page .partners-grid-section {
+  padding: 64px 0 90px;
+}
+
+/* Scoped mirror of the shared .partners-cards-grid rule. The scoped selector
+   has higher specificity, so the responsive steps are restated here to keep
+   the 3 -> 2 -> 1 column behaviour intact. */
+.partners-dedicated-page .partners-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .partners-dedicated-page .partners-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .partners-dedicated-page .partners-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.partners-dedicated-page .partner-detail-card {
+  min-width: 0;
+}
+
+.partners-dedicated-page .partner-brand-name {
+  display: block;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 640px) {
+  .partners-dedicated-page .partner-brand-name {
+    font-size: 1.2rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. AUTHORIZED PRODUCT LINES
+   -------------------------------------------------------------------------- */
+
+.partners-dedicated-page .partner-solutions {
+  margin-bottom: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.partners-dedicated-page .partner-solutions-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.partners-dedicated-page .partner-solutions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.partners-dedicated-page .partner-solution-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.partners-dedicated-page .partner-solution-check {
+  flex-shrink: 0;
+  color: #0284c7;
+}
+
+/* --------------------------------------------------------------------------
+   5. CARD TRUST LINE
+   -------------------------------------------------------------------------- */
+
+.partners-dedicated-page .partner-trust-line {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.partners-dedicated-page .partner-trust-icon {
+  flex-shrink: 0;
+  color: #0284c7;
+}
+
+/* --------------------------------------------------------------------------
+   6. BOTTOM CONSULTATION CTA
+   -------------------------------------------------------------------------- */
+
+.partners-dedicated-page .partner-cta-box {
+  margin-top: 64px;
+  padding: 40px 24px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* The shared .glass-card hover lift reads oddly on a full-width panel, so
+   the CTA stays static and only softens its shadow. */
+.partners-dedicated-page .partner-cta-box:hover {
+  transform: none;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
+}
+
+.partners-dedicated-page .partner-cta-icon {
+  display: block;
+  margin: 0 auto 12px;
+  color: #0284c7;
+}
+
+.partners-dedicated-page .partner-cta-title {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.3;
+  overflow-wrap: break-word;
+}
+
+.partners-dedicated-page .partner-cta-text {
+  max-width: 36rem;
+  margin: 0 auto 24px;
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.65;
+}
+
+@media (max-width: 640px) {
+  .partners-dedicated-page .partner-cta-box {
+    margin-top: 40px;
+    padding: 28px 18px;
+  }
+
+  .partners-dedicated-page .partner-cta-title {
+    font-size: 1.25rem;
+  }
+}
