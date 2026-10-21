@@ -62,14 +62,15 @@
    2. HERO SECTION
    ========================================================================= */
 .sec-hero-section {
-  padding: 44px 0 36px;
-  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  padding: 38px 0 32px;
+  background-color: #ffffff;
+  position: relative;
 }
 
 .sec-hero-grid {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 40px;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 36px;
   align-items: center;
 }
 
@@ -82,56 +83,56 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background-color: #e0f2fe;
-  color: #0284c7;
+  background-color: #eef4ff;
+  color: #1d4ed8;
   padding: 6px 14px;
   border-radius: 9999px;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   margin-bottom: 18px;
   width: fit-content;
-  border: 1px solid #bae6fd;
+  border: 1px solid #dbeafe;
 }
 
 .sec-pulse-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: #0284c7;
-  box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7);
+  background-color: #1d4ed8;
+  box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.7);
   animation: secPulse 2s infinite;
 }
 
 @keyframes secPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7);
+    box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(2, 132, 199, 0);
+    box-shadow: 0 0 0 8px rgba(29, 78, 216, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(2, 132, 199, 0);
+    box-shadow: 0 0 0 0 rgba(29, 78, 216, 0);
   }
 }
 
 .sec-hero-title {
-  font-size: clamp(34px, 4vw, 48px);
+  font-size: clamp(38px, 4.4vw, 52px);
   font-weight: 900;
-  line-height: 1.15;
+  line-height: 1.12;
   color: #0f172a;
   margin: 0 0 16px 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
 .text-blue-glow {
-  color: #0284c7;
+  color: #0077f7;
 }
 
 .sec-hero-subtext {
   font-size: 15px;
-  line-height: 1.55;
-  color: #64748b;
+  line-height: 1.6;
+  color: #475569;
   margin: 0 0 28px 0;
   max-width: 520px;
 }
@@ -147,23 +148,23 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #0284c7;
+  background: linear-gradient(135deg, #0284c7 0%, #0066ee 100%);
   color: #ffffff;
-  padding: 11px 24px;
+  padding: 13px 28px;
   border-radius: 9999px;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 102, 238, 0.32);
   text-decoration: none;
 }
 
 .btn-sec-primary:hover {
-  background-color: #0369a1;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35);
+  background: linear-gradient(135deg, #0369a1 0%, #0055cc 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 102, 238, 0.42);
 }
 
 .btn-sec-outline {
@@ -172,21 +173,22 @@
   justify-content: center;
   gap: 8px;
   background-color: #ffffff;
-  color: #0284c7;
-  padding: 10px 22px;
+  color: #0077f7;
+  padding: 12px 26px;
   border-radius: 9999px;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
-  border: 1.5px solid #0284c7;
+  border: 1.5px solid #0077f7;
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
 }
 
 .btn-sec-outline:hover {
-  background-color: #f0f9ff;
-  border-color: #0369a1;
-  color: #0369a1;
+  background-color: #f0f7ff;
+  border-color: #0055cc;
+  color: #0055cc;
+  transform: translateY(-1px);
 }
 
 .play-icon-circle-sm {
@@ -203,16 +205,20 @@
 .sec-hero-graphic-wrap {
   position: relative;
   width: 100%;
-  border-radius: 18px;
-  overflow: visible;
+  height: 380px;
+  border-top-left-radius: 140px;
+  border-bottom-left-radius: 140px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 44px rgba(15, 23, 42, 0.12);
 }
 
 .sec-hero-image {
   width: 100%;
-  height: 340px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 18px;
-  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.12);
+  object-position: center right;
   display: block;
 }
 
@@ -221,33 +227,29 @@
   position: absolute;
   display: flex;
   align-items: center;
-  gap: 7px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 6px 12px;
-  border-radius: 9999px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #0f172a;
+  gap: 9px;
+  background: #ffffff;
+  padding: 7px 14px 7px 8px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.95);
   z-index: 5;
   transition: transform 0.25s ease;
 }
 
 .smart-badge-float:hover {
-  transform: translateY(-2px) scale(1.03);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .smart-badge-icon-box {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  flex-shrink: 0;
 }
 
 .smart-badge-icon-box.bg-green {
@@ -258,13 +260,32 @@
   background-color: #8b5cf6;
 }
 
-.smart-badge-icon-box.bg-blue {
-  background-color: #0284c7;
+.smart-badge-icon-box.bg-indigo {
+  background-color: #6366f1;
+}
+
+.smart-badge-text-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.smart-badge-text {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.smart-badge-sub {
+  font-size: 9px;
+  color: #64748b;
+  margin-top: 1px;
+  font-weight: 500;
 }
 
 .badge-ai-detection {
-  top: 14%;
-  left: 6%;
+  top: 15%;
+  left: 8%;
 }
 
 .badge-realtime-alerts {
@@ -274,23 +295,23 @@
 
 .badge-monitoring {
   bottom: 12%;
-  right: 6%;
+  right: 8%;
 }
 
 /* =========================================================================
    3. QUICK SERVICE CATEGORIES STRIP (5 Horizontal Cards)
    ========================================================================= */
 .sec-categories-strip-section {
-  padding: 16px 0 24px;
+  padding: 24px 0 28px;
   background-color: #ffffff;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  border-top: 1px solid #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .sec-categories-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+  gap: 20px;
 }
 
 .sec-category-item {
@@ -298,43 +319,47 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 14px 10px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  padding: 8px 4px;
+  background: none;
+  border: none;
+  box-shadow: none;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .sec-category-item:hover {
-  background: #ffffff;
-  border-color: #0284c7;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.08);
+  background: none;
+  border: none;
+  box-shadow: none;
+  transform: translateY(-3px);
 }
 
 .sec-cat-icon-wrap {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background-color: #e0f2fe;
-  color: #0284c7;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.5px solid #dbeafe;
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
+  color: #0077f7;
+  margin-bottom: 10px;
   transition: all 0.2s ease;
 }
 
 .sec-category-item:hover .sec-cat-icon-wrap {
-  background-color: #0284c7;
+  background-color: #0077f7;
   color: #ffffff;
+  border-color: #0077f7;
+  box-shadow: 0 6px 18px rgba(0, 119, 247, 0.35);
 }
 
 .sec-cat-name {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
-  color: #1e293b;
+  color: #0f172a;
   line-height: 1.3;
 }
 

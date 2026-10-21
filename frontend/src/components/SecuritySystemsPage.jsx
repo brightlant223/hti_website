@@ -224,17 +224,20 @@ export default function SecuritySystemsPage({
                   <span className="smart-badge-text">AI Detection</span>
                 </div>
 
-                {/* Floating Smart Badge 2: Real-Time Alerts */}
+                {/* Floating Smart Badge 2: Real-time Alerts */}
                 <div className="smart-badge-float badge-realtime-alerts">
                   <div className="smart-badge-icon-box bg-purple">
                     <Activity size={14} />
                   </div>
-                  <span className="smart-badge-text">Real-Time Alerts</span>
+                  <div className="smart-badge-text-col">
+                    <span className="smart-badge-text">Real-time Alerts</span>
+                    <span className="smart-badge-sub">Instant push notification</span>
+                  </div>
                 </div>
 
                 {/* Floating Smart Badge 3: 24/7 Monitoring */}
                 <div className="smart-badge-float badge-monitoring">
-                  <div className="smart-badge-icon-box bg-blue">
+                  <div className="smart-badge-icon-box bg-indigo">
                     <ShieldCheck size={14} />
                   </div>
                   <span className="smart-badge-text">24/7 Monitoring</span>
