@@ -617,13 +617,6 @@ export default function Navbar({
           image: '/services/services-rapid-airlock.jpg',
           icon: Truck,
           slug: 'high-speed-roll-up-doors'
-        },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore all certified pedestrian & gate automation systems with datasheets.',
-          image: '/products/automatic-doors.jpg',
-          icon: Layers,
-          isCatalogLink: true
         }
       ]
     },
@@ -675,13 +668,6 @@ export default function Navbar({
           image: '/case-studies/case-boom-barrier.jpg',
           icon: Flame,
           slug: 'tyre-killers-road-blockers'
-        },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore crash-rated barriers, bollards, tyre killers & parking systems.',
-          image: '/products/boom-barriers.jpg',
-          icon: Layers,
-          isCatalogLink: true
         }
       ]
     },
@@ -733,13 +719,6 @@ export default function Navbar({
           image: '/hero-cleanroom-interlock-chamber.jpg',
           icon: Sparkles,
           slug: 'hermetic-cleanroom-doors'
-        },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore cGMP & USFDA 21 CFR Part 11 interlocking and contamination equipment.',
-          image: '/hero-cleanroom-interlock-chamber.jpg',
-          icon: Layers,
-          isCatalogLink: true
         }
       ]
     },
@@ -791,13 +770,6 @@ export default function Navbar({
           image: '/services/service-fire-alarm.jpg',
           icon: Settings,
           slug: 'public-address-system'
-        },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore multi-loop addressable fire panels, hydrants & UL certified doors.',
-          image: '/products/fire-alarm.jpg',
-          icon: Layers,
-          isCatalogLink: true
         }
       ]
     },
@@ -849,13 +821,6 @@ export default function Navbar({
           image: '/services/services-heavy-security.jpg',
           icon: Lock,
           slug: 'wireless-intrusion-detection'
-        },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore 4K AI IP cameras, facial biometric terminals & telemetry arrays.',
-          image: '/hero-security-command-center.jpg',
-          icon: Layers,
-          isCatalogLink: true
         }
       ]
     }
@@ -1300,8 +1265,8 @@ export default function Navbar({
                   )}
                 </div>
 
-                {/* 6 Product Cards Grid (3 Columns x 2 Rows) */}
-                <div className="mega-subservice-cards-grid">
+                {/* 5 Product Cards Grid (Balanced 3 + 2 Layout) */}
+                <div className="mega-subservice-cards-grid mega-products-cards-grid">
                   {currentProductGroup.products.map((prod, pIdx) => {
                     const CardIcon = prod.icon || Cpu;
                     return (

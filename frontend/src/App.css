@@ -510,6 +510,24 @@
   gap: 13px;
 }
 
+/* 5 Product Cards Grid (Balanced 3 + 2 Layout, seamlessly filling full width) */
+.mega-subservice-cards-grid.mega-products-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 13px;
+}
+
+.mega-products-cards-grid > .mega-subservice-card:nth-child(1),
+.mega-products-cards-grid > .mega-subservice-card:nth-child(2),
+.mega-products-cards-grid > .mega-subservice-card:nth-child(3) {
+  grid-column: span 2;
+}
+
+.mega-products-cards-grid > .mega-subservice-card:nth-child(4),
+.mega-products-cards-grid > .mega-subservice-card:nth-child(5) {
+  grid-column: span 3;
+}
+
 .mega-subservice-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -731,6 +749,22 @@
   .mega-subservice-cards-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
+  }
+
+  .mega-subservice-cards-grid.mega-products-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .mega-products-cards-grid > .mega-subservice-card:nth-child(1),
+  .mega-products-cards-grid > .mega-subservice-card:nth-child(2),
+  .mega-products-cards-grid > .mega-subservice-card:nth-child(3),
+  .mega-products-cards-grid > .mega-subservice-card:nth-child(4) {
+    grid-column: span 1;
+  }
+
+  .mega-products-cards-grid > .mega-subservice-card:nth-child(5) {
+    grid-column: span 2;
   }
 
   .subservice-card-body {

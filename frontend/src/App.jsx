@@ -26,7 +26,6 @@ import ContactPage from './components/ContactPage';
 import PartnersPage from './components/PartnersPage';
 import BlogsPage from './components/BlogsPage';
 import CareersPage from './components/CareersPage';
-import SecuritySystemsPage from './components/SecuritySystemsPage';
 
 // Complete static seed data fallback for resilient offline loading
 import { productsData } from './data/productsData';
@@ -65,7 +64,7 @@ const parseUrlRoute = () => {
   if (path === '/automation' || path === '/automation/' || hash === '#/automation') {
     return { page: 'automation', param: null };
   }
-  if (path === '/security-systems' || path === '/security-systems/' || path === '/security' || hash === '#/security-systems') {
+  if (path === '/security-systems' || path === '/security-systems/' || path === '/security' || path === '/cctv' || path === '/cctv-surveillance' || path === '/surveillance' || hash === '#/security-systems' || hash === '#security-systems') {
     return { page: 'security-systems', param: null };
   }
   if (path === '/cleanroom-interlocks' || path === '/cleanroom-interlocks/' || path === '/interlocks' || hash === '#/cleanroom-interlocks') {
@@ -333,6 +332,9 @@ export default function App() {
       targetUrl = '/catalog';
       targetPage = 'catalog';
       targetParam = 'all';
+    } else if (page === 'security' || page === 'cctv') {
+      targetUrl = '/security-systems';
+      targetPage = 'security-systems';
     } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
       targetUrl = `/${page}`;
     } else if (page === 'home') {
@@ -448,14 +450,7 @@ export default function App() {
         )}
 
         {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /perimeter-defense, /fire-protection, /hygiene) */}
-        {routeState.page === 'security-systems' && (
-          <SecuritySystemsPage
-            onNavigate={navigateTo}
-            onQuickQuote={handleQuickQuote}
-            onSelectProduct={(p) => navigateTo('product', typeof p === 'string' ? p : (p?.slug || 'automatic-sliding-swing-doors'))}
-          />
-        )}
-        {['automation', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene'].includes(routeState.page) && (
+        {['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene'].includes(routeState.page) && (
           <CategoryPage
             categoryKey={routeState.page}
             onNavigate={navigateTo}
