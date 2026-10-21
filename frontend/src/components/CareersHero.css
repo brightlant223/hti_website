@@ -31,7 +31,7 @@ html.dark .hero-careers-section {
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 10px;
 }
 
 /* Mouse-follow soft radial glow (Effect 5) */
@@ -82,8 +82,13 @@ html.dark .hero-grid-pattern {
 }
 
 @keyframes heroGridDrift {
-  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
-  100% { background-position: 80px 80px, 80px 80px, 80px 80px, 80px 80px; }
+  0% {
+    background-position: 0 0, 0 0, 0 0, 0 0;
+  }
+
+  100% {
+    background-position: 80px 80px, 80px 80px, 80px 80px, 80px 80px;
+  }
 }
 
 /* Two soft blurred gradient blobs (blue and red) drifting slowly */
@@ -124,15 +129,31 @@ html.dark .hero-blob-red {
 }
 
 @keyframes heroBlobDriftCyan {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-50px, 40px, 0) scale(1.08); }
-  100% { transform: translate3d(30px, -30px, 0) scale(0.96); }
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-50px, 40px, 0) scale(1.08);
+  }
+
+  100% {
+    transform: translate3d(30px, -30px, 0) scale(0.96);
+  }
 }
 
 @keyframes heroBlobDriftRed {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(45px, -40px, 0) scale(1.06); }
-  100% { transform: translate3d(-35px, 30px, 0) scale(0.94); }
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(45px, -40px, 0) scale(1.06);
+  }
+
+  100% {
+    transform: translate3d(-35px, 30px, 0) scale(0.94);
+  }
 }
 
 /* ── 3. CIRCUIT-LINE OVERLAY & TRAVELLING GLOWING PULSES (Effect 1) ─────── */
@@ -192,20 +213,27 @@ html.dark .hero-circuit-nodes circle {
   height: 1.5px;
   pointer-events: none;
   z-index: 3;
-  background: linear-gradient(
-    90deg,
-    transparent 2%,
-    rgba(2, 132, 199, 0.35) 25%,
-    rgba(239, 68, 68, 0.5) 55%,
-    rgba(2, 132, 199, 0.35) 80%,
-    transparent 98%
-  );
+  background: linear-gradient(90deg,
+      transparent 2%,
+      rgba(2, 132, 199, 0.35) 25%,
+      rgba(239, 68, 68, 0.5) 55%,
+      rgba(2, 132, 199, 0.35) 80%,
+      transparent 98%);
   animation: heroHairlineShift 11s ease-in-out infinite;
 }
 
 @keyframes heroHairlineShift {
-  0%, 100% { opacity: 0.4; transform: scaleX(0.96); }
-  50% { opacity: 0.9; transform: scaleX(1); }
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scaleX(0.96);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scaleX(1);
+  }
 }
 
 /* ── 4. LEFT COLUMN: CONTENT, HEADLINE & TERMINAL (Effect 2) ────────────── */
@@ -276,8 +304,16 @@ html.dark .hero-eyebrow-badge {
 }
 
 @keyframes heroBadgePing {
-  0% { transform: scale(0.9); opacity: 0.8; }
-  65%, 100% { transform: scale(2.4); opacity: 0; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+
+  65%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }
 
 .hero-badge-icon {
@@ -359,8 +395,15 @@ html.dark .hero-terminal-code {
 }
 
 @keyframes heroTerminalCursorBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 /* Staggered Animated Headline (Effect 2) */
@@ -390,16 +433,28 @@ html.dark .hero-title {
 }
 
 /* Word Stagger Delays */
-.hero-word-1 { animation: heroWordSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
-.hero-word-2 { animation: heroWordSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both; }
-.hero-word-highlight { animation: heroWordSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both; }
-.hero-word-break { animation: heroWordSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.34s both; }
+.hero-word-1 {
+  animation: heroWordSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.hero-word-2 {
+  animation: heroWordSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+
+.hero-word-highlight {
+  animation: heroWordSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
+}
+
+.hero-word-break {
+  animation: heroWordSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.34s both;
+}
 
 @keyframes heroWordSlideUp {
   from {
     opacity: 0;
     transform: translateY(22px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -409,16 +464,14 @@ html.dark .hero-title {
 /* Animated Gradient Shimmer on "Engineering Career" (Effect 2) */
 .hero-shimmer-text {
   display: inline-block;
-  background: linear-gradient(
-    110deg,
-    #dc2626 0%,
-    #ef4444 26%,
-    #fca5a5 46%,
-    #ffffff 50%,
-    #fca5a5 54%,
-    #ef4444 74%,
-    #dc2626 100%
-  );
+  background: linear-gradient(110deg,
+      #dc2626 0%,
+      #ef4444 26%,
+      #fca5a5 46%,
+      #ffffff 50%,
+      #fca5a5 54%,
+      #ef4444 74%,
+      #dc2626 100%);
   background-size: 240% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -427,8 +480,14 @@ html.dark .hero-title {
 }
 
 @keyframes heroShimmerSweep {
-  0% { background-position: 140% 0; }
-  50%, 100% { background-position: -40% 0; }
+  0% {
+    background-position: 140% 0;
+  }
+
+  50%,
+  100% {
+    background-position: -40% 0;
+  }
 }
 
 .hero-title-break {
@@ -547,9 +606,17 @@ html.dark .hero-btn-secondary {
 }
 
 @keyframes heroBorderGradientRotate {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .hero-btn-secondary:hover::before {
@@ -580,10 +647,23 @@ html.dark .hero-btn-secondary:hover {
 }
 
 @keyframes heroHeartPulse {
-  0%, 100% { transform: scale(1); }
-  25% { transform: scale(1.32); }
-  50% { transform: scale(1.12); }
-  75% { transform: scale(1.26); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.32);
+  }
+
+  50% {
+    transform: scale(1.12);
+  }
+
+  75% {
+    transform: scale(1.26);
+  }
 }
 
 .hero-btn-secondary:focus-visible {
@@ -596,7 +676,7 @@ html.dark .hero-btn-secondary:hover {
   display: flex;
   align-items: center;
   gap: 10px;
-  
+
   padding-top: 18px;
   border-top: 1px solid var(--border-subtle, #e2e8f0);
   width: 100%;
@@ -632,9 +712,17 @@ html.dark .hero-chip {
   color: #94a3b8;
 }
 
-.hero-chip-1 { animation: heroFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.48s both; }
-.hero-chip-2 { animation: heroFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.58s both; }
-.hero-chip-3 { animation: heroFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.68s both; }
+.hero-chip-1 {
+  animation: heroFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.48s both;
+}
+
+.hero-chip-2 {
+  animation: heroFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.58s both;
+}
+
+.hero-chip-3 {
+  animation: heroFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.68s both;
+}
 
 .hero-chip:hover {
   transform: translateY(-2px);
@@ -682,6 +770,7 @@ html.dark .hero-chip-icon {
     opacity: 0;
     transform: translateY(24px) scale(0.97);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -694,13 +783,11 @@ html.dark .hero-chip-icon {
   inset: -10px -10px 14px 10px;
   border-radius: 26px;
   border: 1px dashed rgba(148, 163, 184, 0.38);
-  background: repeating-linear-gradient(
-    45deg,
-    rgba(241, 245, 249, 0.65),
-    rgba(241, 245, 249, 0.65) 8px,
-    transparent 8px,
-    transparent 16px
-  );
+  background: repeating-linear-gradient(45deg,
+      rgba(241, 245, 249, 0.65),
+      rgba(241, 245, 249, 0.65) 8px,
+      transparent 8px,
+      transparent 16px);
   pointer-events: none;
   z-index: 1;
 }
@@ -708,13 +795,11 @@ html.dark .hero-chip-icon {
 [data-theme="dark"] .hero-backdrop-plate,
 html.dark .hero-backdrop-plate {
   border-color: rgba(56, 189, 248, 0.22);
-  background: repeating-linear-gradient(
-    45deg,
-    rgba(17, 26, 46, 0.45),
-    rgba(17, 26, 46, 0.45) 8px,
-    transparent 8px,
-    transparent 16px
-  );
+  background: repeating-linear-gradient(45deg,
+      rgba(17, 26, 46, 0.45),
+      rgba(17, 26, 46, 0.45) 8px,
+      transparent 8px,
+      transparent 16px);
 }
 
 /* 3D Tilt Card Frame */
@@ -759,12 +844,10 @@ html.dark .hero-image-frame {
 .hero-image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 23, 42, 0.08) 0%,
-    transparent 30%,
-    rgba(15, 23, 42, 0.32) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(15, 23, 42, 0.08) 0%,
+      transparent 30%,
+      rgba(15, 23, 42, 0.32) 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -775,22 +858,31 @@ html.dark .hero-image-frame {
   left: 0;
   right: 0;
   height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    transparent 5%,
-    rgba(2, 132, 199, 0.55) 30%,
-    rgba(239, 68, 68, 0.55) 70%,
-    transparent 95%
-  );
+  background: linear-gradient(90deg,
+      transparent 5%,
+      rgba(2, 132, 199, 0.55) 30%,
+      rgba(239, 68, 68, 0.55) 70%,
+      transparent 95%);
   pointer-events: none;
   z-index: 3;
   animation: heroScanSweep 8s ease-in-out infinite;
 }
 
 @keyframes heroScanSweep {
-  0% { top: 0%; opacity: 0; }
-  12%, 88% { opacity: 0.7; }
-  100% { top: 100%; opacity: 0; }
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+
+  12%,
+  88% {
+    opacity: 0.7;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }
 
 /* Blueprint-style Corner Brackets (Draw in on load) (Effect 4) */
@@ -876,8 +968,13 @@ html.dark .hero-float-team {
 }
 
 @keyframes heroFloatTeamAnim {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-7px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-7px);
+  }
 }
 
 .hero-status-dot {
@@ -890,8 +987,17 @@ html.dark .hero-float-team {
 }
 
 @keyframes heroPulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(0.85); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
 }
 
 /* Floating Tag 2: CAD REF // HTI-ENG-2026 (Different speed: 5.4s) */
@@ -919,8 +1025,13 @@ html.dark .hero-float-team {
 }
 
 @keyframes heroFloatCadAnim {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-5px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-5px);
+  }
 }
 
 .hero-cad-dot {
@@ -955,8 +1066,13 @@ html.dark .hero-float-team {
 }
 
 @keyframes heroFloatPharmaAnim {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-6px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-6px);
+  }
 }
 
 .hero-pharma-icon {
@@ -989,8 +1105,13 @@ html.dark .hero-float-metric {
 }
 
 @keyframes heroFloatMetricAnim {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-8px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-8px);
+  }
 }
 
 .hero-metric-row {
@@ -1098,25 +1219,21 @@ html.dark .hero-metric-footer-badge {
 .hero-axis-dash {
   flex: 1;
   height: 1px;
-  background: repeating-linear-gradient(
-    90deg,
-    #cbd5e1,
-    #cbd5e1 3px,
-    transparent 3px,
-    transparent 7px
-  );
+  background: repeating-linear-gradient(90deg,
+      #cbd5e1,
+      #cbd5e1 3px,
+      transparent 3px,
+      transparent 7px);
   margin: 0 10px;
 }
 
 [data-theme="dark"] .hero-axis-dash,
 html.dark .hero-axis-dash {
-  background: repeating-linear-gradient(
-    90deg,
-    #334155,
-    #334155 3px,
-    transparent 3px,
-    transparent 7px
-  );
+  background: repeating-linear-gradient(90deg,
+      #334155,
+      #334155 3px,
+      transparent 3px,
+      transparent 7px);
 }
 
 /* ── 8. RESPONSIVE DESIGN (Mobile & Tablet) ──────────────────────────────── */
@@ -1196,6 +1313,7 @@ html.dark .hero-axis-dash {
   }
 
   .hero-chips-wrap {
+
     gap: 8px;
   }
 
@@ -1228,6 +1346,7 @@ html.dark .hero-axis-dash {
 
 /* ── 9. ACCESSIBILITY: PREFERS-REDUCED-MOTION ────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

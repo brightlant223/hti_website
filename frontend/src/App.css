@@ -92,6 +92,18 @@
   padding: 8px 0;
 }
 
+.nav-scrolled .hti-logo-container {
+  height: 50px;
+}
+
+.nav-scrolled .hti-logo-img {
+  height: 48px;
+}
+
+.nav-scrolled .brand-divider-line {
+  height: 38px;
+}
+
 .main-nav-inner {
   display: flex;
   align-items: center;
@@ -104,32 +116,42 @@
 .bright-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   text-decoration: none;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .hti-logo-container {
-  height: 44px;
+  height: 60px;
+  min-width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .hti-logo-img {
-  height: 38px;
+  height: 58px; /* High-end, bold, impactful HTI branding */
   width: auto;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 1px 2px rgba(239, 68, 68, 0.12));
+  filter: drop-shadow(0 2px 10px rgba(239, 68, 68, 0.20));
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+}
+
+.bright-brand:hover .hti-logo-img {
+  transform: scale(1.03);
+  filter: drop-shadow(0 4px 16px rgba(239, 68, 68, 0.30));
 }
 
 .brand-divider-line {
-  width: 2px;
-  height: 32px;
-  background: linear-gradient(180deg, rgba(239, 68, 68, 0.2) 0%, rgba(2, 132, 199, 0.45) 50%, rgba(15, 23, 42, 0.15) 100%);
+  width: 2.5px;
+  height: 46px;
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.35) 0%, rgba(2, 132, 199, 0.55) 50%, rgba(15, 23, 42, 0.15) 100%);
   border-radius: 2px;
-  margin: 0 2px;
+  margin: 0 1px;
+  flex-shrink: 0;
 }
 
 .bright-brand-text {
@@ -144,9 +166,9 @@
 
 .brand-word-bold {
   font-family: var(--font-heading, sans-serif);
-  font-size: 1.12rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  font-size: 1.28rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
   color: #0f172a;
   text-transform: uppercase;
   background: linear-gradient(135deg, #0f172a 60%, #1e293b 100%);
@@ -157,22 +179,22 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.62rem;
+  font-size: 0.70rem;
   font-weight: 700;
   color: #64748b;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 .brand-badge-pill {
   background: #fef2f2;
   color: #dc2626;
-  font-size: 0.58rem;
+  font-size: 0.64rem;
   font-weight: 800;
-  padding: 1px 5px;
+  padding: 1.5px 6px;
   border-radius: 4px;
-  border: 1px solid rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.25);
   letter-spacing: 0.04em;
 }
 
@@ -1912,7 +1934,7 @@
 
 .bright-mobile-backdrop {
   position: fixed;
-  top: 64px;
+  top: var(--hti-nav-h, 81px);
   left: 0;
   right: 0;
   bottom: 0;
@@ -1935,12 +1957,12 @@
 
 .bright-mobile-drawer {
   position: fixed;
-  top: 64px;
+  top: var(--hti-nav-h, 81px);
   left: 0;
   right: 0;
   bottom: 0;
-  height: calc(100dvh - 64px);
-  max-height: calc(100dvh - 64px);
+  height: calc(100dvh - var(--hti-nav-h, 81px));
+  max-height: calc(100dvh - var(--hti-nav-h, 81px));
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -2175,14 +2197,14 @@
     display: none !important;
   }
 
-  .bright-mobile-backdrop {
-    top: 64px;
+  .bright-mobile-backdrop,
+  .bright-mobile-drawer {
+    top: var(--hti-nav-h, 81px);
   }
 
   .bright-mobile-drawer {
-    top: 64px;
-    height: calc(100dvh - 64px);
-    max-height: calc(100dvh - 64px);
+    height: calc(100dvh - var(--hti-nav-h, 81px));
+    max-height: calc(100dvh - var(--hti-nav-h, 81px));
     padding: 16px 16px 40px;
   }
 }
@@ -2237,26 +2259,39 @@
 
 @media (max-width: 480px) {
   .bright-container {
-    padding: 0 14px;
+    padding: 0 12px;
+  }
+
+  .bright-brand {
+    gap: 10px;
+  }
+
+  .hti-logo-container {
+    height: 48px;
   }
 
   .hti-logo-img {
-    height: 32px;
+    height: 44px;
+  }
+
+  .brand-divider-line {
+    height: 34px;
+    margin: 0;
   }
 
   .brand-word-bold {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     letter-spacing: 0.04em;
   }
 
   .bright-brand-sub {
-    font-size: 0.55rem;
+    font-size: 0.58rem;
     gap: 4px;
   }
 
   .brand-badge-pill {
-    font-size: 0.50rem;
-    padding: 1px 3px;
+    font-size: 0.52rem;
+    padding: 1px 4px;
   }
 
   .bright-theme-toggle {
@@ -13645,8 +13680,8 @@
   }
 
   .interlock-stages-row {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
   }
 
   .terminal-event-box {
@@ -14019,6 +14054,7 @@
   position: relative;
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 10px 25px rgba(11, 26, 48, 0.28), inset 0 2px 2px rgba(255, 255, 255, 0.45);
+  text-decoration: none;
 }
 
 .hti-float-btn:hover {
@@ -14615,6 +14651,7 @@
     width: 52px;
     height: 52px;
     box-shadow: 0 8px 24px rgba(11, 26, 48, 0.3);
+    text-decoration: none;
   }
 
   /* WhatsApp pinned to bottom LEFT on mobile */
@@ -14641,7 +14678,6 @@
   .float-tooltip {
     display: none !important;
   }
-
   .hti-chatbot-window {
     right: 12px;
     left: 12px;
@@ -14662,8 +14698,8 @@
   }
 
   .interlock-stages-row {
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 6px !important;
   }
 
   .mobile-menu-active .hti-floating-actions-container,
@@ -14675,6 +14711,57 @@
     visibility: hidden !important;
     transform: translateY(16px) scale(0.9) !important;
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .bright-container {
+    padding: 0 8px;
+  }
+
+  .bright-brand {
+    gap: 7px;
+  }
+
+  .hti-logo-container {
+    height: 42px;
+  }
+
+  .hti-logo-img {
+    height: 38px;
+  }
+
+  .brand-divider-line {
+    height: 28px;
+  }
+
+  .brand-word-bold {
+    font-size: 0.90rem;
+  }
+
+  .bright-brand-sub {
+    font-size: 0.50rem;
+    gap: 3px;
+  }
+
+  .hti-float-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .hti-whatsapp-float {
+    left: 12px;
+    bottom: 16px;
+  }
+
+  .hti-chatbot-float {
+    right: 12px;
+    bottom: 16px;
+  }
+
+  .whatsapp-svg-icon {
+    width: 26px;
+    height: 26px;
   }
 }
 
@@ -16903,61 +16990,270 @@
 }
 
 /* ==========================================================================
-   HOME PAGE - INTERLOCK SIMULATOR MOBILE LAYOUT
-   The three-module stage stacked into a very tall column on phones.
+   HOME PAGE - INTERLOCK SIMULATOR MOBILE & TABLET LAYOUT
+   Preserves identical horizontal layout as desktop/laptop (Door A - Center - Door B)
+   and side-by-side telemetry metrics without vertical stacking.
    ========================================================================== */
 @media (max-width: 640px) {
+  .interlock-column-card {
+    padding: 16px 12px;
+  }
+
   .interlock-stages-row {
-    gap: 12px;
+    display: grid !important;
+    grid-template-columns: 1fr 1.05fr 1fr !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+    margin: 16px 0 !important;
   }
 
   .door-module-box {
-    padding: 14px 12px;
+    padding: 10px 4px !important;
+    border-radius: 10px !important;
+  }
+
+  .door-module-name {
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 6px !important;
   }
 
   .door-graphic-frame {
-    width: 72px;
-    height: 96px;
+    width: 62px !important;
+    height: 84px !important;
+    border-width: 2.5px !important;
+    margin-bottom: 8px !important;
+    box-shadow: inset 0 0 0 3px #ffffff, 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+  }
+
+  .door-graphic-frame::after {
+    left: -8px;
+    right: -8px;
+    bottom: -6px;
+    height: 2px;
   }
 
   .door-graphic-frame .door-glass-window {
-    width: 38px;
-    height: 34px;
-    margin-top: -18px;
+    width: 32px !important;
+    height: 30px !important;
+    margin-top: -16px !important;
   }
 
-  /* Telemetry header stacks so the long tag never collides with the badge */
+  .door-handle {
+    width: 3px !important;
+    height: 14px !important;
+    right: 5px !important;
+  }
+
+  .btn-door-status {
+    padding: 4px 8px !important;
+    font-size: 0.68rem !important;
+    gap: 4px !important;
+    width: 100% !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+  }
+
+  .interlock-center-module {
+    padding: 10px 4px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+
+  .interlock-brand-tag {
+    font-size: 0.58rem !important;
+    letter-spacing: 0.03em !important;
+  }
+
+  .pressure-number-display {
+    font-size: 1.25rem !important;
+    font-weight: 800 !important;
+    margin: 2px 0 !important;
+  }
+
+  .pressure-sub-label {
+    font-size: 0.56rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .indicator-dots-row {
+    gap: 4px !important;
+    margin-top: 5px !important;
+  }
+
+  .dot-led {
+    width: 5px !important;
+    height: 5px !important;
+  }
+
+  /* Telemetry Dashboard: matches laptop horizontal layout */
+  .interlock-telemetry-dashboard {
+    padding: 12px 10px !important;
+    border-radius: 12px !important;
+    gap: 10px !important;
+    margin: 8px 0 12px !important;
+  }
+
   .telemetry-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+    padding-bottom: 6px !important;
   }
 
   .telemetry-tag {
-    font-size: 0.66rem;
-    letter-spacing: 0.04em;
+    font-size: 0.62rem !important;
+    letter-spacing: 0.03em !important;
+  }
+
+  .telemetry-mode-badge {
+    font-size: 0.58rem !important;
+    padding: 2px 6px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
   }
 
   .telemetry-metrics-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .telemetry-metric-item {
+    padding: 8px 4px !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 2px !important;
+  }
+
+  .metric-icon-wrap {
+    width: 22px !important;
+    height: 22px !important;
+    margin: 0 auto 2px !important;
+    justify-content: center !important;
+  }
+
+  .metric-icon-wrap svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .metric-val {
+    font-size: 0.78rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .metric-label {
+    font-size: 0.54rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .metric-status-pill {
+    font-size: 0.50rem !important;
+    padding: 1.5px 4px !important;
+    align-self: center !important;
+    margin-top: 2px !important;
   }
 
   .telemetry-control-strip {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 8px 10px !important;
+  }
+
+  .narrative-text {
+    font-size: 0.68rem !important;
+    line-height: 1.3 !important;
   }
 
   .telemetry-action-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+    width: 100% !important;
   }
 
   .telemetry-action-buttons button {
-    justify-content: center;
-    width: 100%;
+    justify-content: center !important;
+    width: 100% !important;
+    padding: 5px 8px !important;
+    font-size: 0.68rem !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .interlock-column-card {
+    padding: 12px 8px !important;
+  }
+
+  .interlock-stages-row {
+    gap: 5px !important;
+  }
+
+  .door-module-box {
+    padding: 8px 2px !important;
+  }
+
+  .door-module-name {
+    font-size: 0.66rem !important;
+  }
+
+  .door-graphic-frame {
+    width: 50px !important;
+    height: 68px !important;
+  }
+
+  .door-graphic-frame .door-glass-window {
+    width: 26px !important;
+    height: 24px !important;
+    margin-top: -12px !important;
+  }
+
+  .btn-door-status {
+    padding: 3px 4px !important;
+    font-size: 0.60rem !important;
+    gap: 2px !important;
+  }
+
+  .interlock-center-module {
+    padding: 8px 2px !important;
+  }
+
+  .interlock-brand-tag {
+    font-size: 0.50rem !important;
+  }
+
+  .pressure-number-display {
+    font-size: 1.05rem !important;
+  }
+
+  .pressure-sub-label {
+    font-size: 0.48rem !important;
+  }
+
+  .telemetry-tag {
+    font-size: 0.56rem !important;
+  }
+
+  .metric-val {
+    font-size: 0.72rem !important;
+  }
+
+  .metric-label {
+    font-size: 0.50rem !important;
+  }
+
+  .metric-status-pill {
+    font-size: 0.46rem !important;
+    padding: 1px 3px !important;
   }
 }
 

@@ -59,6 +59,31 @@ export default function Navbar({
   const dropdownTimeoutRef = useRef(null);
   const mobileToggleRef = useRef(null);
   const mobileDrawerRef = useRef(null);
+  const navBarRef = useRef(null);
+
+  // The header height changes with the logo size, the scroll state and the
+  // breakpoint. Measure it so the mobile drawer/backdrop always start exactly
+  // under the header instead of overlapping it.
+  const [navHeight, setNavHeight] = useState(81);
+
+  useEffect(() => {
+    const el = navBarRef.current;
+    if (!el) return undefined;
+
+    const update = () => setNavHeight(Math.round(el.getBoundingClientRect().height));
+    update();
+
+    let ro;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(update);
+      ro.observe(el);
+    }
+    window.addEventListener('resize', update);
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener('resize', update);
+    };
+  }, []);
 
   const handleMouseEnterDropdown = (name) => {
     if (dropdownTimeoutRef.current) {
@@ -841,7 +866,7 @@ export default function Navbar({
   };
 
   return (
-    <header className="navbar-wrapper" ref={navRef}>
+    <header className="navbar-wrapper" ref={navRef} style={{ '--hti-nav-h': `${navHeight}px` }}>
       {/* 1. Sleek Top Bar (Hidden on Mobile) */}
       <div className="bright-top-bar desktop-only">
         <div className="bright-container top-bar-inner">
@@ -874,7 +899,7 @@ export default function Navbar({
       </div>
 
       {/* 2. Main Navigation Bar */}
-      <nav className={`bright-main-nav ${isScrolled ? 'nav-scrolled' : ''}`} aria-label="Main navigation">
+      <nav className={`bright-main-nav ${isScrolled ? 'nav-scrolled' : ''}`} aria-label="Main navigation" ref={navBarRef}>
         {/* Full-bleed veil behind an open mega panel so page content never
             peeks out from behind it. Sits below the nav bar (z-index 10001). */}
         {(activeDropdown === 'services' || activeDropdown === 'products') && (
