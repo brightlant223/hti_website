@@ -419,7 +419,7 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
                       </div>
                       <div className="why-text-box">
                         <div className="why-title-row">
-                          <h4 className="why-item-title">{item.title}</h4>
+                          <h3 className="why-item-title">{item.title}</h3>
                           <span 
                             className="why-item-badge" 
                             style={{ color: item.color, backgroundColor: item.bg, borderColor: item.border }}

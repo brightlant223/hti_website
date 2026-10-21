@@ -2496,7 +2496,7 @@
   }
 
   .brand-badge-pill {
-    font-size: 0.52rem;
+    font-size: 0.625rem;
     padding: 1px 4px;
   }
 
@@ -8325,7 +8325,7 @@
   }
 
   .clients-stats-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 10px;
   }
 
@@ -8374,7 +8374,7 @@
 
 @media (max-width: 480px) {
   .clients-stats-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
   }
 
@@ -8395,7 +8395,7 @@
   }
 
   .clients-stat-card .stat-card-label {
-    font-size: 0.56rem;
+    font-size: 0.625rem;
   }
 
   .cta-actions-flex {
@@ -9299,11 +9299,15 @@
 /* Category Products Grid & Cards */
 .cat-products-cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* minmax(0, 1fr) lets a track shrink below the card's min-content width,
+     otherwise a single column overflows the container on 320px screens and
+     the card is clipped by the page. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
 }
 
 .cat-product-card {
+  min-width: 0;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 16px;
@@ -10578,7 +10582,7 @@
 
 @media (max-width: 640px) {
   .auto-hero-stats-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
   }
 
@@ -10903,12 +10907,15 @@
 
 .auto-phases-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* minmax(0, 1fr) lets the four phase tracks shrink with the viewport
+     instead of overflowing and being clipped on narrow phones. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
 }
 
 /* Stagger entrance when parent is revealed (.in-view) */
 .auto-lifecycle-section.in-view .auto-phase-card {
+  min-width: 0;
   animation: phaseCardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
@@ -11076,7 +11083,7 @@
 /* Responsive Rules for Lifecycle & FAQ - ALWAYS 1 LINE WITH 4 CONTENTS */
 @media (max-width: 1024px) {
   .auto-phases-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 12px;
   }
 
@@ -11106,7 +11113,7 @@
 
 @media (max-width: 768px) {
   .auto-phases-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 8px;
   }
 
@@ -11137,7 +11144,7 @@
 
 @media (max-width: 540px) {
   .auto-phases-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 5px;
   }
 
@@ -11162,7 +11169,7 @@
   }
 
   .auto-phase-desc {
-    font-size: 0.56rem;
+    font-size: 0.625rem;
     line-height: 1.28;
   }
 
@@ -11760,7 +11767,7 @@
   }
 
   .category-stats-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 10px;
   }
 
@@ -11862,7 +11869,7 @@
   }
 
   .category-stats-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
   }
 
@@ -15418,7 +15425,7 @@
 .bot-verified-tag {
   background: #0284c7;
   color: #ffffff;
-  font-size: 0.54rem;
+  font-size: 0.625rem;
   font-weight: 850;
   padding: 1.5px 6px;
   border-radius: 9999px;
@@ -15439,7 +15446,7 @@
 
 .online-green-dot {
   color: #16a34a;
-  font-size: 0.56rem;
+  font-size: 0.625rem;
   margin-right: 2px;
 }
 
@@ -16061,7 +16068,7 @@
   }
 
   .bright-brand-sub {
-    font-size: 0.50rem;
+    font-size: 0.625rem;
     gap: 3px;
   }
 
@@ -18424,7 +18431,9 @@
   }
 
   .interlock-brand-tag {
-    font-size: 0.58rem !important;
+    /* 0.58rem renders at 9.3px and below on small phones; keep the label
+       legible instead of shrinking it further. */
+    font-size: 0.625rem !important;
     letter-spacing: 0.03em !important;
   }
 
@@ -18435,7 +18444,7 @@
   }
 
   .pressure-sub-label {
-    font-size: 0.56rem !important;
+    font-size: 0.625rem !important;
     line-height: 1.2 !important;
   }
 
@@ -18467,7 +18476,7 @@
   }
 
   .telemetry-tag {
-    font-size: 0.62rem !important;
+    font-size: 0.625rem !important;
     letter-spacing: 0.03em !important;
   }
 
@@ -18511,12 +18520,12 @@
   }
 
   .metric-label {
-    font-size: 0.54rem !important;
+    font-size: 0.625rem !important;
     line-height: 1.15 !important;
   }
 
   .metric-status-pill {
-    font-size: 0.50rem !important;
+    font-size: 0.625rem !important;
     padding: 1.5px 4px !important;
     align-self: center !important;
     margin-top: 2px !important;
@@ -18547,6 +18556,15 @@
     width: 100% !important;
     padding: 5px 8px !important;
     font-size: 0.68rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  /* Four phase cards side by side are unreadable at this width; two
+     columns keep every card fully visible and legible. */
+  .auto-phases-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px;
   }
 }
 
@@ -18594,7 +18612,7 @@
   }
 
   .interlock-brand-tag {
-    font-size: 0.50rem !important;
+    font-size: 0.625rem !important;
   }
 
   .pressure-number-display {
@@ -18602,11 +18620,11 @@
   }
 
   .pressure-sub-label {
-    font-size: 0.48rem !important;
+    font-size: 0.625rem !important;
   }
 
   .telemetry-tag {
-    font-size: 0.56rem !important;
+    font-size: 0.625rem !important;
   }
 
   .metric-val {
@@ -18614,11 +18632,11 @@
   }
 
   .metric-label {
-    font-size: 0.50rem !important;
+    font-size: 0.625rem !important;
   }
 
   .metric-status-pill {
-    font-size: 0.46rem !important;
+    font-size: 0.625rem !important;
     padding: 1px 3px !important;
   }
 }

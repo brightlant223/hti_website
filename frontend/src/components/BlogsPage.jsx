@@ -668,9 +668,9 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
                         </div>
 
                         {/* Article Title */}
-                        <h3 className="card-article-title" title={art.title}>
+                        <h2 className="card-article-title" title={art.title}>
                           {art.title}
-                        </h3>
+                        </h2>
 
                         {/* Description */}
                         <p className="card-article-description">

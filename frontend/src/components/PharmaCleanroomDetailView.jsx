@@ -435,7 +435,7 @@ export default function PharmaCleanroomDetailView({
                 {renderPharmaIcon(c.iconName, c.iconClass, 22)}
               </div>
               <div className="pharma-feature-content">
-                <h5>{c.title}</h5>
+                <h3>{c.title}</h3>
                 <p>{c.desc}</p>
               </div>
             </div>

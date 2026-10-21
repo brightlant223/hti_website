@@ -633,7 +633,7 @@ export default function ProductDetailPage({
                   {resolveIcon(card.iconName, ICON_MAP[fallbackIcon] || Settings, 22)}
                 </div>
                 <div className="auto-feature-content">
-                  <h5>{card.title}</h5>
+                  <h3>{card.title}</h3>
                   <p>{card.desc}</p>
                 </div>
               </div>

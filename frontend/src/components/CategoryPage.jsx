@@ -1296,7 +1296,7 @@ export default function CategoryPage({
       <div className="auto-phases-grid">
         <div className="auto-phase-card">
           <div className="auto-phase-num-badge">01</div>
-          <h4 className="auto-phase-title">Site Feasibility &amp; CAD</h4>
+          <h3 className="auto-phase-title">Site Feasibility &amp; CAD</h3>
           <p className="auto-phase-desc">
             Physical opening measurement, wind load / cycle rate calculations, and CAD General Arrangement (GA) drawings.
           </p>
@@ -1304,7 +1304,7 @@ export default function CategoryPage({
 
         <div className="auto-phase-card">
           <div className="auto-phase-num-badge">02</div>
-          <h4 className="auto-phase-title">OEM Hardware Sourcing</h4>
+          <h3 className="auto-phase-title">OEM Hardware Sourcing</h3>
           <p className="auto-phase-desc">
             Procurement of certified tier-1 motors, sensors, microcontrollers, and Flameproof Ex-d cast enclosures.
           </p>
@@ -1312,7 +1312,7 @@ export default function CategoryPage({
 
         <div className="auto-phase-card">
           <div className="auto-phase-num-badge">03</div>
-          <h4 className="auto-phase-title">Precision Integration</h4>
+          <h3 className="auto-phase-title">Precision Integration</h3>
           <p className="auto-phase-desc">
             Site installation, electrical wiring, FACP fire alarm trip integration, and differential pressure interlock calibration.
           </p>
@@ -1320,7 +1320,7 @@ export default function CategoryPage({
 
         <div className="auto-phase-card">
           <div className="auto-phase-num-badge">04</div>
-          <h4 className="auto-phase-title">Testing &amp; 24/7 SLA</h4>
+          <h3 className="auto-phase-title">Testing &amp; 24/7 SLA</h3>
           <p className="auto-phase-desc">
             100% cycle stress testing, documentation handover for USFDA / NBC audit sign-offs, and AMC service agreements.
           </p>

@@ -248,7 +248,7 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
 
                     {/* Info Area */}
                     <div className="client-card-body">
-                      <h3 className="client-brand-name">{client.name}</h3>
+                      <h2 className="client-brand-name">{client.name}</h2>
                       <p className="client-sector-title">{client.sector}</p>
                       
                       {/* Solution Deployed Badge */}

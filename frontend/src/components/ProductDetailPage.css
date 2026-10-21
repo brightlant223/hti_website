@@ -487,6 +487,11 @@
 
 .auto-specs-card-left,
 .auto-specs-card-right {
+  /* The specification table keeps a min-width so it stays legible, which
+     would otherwise become the grid track's minimum and push the whole
+     section past the viewport on narrow screens. The table is already
+     horizontally scrollable inside .auto-specs-table-container. */
+  min-width: 0;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 20px;
