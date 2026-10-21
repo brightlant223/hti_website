@@ -1031,3 +1031,23 @@
     min-width: 42px;
   }
 }
+
+/* ==========================================================================
+   PRODUCT VIDEO PLAY BUTTON
+   --------------------------------------------------------------------------
+   The play glyph used to rely on .fill-white / .text-white / .ml-1, which
+   have no rule in this project, so the triangle rendered black (and unfilled)
+   on top of the solid sky-blue play circle.
+   ========================================================================== */
+
+.auto-doors-page-container .auto-play-circle svg {
+  color: #ffffff;
+  fill: #ffffff;
+  margin-left: 4px;
+}
+
+/* Grid child: allow long unbroken text to shrink instead of blowing the
+   column out of the 1.35fr / 1fr video grid. */
+.auto-doors-page-container .auto-doors-video-content {
+  min-width: 0;
+}

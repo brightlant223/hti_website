@@ -550,7 +550,7 @@ export default function ProductDetailPage({
                         aria-label={`Play ${product.name} Video`}
                       >
                         <div className="auto-play-circle">
-                          <Play size={28} className="fill-white text-white ml-1" />
+                          <Play size={28} className="auto-play-icon" />
                         </div>
                       </button>
                       <div className="auto-video-fallback-pill" style={{ pointerEvents: 'none' }}>
@@ -568,7 +568,7 @@ export default function ProductDetailPage({
                   />
                   <div className="auto-video-play-overlay" style={{ cursor: 'default' }}>
                     <div className="auto-play-circle" style={{ opacity: 0.9 }}>
-                      <Play size={28} className="fill-white text-white ml-1" />
+                      <Play size={28} className="auto-play-icon" />
                     </div>
                   </div>
                   <div className="auto-video-fallback-pill">
