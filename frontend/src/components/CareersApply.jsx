@@ -408,6 +408,7 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
 
     setTimeout(() => {
       setIsSubmitting(false);
+      setStepDirection('forward');
       setSubmitted(true);
     }, 850);
   };
@@ -433,7 +434,7 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
       fullName: '',
       email: '',
       phone: '',
-      position: '',
+      position: selectedPosition || '',
       experience: '',
       noticePeriod: '',
       agreePrivacy: false
@@ -441,6 +442,9 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
     setResumeFile(null);
     setFormErrors({});
     setTouched({});
+    if (contentBodyRef.current) {
+      contentBodyRef.current.scrollTop = 0;
+    }
   };
 
   return (
@@ -569,21 +573,12 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
 
           {/* ── RIGHT COLUMN: STABLE FORM CARD (Fixed Height Desktop) ─────── */}
           <div className="apply-form-col">
-            <div className="apply-form-card" role="region" aria-label="Job Application Form">
-
-              {/* Pinned Card Header */}
-              <div className="apply-card-header">
-                <div className="apply-card-protocol-badge" aria-hidden="true">
-                  <span className="apply-card-protocol-dot" />
-                  <span>STEP 0{currentStep} / 03 · APPLICATION PROTOCOL</span>
-                </div>
-                <h3 className="apply-card-title">Submit Your Application</h3>
-                <p className="apply-card-subtitle">
-                  Step {currentStep} of 3 — {currentStep === 1 ? 'Personal Details' : currentStep === 2 ? 'Experience & Resume' : 'Review & Final Submit'}
-                </p>
-              </div>
-
-              {/* ── SUCCESS SCREEN (Inside Same Card) ────────────────────── */}
+            <div
+              className={`apply-form-card ${submitted ? 'is-success-view' : ''}`}
+              role="region"
+              aria-label="Job Application Form"
+            >
+              {/* ── SUCCESS SCREEN: Rendered as its OWN view when submitted ──── */}
               {submitted ? (
                 <div className="apply-success-box" role="alert">
                   {/* Pure CSS Confetti Particles */}
@@ -593,7 +588,7 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
                     ))}
                   </div>
 
-                  <div className="apply-success-icon-wrap">
+                  <div className="apply-success-icon-wrap" aria-hidden="true">
                     <CheckCircle2 size={38} className="apply-success-big-check" />
                   </div>
 
@@ -607,41 +602,55 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
                     resume file (if not already attached) and send the email to complete your application.
                   </p>
 
-                  {/* What happens next list */}
+                  {/* What happens next list (width: 100%, max-width: 520px, centered) */}
                   <div className="apply-next-steps-card">
                     <h4 className="apply-next-steps-heading">What Happens Next</h4>
                     <div className="apply-next-steps-list">
                       <div className="apply-next-step-row">
                         <span className="apply-step-bullet">01.</span>
-                        <span>Our talent acquisition team reviews your resume within 24–48 hours.</span>
+                        <span className="apply-step-text-val">Our talent acquisition team reviews your resume within 24–48 hours.</span>
                       </div>
                       <div className="apply-next-step-row">
                         <span className="apply-step-bullet">02.</span>
-                        <span>Shortlisted profiles receive an introductory HR call within 3–5 working days.</span>
+                        <span className="apply-step-text-val">Shortlisted profiles receive an introductory HR call within 3–5 working days.</span>
                       </div>
                       <div className="apply-next-step-row">
                         <span className="apply-step-bullet">03.</span>
-                        <span>Technical discussions with department leadership before final offer discussions.</span>
+                        <span className="apply-step-text-val">Technical discussions with department leadership before final offer discussions.</span>
                       </div>
                     </div>
                   </div>
 
+                  {/* Action button: auto width centered desktop, full width mobile */}
                   <button
                     type="button"
                     className="apply-btn-reset"
                     onClick={handleResetForm}
                   >
                     <span>Submit Another Application</span>
-                    <ArrowRight size={15} />
+                    <ArrowRight size={15} aria-hidden="true" />
                   </button>
                 </div>
               ) : (
-                <form
-                  onSubmit={handleFormSubmit}
-                  onKeyDown={handleKeyDown}
-                  noValidate
-                  style={{ display: 'contents' }}
-                >
+                <>
+                  {/* Pinned Card Header */}
+                  <div className="apply-card-header">
+                    <div className="apply-card-protocol-badge" aria-hidden="true">
+                      <span className="apply-card-protocol-dot" />
+                      <span>STEP 0{currentStep} / 03 · APPLICATION PROTOCOL</span>
+                    </div>
+                    <h3 className="apply-card-title">Submit Your Application</h3>
+                    <p className="apply-card-subtitle">
+                      Step {currentStep} of 3 — {currentStep === 1 ? 'Personal Details' : currentStep === 2 ? 'Experience & Resume' : 'Review & Final Submit'}
+                    </p>
+                  </div>
+
+                  <form
+                    onSubmit={handleFormSubmit}
+                    onKeyDown={handleKeyDown}
+                    noValidate
+                    style={{ display: 'contents' }}
+                  >
                   {/* Pinned Stepper Bar */}
                   <div className="apply-stepper-wrap" aria-label="Application Progress" role="navigation">
                     <div className="apply-stepper-track-bg" aria-hidden="true">
@@ -1154,7 +1163,8 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
                     </div>
                   </div>
                 </form>
-              )}
+              </>
+            )}
 
             </div>
           </div>

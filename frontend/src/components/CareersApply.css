@@ -1399,18 +1399,56 @@ html.dark .apply-btn-back {
   color: var(--text-dim, #94a3b8);
 }
 
-/* ── 9. SUCCESS SCREEN WITH PURE CSS CONFETTI ────────────────────────────── */
+/* ── 9. SUCCESS SCREEN (Dedicated View, Vertically Centered & Unclipped) ─── */
+.apply-form-card.is-success-view {
+  display: flex;
+  flex-direction: column;
+}
 .apply-success-box {
   position: relative;
-  flex: 1 1 0;
-  min-height: 0;
-  overflow-y: auto;
-  padding: 32px 28px;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  padding: 36px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  animation: applyFadeUpQuick 0.4s ease both;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0;
+  transform: none;
+  animation: applySuccessScaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+.apply-success-box::-webkit-scrollbar {
+  width: 5px;
+}
+
+.apply-success-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.apply-success-box::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
+}
+
+/* Simple fade + scale-in animation (NO translateX, NO slide classes) */
+@keyframes applySuccessScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .apply-success-icon-wrap {
@@ -1422,8 +1460,9 @@ html.dark .apply-btn-back {
   align-items: center;
   justify-content: center;
   color: #10b981;
-  margin-bottom: 14px;
+  margin: 0 auto 14px;
   box-shadow: 0 0 24px rgba(16, 185, 129, 0.25);
+  flex-shrink: 0;
 }
 
 .apply-success-pill {
@@ -1435,15 +1474,22 @@ html.dark .apply-btn-back {
   background: rgba(16, 185, 129, 0.1);
   padding: 3px 10px;
   border-radius: 6px;
-  margin-bottom: 12px;
+  margin: 0 auto 12px;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .apply-success-title {
   font-family: var(--font-heading, 'Outfit', sans-serif);
-  font-size: 1.6rem;
+  font-size: clamp(1.4rem, 2.2vw, 1.65rem);
   font-weight: 800;
   color: var(--text-main, #0f172a);
-  margin-bottom: 8px;
+  margin: 0 auto 8px;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
 }
 
 [data-theme="dark"] .apply-success-title,
@@ -1452,23 +1498,27 @@ html.dark .apply-success-title {
 }
 
 .apply-success-desc {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: var(--text-muted, #64748b);
-  max-width: 480px;
+  width: 100%;
+  max-width: 520px;
   line-height: 1.55;
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* Next steps timeline */
 .apply-next-steps-card {
   width: 100%;
-  max-width: 480px;
-  background: rgba(248, 250, 252, 0.8);
+  max-width: 520px;
+  box-sizing: border-box;
+  background: rgba(248, 250, 252, 0.85);
   border: 1px solid var(--border-subtle, #e2e8f0);
   border-radius: 14px;
-  padding: 16px 18px;
+  padding: 16px 20px;
   text-align: left;
-  margin-bottom: 22px;
+  margin: 0 auto 22px;
 }
 
 [data-theme="dark"] .apply-next-steps-card,
@@ -1501,9 +1551,11 @@ html.dark .apply-next-steps-heading {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--text-muted, #475569);
-  line-height: 1.4;
+  line-height: 1.45;
+  width: 100%;
+  max-width: 100%;
 }
 
 [data-theme="dark"] .apply-next-step-row,
@@ -1515,6 +1567,7 @@ html.dark .apply-next-step-row {
   font-weight: 800;
   color: var(--accent-cyan, #0284c7);
   font-family: monospace;
+  flex-shrink: 0;
 }
 
 [data-theme="dark"] .apply-step-bullet,
@@ -1522,19 +1575,32 @@ html.dark .apply-step-bullet {
   color: #38bdf8;
 }
 
+.apply-step-text-val {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  flex: 1;
+  min-width: 0;
+}
+
 .apply-btn-reset {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 22px;
+  padding: 12px 24px;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
   border-radius: 10px;
   background: #ffffff;
   border: 1px solid var(--border-subtle, #cbd5e1);
   color: var(--text-main, #0f172a);
-  font-size: 0.86rem;
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s ease;
+  box-sizing: border-box;
 }
 
 [data-theme="dark"] .apply-btn-reset,
@@ -1547,7 +1613,14 @@ html.dark .apply-btn-reset {
 .apply-btn-reset:hover {
   transform: translateY(-2px);
   border-color: var(--accent-cyan, #0284c7);
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.18);
+  color: var(--accent-cyan, #0284c7);
+}
+
+html.dark .apply-btn-reset:hover {
+  border-color: #38bdf8;
+  color: #38bdf8;
+  box-shadow: 0 6px 16px rgba(56, 189, 248, 0.2);
 }
 
 /* Pure CSS Confetti Burst */
@@ -1694,6 +1767,22 @@ html.dark .apply-btn-reset {
     margin-left: 0;
     order: -1; /* Place Continue / Submit on top for easy tap */
   }
+
+  /* Success Screen Mobile Rules */
+  .apply-success-box {
+    padding: 28px 16px;
+    justify-content: flex-start;
+  }
+
+  .apply-next-steps-card {
+    padding: 14px 14px;
+    margin-bottom: 18px;
+  }
+
+  .apply-btn-reset {
+    width: 100%;
+    height: 46px; /* 44px+ tap target */
+  }
 }
 
 /* ── 11. ACCESSIBILITY: PREFERS-REDUCED-MOTION ───────────────────────────── */
@@ -1710,7 +1799,8 @@ html.dark .apply-btn-reset {
   .apply-step-slide-backward,
   .apply-step-btn.is-active .apply-step-badge,
   .apply-input.has-error,
-  .apply-confetti-piece {
+  .apply-confetti-piece,
+  .apply-success-box {
     animation: none !important;
   }
 
