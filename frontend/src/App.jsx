@@ -26,6 +26,7 @@ import ContactPage from './components/ContactPage';
 import PartnersPage from './components/PartnersPage';
 import BlogsPage from './components/BlogsPage';
 import CareersPage from './components/CareersPage';
+import SecuritySystemsPage from './components/SecuritySystemsPage';
 
 // Complete static seed data fallback for resilient offline loading
 import { productsData } from './data/productsData';
@@ -447,7 +448,14 @@ export default function App() {
         )}
 
         {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /perimeter-defense, /fire-protection, /hygiene) */}
-        {['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene'].includes(routeState.page) && (
+        {routeState.page === 'security-systems' && (
+          <SecuritySystemsPage
+            onNavigate={navigateTo}
+            onQuickQuote={handleQuickQuote}
+            onSelectProduct={(p) => navigateTo('product', typeof p === 'string' ? p : (p?.slug || 'automatic-sliding-swing-doors'))}
+          />
+        )}
+        {['automation', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene'].includes(routeState.page) && (
           <CategoryPage
             categoryKey={routeState.page}
             onNavigate={navigateTo}

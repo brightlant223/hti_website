@@ -454,6 +454,7 @@ export default function Navbar({
       tagline: 'Analogue & IP 4K surveillance, biometric access & video door phones.',
       icon: Cpu,
       color: '#0284c7',
+      page: 'security-systems',
       category: 'Security System',
       badge: 'INTELLIGENT SURVEILLANCE',
       headingPrimary: '4K AI Surveillance, Biometrics &',

@@ -7,6 +7,7 @@ import {
   SlidersHorizontal, Play, Truck, Plane, Download, X, Activity
 } from 'lucide-react';
 import { getProductsByCategory } from '../data/productsData';
+import SecuritySystemsPage from './SecuritySystemsPage';
 
 // EXACT 14 INDUSTRIAL ACCESS AUTOMATION SERVICES MATCHING REFERENCE DESIGN
 const INDUSTRIAL_AUTOMATION_SERVICES = [
@@ -609,6 +610,16 @@ export default function CategoryPage({
   const isCleanroom = categoryKey?.toLowerCase() === 'cleanroom-interlocks' || categoryKey?.toLowerCase() === 'interlocks';
   const isPerimeter = categoryKey?.toLowerCase() === 'perimeter-defense' || categoryKey?.toLowerCase() === 'perimeter';
   const isFire = categoryKey?.toLowerCase() === 'fire-protection' || categoryKey?.toLowerCase() === 'fire' || categoryKey?.toLowerCase() === 'fire-safety';
+  const isSecurity = categoryKey?.toLowerCase() === 'security-systems' || categoryKey?.toLowerCase() === 'security';
+
+  if (isSecurity) {
+    return (
+      <SecuritySystemsPage
+        onNavigate={onNavigate}
+        onQuickQuote={onQuickQuote}
+      />
+    );
+  }
 
   // Filter 14 Industrial Automation Services
   const filteredAutomationServices = useMemo(() => {
