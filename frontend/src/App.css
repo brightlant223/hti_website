@@ -92,6 +92,18 @@
   padding: 8px 0;
 }
 
+.nav-scrolled .hti-logo-container {
+  height: 44px;
+}
+
+.nav-scrolled .hti-logo-img {
+  height: 41px;
+}
+
+.nav-scrolled .brand-divider-line {
+  height: 32px;
+}
+
 .main-nav-inner {
   display: flex;
   align-items: center;
@@ -104,47 +116,40 @@
 .bright-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 13px;
   text-decoration: none;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .hti-logo-container {
-  height: 42px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.bright-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.hti-logo-container {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-shrink: 0;
 }
 
 .hti-logo-img {
-  height: 38px;
+  height: 46px; /* Moderately increased from 38px (~21% increase) for balanced, prominent branding */
   width: auto;
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 1px 2px rgba(239, 68, 68, 0.12));
+  transition: transform 0.2s ease;
+}
+
+.bright-brand:hover .hti-logo-img {
+  transform: scale(1.02);
 }
 
 .brand-divider-line {
   width: 2px;
-  height: 32px;
+  height: 36px;
   background: linear-gradient(180deg, rgba(239, 68, 68, 0.2) 0%, rgba(2, 132, 199, 0.45) 50%, rgba(15, 23, 42, 0.15) 100%);
   border-radius: 2px;
-  margin: 0 2px;
+  margin: 0 1px;
+  flex-shrink: 0;
 }
 
 .bright-brand-text {
@@ -2183,20 +2188,33 @@
 
 @media (max-width: 480px) {
   .bright-container {
-    padding: 0 14px;
+    padding: 0 12px;
+  }
+
+  .bright-brand {
+    gap: 8px;
+  }
+
+  .hti-logo-container {
+    height: 42px;
   }
 
   .hti-logo-img {
-    height: 32px;
+    height: 38px; /* Proportionally increased from 32px (~19% increase) */
+  }
+
+  .brand-divider-line {
+    height: 30px;
+    margin: 0;
   }
 
   .brand-word-bold {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     letter-spacing: 0.04em;
   }
 
   .bright-brand-sub {
-    font-size: 0.55rem;
+    font-size: 0.54rem;
     gap: 4px;
   }
 
@@ -13965,6 +13983,7 @@
   position: relative;
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 10px 25px rgba(11, 26, 48, 0.28), inset 0 2px 2px rgba(255, 255, 255, 0.45);
+  text-decoration: none;
 }
 
 .hti-float-btn:hover {
@@ -14561,6 +14580,7 @@
     width: 52px;
     height: 52px;
     box-shadow: 0 8px 24px rgba(11, 26, 48, 0.3);
+    text-decoration: none;
   }
 
   /* WhatsApp pinned to bottom LEFT on mobile */
@@ -14587,7 +14607,6 @@
   .float-tooltip {
     display: none !important;
   }
-
   .hti-chatbot-window {
     right: 12px;
     left: 12px;
@@ -14621,6 +14640,57 @@
     visibility: hidden !important;
     transform: translateY(16px) scale(0.9) !important;
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .bright-container {
+    padding: 0 8px;
+  }
+
+  .bright-brand {
+    gap: 6px;
+  }
+
+  .hti-logo-container {
+    height: 38px;
+  }
+
+  .hti-logo-img {
+    height: 34px;
+  }
+
+  .brand-divider-line {
+    height: 24px;
+  }
+
+  .brand-word-bold {
+    font-size: 0.84rem;
+  }
+
+  .bright-brand-sub {
+    font-size: 0.48rem;
+    gap: 3px;
+  }
+
+  .hti-float-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .hti-whatsapp-float {
+    left: 12px;
+    bottom: 16px;
+  }
+
+  .hti-chatbot-float {
+    right: 12px;
+    bottom: 16px;
+  }
+
+  .whatsapp-svg-icon {
+    width: 26px;
+    height: 26px;
   }
 }
 

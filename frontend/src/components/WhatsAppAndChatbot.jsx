@@ -19,7 +19,7 @@ import {
   RotateCcw
 } from 'lucide-react';
 
-const WHATSAPP_NUMBER = '919992756077';
+const WHATSAPP_NUMBER = '919892756077';
 const WHATSAPP_DEFAULT_MSG = 'Hello HTI Automation, I would like to inquire about your automation, cleanroom interlocks and security systems.';
 
 // Smart Knowledge Base for Instant Interactive Answers
@@ -68,7 +68,7 @@ All systems include optical safety photobeams and remote smartphone/PLC trigger 
 HTI Automation and Security System Pvt Ltd
 Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area Estate, Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra - 400703.
 
-📞 **Phone / WhatsApp:** +91 9992756077
+📞 **Phone / WhatsApp:** +91 9892756077
 ✉️ **Email:** info@htisystems.in
 ⏱️ **Hours:** Mon - Sat: 9:00 AM - 7:00 PM IST (24/7 SLA on-call emergency support)`,
     pills: ['Open WhatsApp Chat', 'Fill Inquiry Form', 'Browse 33+ Systems']
@@ -159,7 +159,7 @@ export default function WhatsAppAndChatbot({ onNavigate, onQuoteClick }) {
         ? matched.response 
         : `Thank you for your inquiry about "${query}". HTI has executed 500+ automation and cleanroom projects across India. 
 
-For customized sizing, CAD engineering review, or instant pricing, our Senior Automation Specialist is available right now on WhatsApp or phone at +91 9992756077.`;
+For customized sizing, CAD engineering review, or instant pricing, our Senior Automation Specialist is available right now on WhatsApp or phone at +91 9892756077.`;
 
       const botMsg = {
         id: Date.now() + 1,
@@ -190,8 +190,9 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
   };
 
   const openWhatsApp = (customText = null) => {
-    const msg = customText || WHATSAPP_DEFAULT_MSG;
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    const url = customText
+      ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(customText)}`
+      : `https://wa.me/${WHATSAPP_NUMBER}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -213,11 +214,13 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
           ========================================================================= */}
       <div className="hti-floating-actions-container">
         {/* WhatsApp Quick Launcher Button with Rich Official 3D Glossy Glow */}
-        <button
+        <a
+          href={`https://wa.me/${WHATSAPP_NUMBER}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="hti-float-btn hti-whatsapp-float"
-          onClick={() => openWhatsApp()}
-          aria-label="Direct WhatsApp Chat with HTI Engineers"
-          title="Chat with HTI Specialist on WhatsApp (+91 9992756077)"
+          aria-label="Chat with us on WhatsApp"
+          title="Chat with us on WhatsApp (+91 9892756077)"
         >
           <div className="wa-icon-glow-wrap">
             <svg className="whatsapp-svg-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -225,7 +228,7 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
             </svg>
           </div>
           <span className="float-tooltip">Chat on WhatsApp</span>
-        </button>
+        </a>
 
         {/* AI Chatbot Floating Trigger with Electric Gradient & Ambient Glow */}
         <button
@@ -293,10 +296,16 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
           {/* Quick Notice Bar */}
           <div className="chatbot-sub-bar">
             <span>Direct WhatsApp Helpline:</span>
-            <button className="sub-bar-wa-link" onClick={() => openWhatsApp()}>
-              <span>+91 9992756077</span>
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="sub-bar-wa-link"
+              aria-label="Chat with us on WhatsApp"
+            >
+              <span>+91 9892756077</span>
               <ExternalLink size={11} />
-            </button>
+            </a>
           </div>
 
           {/* Messages Body */}

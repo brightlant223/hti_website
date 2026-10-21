@@ -62,36 +62,26 @@
 }
 
 /* Brand Column */
-.footer-logo-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.footer-hti-logo {
-  height: 26px;
-  width: auto;
-  object-fit: contain;
-}
-
 .footer-brand-title {
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
+  line-height: 1.15;
+  margin-bottom: 8px;
 }
 
 .brand-head-bold {
   font-weight: 800;
   color: #ffffff;
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
+  font-size: 0.98rem;
+  letter-spacing: 0.03em;
 }
 
 .brand-head-sub {
-  font-size: 0.65rem;
+  font-size: 0.67rem;
   color: #94a3b8;
   font-weight: 500;
+  margin-top: 2px;
+  letter-spacing: 0.01em;
 }
 
 .footer-summary-text {
@@ -336,7 +326,7 @@
 /* 3. TABLETS PORTRAIT & LARGE MOBILES (601px - 840px) */
 @media (max-width: 840px) {
   .footer-wrap {
-    padding: 14px 0 8px;
+    padding: 14px 0 85px;
   }
   .footer-grid {
     grid-template-columns: 1fr 1fr;
@@ -360,7 +350,7 @@
 /* 4. MOBILES (<= 600px) - ULTRA SLIM */
 @media (max-width: 600px) {
   .footer-wrap {
-    padding: 10px 0 6px;
+    padding: 12px 0 90px;
   }
   .footer-container {
     padding: 0 10px;
@@ -374,18 +364,14 @@
     gap: 8px 10px;
     margin-bottom: 8px;
   }
-  .footer-logo-row {
-    gap: 6px;
-    margin-bottom: 3px;
-  }
-  .footer-hti-logo {
-    height: 22px;
+  .footer-brand-title {
+    margin-bottom: 4px;
   }
   .brand-head-bold {
-    font-size: 0.8rem;
+    font-size: 0.88rem;
   }
   .brand-head-sub {
-    font-size: 0.6rem;
+    font-size: 0.62rem;
   }
   .footer-summary-text {
     font-size: 0.68rem;
@@ -473,7 +459,7 @@
 /* 5. ULTRA-COMPACT MOBILES (<= 380px) */
 @media (max-width: 380px) {
   .footer-wrap {
-    padding: 8px 0 5px;
+    padding: 10px 0 88px;
   }
   .footer-grid {
     gap: 6px 6px;
