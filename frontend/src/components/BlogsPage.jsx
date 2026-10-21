@@ -615,7 +615,7 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
           <div className="container">
             {filteredArticles.length === 0 ? (
               <div className="blogs-empty-state-card">
-                <BookOpen size={42} className="empty-icon text-muted" />
+                <BookOpen size={42} className="empty-icon" />
                 <h3>No whitepapers found matching your criteria</h3>
                 <p>Try switching to another discipline or clear your search term.</p>
                 <button 

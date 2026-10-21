@@ -1688,3 +1688,19 @@
 .dark .reader-content-body {
   color: #cbd5e1;
 }
+
+/* --------------------------------------------------------------------------
+   EMPTY STATE ICON
+   --------------------------------------------------------------------------
+   The empty-state glyph relied on .empty-icon and .text-muted, neither of
+   which has a rule here (.text-muted is only defined inside .login-label),
+   so the 42px icon rendered in the full-strength body colour with no
+   spacing. It now uses the muted slate used by the other empty states in
+   the site and sits centred above the message.
+   -------------------------------------------------------------------------- */
+
+.blogs-dedicated-page .blogs-empty-state-card .empty-icon {
+  display: block;
+  margin: 0 auto 12px;
+  color: #94a3b8;
+}
