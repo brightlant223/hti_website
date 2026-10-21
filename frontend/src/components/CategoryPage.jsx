@@ -1,13 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
-  ArrowLeft, Search, Filter, ShieldCheck, ArrowRight,
+  ArrowLeft, Search, ShieldCheck, ArrowRight,
   Send, Sparkles, Cpu, Layers, Flame, Lock, CheckCircle2,
-  PhoneCall, FileText, Check, ChevronDown, ChevronUp, Wrench,
-  Clock, Award, HelpCircle, CheckSquare, Factory, Building2,
-  SlidersHorizontal, Play, Truck, Plane, Download, X, Activity,
-  Monitor, User, AlertTriangle
+  PhoneCall, Check, ChevronDown, ChevronUp, Wrench,
+  Award, HelpCircle, Factory, Building2,
+  SlidersHorizontal, Play, Truck, Plane, Download, X, Activity
 } from 'lucide-react';
 import { getProductsByCategory } from '../data/productsData';
+import CategoryControls from './CategoryControls';
 
 // EXACT 14 INDUSTRIAL ACCESS AUTOMATION SERVICES MATCHING REFERENCE DESIGN
 const INDUSTRIAL_AUTOMATION_SERVICES = [
@@ -822,6 +822,60 @@ const MONITORING_FILTER_CATEGORIES = [
   'Custom Solutions'
 ];
 
+// Filter chips used to be a single flat list that mixed two different
+// dimensions - "which application" and "which specification". The second
+// row of chips therefore appeared with no heading at all. These values are
+// specifications and are now split into their own labelled group so the two
+// can also be combined.
+const SPECIFICATION_FILTER_VALUES = new Set([
+  'Heavy Duty',
+  'High Speed',
+  'Energy Efficient',
+  'Custom Solutions',
+  'Crash Rated',
+  'Smart Controls',
+  'Flameproof Ex-d'
+]);
+
+const splitFilters = (filters) => {
+  const rest = filters.filter((f) => f !== 'All');
+  return {
+    application: ['All', ...rest.filter((f) => !SPECIFICATION_FILTER_VALUES.has(f))],
+    specification: ['All', ...rest.filter((f) => SPECIFICATION_FILTER_VALUES.has(f))]
+  };
+};
+
+// Pre-split filter lists for each service division
+const AUTOMATION_FILTERS = splitFilters(FILTER_CATEGORIES);
+const CLEANROOM_FILTERS = splitFilters(CLEANROOM_FILTER_CATEGORIES);
+const PERIMETER_FILTERS = splitFilters(PERIMETER_FILTER_CATEGORIES);
+const FIRE_FILTERS = splitFilters(FIRE_FILTER_CATEGORIES);
+const SECURITY_FILTERS = splitFilters(SECURITY_FILTER_CATEGORIES);
+const MONITORING_FILTERS = splitFilters(MONITORING_FILTER_CATEGORIES);
+
+// One shared matcher for every category instead of six near-identical copies
+const filterServices = (services, { searchQuery, activeFilter, activeSpec }) => {
+  const query = (searchQuery || '').trim().toLowerCase();
+
+  return services.filter((service) => {
+    const matchSearch = !query || (
+      service.title.toLowerCase().includes(query) ||
+      service.description.toLowerCase().includes(query) ||
+      service.categoryBadge.toLowerCase().includes(query) ||
+      service.features.some((f) => f.toLowerCase().includes(query))
+    );
+
+    const matchApplication = activeFilter === 'All' ||
+      service.categoryFilters.includes(activeFilter) ||
+      service.categoryBadge === activeFilter;
+
+    const matchSpecification = activeSpec === 'All' ||
+      service.categoryFilters.includes(activeSpec);
+
+    return matchSearch && matchApplication && matchSpecification;
+  });
+};
+
 export default function CategoryPage({
   categoryKey,
   onNavigate,
@@ -831,8 +885,23 @@ export default function CategoryPage({
   const [selectedSubcat, setSelectedSubcat] = useState('All');
   const [activeFaq, setActiveFaq] = useState(null);
   const [activeFilter, setActiveFilter] = useState('All');
+  const [activeSpec, setActiveSpec] = useState('All');
   const [brochureToast, setBrochureToast] = useState(null);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
+
+  // Switching between category pages used to keep the previous page's search
+  // term and filter chips, which could land the visitor on an empty listing
+  // (e.g. /fire-protection showing "0 services found") with no visible
+  // explanation. Reset everything whenever the division changes.
+  const [lastCategoryKey, setLastCategoryKey] = useState(categoryKey);
+  if (lastCategoryKey !== categoryKey) {
+    setLastCategoryKey(categoryKey);
+    setSearchQuery('');
+    setSelectedSubcat('All');
+    setActiveFilter('All');
+    setActiveSpec('All');
+    setActiveFaq(null);
+  }
 
   // Smooth Scroll-Reveal Observer for Modern Interactive Animations
   useEffect(() => {
@@ -878,113 +947,35 @@ export default function CategoryPage({
   const isSecurity = categoryKey?.toLowerCase() === 'security-systems' || categoryKey?.toLowerCase() === 'security' || categoryKey?.toLowerCase() === 'cctv-surveillance' || categoryKey?.toLowerCase() === 'cctv';
   const isMonitoring = categoryKey?.toLowerCase() === 'server-room-monitoring' || categoryKey?.toLowerCase() === 'critical-monitoring' || categoryKey?.toLowerCase() === 'monitoring';
 
-  // Filter 6 CCTV Surveillance & Biometrics Services
-  const filteredSecurityServices = useMemo(() => {
-    return SECURITY_SERVICES.filter(service => {
-      const matchSearch = (
-        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-      const matchFilter = (
-        activeFilter === 'All' ||
-        service.categoryFilters.includes(activeFilter) ||
-        service.categoryBadge === activeFilter
-      );
-      return matchSearch && matchFilter;
-    });
-  }, [searchQuery, activeFilter]);
+  const filteredSecurityServices = useMemo(
+    () => filterServices(SECURITY_SERVICES, { searchQuery, activeFilter, activeSpec }),
+    [searchQuery, activeFilter, activeSpec]
+  );
 
-  // Filter 6 Server Room & Critical Monitoring Services
-  const filteredMonitoringServices = useMemo(() => {
-    return MONITORING_SERVICES.filter(service => {
-      const matchSearch = (
-        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-      const matchFilter = (
-        activeFilter === 'All' ||
-        service.categoryFilters.includes(activeFilter) ||
-        service.categoryBadge === activeFilter
-      );
-      return matchSearch && matchFilter;
-    });
-  }, [searchQuery, activeFilter]);
+  const filteredMonitoringServices = useMemo(
+    () => filterServices(MONITORING_SERVICES, { searchQuery, activeFilter, activeSpec }),
+    [searchQuery, activeFilter, activeSpec]
+  );
 
-  // Filter 14 Industrial Automation Services
-  const filteredAutomationServices = useMemo(() => {
-    return INDUSTRIAL_AUTOMATION_SERVICES.filter(service => {
-      const matchSearch = (
-        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-      const matchFilter = (
-        activeFilter === 'All' ||
-        service.categoryFilters.includes(activeFilter) ||
-        service.categoryBadge === activeFilter
-      );
-      return matchSearch && matchFilter;
-    });
-  }, [searchQuery, activeFilter]);
+  const filteredAutomationServices = useMemo(
+    () => filterServices(INDUSTRIAL_AUTOMATION_SERVICES, { searchQuery, activeFilter, activeSpec }),
+    [searchQuery, activeFilter, activeSpec]
+  );
 
-  // Filter 6 Cleanroom Interlocks & Pass Boxes Services
-  const filteredCleanroomServices = useMemo(() => {
-    return CLEANROOM_SERVICES.filter(service => {
-      const matchSearch = (
-        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-      const matchFilter = (
-        activeFilter === 'All' ||
-        service.categoryFilters.includes(activeFilter) ||
-        service.categoryBadge === activeFilter
-      );
-      return matchSearch && matchFilter;
-    });
-  }, [searchQuery, activeFilter]);
+  const filteredCleanroomServices = useMemo(
+    () => filterServices(CLEANROOM_SERVICES, { searchQuery, activeFilter, activeSpec }),
+    [searchQuery, activeFilter, activeSpec]
+  );
 
-  // Filter 6 Perimeter Defense & Traffic Control Services
-  const filteredPerimeterServices = useMemo(() => {
-    return PERIMETER_SERVICES.filter(service => {
-      const matchSearch = (
-        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-      const matchFilter = (
-        activeFilter === 'All' ||
-        service.categoryFilters.includes(activeFilter) ||
-        service.categoryBadge === activeFilter
-      );
-      return matchSearch && matchFilter;
-    });
-  }, [searchQuery, activeFilter]);
+  const filteredPerimeterServices = useMemo(
+    () => filterServices(PERIMETER_SERVICES, { searchQuery, activeFilter, activeSpec }),
+    [searchQuery, activeFilter, activeSpec]
+  );
 
-  // Filter 6 Fire Protection & Life Safety Services
-  const filteredFireServices = useMemo(() => {
-    return FIRE_SERVICES.filter(service => {
-      const matchSearch = (
-        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-      const matchFilter = (
-        activeFilter === 'All' ||
-        service.categoryFilters.includes(activeFilter) ||
-        service.categoryBadge === activeFilter
-      );
-      return matchSearch && matchFilter;
-    });
-  }, [searchQuery, activeFilter]);
+  const filteredFireServices = useMemo(
+    () => filterServices(FIRE_SERVICES, { searchQuery, activeFilter, activeSpec }),
+    [searchQuery, activeFilter, activeSpec]
+  );
 
   const handleBrochureDownload = (service) => {
     setBrochureToast(`Technical engineering brochure for "${service.title}" has been downloaded.`);
@@ -1584,43 +1575,20 @@ export default function CategoryPage({
           </section>
 
           {/* 4. SEARCH AND FILTER SECTION */}
-          <section className="auto-controls-section">
-            <div className="auto-search-bar-row">
-              <div className="auto-search-input-wrap">
-                <Search size={17} className="auto-search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search services, solutions..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="auto-search-field"
-                />
-                {searchQuery && (
-                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
-                )}
-              </div>
-
-              <div className="auto-results-count">
-                <span>{filteredAutomationServices.length} services found</span>
-              </div>
-            </div>
-
-            {/* Filter Chips by Application */}
-            <div className="auto-filters-container">
-              <div className="auto-filter-label">FILTER BY APPLICATION</div>
-              <div className="auto-filter-chips-list">
-                {FILTER_CATEGORIES.map((filter) => (
-                  <button
-                    key={filter}
-                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
-                    onClick={() => setActiveFilter(filter)}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
+          <CategoryControls
+            searchId="cat-search-automation"
+            searchLabel="Search automation services and systems"
+            searchPlaceholder="Search services, solutions..."
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            resultsLabel={`${filteredAutomationServices.length} services found`}
+            applicationFilters={AUTOMATION_FILTERS.application}
+            specificationFilters={AUTOMATION_FILTERS.specification}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            activeSpec={activeSpec}
+            onSpecChange={setActiveSpec}
+          />
 
           {/* 5. 14 SERVICE CARDS & CUSTOM CTA */}
           <section className="auto-services-grid-section auto-scroll-reveal">
@@ -1957,43 +1925,20 @@ export default function CategoryPage({
           </section>
 
           {/* 4. SEARCH AND FILTER SECTION */}
-          <section className="auto-controls-section">
-            <div className="auto-search-bar-row">
-              <div className="auto-search-input-wrap">
-                <Search size={17} className="auto-search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search cleanroom services, solutions..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="auto-search-field"
-                />
-                {searchQuery && (
-                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
-                )}
-              </div>
-
-              <div className="auto-results-count">
-                <span>{filteredCleanroomServices.length} services found</span>
-              </div>
-            </div>
-
-            {/* Filter Chips by Application */}
-            <div className="auto-filters-container">
-              <div className="auto-filter-label">FILTER BY APPLICATION</div>
-              <div className="auto-filter-chips-list">
-                {CLEANROOM_FILTER_CATEGORIES.map((filter) => (
-                  <button
-                    key={filter}
-                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
-                    onClick={() => setActiveFilter(filter)}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
+          <CategoryControls
+            searchId="cat-search-cleanroom"
+            searchLabel="Search cleanroom interlock and pass box services"
+            searchPlaceholder="Search cleanroom services, solutions..."
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            resultsLabel={`${filteredCleanroomServices.length} services found`}
+            applicationFilters={CLEANROOM_FILTERS.application}
+            specificationFilters={CLEANROOM_FILTERS.specification}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            activeSpec={activeSpec}
+            onSpecChange={setActiveSpec}
+          />
 
           {/* 5. 6 SERVICE CARDS & CUSTOM CLEANROOM CTA */}
           <section className="auto-services-grid-section auto-scroll-reveal">
@@ -2336,43 +2281,20 @@ export default function CategoryPage({
           </section>
 
           {/* 4. SEARCH AND FILTER SECTION */}
-          <section className="auto-controls-section">
-            <div className="auto-search-bar-row">
-              <div className="auto-search-input-wrap">
-                <Search size={17} className="auto-search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search perimeter services, solutions..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="auto-search-field"
-                />
-                {searchQuery && (
-                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
-                )}
-              </div>
-
-              <div className="auto-results-count">
-                <span>{filteredPerimeterServices.length} services found</span>
-              </div>
-            </div>
-
-            {/* Filter Chips by Application */}
-            <div className="auto-filters-container">
-              <div className="auto-filter-label">FILTER BY APPLICATION</div>
-              <div className="auto-filter-chips-list">
-                {PERIMETER_FILTER_CATEGORIES.map((filter) => (
-                  <button
-                    key={filter}
-                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
-                    onClick={() => setActiveFilter(filter)}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
+          <CategoryControls
+            searchId="cat-search-perimeter"
+            searchLabel="Search perimeter defense and traffic control services"
+            searchPlaceholder="Search perimeter services, solutions..."
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            resultsLabel={`${filteredPerimeterServices.length} services found`}
+            applicationFilters={PERIMETER_FILTERS.application}
+            specificationFilters={PERIMETER_FILTERS.specification}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            activeSpec={activeSpec}
+            onSpecChange={setActiveSpec}
+          />
 
           {/* 5. 6 SERVICE CARDS & CUSTOM PERIMETER CTA */}
           <section className="auto-services-grid-section auto-scroll-reveal">
@@ -2715,43 +2637,20 @@ export default function CategoryPage({
           </section>
 
           {/* 4. SEARCH AND FILTER SECTION */}
-          <section className="auto-controls-section">
-            <div className="auto-search-bar-row">
-              <div className="auto-search-input-wrap">
-                <Search size={17} className="auto-search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search fire protection services, solutions..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="auto-search-field"
-                />
-                {searchQuery && (
-                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
-                )}
-              </div>
-
-              <div className="auto-results-count">
-                <span>{filteredFireServices.length} services found</span>
-              </div>
-            </div>
-
-            {/* Filter Chips by Application */}
-            <div className="auto-filters-container">
-              <div className="auto-filter-label">FILTER BY APPLICATION</div>
-              <div className="auto-filter-chips-list">
-                {FIRE_FILTER_CATEGORIES.map((filter) => (
-                  <button
-                    key={filter}
-                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
-                    onClick={() => setActiveFilter(filter)}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
+          <CategoryControls
+            searchId="cat-search-fire"
+            searchLabel="Search fire protection and life safety services"
+            searchPlaceholder="Search fire protection services, solutions..."
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            resultsLabel={`${filteredFireServices.length} services found`}
+            applicationFilters={FIRE_FILTERS.application}
+            specificationFilters={FIRE_FILTERS.specification}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            activeSpec={activeSpec}
+            onSpecChange={setActiveSpec}
+          />
 
           {/* 5. 6 SERVICE CARDS & CUSTOM FIRE SAFETY CTA */}
           <section className="auto-services-grid-section auto-scroll-reveal">
@@ -3094,43 +2993,20 @@ export default function CategoryPage({
           </section>
 
           {/* 4. SEARCH AND FILTER SECTION */}
-          <section className="auto-controls-section">
-            <div className="auto-search-bar-row">
-              <div className="auto-search-input-wrap">
-                <Search size={17} className="auto-search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search surveillance, biometrics, intercom solutions..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="auto-search-field"
-                />
-                {searchQuery && (
-                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
-                )}
-              </div>
-
-              <div className="auto-results-count">
-                <span>{filteredSecurityServices.length} services found</span>
-              </div>
-            </div>
-
-            {/* Filter Chips by Application */}
-            <div className="auto-filters-container">
-              <div className="auto-filter-label">FILTER BY APPLICATION</div>
-              <div className="auto-filter-chips-list">
-                {SECURITY_FILTER_CATEGORIES.map((filter) => (
-                  <button
-                    key={filter}
-                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
-                    onClick={() => setActiveFilter(filter)}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
+          <CategoryControls
+            searchId="cat-search-security"
+            searchLabel="Search CCTV surveillance and biometrics services"
+            searchPlaceholder="Search surveillance, biometrics, intercom solutions..."
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            resultsLabel={`${filteredSecurityServices.length} services found`}
+            applicationFilters={SECURITY_FILTERS.application}
+            specificationFilters={SECURITY_FILTERS.specification}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            activeSpec={activeSpec}
+            onSpecChange={setActiveSpec}
+          />
 
           {/* 5. 6 SERVICE CARDS & CUSTOM SECURITY CTA */}
           <section className="auto-services-grid-section auto-scroll-reveal">
@@ -3473,43 +3349,20 @@ export default function CategoryPage({
           </section>
 
           {/* 4. SEARCH AND FILTER SECTION */}
-          <section className="auto-controls-section">
-            <div className="auto-search-bar-row">
-              <div className="auto-search-input-wrap">
-                <Search size={17} className="auto-search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search server room monitoring, WLD, gas detection..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="auto-search-field"
-                />
-                {searchQuery && (
-                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
-                )}
-              </div>
-
-              <div className="auto-results-count">
-                <span>{filteredMonitoringServices.length} services found</span>
-              </div>
-            </div>
-
-            {/* Filter Chips by Application */}
-            <div className="auto-filters-container">
-              <div className="auto-filter-label">FILTER BY APPLICATION</div>
-              <div className="auto-filter-chips-list">
-                {MONITORING_FILTER_CATEGORIES.map((filter) => (
-                  <button
-                    key={filter}
-                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
-                    onClick={() => setActiveFilter(filter)}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
+          <CategoryControls
+            searchId="cat-search-monitoring"
+            searchLabel="Search server room and critical monitoring services"
+            searchPlaceholder="Search server room monitoring, WLD, gas detection..."
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            resultsLabel={`${filteredMonitoringServices.length} services found`}
+            applicationFilters={MONITORING_FILTERS.application}
+            specificationFilters={MONITORING_FILTERS.specification}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            activeSpec={activeSpec}
+            onSpecChange={setActiveSpec}
+          />
 
           {/* 5. 6 SERVICE CARDS & CUSTOM MONITORING CTA */}
           <section className="auto-services-grid-section auto-scroll-reveal">
@@ -3761,12 +3614,17 @@ export default function CategoryPage({
             {/* Search input */}
             <div className="category-search-box">
               <Search size={18} className="search-icon" />
+              <label className="sr-only" htmlFor="cat-search-hygiene">
+                Search within {categoryMeta.categoryName}
+              </label>
               <input
-                type="text"
+                id="cat-search-hygiene"
+                type="search"
                 placeholder={`Search within ${categoryMeta.categoryName}...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="category-search-input"
+                autoComplete="off"
               />
               {searchQuery && (
                 <button
@@ -3794,6 +3652,8 @@ export default function CategoryPage({
                     key={idx}
                     className={`subcat-pill-btn ${selectedSubcat === sub ? 'active-pill' : ''}`}
                     onClick={() => setSelectedSubcat(sub)}
+                    type="button"
+                    aria-pressed={selectedSubcat === sub}
                   >
                     {sub}
                   </button>

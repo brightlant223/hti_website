@@ -6779,6 +6779,7 @@
 .btn-sm {
   padding: 8px 16px;
   font-size: 0.85rem;
+  min-height: 36px;
 }
 
 /* Admin Table */
@@ -9473,10 +9474,13 @@
 .auto-breadcrumb-link {
   background: none;
   border: none;
-  padding: 0;
+  padding: 4px 0;
   color: #64748b;
   cursor: pointer;
   font-size: 0.82rem;
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
   transition: color 0.15s ease;
 }
 
@@ -9869,6 +9873,16 @@
   margin-bottom: 9px;
 }
 
+/* Filter group wrapper (was previously unstyled, which left the two
+   labelled groups pressed against each other) */
+.auto-filters-container {
+  margin-bottom: 4px;
+}
+
+.auto-filters-container + .auto-filters-container {
+  margin-top: 14px;
+}
+
 .auto-filter-chips-list {
   display: flex;
   align-items: center;
@@ -9880,8 +9894,9 @@
   background: #ffffff;
   border: 1px solid #cbd5e1;
   border-radius: 9999px;
-  padding: 5px 13px;
+  padding: 7px 14px;
   font-size: 0.76rem;
+  min-height: 32px;
   font-weight: 600;
   color: #334155;
   cursor: pointer;
@@ -10108,7 +10123,8 @@
   color: #ffffff;
   border: none;
   border-radius: 8px;
-  padding: 8px 14px;
+  padding: 9px 14px;
+  min-height: 36px;
   font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
@@ -10142,7 +10158,8 @@
   border: 1px solid #cbd5e1;
   color: #334155;
   border-radius: 8px;
-  padding: 6px 10px;
+  padding: 7px 12px;
+  min-height: 34px;
   font-size: 0.74rem;
   font-weight: 600;
   cursor: pointer;
@@ -10258,7 +10275,8 @@
   color: #ffffff;
   border: none;
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 9px 16px;
+  min-height: 36px;
   font-size: 0.80rem;
   font-weight: 700;
   cursor: pointer;
@@ -18150,5 +18168,51 @@
 @media (max-width: 768px) {
   .insights-quote-row-section {
     padding-bottom: 84px;
+  }
+}
+
+/* ==========================================================================
+   CATEGORY PAGES - TOUCH TARGET & ACCESSIBILITY PASS
+   Filter chips, card buttons and breadcrumbs were 17-33px tall on phones,
+   which made them very hard to hit. The sr-only helper labels the search
+   inputs for screen readers without changing the visual design.
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .auto-filter-chip,
+  .auto-btn-view-details,
+  .auto-btn-brochure,
+  .auto-cta-btn,
+  .auto-breadcrumb-link,
+  .auto-search-clear,
+  .subcat-pill-btn,
+  .back-btn,
+  .breadcrumb-link,
+  .category-search-input,
+  .auto-search-field {
+    min-height: 44px;
+  }
+
+  .auto-search-clear {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+  }
+
+  .auto-search-field,
+  .category-search-input {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .auto-breadcrumb-link,
+  .breadcrumb-link {
+    display: inline-flex;
+    align-items: center;
   }
 }
