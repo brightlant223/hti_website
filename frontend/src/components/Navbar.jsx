@@ -1083,11 +1083,6 @@ export default function Navbar({
               aria-label="Admin Portal"
             >
               <User size={18} />
-              {inquiryCount > 0 && (
-                <span className="admin-icon-badge" title={`${inquiryCount} active inquiries`}>
-                  {inquiryCount}
-                </span>
-              )}
             </button>
           </div>
 
@@ -1773,9 +1768,6 @@ export default function Navbar({
                 >
                   <User size={17} />
                   <span>Open Admin Portal</span>
-                  {inquiryCount > 0 && (
-                    <span className="admin-badge-count">{inquiryCount}</span>
-                  )}
                 </button>
               </div>
             </div>
