@@ -362,3 +362,21 @@ input, textarea, select {
   white-space: nowrap;
   border: 0;
 }
+
+/* ==========================================================================
+   UTILITY CLASSES
+   These Tailwind-style helpers are used across the interactive product demos
+   (clock, pass box, chiller) but were never defined anywhere, so they were
+   silently doing nothing.
+   ========================================================================== */
+.flex-shrink-0 { flex-shrink: 0; }
+
+.text-amber-400 { color: #fbbf24; }
+.text-sky-400 { color: #38bdf8; }
+.text-cyan-300 { color: #67e8f9; }
+.text-cyan-400 { color: #22d3ee; }
+.text-emerald-300 { color: #6ee7b7; }
+.text-emerald-400 { color: #34d399; }
+.text-slate-200 { color: #e2e8f0; }
+.text-emerald-500 { color: #10b981; }
+.text-red-500 { color: #ef4444; }

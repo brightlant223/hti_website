@@ -182,8 +182,10 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
             {/* Instant Search Box */}
             <div className="clients-search-box">
               <Search size={16} className="search-box-icon" />
-              <input
+              <label className="sr-only" htmlFor="clients-search-input">Search clients or sector</label>
+                <input
                 type="text"
+                id="clients-search-input"
                 placeholder="Search clients or sector..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

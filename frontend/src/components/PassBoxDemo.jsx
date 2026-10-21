@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Pause, RotateCcw, AlertCircle, Package } from 'lucide-react';
+import '../AutomaticDoorsDetail.css';
 
 export default function PassBoxDemo() {
   const [currentStep, setCurrentStep] = useState(1);

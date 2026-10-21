@@ -1461,3 +1461,30 @@ html.dark .pharma-modal-success p {
     transition: none !important;
   }
 }
+
+/* ==========================================================================
+   TOUCH TARGET PASS
+   The breadcrumb link and the hero carousel dots were far too small to hit
+   reliably on a phone (17px and 8px).
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .pharma-breadcrumb-btn {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 0;
+  }
+
+  /* Keep the dot visually small but give it a real hit area */
+  .pharma-hero-dot {
+    position: relative;
+    width: 10px;
+    height: 10px;
+  }
+
+  .pharma-hero-dot::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+  }
+}

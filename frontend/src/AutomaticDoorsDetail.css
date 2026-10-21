@@ -2004,3 +2004,24 @@
 
 
 
+
+/* ==========================================================================
+   TOUCH TARGET PASS
+   The interactive demo controls (clock, pass box, chiller) were only
+   ~15px tall, which made them very hard to hit on a phone.
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .demo-ctrl-btn,
+  .clock-tool-btn,
+  .clock-sync-trigger-btn,
+  .demo-action-btn {
+    min-height: 42px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .clock-tool-btn,
+  .clock-sync-trigger-btn {
+    min-width: 42px;
+  }
+}

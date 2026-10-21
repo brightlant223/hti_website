@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
+  AlertCircle,
   ShieldCheck,
   Wrench,
   Settings,
@@ -25,6 +26,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { getProductBySlug } from '../data/productCatalogueData';
+import { scrollToTop } from '../utils/scroll';
 import './ProductDetailPage.css';
 
 // Specialized Cleanroom Interactive Demonstrations
@@ -69,7 +71,13 @@ export default function ProductDetailPage({
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [modalSubmitted, setModalSubmitted] = useState(false);
+  const [modalError, setModalError] = useState('');
   const [carouselOffset, setCarouselOffset] = useState(0);
+
+  // Quote modal refs - used to move focus in, trap it and restore it on close
+  const quoteTriggerRef = useRef(null);
+  const modalBoxRef = useRef(null);
+  const modalFirstFieldRef = useRef(null);
 
   // Always resolve the canonical product record from productCatalogueData
   const rawSlug = typeof productProp === 'string'
@@ -90,21 +98,88 @@ export default function ProductDetailPage({
     message: ''
   });
 
-  // Reset states and update prefilled message when product changes
-  useEffect(() => {
+  // Reset the per-product state when the visitor switches to another product.
+  // This is done during render (React's documented "adjust state when a prop
+  // changes" pattern) so the page never shows one product's form message or
+  // carousel position on a different product.
+  const [lastSlug, setLastSlug] = useState(rawSlug);
+  if (lastSlug !== rawSlug) {
+    setLastSlug(rawSlug);
     setIsVideoPlaying(false);
     setCarouselOffset(0);
     setModalSubmitted(false);
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
+    setModalError('');
     setFormData(prev => ({
       ...prev,
       message: `Hello HTI Engineering, please share technical data sheet, CAD GA drawing, and turnkey quotation for ${product?.name || 'this system'}.`
     }));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Side effects that must run after the product has changed
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+    scrollToTop();
   }, [rawSlug, product?.name]);
+
+  const openQuoteModal = () => {
+    setModalError('');
+    setIsQuoteModalOpen(true);
+  };
+
+  const closeQuoteModal = () => {
+    setIsQuoteModalOpen(false);
+    setModalError('');
+    // Return focus to the button that opened the dialog
+    if (quoteTriggerRef.current) quoteTriggerRef.current.focus();
+  };
+
+  // Escape closes the dialog and Tab is trapped inside it
+  useEffect(() => {
+    if (!isQuoteModalOpen) return undefined;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeQuoteModal();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      const box = modalBoxRef.current;
+      if (!box) return;
+      const focusables = box.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    // Focus the first field so keyboard users land inside the form
+    const t = setTimeout(() => {
+      if (modalFirstFieldRef.current) modalFirstFieldRef.current.focus();
+    }, 60);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      clearTimeout(t);
+    };
+  }, [isQuoteModalOpen]);
 
   if (!product) {
     return (
@@ -281,37 +356,49 @@ export default function ProductDetailPage({
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (modalError) setModalError('');
   };
 
-  const handleModalSubmit = (e) => {
+
+  const handleModalSubmit = async (e) => {
     e.preventDefault();
+    setModalError('');
+
     if (!formData.name || !formData.email || !formData.phone) {
-      alert('Please fill in your Name, Email, and Phone number.');
+      setModalError('Please fill in your Name, Email and Phone number.');
       return;
     }
 
-    fetch('/api/inquiries', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        full_name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        company: formData.company || 'Not specified',
-        category: product.category || 'Automation',
-        product_name: product.name,
-        message: `${formData.message} [Scope/Qty: ${formData.quantity}]`
-      })
-    }).catch(() => {
-      // Graceful offline fallback
-    });
+    try {
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company || 'Not specified',
+          category: product.category || 'Automation',
+          product_name: product.name,
+          message: `${formData.message} [Scope/Qty: ${formData.quantity}]`
+        })
+      });
 
-    setModalSubmitted(true);
-    if (onQuoteSubmit) onQuoteSubmit();
-    setTimeout(() => {
-      setModalSubmitted(false);
-      setIsQuoteModalOpen(false);
-    }, 2400);
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.detail || 'We could not send your request. Please try again.');
+      }
+
+      setModalSubmitted(true);
+      if (onQuoteSubmit) onQuoteSubmit();
+      setTimeout(() => {
+        setModalSubmitted(false);
+        setIsQuoteModalOpen(false);
+      }, 2400);
+    } catch (err) {
+      // Surface the failure instead of silently pretending it worked
+      setModalError(err.message || 'We could not send your request. Please try again.');
+    }
   };
 
   const handleCategoryBreadcrumb = () => {
@@ -377,8 +464,10 @@ export default function ProductDetailPage({
             <div className="auto-btn-row">
               <button
                 className="auto-btn-primary"
-                onClick={() => setIsQuoteModalOpen(true)}
+                onClick={openQuoteModal}
                 id="btn-hero-instant-quotation"
+                ref={quoteTriggerRef}
+                type="button"
               >
                 <span>Request Instant Quotation</span>
                 <ArrowRight size={16} />
@@ -423,7 +512,7 @@ export default function ProductDetailPage({
           {/* Left Column: Interactive Simulation OR Video Player OR Visual Fallback */}
           {isInterlockDemo ? (
             <div className="auto-video-wrapper" style={{ aspectRatio: 'auto', background: 'transparent' }}>
-              <DoorInterlockSimulator onInquireInterlock={() => setIsQuoteModalOpen(true)} />
+              <DoorInterlockSimulator onInquireInterlock={openQuoteModal} />
             </div>
           ) : isPassBoxDemo ? (
             <div className="auto-video-wrapper" style={{ aspectRatio: 'auto', background: 'transparent' }}>
@@ -654,12 +743,20 @@ export default function ProductDetailPage({
           SECTION G: INSTANT QUOTATION MODAL
           ========================================================================= */}
       {isQuoteModalOpen && (
-        <div className="auto-modal-backdrop" onClick={() => setIsQuoteModalOpen(false)}>
-          <div className="auto-modal-box" onClick={(e) => e.stopPropagation()}>
+        <div className="auto-modal-backdrop" onClick={closeQuoteModal}>
+          <div
+            className="auto-modal-box"
+            onClick={(e) => e.stopPropagation()}
+            ref={modalBoxRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="quote-modal-title"
+          >
             <button
               className="auto-modal-close-btn"
-              onClick={() => setIsQuoteModalOpen(false)}
-              aria-label="Close Modal"
+              onClick={closeQuoteModal}
+              aria-label="Close quotation request"
+              type="button"
             >
               <X size={18} />
             </button>
@@ -674,18 +771,28 @@ export default function ProductDetailPage({
               </div>
             ) : (
               <>
-                <h3 className="auto-modal-title">Request Instant Quotation</h3>
+                <h3 className="auto-modal-title" id="quote-modal-title">Request Instant Quotation</h3>
                 <p className="auto-modal-subtitle">
                   {product.name} • Turnkey Engineering Support
                 </p>
 
-                <form onSubmit={handleModalSubmit}>
+                {modalError && (
+                  <div className="auto-modal-error" role="alert">
+                    <AlertCircle size={16} />
+                    <span>{modalError}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleModalSubmit} noValidate>
                   <div className="auto-form-group">
-                    <label className="auto-form-label">Full Name *</label>
+                    <label className="auto-form-label" htmlFor="quote-name">Full Name *</label>
                     <input
+                      id="quote-name"
+                      ref={modalFirstFieldRef}
                       type="text"
                       name="name"
                       required
+                      autoComplete="name"
                       placeholder="e.g. Rajesh Sharma"
                       value={formData.name}
                       onChange={handleInputChange}
@@ -694,11 +801,13 @@ export default function ProductDetailPage({
                   </div>
 
                   <div className="auto-form-group">
-                    <label className="auto-form-label">Corporate Email Address *</label>
+                    <label className="auto-form-label" htmlFor="quote-email">Corporate Email Address *</label>
                     <input
+                      id="quote-email"
                       type="email"
                       name="email"
                       required
+                      autoComplete="email"
                       placeholder="e.g. rajesh@company.com"
                       value={formData.email}
                       onChange={handleInputChange}
@@ -707,11 +816,14 @@ export default function ProductDetailPage({
                   </div>
 
                   <div className="auto-form-group">
-                    <label className="auto-form-label">Phone Number *</label>
+                    <label className="auto-form-label" htmlFor="quote-phone">Phone Number *</label>
                     <input
+                      id="quote-phone"
                       type="tel"
                       name="phone"
                       required
+                      autoComplete="tel"
+                      inputMode="tel"
                       placeholder="e.g. +91 98765 43210"
                       value={formData.phone}
                       onChange={handleInputChange}
@@ -720,10 +832,12 @@ export default function ProductDetailPage({
                   </div>
 
                   <div className="auto-form-group">
-                    <label className="auto-form-label">Company / Facility Name</label>
+                    <label className="auto-form-label" htmlFor="quote-company">Company / Facility Name</label>
                     <input
+                      id="quote-company"
                       type="text"
                       name="company"
+                      autoComplete="organization"
                       placeholder="e.g. Torrent Pharma / L&T Realty"
                       value={formData.company}
                       onChange={handleInputChange}
@@ -732,8 +846,9 @@ export default function ProductDetailPage({
                   </div>
 
                   <div className="auto-form-group">
-                    <label className="auto-form-label">Project Scope / Quantity</label>
+                    <label className="auto-form-label" htmlFor="quote-quantity">Project Scope / Quantity</label>
                     <input
+                      id="quote-quantity"
                       type="text"
                       name="quantity"
                       placeholder="e.g. 4 Entrance Sets / Turnkey Site"
@@ -744,8 +859,9 @@ export default function ProductDetailPage({
                   </div>
 
                   <div className="auto-form-group">
-                    <label className="auto-form-label">Project Requirements / Notes</label>
+                    <label className="auto-form-label" htmlFor="quote-message">Project Requirements / Notes</label>
                     <textarea
+                      id="quote-message"
                       name="message"
                       rows={3}
                       value={formData.message}

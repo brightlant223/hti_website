@@ -982,3 +982,52 @@
     padding: 24px 18px;
   }
 }
+
+/* ==========================================================================
+   QUOTATION MODAL - ERROR STATE & TOUCH TARGETS
+   ========================================================================== */
+.auto-modal-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.45;
+  margin-bottom: 16px;
+}
+
+.auto-modal-error svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+@media (max-width: 1024px) {
+  .auto-modal-close-btn {
+    width: 40px;
+    height: 40px;
+    top: 12px;
+    right: 12px;
+  }
+
+  .auto-modal-box {
+    padding: 26px 20px;
+    max-height: 92vh;
+  }
+
+  .auto-breadcrumb-btn,
+  .auto-related-view-all {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .auto-arrow-btn {
+    min-height: 42px;
+    min-width: 42px;
+  }
+}

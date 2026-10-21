@@ -155,11 +155,15 @@ export default function ProductsCatalog({
               color: '#94a3b8',
               pointerEvents: 'none'
             }} />
+            <label className="sr-only" htmlFor="catalog-search-input">
+              Search all {TOTAL_PRODUCT_COUNT} systems
+            </label>
             <input
-              type="text"
+              id="catalog-search-input"
+              type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search 25 systems (e.g. boom barrier, interlock, 4K CCTV, cleanroom door)..."
+              placeholder={`Search ${TOTAL_PRODUCT_COUNT} systems (e.g. boom barrier, interlock, 4K CCTV, cleanroom door)...`}
               style={{
                 width: '100%',
                 padding: '11px 40px 11px 42px',

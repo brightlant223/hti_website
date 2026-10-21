@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Pause, RotateCcw, Thermometer, ShieldCheck, DoorClosed, Wind, Layers, CheckCircle2 } from 'lucide-react';
+import '../AutomaticDoorsDetail.css';
 
 export default function ChillerCleanroomDoorDemo() {
   const [doorMode, setDoorMode] = useState('chiller'); // 'chiller' | 'cleanroom'

@@ -331,13 +331,14 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                     {/* Row 1: Full Name & Company */}
                     <div className="form-row-2col">
                       <div className="form-field-group">
-                        <label className="form-field-label">
+                        <label className="form-field-label" htmlFor="contact-full-name">
                           Full Name<span className="required-star">*</span>
                         </label>
                         <div className="input-with-icon-wrap">
                           <User size={15} className="input-leading-icon" />
                           <input
                             type="text"
+                            id="contact-full-name"
                             name="fullName"
                             required
                             placeholder="Enter your full name"
@@ -350,13 +351,14 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                       </div>
 
                       <div className="form-field-group">
-                        <label className="form-field-label">
+                        <label className="form-field-label" htmlFor="contact-company">
                           Company / Organization<span className="required-star">*</span>
                         </label>
                         <div className="input-with-icon-wrap">
                           <Building2 size={15} className="input-leading-icon" />
                           <input
                             type="text"
+                            id="contact-company"
                             name="company"
                             required
                             placeholder="Enter company name"
@@ -372,13 +374,14 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                     {/* Row 2: Email & Phone */}
                     <div className="form-row-2col">
                       <div className="form-field-group">
-                        <label className="form-field-label">
+                        <label className="form-field-label" htmlFor="contact-email">
                           Email Address<span className="required-star">*</span>
                         </label>
                         <div className="input-with-icon-wrap">
                           <Mail size={15} className="input-leading-icon" />
                           <input
                             type="email"
+                            id="contact-email"
                             name="email"
                             required
                             placeholder="Enter your email address"
@@ -391,13 +394,14 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
                       </div>
 
                       <div className="form-field-group">
-                        <label className="form-field-label">
+                        <label className="form-field-label" htmlFor="contact-phone">
                           Phone Number<span className="required-star">*</span>
                         </label>
                         <div className="input-with-icon-wrap">
                           <Phone size={15} className="input-leading-icon" />
                           <input
                             type="tel"
+                            id="contact-phone"
                             name="phone"
                             required
                             placeholder="Enter your phone number"
@@ -412,11 +416,12 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
 
                     {/* Row 3: Area of Interest */}
                     <div className="form-field-group">
-                      <label className="form-field-label">
+                      <label className="form-field-label" htmlFor="contact-area">
                         Area of Interest<span className="required-star">*</span>
                       </label>
                       <select
-                        name="areaOfInterest"
+                        id="contact-area"
+                            name="areaOfInterest"
                         required
                         value={formData.areaOfInterest}
                         onChange={handleInputChange}
@@ -434,11 +439,12 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
 
                     {/* Row 4: Project Details & Requirements */}
                     <div className="form-field-group">
-                      <label className="form-field-label">
+                      <label className="form-field-label" htmlFor="contact-message">
                         Project Details & Requirements<span className="required-star">*</span>
                       </label>
                       <textarea
-                        name="message"
+                        id="contact-message"
+                            name="message"
                         required
                         placeholder="Please describe your project in detail — site location, scope, quantity, timeline, or any specific requirements..."
                         value={formData.message}

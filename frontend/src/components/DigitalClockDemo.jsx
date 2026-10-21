@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Pause, RotateCcw, Radio, CheckCircle, Clock, Zap, Server, MapPin } from 'lucide-react';
+import { Play, Pause, RotateCcw, Radio, Zap, Server } from 'lucide-react';
+import '../AutomaticDoorsDetail.css';
 
 export default function DigitalClockDemo() {
-  const [time, setTime] = useState(new Date());
+  // Lazy initialiser keeps `new Date()` out of the render body
+  const [time, setTime] = useState(() => new Date());
   const [isPlaying, setIsPlaying] = useState(true);
   const [is24Hour, setIs24Hour] = useState(true);
   const [ledColor, setLedColor] = useState('red'); // 'red' | 'green'
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState('GPS Synchronized · 8 Satellites');
-  const [activeZone, setActiveZone] = useState('all'); // 'all' | 'zone1' | 'zone2' | 'zone3'
 
   // Clock tick timer
   useEffect(() => {
@@ -55,7 +56,6 @@ export default function DigitalClockDemo() {
     setIsPlaying(true);
     setIs24Hour(true);
     setLedColor('red');
-    setActiveZone('all');
     setSyncStatus('GPS Synchronized · 8 Satellites');
   };
 
