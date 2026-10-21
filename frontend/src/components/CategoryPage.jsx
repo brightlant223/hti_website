@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { getProductsByCategory } from '../data/productsData';
 import CategoryControls from './CategoryControls';
+import './CategoryPage.css';
 
 // EXACT 14 INDUSTRIAL ACCESS AUTOMATION SERVICES MATCHING REFERENCE DESIGN
 const INDUSTRIAL_AUTOMATION_SERVICES = [
@@ -3519,7 +3520,7 @@ export default function CategoryPage({
       </div>
 
       {/* 3. Deep Dive Engineering Overview */}
-      <div className="category-overview-section section-sm">
+      <div className="category-overview-section">
         <div className="container">
           <div className="glass-card detail-card">
             <div className="card-top-row">
@@ -3529,16 +3530,16 @@ export default function CategoryPage({
                 Statutory Certified Engineering
               </span>
             </div>
-            <h2 className="text-xl font-bold text-slate-900 mt-2 mb-3">
+            <h2 className="category-overview-title">
               Comprehensive Engineering & Execution for {categoryMeta.categoryName}
             </h2>
-            <p className="text-slate-600 leading-relaxed text-base">
+            <p className="category-overview-text">
               {categoryMeta.overviewText}
             </p>
 
             {/* Target Industry Sectors */}
-            <div className="mt-6 pt-5 border-t border-slate-200">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-3">
+            <div className="category-sectors-divider">
+              <span className="category-sectors-label">
                 Key Sector Applications:
               </span>
               <div className="applications-badge-grid">
@@ -3615,10 +3616,10 @@ export default function CategoryPage({
       <div className="category-products-grid-section section">
         <div className="container">
           {filteredProducts.length === 0 ? (
-            <div className="empty-results-box glass-card text-center py-12">
-              <Search size={40} className="text-slate-400 mb-3 mx-auto" />
-              <h3 className="text-xl font-bold text-slate-800">No products matching "{searchQuery}"</h3>
-              <p className="text-slate-500 mt-2 mb-4">Try clearing your search term or selecting a different subcategory filter.</p>
+            <div className="empty-results-box glass-card">
+              <Search size={40} className="empty-results-icon" />
+              <h3 className="empty-results-title">No products matching "{searchQuery}"</h3>
+              <p className="empty-results-text">Try clearing your search term or selecting a different subcategory filter.</p>
               <button
                 className="btn btn-secondary"
                 onClick={() => {
@@ -3657,7 +3658,7 @@ export default function CategoryPage({
                   <div className="cat-card-features-list">
                     {p.features && p.features.slice(0, 3).map((f, fIdx) => (
                       <div key={fIdx} className="cat-card-feature-row">
-                        <Check size={14} className="text-sky-600 flex-shrink-0" />
+                        <Check size={14} className="cat-feature-check-icon" />
                         <span>{f}</span>
                       </div>
                     ))}
@@ -3666,7 +3667,7 @@ export default function CategoryPage({
                   {/* Actions Row */}
                   <div className="cat-card-action-row">
                     <button
-                      className="btn btn-primary btn-sm flex-1"
+                      className="btn btn-primary btn-sm cat-card-primary-btn"
                       onClick={() => {
                         onNavigate('product', p.slug);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
