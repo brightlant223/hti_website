@@ -42,7 +42,7 @@ const SOLUTION_CATEGORIES = [
   { id: 'parking', label: 'Parking Solutions', icon: Car }
 ];
 
-// FEATURED SOLUTIONS (matching cards in screenshot)
+// FEATURED SOLUTIONS (5 Solutions displayed in 1 Line)
 const FEATURED_SOLUTIONS = [
   {
     id: 'cctv',
@@ -52,6 +52,11 @@ const FEATURED_SOLUTIONS = [
     image: '/cctv-featured-dome.jpg',
     badge: 'AI Detection',
     highlight: '4K Ultra-HD Resolution',
+    keyFeatures: [
+      '4K UHD (8MP) AI Analytics',
+      'Facial & Vehicle LPR Capture',
+      '80m Starlight IR Night Vision'
+    ],
     description: 'High-definition 4K IP cameras with deep learning video analytics for perimeter tripwire, object tracking, and central VMS management.',
     specs: [
       '4K Ultra HD (3840×2160) Resolution @ 30fps',
@@ -69,6 +74,11 @@ const FEATURED_SOLUTIONS = [
     image: '/cctv-featured-biometric.jpg',
     badge: 'Touchless Multi-Modal',
     highlight: '0.2s Facial Scan',
+    keyFeatures: [
+      '0.2s Touchless Face & Palm',
+      '21 CFR Part 11 Audit Trail',
+      'RFID, PIN & Mobile NFC Key'
+    ],
     description: 'Multi-spectral biometric attendance and access terminals with anti-spoofing liveness detection, RFID card readers, and automated payroll integration.',
     specs: [
       '0.2s Touchless Face & Palm Recognition with Dual Lenses',
@@ -86,6 +96,11 @@ const FEATURED_SOLUTIONS = [
     image: '/cctv-featured-fire-panel.jpg',
     badge: 'NBC 2016 / UL',
     highlight: 'Life-Safety Interlock',
+    keyFeatures: [
+      '1 to 8 Loop Microprocessor',
+      'NBC 2016 Part 4 Certified',
+      'Fail-Safe Interlock Trip Relay'
+    ],
     description: 'Certified addressable and conventional fire alarm panels with fail-safe interlock trip relays and multi-loop smoke and thermal detectors.',
     specs: [
       '1 to 8 Loop Microprocessor Addressable Panel Architecture',
@@ -103,6 +118,11 @@ const FEATURED_SOLUTIONS = [
     image: '/cctv-featured-barrier.jpg',
     badge: 'High Duty Cycle',
     highlight: '100% Continuous Duty',
+    keyFeatures: [
+      '0.9s–3s Fast Boom Arm',
+      '5M+ Cycle Brushless Motor',
+      'FastTag & ANPR Integration'
+    ],
     description: 'Heavy-duty automatic boom barriers, toll gates, and bollards engineered with brushless DC motors for high-throughput vehicular perimeter security.',
     specs: [
       '0.9s to 3s High-Speed Opening with Telescopic / Articulated Arms',
@@ -117,9 +137,14 @@ const FEATURED_SOLUTIONS = [
     category: 'environment',
     title: 'Environmental Telemetry',
     subtitle: 'Server Room & Cold Storage',
-    image: '/services/service-emergency-trip.jpg',
+    image: '/cctv-featured-telemetry.jpg',
     badge: '24/7 Sensors',
     highlight: 'Early Risk Warning',
+    keyFeatures: [
+      'Temp & RH Digital Telemetry',
+      'Under-Floor Water Rope Leak',
+      'Instant SMS & SNMP Siren'
+    ],
     description: 'Real-time telemetry and environmental protection tracking temperature, humidity, water leakage, and smoke for critical IT infrastructure.',
     specs: [
       'Calibrated Temperature (-40°C to +85°C) & Precision RH Sensors',
@@ -460,19 +485,35 @@ export default function SecuritySystemsPage({ onNavigate, onQuickQuote }) {
                 </div>
 
                 <div className="solution-card-body">
-                  <h3 className="solution-card-title">{solution.title}</h3>
-                  <p className="solution-card-sub">{solution.subtitle}</p>
+                  <div className="solution-card-header-info">
+                    <h3 className="solution-card-title">{solution.title}</h3>
+                    <p className="solution-card-sub">{solution.subtitle}</p>
+                  </div>
 
-                  <button
-                    className="solution-card-action-link"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedSolution(solution);
-                    }}
-                  >
-                    <span>View Details</span>
-                    <ArrowRight size={13} className="action-arrow" />
-                  </button>
+                  {/* Card Feature Details */}
+                  {solution.keyFeatures && (
+                    <ul className="solution-card-features-list">
+                      {solution.keyFeatures.map((feat, fIdx) => (
+                        <li key={fIdx}>
+                          <CheckCircle2 size={12} className="feature-check-icon" />
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <div className="solution-card-footer">
+                    <button
+                      className="solution-card-action-link"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedSolution(solution);
+                      }}
+                    >
+                      <span>View Details</span>
+                      <ArrowRight size={13} className="action-arrow" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
