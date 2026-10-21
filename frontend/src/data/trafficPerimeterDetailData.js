@@ -23,7 +23,8 @@ export const TRAFFIC_PERIMETER_CONFIGS = {
       { text: 'OEM Warranty & Service Support', icon: 'Settings' }
     ],
     video: {
-      hasVideoFile: false,
+      hasVideoFile: true,
+      videoSrc: '/Boom%20Barriers%20(Electro%20%20Hydraulic).mp4',
       poster: '/services/service-boom-barrier.jpg',
       badge: 'PRODUCT SHOWCASE',
       heading: 'Automatic Boom Barrier Engineering & Operation',
@@ -137,7 +138,8 @@ export const TRAFFIC_PERIMETER_CONFIGS = {
       { text: 'EN 1398 European Safety Compliance', icon: 'Settings' }
     ],
     video: {
-      hasVideoFile: false,
+      hasVideoFile: true,
+      videoSrc: '/Dock%20Levellers%20&%20Dock%20Shelters.mp4',
       poster: '/services/services-logistics-bridge.jpg',
       badge: 'PRODUCT SHOWCASE',
       heading: 'Dock Leveller & Logistics Bay Engineering',
@@ -251,7 +253,8 @@ export const TRAFFIC_PERIMETER_CONFIGS = {
       { text: 'Fire Alarm Auto-Release Integration', icon: 'Settings' }
     ],
     video: {
-      hasVideoFile: false,
+      hasVideoFile: true,
+      videoSrc: '/Turnstiles%20&%20Flap%20Barriers.mp4',
       poster: '/hero-glass-atrium.jpg',
       badge: 'PRODUCT SHOWCASE',
       heading: 'Pedestrian Flow & Speed Gate Engineering',
@@ -365,7 +368,8 @@ export const TRAFFIC_PERIMETER_CONFIGS = {
       { text: 'Turnkey Civil & Hydraulic Skid Installation', icon: 'Wrench' }
     ],
     video: {
-      hasVideoFile: false,
+      hasVideoFile: true,
+      videoSrc: '/Bollards,%20Tyre%20Killers%20&%20Car%20Lifts.mp4',
       poster: '/services/service-bollards-blockers.jpg',
       badge: 'PRODUCT SHOWCASE',
       heading: 'Anti-Ram Perimeter Defense & Hydraulic Systems',

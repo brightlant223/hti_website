@@ -1,4 +1,4 @@
-import { TRAFFIC_PERIMETER_CONFIGS } from './trafficPerimeterDetailData';
+import { TRAFFIC_PERIMETER_CONFIGS } from './trafficPerimeterDetailData.js';
 
 // Detailed Product Configuration Data for Access Automation Products
 // Perfectly aligns with the reference design for Automatic Sliding & Swing Doors

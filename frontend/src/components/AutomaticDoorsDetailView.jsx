@@ -539,15 +539,20 @@ export default function AutomaticDoorsDetailView({
                     onEnded={() => setIsVideoPlaying(false)}
                   />
                   {!isVideoPlaying && (
-                    <button 
-                      className="auto-video-play-overlay"
-                      onClick={handleVideoPlayToggle}
-                      aria-label={`Play ${cfg.name} Video`}
-                    >
-                      <div className="auto-play-circle">
-                        <Play size={28} className="fill-white text-white ml-1" />
+                    <>
+                      <button 
+                        className="auto-video-play-overlay"
+                        onClick={handleVideoPlayToggle}
+                        aria-label={`Play ${cfg.name} Video`}
+                      >
+                        <div className="auto-play-circle">
+                          <Play size={28} className="fill-white text-white ml-1" />
+                        </div>
+                      </button>
+                      <div className="auto-video-fallback-pill" style={{ pointerEvents: 'none' }}>
+                        HD Product Showcase
                       </div>
-                    </button>
+                    </>
                   )}
                 </>
               ) : (

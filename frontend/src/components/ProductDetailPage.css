@@ -1,779 +1,692 @@
-/* =========================================================================
-   HTI INDUSTRIAL CORPORATE PRODUCT DETAIL SYSTEM (DESKTOP + MOBILE)
-   Universal, Reusable Design System for All 25 Engineering Products
-   ========================================================================= */
+/* ==========================================================================
+   HTI AUTOMATION & SECURITY SYSTEMS - UNIVERSAL PRODUCT DETAIL REDESIGN
+   Matches the Primary Reference Design ("Automatic Sliding & Swing Doors")
+   Across All 30 Products in All 5 Product Categories
+   ========================================================================== */
 
-:root {
-  --hti-navy: #0f172a;
-  --hti-navy-light: #1e293b;
-  --hti-blue: #0284c7;
-  --hti-blue-dark: #0369a1;
-  --hti-blue-light: #e0f2fe;
-  --hti-slate-50: #f8fafc;
-  --hti-slate-100: #f1f5f9;
-  --hti-slate-200: #e2e8f0;
-  --hti-slate-300: #cbd5e1;
-  --hti-slate-500: #64748b;
-  --hti-slate-700: #334155;
-  --hti-slate-900: #0f172a;
-  --hti-radius-sm: 6px;
-  --hti-radius-md: 10px;
-  --hti-radius-lg: 16px;
-  --hti-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
-  --hti-shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
-  --hti-shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
-  --hti-shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
-}
-
-.hti-product-detail-view {
-  background: #ffffff;
-  color: var(--hti-slate-900);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  line-height: 1.6;
-  overflow-x: hidden;
-  padding-bottom: 60px;
-}
-
-/* Base Container */
-.hti-container {
+.auto-doors-page-container {
+  max-width: 1440px;
   width: 100%;
-  max-width: 1240px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 16px 36px 70px;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  color: #0f172a;
+  background: #ffffff;
 }
 
-@media (max-width: 640px) {
-  .hti-container {
-    padding: 0 16px;
-  }
-}
-
-/* =========================================================================
-   A. BREADCRUMBS
-   ========================================================================= */
-.hti-breadcrumb-bar {
-  background: var(--hti-slate-50);
-  border-bottom: 1px solid var(--hti-slate-200);
-  padding: 12px 0;
-  font-size: 0.85rem;
-}
-
-.hti-breadcrumb-list {
+/* ==========================================================================
+   SECTION A: BREADCRUMBS BAR
+   ========================================================================== */
+.auto-doors-breadcrumb {
   display: flex;
   align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 24px;
   flex-wrap: wrap;
-  gap: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
 }
 
-.hti-breadcrumb-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--hti-slate-500);
-}
-
-.hti-breadcrumb-item button,
-.hti-breadcrumb-item a {
+.auto-breadcrumb-btn {
   background: none;
   border: none;
   padding: 0;
-  color: var(--hti-slate-500);
-  font-size: 0.85rem;
+  font-size: inherit;
+  font-weight: 600;
+  color: #475569;
   cursor: pointer;
-  text-decoration: none;
   transition: color 0.18s ease;
 }
 
-.hti-breadcrumb-item button:hover,
-.hti-breadcrumb-item a:hover {
-  color: var(--hti-blue);
+.auto-breadcrumb-btn:hover {
+  color: #0284c7;
   text-decoration: underline;
 }
 
-.hti-breadcrumb-item.active {
-  color: var(--hti-navy);
-  font-weight: 600;
+.auto-breadcrumb-sep {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  user-select: none;
 }
 
-.hti-breadcrumb-sep {
-  color: var(--hti-slate-300);
+.auto-breadcrumb-curr {
+  color: #0f172a;
+  font-weight: 700;
 }
 
-/* =========================================================================
-   A. HERO HEADER SECTION
-   ========================================================================= */
-.hti-product-hero {
-  background: linear-gradient(180deg, #ffffff 0%, var(--hti-slate-50) 100%);
-  border-bottom: 1px solid var(--hti-slate-200);
-  padding: 44px 0 54px;
+/* ==========================================================================
+   SECTION B: PRODUCT HERO (Two-Column Layout)
+   ========================================================================== */
+.auto-doors-hero-section {
+  margin-bottom: 36px;
 }
 
-.hti-hero-grid {
+.auto-doors-hero-grid {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1.15fr 1fr;
   gap: 48px;
   align-items: center;
 }
 
-.hti-hero-content {
+.auto-doors-hero-left {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
-.hti-category-pill {
+.auto-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.auto-badge-solid-blue {
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.auto-badge-soft-blue {
+  background: #e0f2fe;
+  color: #0284c7;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.auto-badge-soft-pink {
+  background: #fee2e2;
+  color: #ef4444;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.auto-doors-hero-title {
+  font-size: 2.75rem;
+  font-weight: 900;
+  color: #0b1a30;
+  line-height: 1.16;
+  margin: 0 0 16px;
+  letter-spacing: -0.025em;
+}
+
+.auto-doors-hero-desc {
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0 0 24px;
+  max-width: 620px;
+}
+
+.auto-btn-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 26px;
+}
+
+.auto-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #e11d48;
+  color: #ffffff;
+  padding: 13px 26px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.28);
+}
+
+.auto-btn-primary:hover {
+  background: #be123c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.38);
+}
+
+.auto-trust-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.auto-trust-item {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--hti-blue-light);
-  color: var(--hti-blue-dark);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 6px 12px;
-  border-radius: 9999px;
-  margin-bottom: 18px;
-  align-self: flex-start;
-  border: 1px solid rgba(2, 132, 199, 0.2);
+  color: #334155;
 }
 
-.hti-hero-title {
-  font-size: 2.35rem;
-  line-height: 1.2;
-  font-weight: 800;
-  color: var(--hti-navy);
-  margin: 0 0 16px 0;
-  letter-spacing: -0.02em;
-}
-
-.hti-hero-intro {
-  font-size: 1.05rem;
-  line-height: 1.65;
-  color: var(--hti-slate-700);
-  margin: 0 0 24px 0;
-}
-
-/* Trust Indicators in Hero */
-.hti-trust-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 28px;
-}
-
-.hti-trust-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: #ffffff;
-  border: 1px solid var(--hti-slate-200);
-  color: var(--hti-slate-700);
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: var(--hti-radius-sm);
-  box-shadow: var(--hti-shadow-sm);
-}
-
-.hti-trust-badge svg {
-  color: var(--hti-blue);
+.auto-trust-icon {
+  color: #0284c7;
   flex-shrink: 0;
 }
 
-/* Primary Action Buttons */
-.hti-hero-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-}
-
-.hti-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: var(--hti-blue);
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 700;
-  padding: 13px 26px;
-  border-radius: var(--hti-radius-md);
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.28);
-  transition: all 0.2s ease;
-}
-
-.hti-btn-primary:hover {
-  background: var(--hti-blue-dark);
-  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.38);
-  transform: translateY(-1px);
-}
-
-.hti-btn-primary:active {
-  transform: translateY(0);
-}
-
-.hti-btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: #ffffff;
-  color: var(--hti-slate-700);
-  font-size: 0.95rem;
-  font-weight: 600;
-  padding: 12px 22px;
-  border-radius: var(--hti-radius-md);
-  border: 1px solid var(--hti-slate-300);
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.hti-btn-secondary:hover {
-  background: var(--hti-slate-100);
-  border-color: var(--hti-slate-400);
-  color: var(--hti-navy);
-}
-
-/* Hero Media Frame */
-.hti-hero-visual {
+.auto-doors-hero-right {
   position: relative;
-  border-radius: var(--hti-radius-lg);
+  border-radius: 20px;
   overflow: hidden;
-  background: #ffffff;
-  border: 1px solid var(--hti-slate-200);
-  box-shadow: var(--hti-shadow-xl);
+  box-shadow: 0 14px 34px -8px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e2e8f0;
+  background: #0f172a;
 }
 
-.hti-hero-img-wrap {
-  position: relative;
+.auto-hero-main-img {
   width: 100%;
-  aspect-ratio: 16 / 11;
-  background: var(--hti-slate-100);
-  overflow: hidden;
-}
-
-.hti-hero-img {
-  width: 100%;
-  height: 100%;
+  height: 410px;
   object-fit: cover;
-  object-position: center;
   display: block;
-  transition: transform 0.4s ease;
+  transition: transform 0.3s ease;
 }
 
-.hti-hero-visual:hover .hti-hero-img {
-  transform: scale(1.02);
-}
-
-.hti-hero-overlay-tag {
+.auto-hero-dots {
   position: absolute;
   bottom: 14px;
-  left: 14px;
-  background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(8px);
-  color: #ffffff;
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: var(--hti-radius-sm);
-  display: inline-flex;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 2;
 }
 
-.hti-pulse-dot {
-  width: 8px;
-  height: 8px;
+.auto-hero-dot {
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-/* =========================================================================
-   COMMON SECTION STYLING
-   ========================================================================= */
-.hti-section {
-  padding: 64px 0;
-  border-bottom: 1px solid var(--hti-slate-200);
+.auto-hero-dot.active {
+  width: 18px;
+  border-radius: 9999px;
+  background: #0284c7;
 }
 
-.hti-section.bg-subtle {
-  background: var(--hti-slate-50);
+/* ==========================================================================
+   COMMON WIDE CARDS (Sections C, D, E)
+   ========================================================================== */
+.auto-wide-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  padding: 36px 44px;
+  margin-bottom: 38px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
 }
 
-.hti-section-header {
-  text-align: left;
-  margin-bottom: 36px;
-}
-
-.hti-section-header.text-center {
-  text-align: center;
-}
-
-.hti-section-tag {
-  display: inline-block;
-  color: var(--hti-blue);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.auto-card-kicker {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #e11d48;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   margin-bottom: 8px;
 }
 
-.hti-section-title {
-  font-size: 1.85rem;
+.auto-card-heading {
+  font-size: 1.65rem;
   font-weight: 800;
-  color: var(--hti-navy);
-  margin: 0 0 10px 0;
+  color: #0b1a30;
+  line-height: 1.25;
+  margin: 0 0 12px;
   letter-spacing: -0.015em;
 }
 
-.hti-section-subtitle {
-  font-size: 1rem;
-  color: var(--hti-slate-500);
-  max-width: 680px;
-  margin: 0;
+.auto-card-desc {
+  font-size: 0.94rem;
+  color: #475569;
+  line-height: 1.65;
+  margin: 0 0 20px;
 }
 
-.hti-section-header.text-center .hti-section-subtitle {
-  margin: 0 auto;
-}
-
-/* =========================================================================
-   B. PRODUCT OVERVIEW
-   ========================================================================= */
-.hti-overview-grid {
+/* ==========================================================================
+   SECTION C: PRODUCT VIDEO SECTION
+   ========================================================================== */
+.auto-doors-video-grid {
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: 40px;
-  align-items: start;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 44px;
+  align-items: center;
 }
 
-.hti-overview-paragraphs {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.auto-video-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #020617;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  aspect-ratio: 16 / 9;
 }
 
-.hti-overview-block h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--hti-navy);
-  margin: 0 0 8px 0;
+.auto-html5-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.auto-video-play-overlay {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.3);
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s ease;
+  z-index: 2;
 }
 
-.hti-overview-block h3 svg {
-  color: var(--hti-blue);
+.auto-video-play-overlay:hover {
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.auto-play-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(2, 132, 199, 0.7);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.auto-video-play-overlay:hover .auto-play-circle {
+  transform: scale(1.08);
+  background: #0369a1;
+}
+
+.auto-video-fallback-pill {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #f8fafc;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 5px 12px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 3;
+}
+
+.auto-video-bullets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.auto-video-bullet-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.auto-video-bullet-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-.hti-overview-block p {
-  font-size: 0.98rem;
-  color: var(--hti-slate-700);
-  line-height: 1.65;
+.auto-video-bullet-icon.icon-blue {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.auto-video-bullet-icon.icon-red {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+/* ==========================================================================
+   SECTION D: ENGINEERING & TECHNICAL OVERVIEW
+   ========================================================================== */
+.auto-engineering-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  padding: 36px 44px 44px;
+  margin-bottom: 38px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+}
+
+.auto-engineering-header {
+  margin-bottom: 28px;
+  max-width: 900px;
+}
+
+.auto-engineering-header .auto-card-heading {
+  font-size: 1.85rem;
+  margin-bottom: 12px;
+}
+
+.auto-engineering-header .auto-card-desc {
+  font-size: 0.96rem;
+  margin-bottom: 0;
+}
+
+.auto-feature-cards-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.auto-feature-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px 20px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auto-feature-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
+}
+
+.auto-feature-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.auto-feature-icon-circle.circle-cyan {
+  background: #ecfeff;
+  color: #0891b2;
+}
+
+.auto-feature-icon-circle.circle-red {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.auto-feature-icon-circle.circle-blue {
+  background: #f0f9ff;
+  color: #0284c7;
+}
+
+.auto-feature-icon-circle.circle-green {
+  background: #f0fdf4;
+  color: #10b981;
+}
+
+.auto-feature-content h5 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px;
+}
+
+.auto-feature-content p {
+  font-size: 0.84rem;
+  color: #64748b;
+  line-height: 1.5;
   margin: 0;
 }
 
-.hti-highlights-card {
+/* ==========================================================================
+   SECTION E: TECHNICAL SPECIFICATIONS & STANDARDS
+   ========================================================================== */
+.auto-doors-specs-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 38px;
+}
+
+.auto-specs-card-left,
+.auto-specs-card-right {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 32px 36px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.auto-specs-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0b1a30;
+  margin: 0 0 18px;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.auto-specs-table-container {
   background: #ffffff;
-  border: 1px solid var(--hti-slate-200);
-  border-radius: var(--hti-radius-lg);
-  padding: 28px;
-  box-shadow: var(--hti-shadow-md);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.02);
 }
 
-.hti-highlights-card h4 {
-  font-size: 1.05rem;
+.auto-specs-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.86rem;
+}
+
+.auto-specs-table tr {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.auto-specs-table tr:last-child {
+  border-bottom: none;
+}
+
+.auto-specs-table tr.even-row {
+  background: #f8fafc;
+}
+
+.auto-specs-table td {
+  padding: 11px 18px;
+  vertical-align: middle;
+}
+
+.auto-spec-label {
   font-weight: 700;
-  color: var(--hti-navy);
-  margin: 0 0 18px 0;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--hti-slate-200);
+  color: #0f172a;
+  width: 38%;
 }
 
-.hti-highlights-list {
+.auto-spec-value {
+  color: #334155;
+  font-weight: 500;
+}
+
+.auto-compliance-list {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.hti-highlight-item {
+.auto-compliance-item {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 0.92rem;
-  color: var(--hti-slate-700);
-  line-height: 1.5;
-}
-
-.hti-highlight-item svg {
-  color: var(--hti-blue);
-  flex-shrink: 0;
-  margin-top: 3px;
-}
-
-/* =========================================================================
-   C. KEY BENEFITS
-   ========================================================================= */
-.hti-benefits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
-}
-
-.hti-benefit-card {
+  align-items: center;
+  gap: 14px;
   background: #ffffff;
-  border: 1px solid var(--hti-slate-200);
-  border-radius: var(--hti-radius-md);
-  padding: 26px 22px;
-  box-shadow: var(--hti-shadow-sm);
-  transition: all 0.22s ease;
-  display: flex;
-  flex-direction: column;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+  transition: transform 0.18s ease;
 }
 
-.hti-benefit-card:hover {
-  border-color: var(--hti-blue);
-  box-shadow: var(--hti-shadow-md);
-  transform: translateY(-2px);
+.auto-compliance-item:hover {
+  transform: translateX(3px);
+  border-color: #cbd5e1;
 }
 
-.hti-benefit-icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--hti-radius-sm);
-  background: var(--hti-blue-light);
-  color: var(--hti-blue-dark);
+.auto-compliance-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  color: #0284c7;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
-  border: 1px solid rgba(2, 132, 199, 0.2);
+  flex-shrink: 0;
 }
 
-.hti-benefit-title {
-  font-size: 1.08rem;
-  font-weight: 700;
-  color: var(--hti-navy);
-  margin: 0 0 10px 0;
+/* ==========================================================================
+   SECTION F: RELATED IMAGES
+   ========================================================================== */
+.auto-doors-related-section {
+  margin-bottom: 40px;
 }
 
-.hti-benefit-desc {
-  font-size: 0.92rem;
-  color: var(--hti-slate-500);
-  line-height: 1.55;
+.auto-related-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.auto-related-header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.auto-related-header-left h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0b1a30;
   margin: 0;
-}
-
-/* =========================================================================
-   D. APPLICATIONS
-   ========================================================================= */
-.hti-applications-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 22px;
-}
-
-.hti-app-card {
-  background: #ffffff;
-  border: 1px solid var(--hti-slate-200);
-  border-radius: var(--hti-radius-md);
-  padding: 24px 20px;
-  box-shadow: var(--hti-shadow-sm);
-  transition: all 0.2s ease;
-}
-
-.hti-app-card:hover {
-  border-color: var(--hti-slate-300);
-  box-shadow: var(--hti-shadow-md);
-}
-
-.hti-app-industry-badge {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--hti-blue);
-  background: var(--hti-blue-light);
-  padding: 3px 8px;
-  border-radius: 4px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
+  letter-spacing: -0.01em;
 }
 
-.hti-app-title {
-  font-size: 1.05rem;
+.auto-related-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.auto-related-view-all {
+  font-size: 0.86rem;
   font-weight: 700;
-  color: var(--hti-navy);
-  margin: 0 0 8px 0;
+  color: #64748b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.18s ease;
 }
 
-.hti-app-desc {
-  font-size: 0.88rem;
-  color: var(--hti-slate-700);
-  line-height: 1.5;
-  margin: 0;
+.auto-related-view-all:hover {
+  color: #0284c7;
+  text-decoration: underline;
 }
 
-/* =========================================================================
-   E. TECHNICAL SPECIFICATIONS TABLE & COMPLIANCE
-   ========================================================================= */
-.hti-tech-container {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 36px;
-  align-items: start;
-}
-
-.hti-table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  border-radius: var(--hti-radius-md);
-  border: 1px solid var(--hti-slate-200);
-  background: #ffffff;
-  box-shadow: var(--hti-shadow-sm);
-  -webkit-overflow-scrolling: touch;
-}
-
-.hti-specs-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 0.9rem;
-}
-
-.hti-specs-table tr {
-  border-bottom: 1px solid var(--hti-slate-200);
-  transition: background 0.15s ease;
-}
-
-.hti-specs-table tr:last-child {
-  border-bottom: none;
-}
-
-.hti-specs-table tr:hover {
-  background: var(--hti-slate-50);
-}
-
-.hti-spec-label {
-  padding: 13px 18px;
-  font-weight: 600;
-  color: var(--hti-slate-700);
-  background: var(--hti-slate-50);
-  width: 40%;
-  white-space: normal;
-  border-right: 1px solid var(--hti-slate-200);
-}
-
-.hti-spec-value {
-  padding: 13px 18px;
-  color: var(--hti-navy);
-  font-weight: 500;
-}
-
-/* Compliance Card */
-.hti-compliance-card {
-  background: #ffffff;
-  border: 1px solid var(--hti-slate-200);
-  border-radius: var(--hti-radius-md);
-  padding: 24px;
-  box-shadow: var(--hti-shadow-sm);
-}
-
-.hti-compliance-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--hti-navy);
-  margin: 0 0 16px 0;
+.auto-arrow-btns-group {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.hti-compliance-title svg {
-  color: #10b981;
-}
-
-.hti-compliance-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.hti-compliance-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 0.88rem;
-  color: var(--hti-slate-700);
-  line-height: 1.45;
-}
-
-.hti-compliance-item svg {
-  color: #10b981;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-/* =========================================================================
-   F. PRODUCT MEDIA (VIDEO, SIMULATION & GALLERY)
-   ========================================================================= */
-.hti-media-showcase {
+.auto-arrow-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid #cbd5e1;
   background: #ffffff;
-  border: 1px solid var(--hti-slate-200);
-  border-radius: var(--hti-radius-lg);
-  padding: 28px;
-  box-shadow: var(--hti-shadow-md);
-  margin-bottom: 32px;
-}
-
-.hti-video-layout {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 32px;
+  color: #0f172a;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.hti-video-player-wrap {
-  position: relative;
-  border-radius: var(--hti-radius-md);
-  overflow: hidden;
-  background: #000000;
-  box-shadow: var(--hti-shadow-lg);
+.auto-arrow-btn:hover {
+  border-color: #0284c7;
+  color: #0284c7;
+  background: #f0f9ff;
+  transform: scale(1.05);
 }
 
-.hti-html5-video {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-  display: block;
-  object-fit: cover;
-  background: #000;
+.auto-related-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
 }
 
-.hti-video-content h4 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--hti-navy);
-  margin: 0 0 10px 0;
-}
-
-.hti-video-content p {
-  font-size: 0.95rem;
-  color: var(--hti-slate-700);
-  line-height: 1.6;
-  margin: 0 0 18px 0;
-}
-
-.hti-video-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.auto-related-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-.hti-video-bullet-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 0.9rem;
-  color: var(--hti-slate-700);
-}
-
-.hti-video-bullet-item svg {
-  color: var(--hti-blue);
-  flex-shrink: 0;
-  margin-top: 3px;
-}
-
-/* Gallery Grid */
-.hti-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.hti-gallery-card {
-  background: #ffffff;
-  border: 1px solid var(--hti-slate-200);
-  border-radius: var(--hti-radius-md);
-  overflow: hidden;
-  box-shadow: var(--hti-shadow-sm);
-  transition: transform 0.2s ease;
-}
-
-.hti-gallery-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--hti-shadow-md);
-}
-
-.hti-gallery-card img {
+.auto-related-media {
   width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  display: block;
-}
-
-.hti-gallery-caption {
-  padding: 12px 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--hti-slate-700);
-  background: #ffffff;
-  border-top: 1px solid var(--hti-slate-200);
-}
-
-/* =========================================================================
-   G. RELATED PRODUCTS
-   ========================================================================= */
-.hti-related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.hti-related-card {
-  background: #ffffff;
-  border: 1px solid var(--hti-slate-200);
-  border-radius: var(--hti-radius-md);
+  height: 180px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: var(--hti-shadow-sm);
-  display: flex;
-  flex-direction: column;
-  transition: all 0.22s ease;
+  background: #0f172a;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.hti-related-card:hover {
-  border-color: var(--hti-blue);
-  box-shadow: var(--hti-shadow-md);
-  transform: translateY(-3px);
-}
-
-.hti-related-img-wrap {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  background: var(--hti-slate-100);
-  overflow: hidden;
-}
-
-.hti-related-img {
+.auto-related-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -781,311 +694,291 @@
   transition: transform 0.3s ease;
 }
 
-.hti-related-card:hover .hti-related-img {
-  transform: scale(1.04);
+.auto-related-card:hover .auto-related-media img {
+  transform: scale(1.05);
 }
 
-.hti-related-body {
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.hti-related-category {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--hti-blue);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 6px;
-}
-
-.hti-related-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--hti-navy);
-  margin: 0 0 8px 0;
+.auto-related-caption {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 8px;
+  text-align: left;
   line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.hti-related-tagline {
-  font-size: 0.86rem;
-  color: var(--hti-slate-500);
-  line-height: 1.5;
-  margin: 0 0 16px 0;
-  flex: 1;
-}
-
-.hti-btn-view-related {
-  display: inline-flex;
+/* ==========================================================================
+   INSTANT QUOTATION MODAL
+   ========================================================================== */
+.auto-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+  animation: autoFadeIn 0.2s ease;
+}
+
+@keyframes autoFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.auto-modal-box {
+  background: #ffffff;
+  border-radius: 20px;
   width: 100%;
-  background: var(--hti-slate-50);
-  border: 1px solid var(--hti-slate-200);
-  color: var(--hti-navy);
-  font-size: 0.85rem;
-  font-weight: 700;
-  padding: 10px 14px;
-  border-radius: var(--hti-radius-sm);
+  max-width: 520px;
+  padding: 32px 36px;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+}
+
+.auto-modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
 }
 
-.hti-btn-view-related:hover {
-  background: var(--hti-blue);
-  color: #ffffff;
-  border-color: var(--hti-blue);
+.auto-modal-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
 }
 
-/* =========================================================================
-   H. FINAL CORPORATE CTA BANNER
-   ========================================================================= */
-.hti-final-cta-banner {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  border-radius: var(--hti-radius-lg);
-  padding: 48px 40px;
-  color: #ffffff;
-  box-shadow: var(--hti-shadow-xl);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.hti-final-cta-left {
-  max-width: 640px;
-}
-
-.hti-cta-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(2, 132, 199, 0.2);
-  color: #38bdf8;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border-radius: 9999px;
-  margin-bottom: 14px;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-}
-
-.hti-final-cta-title {
-  font-size: 1.85rem;
+.auto-modal-title {
+  font-size: 1.45rem;
   font-weight: 800;
-  color: #ffffff;
-  margin: 0 0 12px 0;
-  letter-spacing: -0.015em;
+  color: #0f172a;
+  margin: 0 0 4px;
 }
 
-.hti-final-cta-desc {
-  font-size: 0.98rem;
-  color: #cbd5e1;
-  line-height: 1.6;
-  margin: 0 0 20px 0;
-}
-
-.hti-final-cta-meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  font-size: 0.85rem;
-  color: #94a3b8;
-}
-
-.hti-final-cta-meta span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.hti-final-cta-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.hti-btn-cta-large {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--hti-blue);
-  color: #ffffff;
-  font-size: 1.02rem;
+.auto-modal-subtitle {
+  font-size: 0.88rem;
+  color: #0284c7;
   font-weight: 700;
-  padding: 15px 32px;
-  border-radius: var(--hti-radius-md);
+  margin: 0 0 20px;
+}
+
+.auto-form-group {
+  margin-bottom: 14px;
+}
+
+.auto-form-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+}
+
+.auto-form-input,
+.auto-form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #cbd5e1;
+  font-size: 0.9rem;
+  color: #0f172a;
+  background: #ffffff;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.auto-form-input:focus,
+.auto-form-textarea:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.auto-modal-submit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #e11d48;
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
   border: none;
   cursor: pointer;
-  text-decoration: none;
-  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.4);
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  margin-top: 18px;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.hti-btn-cta-large:hover {
-  background: var(--hti-blue-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+.auto-modal-submit-btn:hover {
+  background: #be123c;
+  transform: translateY(-1px);
 }
 
-.hti-cta-direct-phone {
-  font-size: 0.85rem;
-  color: #94a3b8;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
+.auto-modal-success {
+  text-align: center;
+  padding: 30px 10px;
 }
 
-.hti-cta-direct-phone:hover {
-  color: #ffffff;
-  text-decoration: underline;
+.auto-modal-success h4 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 14px 0 6px;
 }
 
-/* =========================================================================
-   RESPONSIVE DESIGN BREAKPOINTS
-   (320px, 360px, 390px, 430px, 768px, 1024px)
-   ========================================================================= */
+.auto-modal-success p {
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
 
-@media (max-width: 1024px) {
-  .hti-hero-grid {
+/* ==========================================================================
+   RESPONSIVE DESIGN (Desktop, Tablet, Mobile)
+   ========================================================================== */
+@media (max-width: 1200px) {
+  .auto-doors-page-container {
+    padding: 16px 24px 60px;
+  }
+
+  .auto-hero-main-img {
+    height: 360px;
+  }
+
+  .auto-feature-cards-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .auto-related-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .auto-doors-hero-grid {
     grid-template-columns: 1fr;
     gap: 36px;
   }
 
-  .hti-overview-grid {
+  .auto-doors-video-grid {
     grid-template-columns: 1fr;
     gap: 32px;
   }
 
-  .hti-tech-container {
+  .auto-doors-specs-grid {
     grid-template-columns: 1fr;
     gap: 28px;
   }
 
-  .hti-video-layout {
-    grid-template-columns: 1fr;
-    gap: 24px;
+  .auto-wide-card {
+    padding: 30px 24px;
   }
 
-  .hti-final-cta-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 36px 28px;
-  }
-
-  .hti-final-cta-right {
-    align-items: flex-start;
-    width: 100%;
-  }
-
-  .hti-btn-cta-large {
-    width: 100%;
-    justify-content: center;
+  .auto-engineering-section {
+    padding: 30px 24px;
   }
 }
 
-@media (max-width: 768px) {
-  .hti-product-hero {
-    padding: 28px 0 36px;
+@media (max-width: 640px) {
+  .auto-doors-page-container {
+    padding: 14px 16px 50px;
   }
 
-  .hti-hero-title {
-    font-size: 1.85rem;
+  .auto-doors-hero-title {
+    font-size: 2rem;
   }
 
-  .hti-hero-intro {
+  .auto-doors-hero-desc {
     font-size: 0.95rem;
+    margin-bottom: 20px;
   }
 
-  .hti-hero-actions {
-    flex-direction: column;
-    width: 100%;
+  .auto-hero-main-img {
+    height: 240px;
   }
 
-  .hti-btn-primary,
-  .hti-btn-secondary {
+  .auto-btn-primary {
     width: 100%;
     justify-content: center;
   }
 
-  .hti-section {
-    padding: 44px 0;
-  }
-
-  .hti-section-title {
-    font-size: 1.55rem;
-  }
-
-  .hti-spec-label {
-    width: 45%;
-    font-size: 0.82rem;
-    padding: 10px 12px;
-  }
-
-  .hti-spec-value {
-    font-size: 0.82rem;
-    padding: 10px 12px;
-  }
-
-  .hti-media-showcase {
-    padding: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hti-hero-title {
-    font-size: 1.55rem;
-  }
-
-  .hti-section-title {
-    font-size: 1.35rem;
-  }
-
-  .hti-final-cta-title {
-    font-size: 1.4rem;
-  }
-
-  .hti-final-cta-banner {
-    padding: 24px 18px;
-  }
-
-  .hti-table-responsive {
-    border-radius: var(--hti-radius-sm);
-  }
-
-  .hti-spec-label,
-  .hti-spec-value {
-    padding: 9px 10px;
-    font-size: 0.78rem;
-  }
-
-  .hti-benefit-card,
-  .hti-app-card {
-    padding: 20px 16px;
-  }
-}
-
-@media (max-width: 360px) {
-  .hti-hero-title {
-    font-size: 1.35rem;
-  }
-
-  .hti-trust-badges {
+  .auto-trust-row {
     flex-direction: column;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 12px;
   }
 
-  .hti-trust-badge {
-    width: 100%;
+  .auto-wide-card {
+    padding: 22px 16px;
+    border-radius: 16px;
+    margin-bottom: 26px;
+  }
+
+  .auto-engineering-section {
+    padding: 22px 16px;
+    border-radius: 16px;
+    margin-bottom: 26px;
+  }
+
+  .auto-card-heading {
+    font-size: 1.35rem;
+  }
+
+  .auto-feature-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  .auto-specs-card-left,
+  .auto-specs-card-right {
+    padding: 22px 16px;
+    border-radius: 16px;
+  }
+
+  .auto-specs-table-container {
+    overflow-x: auto;
+  }
+
+  .auto-specs-table {
+    min-width: 440px;
+  }
+
+  .auto-related-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .auto-related-media {
+    height: 140px;
+  }
+
+  .auto-modal-box {
+    padding: 24px 18px;
   }
 }

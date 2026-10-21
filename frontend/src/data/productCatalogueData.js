@@ -675,7 +675,8 @@ export const PRODUCTS_CATALOGUE = {
       { text: 'FASTag & ANPR Ready Interface', icon: 'Radio' }
     ],
     video: {
-      hasVideoFile: false,
+      hasVideoFile: true,
+      videoSrc: '/Boom%20Barriers%20(Electro%20%20Hydraulic).mp4',
       poster: '/services/service-boom-barrier.jpg',
       badge: 'PRODUCT SHOWCASE',
       heading: 'Automatic Boom Barrier Engineering & Operation',
@@ -779,7 +780,8 @@ export const PRODUCTS_CATALOGUE = {
       { text: 'Telescopic & Swing-Lip Variants', icon: 'Wrench' }
     ],
     video: {
-      hasVideoFile: false,
+      hasVideoFile: true,
+      videoSrc: '/Dock%20Levellers%20&%20Dock%20Shelters.mp4',
       poster: '/services/services-logistics-bridge.jpg',
       badge: 'LOGISTICS AUTOMATION',
       heading: 'Hydraulic Dock Leveller & Shelter Engineering',
@@ -883,7 +885,8 @@ export const PRODUCTS_CATALOGUE = {
       { text: 'Fire Alarm Auto-Release', icon: 'Flame' }
     ],
     video: {
-      hasVideoFile: false,
+      hasVideoFile: true,
+      videoSrc: '/Turnstiles%20&%20Flap%20Barriers.mp4',
       poster: '/hero-glass-atrium.jpg',
       badge: 'SPEED GATE AUTOMATION',
       heading: 'Optical Flap Barrier & Speed Gate Engineering',
@@ -987,7 +990,8 @@ export const PRODUCTS_CATALOGUE = {
       { text: 'Turnkey Civil & Hydraulic Skid Integration', icon: 'Wrench' }
     ],
     video: {
-      hasVideoFile: false,
+      hasVideoFile: true,
+      videoSrc: '/Bollards,%20Tyre%20Killers%20&%20Car%20Lifts.mp4',
       poster: '/services/service-bollards-blockers.jpg',
       badge: 'PERIMETER DEFENSE',
       heading: 'High-Impact Vehicle Defense in Action',
@@ -2755,16 +2759,570 @@ export const PRODUCTS_CATALOGUE = {
       ]
     },
     relatedSlugs: ['server-room-monitoring', 'cctv-surveillance-system', 'gas-detection-systems']
+  },
+
+  // 26. Sectional Overhead Doors (Access Automation)
+  'sectional-overhead-doors': {
+    id: 26,
+    slug: 'sectional-overhead-doors',
+    name: 'Sectional Overhead Doors',
+    category: 'Access Automation',
+    categorySlug: 'access-automation',
+    categoryPage: 'automation',
+    breadcrumbName: 'Sectional Overhead Doors',
+    tagline: 'Insulated vertical lifting doors maximizing loading dock space and thermal efficiency',
+    badge: 'Thermal Efficient',
+    heroDescription: 'Industrial overhead sectional doors manufactured from double-skinned insulated polyurethane sandwich panels. Glides upward along vertical and curved tracks flush against the ceiling, leaving loading bay thresholds completely unobstructed.',
+    heroImage: '/services/service-sectional-doors.jpg',
+    trustIndicators: [
+      { text: 'Class 4 Wind Resistance', icon: 'ShieldCheck' },
+      { text: 'U-Value 0.51 W/m²K Insulation', icon: 'Settings' },
+      { text: '50,000 Cycle Torsion Springs', icon: 'Wrench' }
+    ],
+    video: {
+      hasVideoFile: false,
+      poster: '/services/service-sectional-doors.jpg',
+      badge: 'ENGINEERING SHOWCASE',
+      heading: 'Sectional Overhead Door Performance',
+      description: 'Experience the smooth vertical glide, high thermal insulation core, and anti-drop safety brake mechanisms engineered for high-throughput logistics bays.',
+      bullets: [
+        'Double-wall insulated steel sandwich panels filled with CFC-free PU foam',
+        'Anti-drop cable brake and spring rupture safety catch mechanisms',
+        'High-cycle shot-peened torsion spring balancing for 50,000 operations',
+        'Seamless dock leveler, traffic light, and safety interlock integration'
+      ]
+    },
+    overview: {
+      heading: 'Engineered for Heavy Logistics & Thermal Retention',
+      paragraphs: [
+        'HTI Sectional Overhead Doors provide the optimal balance between high thermal efficiency, acoustic insulation, and space optimization for industrial manufacturing plants, logistics hubs, and cold storage warehouses.',
+        'Manufactured with 40mm or 50mm CFC-free polyurethane cores encased in galvanized steel skins, these doors glide smoothly along curved overhead tracks, maximizing vertical clearance for forklift operations while maintaining energy efficiency.'
+      ],
+      highlights: [
+        { label: 'Panel Core', value: '40mm / 50mm CFC-free Polyurethane' },
+        { label: 'Operating Speed', value: '0.25 m/sec with manual chain hoist' },
+        { label: 'Wind Resistance', value: 'Class 3 / Class 4 (tested to 120 km/h)' },
+        { label: 'Safety Devices', value: 'Anti-drop cable brake & bottom safety edge' }
+      ]
+    },
+    benefits: [
+      {
+        title: 'Thermal & Acoustic Insulation',
+        desc: 'High-density PU core delivers exceptional thermal barrier U-value 0.51 W/m²K, reducing facility HVAC loading.',
+        iconName: 'ShieldCheck'
+      },
+      {
+        title: 'Space-Saving Overhead Clearance',
+        desc: 'Glides vertically upward and rests flush against ceiling beams, leaving dock doorways completely clear.',
+        iconName: 'Layers'
+      },
+      {
+        title: 'Dual Anti-Drop Safety Brakes',
+        desc: 'Engineered cable and spring rupture safety catches prevent accidental panel descent in the event of cable tension loss.',
+        iconName: 'Settings'
+      },
+      {
+        title: 'Heavy Logistics Duty Cycle',
+        desc: 'Shot-peened torsion spring balancing tested for up to 50,000 continuous loading dock cycles.',
+        iconName: 'Wrench'
+      }
+    ],
+    applications: [
+      { title: 'Logistics Warehouses & Dock Bays', desc: 'Continuous cross-docking operations requiring heavy thermal protection.' },
+      { title: 'Automotive Manufacturing Halls', desc: 'Material supply entrances with automated overhead clearance.' },
+      { title: 'Distribution Centers', desc: 'High-volume cargo loading bays interlocked with dock levellers.' },
+      { title: 'Aviation Hangars & Depots', desc: 'Heavy vehicle maintenance bays with robust weather shielding.' }
+    ],
+    specs: {
+      heading: 'Technical Specifications & Parameters',
+      description: 'Factory-tested specifications for HTI Sectional Overhead Doors and industrial operators.',
+      tableRows: [
+        { label: 'Panel Construction:', value: '40 mm / 50 mm double-skin galvanized steel with PU insulation' },
+        { label: 'Thermal Transmission:', value: 'U = 0.51 W/m²K (complies with green building norms)' },
+        { label: 'Balancing System:', value: 'Shot-peened high-tensile torsion springs (up to 50,000 cycles)' },
+        { label: 'Operating Drive:', value: '400V 3-phase or 230V 1-phase industrial shaft motor with chain override' },
+        { label: 'Wind Load Rating:', value: 'Class 3 / 4 certified per EN 12424 standards' },
+        { label: 'Track Hardware:', value: '2mm galvanized steel C-profile tracks with nylon ball bearing rollers' },
+        { label: 'Safety Equipment:', value: 'Cable break device, spring break catch, pneumatic bottom safety edge' },
+        { label: 'Operating Temp:', value: '-25°C to +60°C ambient tolerance' }
+      ],
+      complianceTitle: 'Standards & Statutory Certifications',
+      complianceItems: [
+        'EN 13241-1 European Industrial Doors Safety Harmonized Standard',
+        'EN 12424 Wind Load Resistance Class 3 / 4 Certification',
+        'ISO 9001:2015 Quality Assured Manufacturing & Assembly',
+        'Integrated Fire Alarm & Loading Bay Dock Interlock Relay Interface'
+      ]
+    },
+    relatedImages: {
+      heading: 'Installation Gallery & System Views',
+      description: 'Sectional overhead door installations across logistics warehouses and distribution hubs.',
+      images: [
+        { id: 1, src: '/services/service-sectional-doors.jpg', caption: 'Loading Dock Overhead Sectional Door Installation' },
+        { id: 2, src: '/services/service-high-speed-doors.jpg', caption: 'Warehouse Entrance Insulated Sectional System' },
+        { id: 3, src: '/hero-industrial-doors-dock.jpg', caption: 'Logistics Loading Bay Multi-Door Array' },
+        { id: 4, src: '/case-studies/case-industrial-doors.jpg', caption: 'Heavy Manufacturing Plant Internal Partition' },
+        { id: 5, src: '/services/services-logistics-bridge.jpg', caption: 'Dock Leveler and Sectional Door Integration' }
+      ]
+    },
+    relatedSlugs: ['pvc-rapid-roll-up-doors', 'dock-levellers-dock-shelters', 'motorized-rolling-shutters']
+  },
+
+  // 27. Tyre Killers & Road Blockers (Traffic & Perimeter)
+  'tyre-killers-road-blockers': {
+    id: 27,
+    slug: 'tyre-killers-road-blockers',
+    name: 'Tyre Killers & Road Blockers',
+    category: 'Traffic & Perimeter',
+    categorySlug: 'traffic-perimeter',
+    categoryPage: 'perimeter-defense',
+    breadcrumbName: 'Tyre Killers & Road Blockers',
+    tagline: 'Electro-hydraulic high-security anti-ram road blockers & bi-directional tyre shredders',
+    badge: 'High Security Defense',
+    heroDescription: 'Heavy-duty electro-hydraulic road blockers and hardened steel tyre killers engineered to enforce zero-tolerance perimeter defense at military facilities, government complexes, data centers, and critical assets.',
+    heroImage: '/services/service-bollards-blockers.jpg',
+    trustIndicators: [
+      { text: 'ASTM F2656 Crash Rated Design', icon: 'ShieldCheck' },
+      { text: 'Electro-Hydraulic Heavy Drive', icon: 'Settings' },
+      { text: 'Sub-2s Emergency Fast Rise', icon: 'Zap' }
+    ],
+    video: {
+      hasVideoFile: false,
+      poster: '/services/service-bollards-blockers.jpg',
+      badge: 'PERIMETER DEFENSE',
+      heading: 'Tyre Killer & Road Blocker Operation',
+      description: 'See the heavy-gauge hardened steel spikes and hydraulic barrier ram rise in under 2 seconds to neutralize unauthorized vehicle breaches.',
+      bullets: [
+        'Hardened heavy-gauge alloy steel spikes shred tubeless radial tyres instantly',
+        'Electro-hydraulic power pack engineered for 100% continuous perimeter duty',
+        'Emergency Fast Operation (EFO) activates full blocking in under 1.8 seconds',
+        'Dual inductive loops prevent accidental deployment under authorized vehicles'
+      ]
+    },
+    overview: {
+      heading: 'Engineered for High-Security Facility Access Defense',
+      paragraphs: [
+        'HTI Tyre Killers and Road Blockers are mission-critical vehicle barrier systems designed to prevent hostile vehicle ramming attacks and unauthorized drive-throughs. Fabricated from structural heavy-gauge steel, these systems deliver uncompromising perimeter defense.',
+        'Equipped with independent electro-hydraulic power units, bi-directional or uni-directional spikes, and high-speed emergency fast operation (EFO), they integrate seamlessly with boom barriers, FASTag RFID readers, and central security control consoles.'
+      ],
+      highlights: [
+        { label: 'Blocking Height', value: '500 mm to 1000 mm rising blocker / 150 mm spike' },
+        { label: 'EFO Fast Rise', value: '< 1.8 seconds emergency hydraulic accumulator' },
+        { label: 'Axle Load Capacity', value: '40 to 60 Metric Tons heavy logistics rating' },
+        { label: 'Drive Unit', value: 'External weatherproof electro-hydraulic power pack' }
+      ]
+    },
+    benefits: [
+      {
+        title: 'Instant Tyre Deflation',
+        desc: 'Heavy-gauge alloy spikes shred heavy truck and passenger vehicle tyres instantly upon unauthorized intrusion.',
+        iconName: 'ShieldCheck'
+      },
+      {
+        title: 'Anti-Ram Structural Core',
+        desc: 'Reinforced structural steel blocker foundation dissipates heavy vehicle impact energy safely into ground foundations.',
+        iconName: 'Layers'
+      },
+      {
+        title: 'Sub-2s Emergency Fast Rise',
+        desc: 'Dedicated hydraulic accumulator allows instant deployment in under 1.8 seconds during security alerts.',
+        iconName: 'Zap'
+      },
+      {
+        title: 'Integrated Access Control',
+        desc: 'Synchronized interlocking with automatic boom barriers, ANPR cameras, and FASTag UHF readers.',
+        iconName: 'Settings'
+      }
+    ],
+    applications: [
+      { title: 'Military Bases & Defense Checkpoints', desc: 'Active physical denial barriers preventing forced vehicular breach.' },
+      { title: 'Data Centers & Tech HQs', desc: 'Sub-surface road blockers securing sensitive computing infrastructure perimeters.' },
+      { title: 'Government Secretariats & Embassies', desc: 'Certified anti-ram impact barriers protecting critical public assets.' },
+      { title: 'Logistics Depots & Customs Ports', desc: 'One-way tyre killers enforcing designated directional lane discipline.' }
+    ],
+    specs: {
+      heading: 'Technical Specifications & Parameters',
+      description: 'Factory-tested parameters for HTI hydraulic road blockers and steel tyre shredders.',
+      tableRows: [
+        { label: 'System Type:', value: 'Electro-Hydraulic Rising Road Blocker & Flush Surface Tyre Killer' },
+        { label: 'Blocker Rising Height:', value: '500 mm / 650 mm / 800 mm / 1000 mm options' },
+        { label: 'Spike Height / Thickness:', value: '150 mm heavy hardened alloy steel, 12 mm thickness' },
+        { label: 'Operating Speed:', value: 'Normal: 3 – 5 sec; Emergency Fast Operation (EFO): < 1.8 sec' },
+        { label: 'Axle Load Rating:', value: '50 Metric Tons axle weight capacity per BS 6323 standards' },
+        { label: 'Hydraulic Power Unit:', value: 'High-pressure 240V / 415V 3-phase hydraulic power pack with manual pump' },
+        { label: 'Ingress Protection:', value: 'IP68 submersible hydraulic cylinder; IP65 external control cabinet' },
+        { label: 'Safety Integration:', value: 'Traffic signal lights (Red/Green), inductive safety loops, photocell sensors' }
+      ],
+      complianceTitle: 'Standards & Statutory Certifications',
+      complianceItems: [
+        'ASTM F2656 / PAS 68 Crash Impact Certification Equivalent Geometry',
+        'IP68 Submersible Hydraulic Cylinder Enclosure Standards',
+        'ISO 9001:2015 Precision Fabrication & Security Engineering',
+        'Central SCADA / BMS Dry Contact Supervised Emergency Override'
+      ]
+    },
+    relatedImages: {
+      heading: 'Installation Gallery & System Views',
+      description: 'Road blocker and tyre killer installations protecting high-security checkpoints.',
+      images: [
+        { id: 1, src: '/services/service-bollards-blockers.jpg', caption: 'Electro-Hydraulic Rising Road Blocker Active Deployment' },
+        { id: 2, src: '/case-studies/case-boom-barrier.jpg', caption: 'Heavy Duty Anti-Ram Vehicle Defense Checkpoint' },
+        { id: 3, src: '/products/boom-barriers.jpg', caption: 'Boom Barrier and Road Blocker Interlocked Security Portal' },
+        { id: 4, src: '/services/service-boom-barrier.jpg', caption: 'High-Throughput Corporate Security Gate Array' },
+        { id: 5, src: '/services/services-heavy-security.jpg', caption: 'Sub-Surface Heavy Duty Hydraulic Cylinder Trenching' }
+      ]
+    },
+    relatedSlugs: ['boom-barriers', 'bollards-tyre-killers-car-lifts', 'visitor-management-system']
+  },
+
+  // 28. Hermetically Sealed Cleanroom Doors (Pharma Cleanroom)
+  'hermetic-cleanroom-doors': {
+    id: 28,
+    slug: 'hermetic-cleanroom-doors',
+    name: 'Hermetically Sealed Cleanroom Doors',
+    category: 'Pharma Cleanroom',
+    categorySlug: 'pharma-cleanroom',
+    categoryPage: 'cleanroom-interlocks',
+    breadcrumbName: 'Hermetically Sealed Cleanroom Doors',
+    tagline: 'Airtight flush-fit antimicrobial cleanroom sliding and swing doors for sterile containment',
+    badge: 'ISO 14644 Sterile Flush',
+    heroDescription: 'Hermetically sealing cleanroom doors engineered with drop-down perimeter gaskets and flush-glazed vision panels. Maintains differential pressure zones and air-cleanliness levels in pharmaceutical suites, operating theaters, and sterile labs.',
+    heroImage: '/products/cleanroom-door-pharma.jpg',
+    trustIndicators: [
+      { text: 'ISO 14644 & cGMP Class A Compliant', icon: 'ShieldCheck' },
+      { text: 'Perimeter Hermetic Inflatable/Drop Seal', icon: 'Settings' },
+      { text: 'Antimicrobial Stainless Steel / HPL', icon: 'Wrench' }
+    ],
+    video: {
+      hasVideoFile: false,
+      poster: '/hero-cleanroom-interlock-chamber.jpg',
+      badge: 'STERILE ENGINEERING',
+      heading: 'Hermetic Cleanroom Door Operation',
+      description: 'Observe the 4-sided hermetic sealing mechanism and touchless wave sensor integration maintaining strict differential air pressure cascades.',
+      bullets: [
+        'Four-sided continuous silicone gasket system drops and compresses upon closure',
+        'Flush-fitting double-glazed tempered glass vision panels with integrated silica desiccant',
+        'Non-porous SS304 or High Pressure Laminate (HPL) surfaces resistant to aggressive VHP sanitization',
+        'Seamless interlocking with HTI USFDA 21 CFR Part 11 airlock door controllers'
+      ]
+    },
+    overview: {
+      heading: 'Engineered for Sterile Containment & Differential Pressure',
+      paragraphs: [
+        'HTI Hermetically Sealed Cleanroom Doors are purpose-engineered for environments requiring zero air leakage and precise differential pressure maintenance. Featuring a specialized track system, the door moves forward and downward during closing to compress four-sided gaskets against the frame and floor.',
+        'Constructed with sterile antimicrobial stainless steel SS304/SS316 or anti-static HPL skins, these doors prevent contamination in pharmaceutical manufacturing, sterile filling suites, viral vector laboratories, and hospital surgical suites.'
+      ],
+      highlights: [
+        { label: 'Air Leakage', value: 'Class 4 per EN 12207 airtight sealing (<0.5 m³/h·m²)' },
+        { label: 'Leaf Material', value: 'Stainless Steel SS 304 / SS 316 / High Pressure Laminate' },
+        { label: 'Gasket System', value: '4-Sided continuous silicone compression drop seal' },
+        { label: 'Vision Panel', value: 'Double-glazed flush tempered glass with desiccant' }
+      ]
+    },
+    benefits: [
+      {
+        title: 'Four-Sided Hermetic Sealing',
+        desc: 'Dynamic track mechanism compresses silicone perimeter seals against frame and floor, guaranteeing airtight boundary integrity.',
+        iconName: 'ShieldCheck'
+      },
+      {
+        title: 'Sterile Flush Construction',
+        desc: 'Completely ledge-free frame and flush vision panels prevent dust accumulation and withstand aggressive disinfection.',
+        iconName: 'Layers'
+      },
+      {
+        title: 'Touchless Sensor Entry',
+        desc: 'Infrared optical wave sensors and foot-switch activation eliminate hands-on contamination in surgical and sterile corridors.',
+        iconName: 'Radio'
+      },
+      {
+        title: 'Airlock Logic Interlink',
+        desc: 'Supervised magnetic contact outputs interlock seamlessly with cleanroom HVAC systems and central door controllers.',
+        iconName: 'Settings'
+      }
+    ],
+    applications: [
+      { title: 'Pharmaceutical Sterile Production', desc: 'Class A/B sterile formulation and injectable filling suites.' },
+      { title: 'Hospital Operating Theaters & ICUs', desc: 'Positive pressure surgical suites and bio-containment rooms.' },
+      { title: 'Biotechnology Laboratories', desc: 'BSL-3 and BSL-4 high containment virus and vaccine research suites.' },
+      { title: 'Semiconductor Fabrication Bays', desc: 'Ultra-clean particulate-free precision manufacturing zones.' }
+    ],
+    specs: {
+      heading: 'Technical Specifications & Parameters',
+      description: 'Factory-tested cleanroom door parameters verified for sterile pressure cascades.',
+      tableRows: [
+        { label: 'Door Type:', value: 'Single Slide / Bi-Parting Hermetic Sliding or Flush Swing Door' },
+        { label: 'Leaf Thickness:', value: '45 mm / 50 mm insulated polyurethane or honeycomb infill' },
+        { label: 'Skin Material:', value: 'SS 304 (0.8mm) Hairline Finish or Antibacterial High-Pressure Laminate (HPL)' },
+        { label: 'Air Permeability:', value: 'Class 4 certified under EN 12207 (tested to +150 Pa pressure differential)' },
+        { label: 'Sealing Mechanism:', value: 'EPDM / Silicone four-sided dynamic compression gasket' },
+        { label: 'Vision Lite:', value: '5mm + 5mm double flush laminated safety glass with silica gel moisture absorber' },
+        { label: 'Operator Drive:', value: 'Whisper-quiet Brushless DC motor with microprocessor controller' },
+        { label: 'Emergency Operation:', value: 'Manual push open release lever & integrated 24V fail-safe battery' }
+      ],
+      complianceTitle: 'Standards & Statutory Certifications',
+      complianceItems: [
+        'ISO 14644-1 Cleanrooms and Associated Controlled Environments Standard',
+        'EN 12207 Windows and Doors — Air Permeability Class 4 Certified',
+        'cGMP & USFDA 21 CFR Part 11 Compatible Cleanroom Architecture',
+        'Fire Alarm Interface: Supervised dry contact emergency release'
+      ]
+    },
+    relatedImages: {
+      heading: 'Installation Gallery & System Views',
+      description: 'Hermetic cleanroom door installations across pharmaceutical suites and hospital surgical OT rooms.',
+      images: [
+        { id: 1, src: '/products/cleanroom-door-pharma.jpg', caption: 'Pharmaceutical Personnel Airlock Hermetic Sliding Door' },
+        { id: 2, src: '/hero-cleanroom-interlock-chamber.jpg', caption: 'Sterile Suite Flush Double-Glazed Vision Panel' },
+        { id: 3, src: '/products/cleanroom-interlocks.jpg', caption: 'Cleanroom Airlock Door Controller Integration' },
+        { id: 4, src: '/products/chiller-door-hero.jpg', caption: 'Heavy Thermal Insulated Cleanroom Cold Barrier' },
+        { id: 5, src: '/hero-cleanroom-automation.jpg', caption: 'cGMP Compliant Cleanroom Corridor Deployment' }
+      ]
+    },
+    relatedSlugs: ['door-interlock-systems', 'pass-box-systems', 'chiller-clean-room-doors']
+  },
+
+  // 29. Clean Agent Gas Suppression Systems (Fire & Life Safety)
+  'gas-suppression-systems': {
+    id: 29,
+    slug: 'gas-suppression-systems',
+    name: 'Clean Agent Gas Suppression Systems',
+    category: 'Fire & Life Safety',
+    categorySlug: 'fire-life-safety',
+    categoryPage: 'fire-protection',
+    breadcrumbName: 'Clean Agent Gas Suppression',
+    tagline: 'Waterless clean agent gas fire extinguishing (Novec 1230 & FM-200) for sensitive electrical assets',
+    badge: 'Waterless Fire Suppression',
+    heroDescription: 'Clean agent gaseous fire extinguishing systems utilizing Novec 1230 and FM-200 fluids. Extinguishes electrical and server room fires in under 10 seconds without water damage, residue, or electrical conductivity.',
+    heroImage: '/case-studies/case-fire-hydrant.jpg',
+    trustIndicators: [
+      { text: 'UL Listed & FM Approved Cylinders', icon: 'ShieldCheck' },
+      { text: 'Extinguishes in Under 10 Seconds', icon: 'Zap' },
+      { text: 'Zero Ozone Depletion & Residue', icon: 'Settings' }
+    ],
+    video: {
+      hasVideoFile: false,
+      poster: '/case-studies/case-fire-hydrant.jpg',
+      badge: 'LIFE SAFETY SHOWCASE',
+      heading: 'Clean Agent Gas Discharge & Control',
+      description: 'See the multi-zone gas release panel sequence, abort switches, and high-pressure 360° dispersion nozzles extinguishing fires cleanly.',
+      bullets: [
+        'Rapid total flooding discharge in under 10 seconds to suppress fires at nascent stage',
+        'Electrically non-conductive and leaves zero residue—completely safe for live server racks',
+        'Dual cross-zoned optical smoke and heat detectors prevent false cylinder discharge',
+        'Integrated pre-discharge warning sounders, flashing strobes, and manual abort controls'
+      ]
+    },
+    overview: {
+      heading: 'Engineered for Critical Electrical & Data Center Asset Protection',
+      paragraphs: [
+        'In server rooms, data centers, telecom exchanges, and electrical control rooms, water sprinklers cause catastrophic equipment damage. HTI Clean Agent Gas Suppression Systems utilize environmentally safe extinguishing agents (FK-5-1-12 / HFC-227ea) to extinguish fires in seconds.',
+        'Controlled by specialized releasing fire alarm panels with cross-zoned detection, the system triggers pre-discharge evacuation warnings before releasing pressurized gas through engineered 360° discharge nozzles, leaving equipment completely undamaged.'
+      ],
+      highlights: [
+        { label: 'Clean Agents', value: 'Novec 1230 (FK-5-1-12) / FM-200 (HFC-227ea)' },
+        { label: 'Discharge Time', value: 'Nominal 10 seconds total flooding discharge' },
+        { label: 'Cylinder Pressure', value: '25 bar / 42 bar super-pressurized with dry Nitrogen' },
+        { label: 'Certifications', value: 'UL Listed / FM Approved cylinders and valves' }
+      ]
+    },
+    benefits: [
+      {
+        title: 'Sub-10s Total Flooding',
+        desc: 'Rapid discharge reaches design concentration in under 10 seconds, stopping combustion before flame spread.',
+        iconName: 'Zap'
+      },
+      {
+        title: 'Zero Water Damage & Clean Residue',
+        desc: 'Leaves no water or chemical residue, ensuring sensitive servers and electronics remain fully functional.',
+        iconName: 'ShieldCheck'
+      },
+      {
+        title: 'Cross-Zoned Safety Logic',
+        desc: 'Requires confirmation from both optical smoke and ionization/heat sensors to prevent accidental gas release.',
+        iconName: 'Settings'
+      },
+      {
+        title: 'Environmental Safety',
+        desc: 'Zero Ozone Depletion Potential (ODP=0) and negligible atmospheric lifetime for green building compliance.',
+        iconName: 'Layers'
+      }
+    ],
+    applications: [
+      { title: 'Server Rooms & Cloud Data Centers', desc: 'Waterless suppression protecting high-density computing racks.' },
+      { title: 'Electrical Control & Switchgear Rooms', desc: 'High-voltage substation control panels and battery rooms.' },
+      { title: 'Telecom Exchanges & NOC Hubs', desc: 'Uninterrupted communication infrastructure life safety.' },
+      { title: 'Museum Archives & Vaults', desc: 'Irreplaceable cultural heritage document and artifact protection.' }
+    ],
+    specs: {
+      heading: 'Technical Specifications & Parameters',
+      description: 'Factory-tested clean agent gas extinguishing system parameters.',
+      tableRows: [
+        { label: 'Suppressing Agents:', value: 'Novec 1230 (Dodecafluoro-2-methylpentan-3-one) or FM-200 (Heptafluoropropane)' },
+        { label: 'Cylinder Capacity Options:', value: '30L, 50L, 80L, 120L, 180L seamless steel alloy cylinders' },
+        { label: 'Operating Pressure:', value: '25 bar / 42 bar super-pressurized with ultra-pure dry nitrogen' },
+        { label: 'Discharge Nozzles:', value: '360° or 180° radial brass/stainless steel dispersion nozzles' },
+        { label: 'Actuation Method:', value: '24V DC solenoid valve actuator with manual mechanical override lever' },
+        { label: 'Detection Logic:', value: 'Cross-zoned double-knock detection (Smoke + Thermal sensor confirmation)' },
+        { label: 'Safety Interlocks:', value: 'Pre-discharge countdown timer, manual abort station, and AHU shut-off relay' },
+        { label: 'Ambient Operating Range:', value: '0°C to +50°C' }
+      ],
+      complianceTitle: 'Standards & Statutory Certifications',
+      complianceItems: [
+        'NFPA 2001 Standard on Clean Agent Fire Extinguishing Systems',
+        'UL 2166 / FM 5600 Certified System Component Assemblies',
+        'ISO 14520 Gaseous Fire-Extinguishing Systems Specification',
+        'BMS / SCADA Modbus Interface for Central Facility Telemetry'
+      ]
+    },
+    relatedImages: {
+      heading: 'Installation Gallery & System Views',
+      description: 'Gas suppression cylinders, distribution piping, and discharge nozzles in server rooms.',
+      images: [
+        { id: 1, src: '/case-studies/case-fire-hydrant.jpg', caption: 'Clean Agent High-Pressure Cylinder Bank & Manifold' },
+        { id: 2, src: '/products/fire-alarm.jpg', caption: 'Gas Release Master Control Panel & Abort Station' },
+        { id: 3, src: '/services/service-fire-alarm.jpg', caption: 'Data Center Ceiling Radial Gas Discharge Nozzle' },
+        { id: 4, src: '/case-studies/case-ss304-mist.jpg', caption: 'Server Room Optical Cross-Zoned Smoke Detector' },
+        { id: 5, src: '/services/service-emergency-trip.jpg', caption: 'Gas Release Strobe Siren and Warning Annunciator' }
+      ]
+    },
+    relatedSlugs: ['fire-alarm-system', 'server-room-monitoring', 'fire-hydrant-sprinkler-systems']
+  },
+
+  // 30. Wireless Intrusion Detection Systems (Surveillance & Alerts)
+  'wireless-intrusion-detection': {
+    id: 30,
+    slug: 'wireless-intrusion-detection',
+    name: 'Wireless Intrusion Detection Systems',
+    category: 'Surveillance & Alerts',
+    categorySlug: 'surveillance-alerts',
+    categoryPage: 'security-systems',
+    breadcrumbName: 'Wireless Intrusion Detection',
+    tagline: 'Grade-2 multi-zone perimeter intrusion sensors, microwave beams & wireless control panels',
+    badge: 'Grade-2 Intrusion Security',
+    heroDescription: 'Enterprise-grade wireless and hybrid perimeter intrusion detection systems. Features multi-frequency anti-jamming RF communication, active dual-tech PIR sensors, and long-range perimeter infrared beams for commercial campuses and industrial perimeters.',
+    heroImage: '/hero-security-command-center.jpg',
+    trustIndicators: [
+      { text: 'EN 50131 Grade 2 Certified', icon: 'ShieldCheck' },
+      { text: '2,000m Secure RF Range', icon: 'Zap' },
+      { text: 'Multi-Network GSM / IP Reporting', icon: 'Settings' }
+    ],
+    video: {
+      hasVideoFile: false,
+      poster: '/about-security-camera.jpg',
+      badge: 'PERIMETER SECURITY',
+      heading: 'Wireless Intrusion System Operation',
+      description: 'See the dual-technology PIR motion detection, instant tamper alarm transmission, and centralized security control room dispatch in real time.',
+      bullets: [
+        'Encrypted multi-frequency RF transmission with real-time signal jamming detection',
+        'Outdoor dual PIR + microwave Doppler sensors immune to small animals and wind',
+        'Instant SMS, mobile app push notification, and central monitoring station (CMS) dispatch',
+        'Up to 5 years battery life on ultra-low-power wireless perimeter detectors'
+      ]
+    },
+    overview: {
+      heading: 'Engineered for Rapid Campus Perimeter Protection Without Cabling',
+      paragraphs: [
+        'HTI Wireless Intrusion Detection Systems deliver enterprise-class physical security without the disruption and cost of long-distance trenching and cabling. Combining encrypted long-range wireless protocols with intelligent false-alarm filtration, the system protects corporate campuses, warehouses, and remote industrial depots.',
+        'Featuring hybrid wired/wireless control hubs, optical perimeter beam barriers, magnetic contact sensors, and high-decibel outdoor siren strobes, it integrates with CCTV video surveillance for instant video verification upon alarm trigger.'
+      ],
+      highlights: [
+        { label: 'Wireless Range', value: 'Up to 2,000 meters open field secure RF communication' },
+        { label: 'Encryption Standard', value: 'AES-128 bit rolling-code encrypted transmission' },
+        { label: 'Reporting Channels', value: 'Dual-SIM 4G LTE, Ethernet TCP/IP, and Wi-Fi' },
+        { label: 'Battery Lifespan', value: '3 to 5 years standard lithium cell operation' }
+      ]
+    },
+    benefits: [
+      {
+        title: 'Zero-Trenching Deployment',
+        desc: 'High-security encrypted RF allows rapid installation across sprawling campuses without underground trenching.',
+        iconName: 'Radio'
+      },
+      {
+        title: 'Pet-Immune False Alarm Rejection',
+        desc: 'Dual optical PIR and microwave algorithms ignore pets, swaying foliage, and weather disturbances.',
+        iconName: 'ShieldCheck'
+      },
+      {
+        title: 'Anti-Jamming Frequency Hopping',
+        desc: 'Monitors wireless spectrum constantly and raises instant supervisory alert if RF jamming is attempted.',
+        iconName: 'Settings'
+      },
+      {
+        title: 'Triple Redundant Reporting',
+        desc: 'Transmits alarm events simultaneously via 4G LTE, Ethernet, and cloud push notifications to guards.',
+        iconName: 'Zap'
+      }
+    ],
+    applications: [
+      { title: 'Industrial Campus Perimeter Boundaries', desc: 'Active infrared multi-beam sensors protecting property fences against night intrusion.' },
+      { title: 'Logistics Warehouses & Freight Depots', desc: 'Motion and beam barrier security grids for high-value cargo.' },
+      { title: 'Commercial Office Towers & Banks', desc: 'Indoor volumetric PIR sensors and glass break detectors.' },
+      { title: 'Solar Power Plants & Sub-Stations', desc: 'Remote unmanned perimeter intrusion alarms with cellular reporting.' }
+    ],
+    specs: {
+      heading: 'Technical Specifications & Parameters',
+      description: 'Factory-tested wireless alarm equipment specifications.',
+      tableRows: [
+        { label: 'System Architecture:', value: 'Hybrid 64-Zone Wireless / Wired Security Alarm Panel' },
+        { label: 'Wireless Frequency:', value: '868 MHz / 433 MHz two-way frequency hopping with AES-128 encryption' },
+        { label: 'Outdoor Perimeter Sensors:', value: 'Active Infrared Quad-Beam (50m to 150m boundary span)' },
+        { label: 'Motion Detection:', value: 'Dual PIR + Microwave Doppler with 15m 90° volumetric coverage' },
+        { label: 'Tamper Protection:', value: 'Wall and case tamper switches triggering immediate priority alert' },
+        { label: 'Event Reporting Protocols:', value: 'SIA DC-09, Contact ID, Modbus TCP, REST API for central CMS' },
+        { label: 'Siren & Strobe:', value: '110 dB wireless outdoor siren with high-visibility flashing red/blue LEDs' },
+        { label: 'Power Supply:', value: '230V AC mains with 24-hour internal rechargeable backup battery' }
+      ],
+      complianceTitle: 'Standards & Statutory Certifications',
+      complianceItems: [
+        'EN 50131-1 Security Grade 2 / Grade 3 Intrusion and Hold-Up Alarm Systems',
+        'CE & WPC (Wireless Planning & Coordination) India Telecommunications Approval',
+        'ISO 9001:2015 Precision Electronics & Security Systems Assembly',
+        'Direct CCTV Video Management System (VMS) Trigger Integration'
+      ]
+    },
+    relatedImages: {
+      heading: 'Installation Gallery & System Views',
+      description: 'Wireless intrusion detectors and control hub deployments across facilities.',
+      images: [
+        { id: 1, src: '/hero-security-command-center.jpg', caption: 'Centralized Security Operations Console Intrusion Map' },
+        { id: 2, src: '/about-security-camera.jpg', caption: 'Outdoor Perimeter Wireless Microwave Sensor Beam' },
+        { id: 3, src: '/products/cctv-biometrics.jpg', caption: 'Security Hub with Dual-SIM Cellular & IP Connectivity' },
+        { id: 4, src: '/services/services-heavy-security.jpg', caption: 'Perimeter Wall Active Infrared Multi-Beam Array' },
+        { id: 5, src: '/case-studies/case-boom-barrier.jpg', caption: 'Vehicle Barrier Interlinked Perimeter Siren & Strobe' }
+      ]
+    },
+    relatedSlugs: ['cctv-surveillance-system', 'server-room-monitoring', 'fault-alarm-systems']
   }
 };
 
 // Aliases for alternate slug resolutions to guarantee 100% resilient lookup
+// Access Automation Aliases:
+PRODUCTS_CATALOGUE['motorized-industrial-rolling-shutters'] = PRODUCTS_CATALOGUE['motorized-rolling-shutters'];
+PRODUCTS_CATALOGUE['high-speed-roll-up-doors'] = PRODUCTS_CATALOGUE['pvc-rapid-roll-up-doors'];
+PRODUCTS_CATALOGUE['high-speed-rollup-sectional-doors'] = PRODUCTS_CATALOGUE['pvc-rapid-roll-up-doors'];
+PRODUCTS_CATALOGUE['high-speed-industrial-doors'] = PRODUCTS_CATALOGUE['pvc-rapid-roll-up-doors'];
+PRODUCTS_CATALOGUE['hangar-doors'] = PRODUCTS_CATALOGUE['telescopic-cantilever-gates'];
+PRODUCTS_CATALOGUE['automatic-doors'] = PRODUCTS_CATALOGUE['automatic-sliding-swing-doors'];
+
+// Traffic & Perimeter Aliases:
+PRODUCTS_CATALOGUE['optical-flap-turnstiles'] = PRODUCTS_CATALOGUE['turnstiles-flap-barriers-speed-gates'];
+PRODUCTS_CATALOGUE['hydraulic-crash-bollards'] = PRODUCTS_CATALOGUE['bollards-tyre-killers-car-lifts'];
+PRODUCTS_CATALOGUE['parking-visitor-management'] = PRODUCTS_CATALOGUE['visitor-management-system'];
+PRODUCTS_CATALOGUE['parking-intrusion-alarms'] = PRODUCTS_CATALOGUE['visitor-management-system'];
+
+// Pharma Cleanroom Aliases:
 PRODUCTS_CATALOGUE['pharma-cleanroom-door-interlock-system'] = PRODUCTS_CATALOGUE['door-interlock-systems'];
 PRODUCTS_CATALOGUE['cleanroom-door-interlock-system'] = PRODUCTS_CATALOGUE['door-interlock-systems'];
-PRODUCTS_CATALOGUE['high-speed-rollup-sectional-doors'] = PRODUCTS_CATALOGUE['pvc-rapid-roll-up-doors'];
-PRODUCTS_CATALOGUE['parking-visitor-management'] = PRODUCTS_CATALOGUE['visitor-management-system'];
-PRODUCTS_CATALOGUE['parking-intrusion-alarms'] = PRODUCTS_CATALOGUE['fault-alarm-systems'];
-PRODUCTS_CATALOGUE['automatic-doors'] = PRODUCTS_CATALOGUE['automatic-sliding-swing-doors'];
+PRODUCTS_CATALOGUE['dynamic-static-pass-boxes'] = PRODUCTS_CATALOGUE['pass-box-systems'];
+
+// Fire & Life Safety Aliases:
+PRODUCTS_CATALOGUE['addressable-fire-alarm-system'] = PRODUCTS_CATALOGUE['fire-alarm-system'];
+PRODUCTS_CATALOGUE['fire-rated-steel-doors'] = PRODUCTS_CATALOGUE['fire-rated-doors-shutters'];
+
+// Surveillance & Alerts Aliases:
+PRODUCTS_CATALOGUE['alarm-annunciators'] = PRODUCTS_CATALOGUE['fault-alarm-systems'];
 
 // Helper functions
 export const getProductBySlug = (slug) => {
