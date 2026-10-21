@@ -1,13 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   ArrowLeft, Search, Filter, ShieldCheck, ArrowRight,
   Send, Sparkles, Cpu, Layers, Flame, Lock, CheckCircle2,
   PhoneCall, FileText, Check, ChevronDown, ChevronUp, Wrench,
   Clock, Award, HelpCircle, CheckSquare, Factory, Building2,
-  SlidersHorizontal, Play, Truck, Plane, Download, X, Activity
+  SlidersHorizontal, Play, Truck, Plane, Download, X, Activity,
+  Monitor, User, AlertTriangle
 } from 'lucide-react';
 import { getProductsByCategory } from '../data/productsData';
-import SecuritySystemsPage from './SecuritySystemsPage';
 
 // EXACT 14 INDUSTRIAL ACCESS AUTOMATION SERVICES MATCHING REFERENCE DESIGN
 const INDUSTRIAL_AUTOMATION_SERVICES = [
@@ -594,6 +594,234 @@ const FIRE_FILTER_CATEGORIES = [
   'Custom Solutions'
 ];
 
+// CCTV SURVEILLANCE & BIOMETRIC ACCESS SERVICES
+const SECURITY_SERVICES = [
+  {
+    num: '01',
+    id: 1,
+    slug: 'cctv-surveillance-systems',
+    title: '4K AI CCTV & Network Video Surveillance',
+    categoryBadge: 'AI Surveillance',
+    categoryFilters: ['All', 'AI Surveillance', 'Command & Control', 'Turnkey Security'],
+    description: 'High-definition network IP dome, bullet and PTZ cameras with edge AI analytics, facial detection, ANPR, and smart IR night vision.',
+    features: [
+      'Ultra HD 4K Sony Starvis sensor with H.265+ encoding',
+      'AI tripwire, perimeter intrusion & vehicle plate recognition',
+      'High-throughput NVR storage with RAID failover redundancy'
+    ],
+    image: '/cctv-featured-dome.jpg',
+    brochure: true
+  },
+  {
+    num: '02',
+    id: 2,
+    slug: 'biometric-access-control',
+    title: 'Biometric Access & Time Attendance',
+    categoryBadge: 'Biometric Access',
+    categoryFilters: ['All', 'Biometric Access', 'Access Control', 'Smart Controls'],
+    description: 'Contactless face verification, optical fingerprint scanners, and encrypted RFID smart card readers linked with HRMS payroll software.',
+    features: [
+      '0.2s high-speed dual-lens face recognition with anti-spoofing',
+      'Multi-spectral optical fingerprint sensor with live tissue sensing',
+      'Cloud & on-premise automated payroll sync & shift management'
+    ],
+    image: '/cctv-featured-biometric.jpg',
+    brochure: true
+  },
+  {
+    num: '03',
+    id: 3,
+    slug: 'video-door-phones',
+    title: 'IP Video Door Phones & Multi-Way Intercom',
+    categoryBadge: 'Video Intercom',
+    categoryFilters: ['All', 'Video Intercom', 'Access Control', 'Smart Controls'],
+    description: 'Commercial SIP video door stations with indoor capacitive touchscreens, concierge dispatch stations, and remote smartphone unlock.',
+    features: [
+      '1080p wide-angle camera with wide dynamic range (WDR)',
+      'Full-duplex handsfree audio with acoustic echo suppression',
+      'PoE network powered with remote EM lock release relay'
+    ],
+    image: '/services/services-touchless-entry.jpg',
+    brochure: true
+  },
+  {
+    num: '04',
+    id: 4,
+    slug: 'central-vms-command',
+    title: 'Central VMS Command & Video Wall Systems',
+    categoryBadge: 'Command Center',
+    categoryFilters: ['All', 'Command & Control', 'AI Surveillance', 'Turnkey Security'],
+    description: 'Enterprise Video Management Software (VMS), ultra-narrow bezel LED video walls, matrix decoders, and redundant surveillance server arrays.',
+    features: [
+      'Multi-site unified command wall with interactive GIS e-mapping',
+      'Automated alarm popup on motion, line-cross & access violation',
+      'Hot-standby server failover ensuring zero seconds data loss'
+    ],
+    image: '/hero-security-command-center.jpg',
+    brochure: true
+  },
+  {
+    num: '05',
+    id: 5,
+    slug: 'thermal-perimeter-beams',
+    title: 'Thermal Imaging & Active Perimeter Beams',
+    categoryBadge: 'Perimeter Defense',
+    categoryFilters: ['All', 'Perimeter Defense', 'AI Surveillance', 'Turnkey Security'],
+    description: 'Dual-spectrum thermal radiometry cameras and active photoelectric multi-beam perimeter infrared barriers for perimeter boundary fence protection.',
+    features: [
+      'Long-range optical thermal detection in zero light, smoke & fog',
+      'Quad-beam active infrared fencing with anti-cut sabotage logic',
+      'Immediate PTZ camera auto-slew to alarm trigger coordinate'
+    ],
+    image: '/cctv-featured-barrier.jpg',
+    brochure: true
+  },
+  {
+    num: '06',
+    id: 6,
+    slug: 'parking-intrusion-alarms',
+    title: 'Intrusion Detection & Fault Annunciators',
+    categoryBadge: 'Intrusion Detection',
+    categoryFilters: ['All', 'Intrusion Detection', 'Command & Control', 'Smart Controls'],
+    description: 'Multi-zone burglar alarm panels, seismic vault vibration detectors, magnetic contacts, and visual window fault annunciators.',
+    features: [
+      'Dual-path IP/GSM communicator for instantaneous emergency alerts',
+      'High-decibel outdoor strobe siren & silent panic trigger relays',
+      'Visual LED window annunciator tracking equipment faults'
+    ],
+    image: '/cctv-featured-telemetry.jpg',
+    brochure: true
+  }
+];
+
+const SECURITY_FILTER_CATEGORIES = [
+  'All',
+  'AI Surveillance',
+  'Biometric Access',
+  'Video Intercom',
+  'Command & Control',
+  'Perimeter Defense',
+  'Intrusion Detection',
+  'Access Control',
+  'Smart Controls',
+  'Turnkey Security',
+  'Custom Solutions'
+];
+
+// SERVER ROOM & CRITICAL FACILITY MONITORING SERVICES
+const MONITORING_SERVICES = [
+  {
+    num: '01',
+    id: 1,
+    slug: 'server-room-environment-monitoring',
+    title: 'Server Room Environment Monitoring Systems',
+    categoryBadge: 'Data Center EMS',
+    categoryFilters: ['All', 'Data Center EMS', 'Telemetry & BMS', 'Critical Alerts'],
+    description: 'Intelligent multi-probe telemetry controllers tracking ambient temperature, humidity, airflow, and power health in server racks and data halls.',
+    features: [
+      'Real-time multi-point temperature & relative humidity logging',
+      'Automated SMS, email, SNMP trap & voice call escalation',
+      'Direct dry contact relay triggers for backup PAC chiller units'
+    ],
+    image: '/cctv-featured-telemetry.jpg',
+    brochure: true
+  },
+  {
+    num: '02',
+    id: 2,
+    slug: 'water-leak-detection-systems',
+    title: 'Underfloor Water Leak Detection (WLD)',
+    categoryBadge: 'Water Leak Detection',
+    categoryFilters: ['All', 'Water Leak Detection', 'Data Center EMS', 'Critical Alerts'],
+    description: 'Continuous conductive sensor cables and pinpoint distance-locating controller panels detecting chilled water leaks under raised floors.',
+    features: [
+      'Conductive sensing cable with meter-accurate leak location',
+      'Fast-drying non-conductive polymer cable with fast reset',
+      'Dual relay output for BMS integration & motorized valve cutoff'
+    ],
+    image: '/case-studies/case-cleanroom.jpg',
+    brochure: true
+  },
+  {
+    num: '03',
+    id: 3,
+    slug: 'gas-detection-systems',
+    title: 'Toxic & Combustible Gas Detection Arrays',
+    categoryBadge: 'Gas Monitoring',
+    categoryFilters: ['All', 'Gas Monitoring', 'Life Safety', 'Flameproof Ex-d'],
+    description: 'Fixed industrial gas transmitters detecting battery room hydrogen, refrigerant leaks, CO2, carbon monoxide, and toxic solvents.',
+    features: [
+      'Certified Flameproof (Ex-d Group IIA, IIB, IIC) transmitter heads',
+      'Electrochemical, catalytic pellistor & NDIR optical sensor modules',
+      'Dual setpoint relays for automated emergency exhaust blower trip'
+    ],
+    image: '/case-studies/case-ss304-mist.jpg',
+    brochure: true
+  },
+  {
+    num: '04',
+    id: 4,
+    slug: 'alarm-annunciators',
+    title: 'Microprocessor Visual Alarm Annunciators',
+    categoryBadge: 'Alarm Annunciation',
+    categoryFilters: ['All', 'Alarm Annunciation', 'Telemetry & BMS', 'Critical Alerts'],
+    description: 'Multi-window visual LED alarm annunciator panels monitoring chiller trips, UPS power faults, transformer alarms, and fire pump status.',
+    features: [
+      '4 to 64 window ultra-bright LED backlit fault display matrix',
+      'Standard ISA-18.1 sequence logic (Manual/Auto Reset, First-Out)',
+      'Built-in dual audio buzzer, test, mute, and acknowledge buttons'
+    ],
+    image: '/services/services-heavy-security.jpg',
+    brochure: true
+  },
+  {
+    num: '05',
+    id: 5,
+    slug: 'differential-pressure-monitors',
+    title: 'Cleanroom Differential Pressure Monitors',
+    categoryBadge: 'Pressure Telemetry',
+    categoryFilters: ['All', 'Pressure Telemetry', 'Data Center EMS', 'Telemetry & BMS'],
+    description: 'High-precision digital differential pressure indicators and transmitters maintaining positive/negative cascade pressure in cleanrooms and labs.',
+    features: [
+      'Precision piezoresistive sensor measuring Pascal / mmWC pressure',
+      'Bright 7-segment digital display with green/red status indicator',
+      'Isolated 4-20mA & RS-485 Modbus RTU telemetry to building BMS'
+    ],
+    image: '/hero-cleanroom-interlock-chamber.jpg',
+    brochure: true
+  },
+  {
+    num: '06',
+    id: 6,
+    slug: 'rodent-repellent-systems',
+    title: 'Ultrasonic Rodent Repellent & Server Fire Safety',
+    categoryBadge: 'Facility Protection',
+    categoryFilters: ['All', 'Facility Protection', 'Critical Alerts', 'Data Center EMS'],
+    description: 'High-frequency ultrasonic transducers preventing rodent cable damage combined with clean agent zero-residue server rack fire protection.',
+    features: [
+      'Frequency sweeping ultrasound (20 kHz - 60 kHz) repels pests',
+      'Non-toxic, safe for IT equipment, human hearing & sensitive servers',
+      'UL listed Novec 1230 / FM-200 total flooding clean suppression'
+    ],
+    image: '/case-studies/case-fire-hydrant.jpg',
+    brochure: true
+  }
+];
+
+const MONITORING_FILTER_CATEGORIES = [
+  'All',
+  'Data Center EMS',
+  'Water Leak Detection',
+  'Gas Monitoring',
+  'Alarm Annunciation',
+  'Pressure Telemetry',
+  'Facility Protection',
+  'Critical Alerts',
+  'Telemetry & BMS',
+  'Flameproof Ex-d',
+  'Custom Solutions'
+];
+
 export default function CategoryPage({
   categoryKey,
   onNavigate,
@@ -606,11 +834,85 @@ export default function CategoryPage({
   const [brochureToast, setBrochureToast] = useState(null);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
 
+  // Smooth Scroll-Reveal Observer for Modern Interactive Animations
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Immediately ensure hero sections are visible
+    document.querySelectorAll('.auto-hero-section').forEach((el) => el.classList.add('in-view'));
+
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.auto-scroll-reveal').forEach((el) => el.classList.add('in-view'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+          }
+        });
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -20px 0px' }
+    );
+
+    const revealElements = document.querySelectorAll('.auto-scroll-reveal');
+    revealElements.forEach((el) => observer.observe(el));
+
+    // Fallback ensure all elements are visible smoothly
+    const timer = setTimeout(() => {
+      revealElements.forEach((el) => el.classList.add('in-view'));
+    }, 800);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
+  }, [categoryKey, activeFilter, searchQuery]);
+
   const isAutomation = categoryKey?.toLowerCase() === 'automation';
   const isCleanroom = categoryKey?.toLowerCase() === 'cleanroom-interlocks' || categoryKey?.toLowerCase() === 'interlocks';
   const isPerimeter = categoryKey?.toLowerCase() === 'perimeter-defense' || categoryKey?.toLowerCase() === 'perimeter';
   const isFire = categoryKey?.toLowerCase() === 'fire-protection' || categoryKey?.toLowerCase() === 'fire' || categoryKey?.toLowerCase() === 'fire-safety';
-  const isSecurity = categoryKey?.toLowerCase() === 'security-systems' || categoryKey?.toLowerCase() === 'security' || categoryKey?.toLowerCase() === 'cctv';
+  const isSecurity = categoryKey?.toLowerCase() === 'security-systems' || categoryKey?.toLowerCase() === 'security' || categoryKey?.toLowerCase() === 'cctv-surveillance' || categoryKey?.toLowerCase() === 'cctv';
+  const isMonitoring = categoryKey?.toLowerCase() === 'server-room-monitoring' || categoryKey?.toLowerCase() === 'critical-monitoring' || categoryKey?.toLowerCase() === 'monitoring';
+
+  // Filter 6 CCTV Surveillance & Biometrics Services
+  const filteredSecurityServices = useMemo(() => {
+    return SECURITY_SERVICES.filter(service => {
+      const matchSearch = (
+        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      const matchFilter = (
+        activeFilter === 'All' ||
+        service.categoryFilters.includes(activeFilter) ||
+        service.categoryBadge === activeFilter
+      );
+      return matchSearch && matchFilter;
+    });
+  }, [searchQuery, activeFilter]);
+
+  // Filter 6 Server Room & Critical Monitoring Services
+  const filteredMonitoringServices = useMemo(() => {
+    return MONITORING_SERVICES.filter(service => {
+      const matchSearch = (
+        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.categoryBadge.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      const matchFilter = (
+        activeFilter === 'All' ||
+        service.categoryFilters.includes(activeFilter) ||
+        service.categoryBadge === activeFilter
+      );
+      return matchSearch && matchFilter;
+    });
+  }, [searchQuery, activeFilter]);
 
   // Filter 14 Industrial Automation Services
   const filteredAutomationServices = useMemo(() => {
@@ -742,7 +1044,7 @@ export default function CategoryPage({
             { label: 'Fire Alarm Loops', value: '1 to 8 Loops' },
             { label: 'Compliance', value: 'NBC 2016 / UL' }
           ],
-          overviewText: 'HTI Security Systems Directorate provides end-to-end security architectures engineered for corporate real estate, pharmaceutical plants, and high-security infrastructure. We integrate ultra-HD 4K IP cameras with deep-learning AI analytics (perimeter intrusion, line crossing, facial recognition), touchless multi-factor biometric attendance terminals, addressable fire alarm networks conforming to NBC 2016 Part 4, and real-time IT server room environmental protection.',
+          overviewText: 'HTI Security Systems Directorate provides end-to-end security architectures engineered for corporate real estate, pharmaceutical plants, and high-security infrastructure. We integrate ultra-HD 4K IP cameras with deep-learning AI analytics (perimeter intrusion, line crossing, facial recognition), touchless multi-factor biometric attendance terminals, multi-channel video door intercoms, and central video management command centers.',
           sectors: ['Corporate IT HQs & BFSI', 'Pharma API & Formulation', 'Data Centers & Server Rooms', 'Chemical Processing Units', 'Commercial Shopping Malls'],
           faqs: [
             {
@@ -750,16 +1052,53 @@ export default function CategoryPage({
               a: 'Yes. For pharmaceutical solvent storage, chemical synthesis, and hazardous areas, we supply ATEX and IECEx certified Flameproof (Ex-d Group IIA, IIB, IIC) camera housings in cast aluminum or stainless steel SS316.'
             },
             {
-              q: 'How does the Fire Alarm System integrate with cleanroom door interlocks?',
-              a: 'HTI addressable and conventional fire alarm panels feature potential-free relay contacts connected directly to our door interlocking controllers. Upon a confirmed smoke or heat detector trip, power to all electromagnetic door locks drops instantly to guarantee unhindered evacuation.'
-            },
-            {
-              q: 'What parameters does the Server Room Environmental Monitoring system track?',
-              a: 'The system continuously monitors ambient temperature, relative humidity (RH), fluid/water leaks under raised floors via sensor ropes, AC power failure, and smoke. It triggers instant automated SMS, email, SNMP traps, and hooter siren towers.'
+              q: 'How does AI Video Analytics (VCA) reduce false alarms in enterprise CCTV?',
+              a: 'Our deep-learning algorithms classify movement into humans, vehicles, and non-target environmental noise (such as foliage, animals, or weather shadows). This reduces false alarms by over 95% while triggering instant security hooters upon virtual line crossing or perimeter intrusion.'
             },
             {
               q: 'Are your biometric access systems compliant with USFDA 21 CFR Part 11?',
-              a: 'Yes. Our software provides encrypted, immutable audit trails, time-stamped entry logs, role-based operator permissions, and export capabilities required for USFDA and WHO-GMP audit scrutiny.'
+              a: 'Yes. Our software provides encrypted, immutable audit trails, time-stamped entry logs, role-based operator permissions, dual-custody authorization, and automated compliance export capabilities required for USFDA and WHO-GMP audit scrutiny.'
+            },
+            {
+              q: 'Can IP Video Door Phones integrate with the central command center?',
+              a: 'Yes. HTI multi-apartment and industrial IP video door intercoms integrate seamlessly via SIP and ONVIF protocols into central VMS control rooms, guard consoles, and mobile apps for remote video verification and automated gate release.'
+            }
+          ]
+        };
+      case 'server-room-monitoring':
+      case 'critical-monitoring':
+      case 'monitoring':
+        return {
+          title: 'Server Room & Critical Facility Environmental Monitoring',
+          categoryName: 'Critical Monitoring',
+          tagline: '24/7 temperature/humidity telemetry, water leak location sensing, toxic gas arrays & visual alarm annunciators.',
+          icon: Activity,
+          badgeColor: 'badge-blue',
+          heroGradient: 'hero-gradient-automation',
+          stats: [
+            { label: 'Facilities Monitored', value: '350+' },
+            { label: 'Telemetry Sensor Types', value: '18+ Sensors' },
+            { label: 'Alert Dispatch Latency', value: '< 2 Seconds' },
+            { label: 'Uptime SLA', value: '99.99%' }
+          ],
+          overviewText: 'HTI Critical Monitoring Directorate protects data centers, server racks, cleanrooms, and chemical facilities from catastrophic downtime. Our integrated architecture combines IoT multi-point temperature/RH telemetry, underfloor zoned and distance-measuring water leak detection cables, toxic/combustible gas sensor transmitters, and industrial micro-controller visual fault annunciators with automated multi-channel SMS, call, and SNMP alerting.',
+          sectors: ['Data Centers & IT Server Rooms', 'Pharma Cleanrooms & Stability Chambers', 'Chemical & Hazardous Material Plants', 'Telecom Switching Centers', 'Banking BFSI Data Hubs'],
+          faqs: [
+            {
+              q: 'What environmental parameters does the Server Room Monitoring System track?',
+              a: 'The system continuously monitors ambient temperature, relative humidity (RH), underfloor water leaks via sensing ropes, AC utility power failures, UPS battery alarms, and smoke. Instant alerts are dispatched via SMS, automated voice calls, email, SNMP traps, and local audible/visual beacon towers.'
+            },
+            {
+              q: 'How does the zoned water leak detection (WLD) cable operate?',
+              a: 'HTI conductive polymer sensing cables are installed along the perimeter of raised floors, air handling units (PAC), and beneath server racks. When conductive liquid touches the cable, the system pinpoints the exact distance down to the meter on an interactive floor map and BMS interface.'
+            },
+            {
+              q: 'Can the toxic and combustible gas detection system automatically trip plant exhaust blowers?',
+              a: 'Yes. HTI gas transmitters feature configurable dual alarm setpoints (Warning at 20% LEL, Danger at 40% LEL). When breached, onboard potential-free SPDT relays immediately trip explosion-proof exhaust ventilation blowers, sound warning sirens, and actuate fuel shut-off solenoid valves.'
+            },
+            {
+              q: 'How do visual alarm annunciators integrate with SCADA and industrial PLC systems?',
+              a: 'Our micro-controller annunciator panels feature multi-window LED legends with ISA-sequence alarm acknowledgment (Flash, Steady, Reset). They communicate over Modbus RTU / RS485 and dry contacts to central SCADA and DCS architectures for zero-blindspot fault monitoring.'
             }
           ]
         };
@@ -946,17 +1285,113 @@ export default function CategoryPage({
     setActiveFaq(prev => prev === idx ? null : idx);
   };
 
-  // =========================================================================
-  // DEDICATED REFERENCE-ACCURATE SECURITY SYSTEMS & CCTV SERVICE PAGE
-  // =========================================================================
-  if (isSecurity) {
+  // Reusable 4-Phase Turnkey Engineering Lifecycle Section
+  const renderEngineeringLifecycle = () => (
+    <section className="auto-lifecycle-section auto-scroll-reveal">
+      <div className="auto-section-title-wrap text-center">
+        <div className="auto-section-pill">
+          <Award size={14} className="text-sky-600" />
+          <span>Execution Integrity</span>
+        </div>
+        <h2 className="auto-section-heading">
+          Our 4-Phase Turnkey Engineering Lifecycle
+        </h2>
+        <p className="auto-section-subheading">
+          Every project awarded to HTI undergoes systematic site feasibility, CAD drawing approvals, factory testing, and statutory validation.
+        </p>
+      </div>
+
+      <div className="auto-phases-grid">
+        <div className="auto-phase-card">
+          <div className="auto-phase-num-badge">01</div>
+          <h4 className="auto-phase-title">Site Feasibility &amp; CAD</h4>
+          <p className="auto-phase-desc">
+            Physical opening measurement, wind load / cycle rate calculations, and CAD General Arrangement (GA) drawings.
+          </p>
+        </div>
+
+        <div className="auto-phase-card">
+          <div className="auto-phase-num-badge">02</div>
+          <h4 className="auto-phase-title">OEM Hardware Sourcing</h4>
+          <p className="auto-phase-desc">
+            Procurement of certified tier-1 motors, sensors, microcontrollers, and Flameproof Ex-d cast enclosures.
+          </p>
+        </div>
+
+        <div className="auto-phase-card">
+          <div className="auto-phase-num-badge">03</div>
+          <h4 className="auto-phase-title">Precision Integration</h4>
+          <p className="auto-phase-desc">
+            Site installation, electrical wiring, FACP fire alarm trip integration, and differential pressure interlock calibration.
+          </p>
+        </div>
+
+        <div className="auto-phase-card">
+          <div className="auto-phase-num-badge">04</div>
+          <h4 className="auto-phase-title">Testing &amp; 24/7 SLA</h4>
+          <p className="auto-phase-desc">
+            100% cycle stress testing, documentation handover for USFDA / NBC audit sign-offs, and AMC service agreements.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+
+  // Reusable Interactive FAQ Section
+  const renderFaqSection = () => {
+    const faqs = categoryMeta.faqs || [];
+    if (faqs.length === 0) return null;
+
     return (
-      <SecuritySystemsPage
-        onNavigate={onNavigate}
-        onQuickQuote={onQuickQuote}
-      />
+      <section className="auto-faq-section auto-scroll-reveal">
+        <div className="auto-section-title-wrap text-center">
+          <div className="auto-section-pill">
+            <HelpCircle size={14} className="text-sky-600" />
+            <span>Technical Clarifications</span>
+          </div>
+          <h2 className="auto-section-heading">
+            Frequently Asked Questions on {categoryMeta.categoryName}
+          </h2>
+          <p className="auto-section-subheading">
+            Key operational, engineering, and statutory compliance considerations addressed by HTI specialists.
+          </p>
+        </div>
+
+        <div className="auto-faq-accordion">
+          {faqs.map((faq, idx) => {
+            const isOpen = activeFaq === idx;
+            return (
+              <div
+                key={idx}
+                className={`auto-faq-item ${isOpen ? 'active' : ''}`}
+              >
+                <button
+                  type="button"
+                  className="auto-faq-trigger"
+                  onClick={() => toggleFaq(idx)}
+                  aria-expanded={isOpen}
+                >
+                  <span className="auto-faq-question">{faq.q}</span>
+                  <div className="auto-faq-icon-bubble">
+                    {isOpen ? (
+                      <ChevronUp size={18} className="text-sky-600" />
+                    ) : (
+                      <ChevronDown size={18} className="text-slate-400" />
+                    )}
+                  </div>
+                </button>
+                {isOpen && (
+                  <div className="auto-faq-answer">
+                    <p>{faq.a}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
     );
-  }
+  };
 
   // =========================================================================
   // DEDICATED REFERENCE-ACCURATE INDUSTRIAL ACCESS AUTOMATION SERVICE PAGE
@@ -1015,7 +1450,7 @@ export default function CategoryPage({
           </div>
 
           {/* 2. HERO SECTION */}
-          <section className="auto-hero-section">
+          <section className="auto-hero-section auto-scroll-reveal in-view">
             <div className="auto-hero-grid">
               {/* Left Column: Heading, Description, Stat Cards */}
               <div className="auto-hero-left">
@@ -1101,7 +1536,7 @@ export default function CategoryPage({
           </section>
 
           {/* 3. ENGINEERING INTRODUCTION SECTION */}
-          <section className="auto-engineering-section">
+          <section className="auto-engineering-section auto-scroll-reveal">
             <div className="auto-engineering-card">
               <div className="auto-arch-header-row">
                 <div className="auto-arch-badge-blue">
@@ -1188,7 +1623,7 @@ export default function CategoryPage({
           </section>
 
           {/* 5. 14 SERVICE CARDS & CUSTOM CTA */}
-          <section className="auto-services-grid-section">
+          <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredAutomationServices.length === 0 ? (
               <div className="auto-empty-state">
                 <Search size={36} className="text-slate-400 mb-2" />
@@ -1322,6 +1757,12 @@ export default function CategoryPage({
               </div>
             )}
           </section>
+
+          {/* 5. TURNKEY ENGINEERING LIFECYCLE */}
+          {renderEngineeringLifecycle()}
+
+          {/* 6. TECHNICAL FAQ ACCORDION */}
+          {renderFaqSection()}
         </div>
       </div>
     );
@@ -1382,7 +1823,7 @@ export default function CategoryPage({
           </div>
 
           {/* 2. HERO SECTION */}
-          <section className="auto-hero-section">
+          <section className="auto-hero-section auto-scroll-reveal in-view">
             <div className="auto-hero-grid">
               {/* Left Column: Heading, Description, Stat Cards */}
               <div className="auto-hero-left">
@@ -1468,7 +1909,7 @@ export default function CategoryPage({
           </section>
 
           {/* 3. ENGINEERING INTRODUCTION SECTION */}
-          <section className="auto-engineering-section">
+          <section className="auto-engineering-section auto-scroll-reveal">
             <div className="auto-engineering-card">
               <div className="auto-arch-header-row">
                 <div className="auto-arch-badge-blue">
@@ -1555,7 +1996,7 @@ export default function CategoryPage({
           </section>
 
           {/* 5. 6 SERVICE CARDS & CUSTOM CLEANROOM CTA */}
-          <section className="auto-services-grid-section">
+          <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredCleanroomServices.length === 0 ? (
               <div className="auto-empty-state">
                 <Search size={36} className="text-slate-400 mb-2" />
@@ -1693,6 +2134,12 @@ export default function CategoryPage({
               </div>
             )}
           </section>
+
+          {/* 5. TURNKEY ENGINEERING LIFECYCLE */}
+          {renderEngineeringLifecycle()}
+
+          {/* 6. TECHNICAL FAQ ACCORDION */}
+          {renderFaqSection()}
         </div>
       </div>
     );
@@ -1755,7 +2202,7 @@ export default function CategoryPage({
           </div>
 
           {/* 2. HERO SECTION */}
-          <section className="auto-hero-section">
+          <section className="auto-hero-section auto-scroll-reveal in-view">
             <div className="auto-hero-grid">
               {/* Left Column: Heading, Description, Stat Cards */}
               <div className="auto-hero-left">
@@ -1841,7 +2288,7 @@ export default function CategoryPage({
           </section>
 
           {/* 3. ENGINEERING INTRODUCTION SECTION */}
-          <section className="auto-engineering-section">
+          <section className="auto-engineering-section auto-scroll-reveal">
             <div className="auto-engineering-card">
               <div className="auto-arch-header-row">
                 <div className="auto-arch-badge-blue">
@@ -1928,7 +2375,7 @@ export default function CategoryPage({
           </section>
 
           {/* 5. 6 SERVICE CARDS & CUSTOM PERIMETER CTA */}
-          <section className="auto-services-grid-section">
+          <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredPerimeterServices.length === 0 ? (
               <div className="auto-empty-state">
                 <Search size={36} className="text-slate-400 mb-2" />
@@ -2066,6 +2513,12 @@ export default function CategoryPage({
               </div>
             )}
           </section>
+
+          {/* 5. TURNKEY ENGINEERING LIFECYCLE */}
+          {renderEngineeringLifecycle()}
+
+          {/* 6. TECHNICAL FAQ ACCORDION */}
+          {renderFaqSection()}
         </div>
       </div>
     );
@@ -2128,7 +2581,7 @@ export default function CategoryPage({
           </div>
 
           {/* 2. HERO SECTION */}
-          <section className="auto-hero-section">
+          <section className="auto-hero-section auto-scroll-reveal in-view">
             <div className="auto-hero-grid">
               {/* Left Column: Heading, Description, Stat Cards */}
               <div className="auto-hero-left">
@@ -2214,7 +2667,7 @@ export default function CategoryPage({
           </section>
 
           {/* 3. ENGINEERING INTRODUCTION SECTION */}
-          <section className="auto-engineering-section">
+          <section className="auto-engineering-section auto-scroll-reveal">
             <div className="auto-engineering-card">
               <div className="auto-arch-header-row">
                 <div className="auto-arch-badge-blue">
@@ -2301,7 +2754,7 @@ export default function CategoryPage({
           </section>
 
           {/* 5. 6 SERVICE CARDS & CUSTOM FIRE SAFETY CTA */}
-          <section className="auto-services-grid-section">
+          <section className="auto-services-grid-section auto-scroll-reveal">
             {filteredFireServices.length === 0 ? (
               <div className="auto-empty-state">
                 <Search size={36} className="text-slate-400 mb-2" />
@@ -2439,6 +2892,770 @@ export default function CategoryPage({
               </div>
             )}
           </section>
+
+          {/* 5. TURNKEY ENGINEERING LIFECYCLE */}
+          {renderEngineeringLifecycle()}
+
+          {/* 6. TECHNICAL FAQ ACCORDION */}
+          {renderFaqSection()}
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // DEDICATED CCTV SURVEILLANCE & BIOMETRIC ACCESS SERVICE PAGE
+  // =========================================================================
+  if (isSecurity) {
+    return (
+      <div className="auto-service-page security-service-page">
+        {/* Toast Feedback for Brochure Downloads */}
+        {brochureToast && (
+          <div className="auto-toast-notice">
+            <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
+            <span>{brochureToast}</span>
+          </div>
+        )}
+
+        {/* Video Solutions Modal */}
+        {videoModalOpen && (
+          <div className="auto-video-modal-backdrop" onClick={() => setVideoModalOpen(false)}>
+            <div className="auto-video-modal-card" onClick={(e) => e.stopPropagation()}>
+              <div className="auto-modal-header">
+                <h3 className="auto-modal-title">HTI CCTV Surveillance &amp; Biometrics Overview</h3>
+                <button className="auto-modal-close" onClick={() => setVideoModalOpen(false)}>
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="auto-modal-body">
+                <img
+                  src="/hero-security-command-center.jpg"
+                  alt="CCTV Surveillance &amp; Biometrics Command Center"
+                  className="w-full rounded-lg mb-4"
+                />
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                  HTI executes enterprise 4K AI CCTV networks, contactless facial recognition attendance, centralized video management command centers, and multi-zone video door intercoms engineered for 24/7 security.
+                </p>
+                <div className="flex justify-end gap-3">
+                  <button className="btn btn-secondary btn-sm" onClick={() => setVideoModalOpen(false)}>
+                    Close
+                  </button>
+                  <button className="btn btn-primary btn-sm" onClick={() => { setVideoModalOpen(false); onNavigate('contact'); }}>
+                    Request Security Audit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="auto-page-container">
+          {/* 1. BREADCRUMBS BAR */}
+          <div className="auto-breadcrumb-nav">
+            <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-current">CCTV Surveillance &amp; Biometrics</span>
+          </div>
+
+          {/* 2. HERO SECTION */}
+          <section className="auto-hero-section auto-scroll-reveal in-view">
+            <div className="auto-hero-grid">
+              {/* Left Column: Heading, Description, Stat Cards */}
+              <div className="auto-hero-left">
+                <div className="auto-hero-pill-badge">
+                  <span className="auto-pulse-dot"></span>
+                  <span>CCTV SURVEILLANCE &amp; BIOMETRIC ACCESS</span>
+                </div>
+
+                <h1 className="auto-hero-title">
+                  CCTV Surveillance <br />
+                  <span className="text-blue-accent">&amp; Biometrics</span>
+                </h1>
+
+                <p className="auto-hero-desc">
+                  High-definition 4K AI video surveillance, contactless biometric access control, multi-zone IP video intercom &amp; enterprise central VMS command centers.
+                </p>
+
+                {/* Four Compact Statistic Cards */}
+                <div className="auto-hero-stats-grid">
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Cpu size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">500+</div>
+                      <div className="auto-stat-lbl">Surveillance Cameras Deployed</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <ShieldCheck size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">&lt; 0.2s</div>
+                      <div className="auto-stat-lbl">Biometric Match Latency</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Activity size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">4K UHD</div>
+                      <div className="auto-stat-lbl">AI Analytics Resolution</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Award size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">24/7</div>
+                      <div className="auto-stat-lbl">Central VMS Uptime</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Hero Facility Image with Play Button */}
+              <div className="auto-hero-right">
+                <div className="auto-hero-media-wrapper">
+                  <img
+                    src="/hero-security-command-center.jpg"
+                    alt="Intelligent CCTV Surveillance &amp; Command Center"
+                    className="auto-hero-image"
+                    loading="eager"
+                  />
+                  <button
+                    className="auto-watch-video-btn"
+                    onClick={() => setVideoModalOpen(true)}
+                  >
+                    <div className="auto-play-icon-circle">
+                      <Play size={12} fill="#1d4ed8" />
+                    </div>
+                    <span>Watch Surveillance Demo</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 3. ENGINEERING INTRODUCTION SECTION */}
+          <section className="auto-engineering-section auto-scroll-reveal">
+            <div className="auto-engineering-card">
+              <div className="auto-arch-header-row">
+                <div className="auto-arch-badge-blue">
+                  <span className="auto-subtle-dot"></span>
+                  <span>INTELLIGENT SECURITY ARCHITECTURE</span>
+                </div>
+                <div className="auto-arch-badge-red">
+                  <Wrench size={13} />
+                  <span>Turnkey VMS &amp; AI Analytics Execution</span>
+                </div>
+              </div>
+
+              <h2 className="auto-arch-heading">
+                Comprehensive Engineering &amp; Execution for Surveillance &amp; Access
+              </h2>
+
+              <p className="auto-arch-desc">
+                HTI Surveillance &amp; Biometrics Directorate engineers robust physical security and electronic monitoring networks for enterprise headquarters, industrial factories, pharmaceutical airlocks, and data centers. Our turnkey systems combine artificial intelligence CCTV video analytics, dual-lens facial verification terminals, centralized video management command walls, and fail-safe door access integration.
+              </p>
+
+              {/* Five Application Chips */}
+              <div className="auto-app-chips-row">
+                <div className="auto-app-chip">
+                  <Building2 size={15} className="chip-icon" />
+                  <span>Corporate Towers &amp; IT Campuses</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Factory size={15} className="chip-icon" />
+                  <span>Pharma &amp; Cleanroom Production Bays</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Truck size={15} className="chip-icon" />
+                  <span>Warehouses &amp; Logistics Hubs</span>
+                </div>
+                <div className="auto-app-chip">
+                  <ShieldCheck size={15} className="chip-icon" />
+                  <span>Banking Vaults &amp; Critical Sites</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Layers size={15} className="chip-icon" />
+                  <span>Industrial Plants &amp; Factories</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 4. SEARCH AND FILTER SECTION */}
+          <section className="auto-controls-section">
+            <div className="auto-search-bar-row">
+              <div className="auto-search-input-wrap">
+                <Search size={17} className="auto-search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search surveillance, biometrics, intercom solutions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="auto-search-field"
+                />
+                {searchQuery && (
+                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
+                )}
+              </div>
+
+              <div className="auto-results-count">
+                <span>{filteredSecurityServices.length} services found</span>
+              </div>
+            </div>
+
+            {/* Filter Chips by Application */}
+            <div className="auto-filters-container">
+              <div className="auto-filter-label">FILTER BY APPLICATION</div>
+              <div className="auto-filter-chips-list">
+                {SECURITY_FILTER_CATEGORIES.map((filter) => (
+                  <button
+                    key={filter}
+                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 5. 6 SERVICE CARDS & CUSTOM SECURITY CTA */}
+          <section className="auto-services-grid-section auto-scroll-reveal">
+            {filteredSecurityServices.length === 0 ? (
+              <div className="auto-empty-state">
+                <Search size={36} className="text-slate-400 mb-2" />
+                <h3>No surveillance services matching "{searchQuery}"</h3>
+                <p>Try searching for CCTV, IP cameras, biometrics, facial recognition, VMS, video intercom, or reset filters.</p>
+                <button
+                  className="btn btn-secondary btn-sm mt-3"
+                  onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <div className="auto-services-grid">
+                {filteredSecurityServices.map((service) => (
+                  <div key={service.num} className="auto-service-card">
+                    {/* Card Media with Number and Category Badges */}
+                    <div className="auto-card-media">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="auto-card-img"
+                        loading="lazy"
+                      />
+                      <div className="auto-card-num-badge">
+                        {service.num}
+                      </div>
+                      <div className="auto-card-cat-pill">
+                        {service.categoryBadge}
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="auto-card-body">
+                      <h3 className="auto-card-title">{service.title}</h3>
+                      <p className="auto-card-description">{service.description}</p>
+
+                      {/* 3 Concise Feature Bullets */}
+                      <ul className="auto-card-features">
+                        {service.features.map((feat, idx) => (
+                          <li key={idx} className="auto-feature-bullet">
+                            <span className="auto-bullet-icon">
+                              <Check size={11} strokeWidth={2.5} />
+                            </span>
+                            <span className="auto-bullet-text">{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Action Buttons */}
+                      <div className="auto-card-btn-row">
+                        <button
+                          className="auto-btn-view-details"
+                          onClick={() => {
+                            if (service.slug) {
+                              onNavigate('product', service.slug);
+                            } else {
+                              onNavigate('contact');
+                            }
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>View Details</span>
+                          <ArrowRight size={13} />
+                        </button>
+
+                        <button
+                          className="auto-btn-brochure"
+                          onClick={() => handleBrochureDownload(service)}
+                          title={`Download ${service.title} Brochure`}
+                        >
+                          <Download size={13} />
+                          <span>Brochure</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* CUSTOM SECURITY SOLUTION CTA CARD */}
+                {(!searchQuery && (activeFilter === 'All' || activeFilter === 'AI Surveillance' || activeFilter === 'Biometric Access' || activeFilter === 'Command & Control' || activeFilter === 'Turnkey Security' || activeFilter === 'Custom Solutions')) && (
+                  <div className="auto-custom-cta-card">
+                    <div className="auto-cta-inner">
+                      <div className="auto-cta-left">
+                        <div className="auto-cta-icon-box">
+                          <Cpu size={22} className="text-blue-600" />
+                        </div>
+
+                        <h3 className="auto-cta-heading">Need Enterprise CCTV &amp; Biometric Architecture?</h3>
+                        <p className="auto-cta-desc">
+                          Our certified security systems engineers conduct comprehensive site vulnerability assessments, camera line-of-sight mapping, network bandwidth planning, and biometric HRMS integration.
+                        </p>
+
+                        <ul className="auto-cta-checklist">
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Site risk assessment &amp; camera coverage modeling</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>NVR storage calculation &amp; fiber network planning</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Turnkey cabling, rack mounting &amp; camera installation</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Central VMS server setup &amp; client workstation training</span>
+                          </li>
+                        </ul>
+
+                        <button
+                          className="auto-cta-btn"
+                          onClick={() => {
+                            onNavigate('contact');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>Consult Security Engineers</span>
+                          <ArrowRight size={14} />
+                        </button>
+                      </div>
+
+                      <div className="auto-cta-right-media">
+                        <img
+                          src="/cctv-cta-cameras.jpg"
+                          alt="HTI Enterprise CCTV &amp; Biometrics Solutions"
+                          className="auto-cta-image"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+
+          {/* 5. TURNKEY ENGINEERING LIFECYCLE */}
+          {renderEngineeringLifecycle()}
+
+          {/* 6. TECHNICAL FAQ ACCORDION */}
+          {renderFaqSection()}
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // DEDICATED SERVER ROOM & CRITICAL MONITORING SERVICE PAGE
+  // =========================================================================
+  if (isMonitoring) {
+    return (
+      <div className="auto-service-page monitoring-service-page">
+        {/* Toast Feedback for Brochure Downloads */}
+        {brochureToast && (
+          <div className="auto-toast-notice">
+            <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
+            <span>{brochureToast}</span>
+          </div>
+        )}
+
+        {/* Video Solutions Modal */}
+        {videoModalOpen && (
+          <div className="auto-video-modal-backdrop" onClick={() => setVideoModalOpen(false)}>
+            <div className="auto-video-modal-card" onClick={(e) => e.stopPropagation()}>
+              <div className="auto-modal-header">
+                <h3 className="auto-modal-title">HTI Server Room &amp; Critical Monitoring Overview</h3>
+                <button className="auto-modal-close" onClick={() => setVideoModalOpen(false)}>
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="auto-modal-body">
+                <img
+                  src="/case-studies/case-cleanroom.jpg"
+                  alt="Server Room &amp; Critical Monitoring Infrastructure"
+                  className="w-full rounded-lg mb-4"
+                />
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                  HTI executes multi-point server room environmental telemetry, underfloor water leak detection cables, toxic and combustible gas transmitters, and microprocessor visual fault annunciators engineered for 24/7 continuous data center uptime.
+                </p>
+                <div className="flex justify-end gap-3">
+                  <button className="btn btn-secondary btn-sm" onClick={() => setVideoModalOpen(false)}>
+                    Close
+                  </button>
+                  <button className="btn btn-primary btn-sm" onClick={() => { setVideoModalOpen(false); onNavigate('contact'); }}>
+                    Request Monitoring Audit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="auto-page-container">
+          {/* 1. BREADCRUMBS BAR */}
+          <div className="auto-breadcrumb-nav">
+            <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-sep">&gt;</span>
+            <span className="auto-breadcrumb-current">Server Room &amp; Critical Monitoring</span>
+          </div>
+
+          {/* 2. HERO SECTION */}
+          <section className="auto-hero-section auto-scroll-reveal in-view">
+            <div className="auto-hero-grid">
+              {/* Left Column: Heading, Description, Stat Cards */}
+              <div className="auto-hero-left">
+                <div className="auto-hero-pill-badge">
+                  <span className="auto-pulse-dot"></span>
+                  <span>SERVER ROOM &amp; CRITICAL MONITORING</span>
+                </div>
+
+                <h1 className="auto-hero-title">
+                  Server Room <br />
+                  <span className="text-blue-accent">&amp; Critical Monitoring</span>
+                </h1>
+
+                <p className="auto-hero-desc">
+                  24/7 intelligent telemetry for server rooms, data centers &amp; cleanrooms: temperature, humidity, water leak detection, toxic gas sensors &amp; automated alarm annunciators.
+                </p>
+
+                {/* Four Compact Statistic Cards */}
+                <div className="auto-hero-stats-grid">
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Activity size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">350+</div>
+                      <div className="auto-stat-lbl">Server Rooms Protected</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <ShieldCheck size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">0.5s</div>
+                      <div className="auto-stat-lbl">Critical Alert Dispatch</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Cpu size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">99.99%</div>
+                      <div className="auto-stat-lbl">Sensor Telemetry Uptime</div>
+                    </div>
+                  </div>
+
+                  <div className="auto-stat-card">
+                    <div className="auto-stat-icon-wrap">
+                      <Award size={18} />
+                    </div>
+                    <div className="auto-stat-text">
+                      <div className="auto-stat-val">24/7</div>
+                      <div className="auto-stat-lbl">Automated BMS Telemetry</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Hero Facility Image with Play Button */}
+              <div className="auto-hero-right">
+                <div className="auto-hero-media-wrapper">
+                  <img
+                    src="/case-studies/case-cleanroom.jpg"
+                    alt="Server Room Environmental Monitoring &amp; Data Center"
+                    className="auto-hero-image"
+                    loading="eager"
+                  />
+                  <button
+                    className="auto-watch-video-btn"
+                    onClick={() => setVideoModalOpen(true)}
+                  >
+                    <div className="auto-play-icon-circle">
+                      <Play size={12} fill="#1d4ed8" />
+                    </div>
+                    <span>Watch Monitoring Demo</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 3. ENGINEERING INTRODUCTION SECTION */}
+          <section className="auto-engineering-section auto-scroll-reveal">
+            <div className="auto-engineering-card">
+              <div className="auto-arch-header-row">
+                <div className="auto-arch-badge-blue">
+                  <span className="auto-subtle-dot"></span>
+                  <span>CRITICAL MONITORING ARCHITECTURE</span>
+                </div>
+                <div className="auto-arch-badge-red">
+                  <Wrench size={13} />
+                  <span>High-Availability Data Center Telemetry</span>
+                </div>
+              </div>
+
+              <h2 className="auto-arch-heading">
+                Comprehensive Engineering &amp; Execution for Server Room Protection
+              </h2>
+
+              <p className="auto-arch-desc">
+                HTI Critical Monitoring Directorate designs and installs high-availability environmental monitoring, gas detection, and telemetry infrastructure for server rooms, network operations centers (NOC), pharmaceutical cold rooms, and power sub-stations. From multi-point temperature and humidity probes to precision water leak detection cables and fail-safe annunciator panels, we safeguard mission-critical uptime.
+              </p>
+
+              {/* Five Application Chips */}
+              <div className="auto-app-chips-row">
+                <div className="auto-app-chip">
+                  <Building2 size={15} className="chip-icon" />
+                  <span>Server Rooms &amp; Data Halls</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Factory size={15} className="chip-icon" />
+                  <span>Pharma Cleanrooms &amp; Cold Storage</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Truck size={15} className="chip-icon" />
+                  <span>UPS, Inverter &amp; Battery Rooms</span>
+                </div>
+                <div className="auto-app-chip">
+                  <ShieldCheck size={15} className="chip-icon" />
+                  <span>Hospitals &amp; Critical Diagnostic Labs</span>
+                </div>
+                <div className="auto-app-chip">
+                  <Layers size={15} className="chip-icon" />
+                  <span>Industrial Chiller &amp; PAC Plant Rooms</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 4. SEARCH AND FILTER SECTION */}
+          <section className="auto-controls-section">
+            <div className="auto-search-bar-row">
+              <div className="auto-search-input-wrap">
+                <Search size={17} className="auto-search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search server room monitoring, WLD, gas detection..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="auto-search-field"
+                />
+                {searchQuery && (
+                  <button className="auto-search-clear" onClick={() => setSearchQuery('')}>✕</button>
+                )}
+              </div>
+
+              <div className="auto-results-count">
+                <span>{filteredMonitoringServices.length} services found</span>
+              </div>
+            </div>
+
+            {/* Filter Chips by Application */}
+            <div className="auto-filters-container">
+              <div className="auto-filter-label">FILTER BY APPLICATION</div>
+              <div className="auto-filter-chips-list">
+                {MONITORING_FILTER_CATEGORIES.map((filter) => (
+                  <button
+                    key={filter}
+                    className={`auto-filter-chip ${activeFilter === filter ? 'active' : ''}`}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 5. 6 SERVICE CARDS & CUSTOM MONITORING CTA */}
+          <section className="auto-services-grid-section auto-scroll-reveal">
+            {filteredMonitoringServices.length === 0 ? (
+              <div className="auto-empty-state">
+                <Search size={36} className="text-slate-400 mb-2" />
+                <h3>No monitoring services matching "{searchQuery}"</h3>
+                <p>Try searching for environment monitoring, water leak detection, gas sensors, annunciators, differential pressure, or reset filters.</p>
+                <button
+                  className="btn btn-secondary btn-sm mt-3"
+                  onClick={() => { setSearchQuery(''); setActiveFilter('All'); }}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <div className="auto-services-grid">
+                {filteredMonitoringServices.map((service) => (
+                  <div key={service.num} className="auto-service-card">
+                    {/* Card Media with Number and Category Badges */}
+                    <div className="auto-card-media">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="auto-card-img"
+                        loading="lazy"
+                      />
+                      <div className="auto-card-num-badge">
+                        {service.num}
+                      </div>
+                      <div className="auto-card-cat-pill">
+                        {service.categoryBadge}
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="auto-card-body">
+                      <h3 className="auto-card-title">{service.title}</h3>
+                      <p className="auto-card-description">{service.description}</p>
+
+                      {/* 3 Concise Feature Bullets */}
+                      <ul className="auto-card-features">
+                        {service.features.map((feat, idx) => (
+                          <li key={idx} className="auto-feature-bullet">
+                            <span className="auto-bullet-icon">
+                              <Check size={11} strokeWidth={2.5} />
+                            </span>
+                            <span className="auto-bullet-text">{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Action Buttons */}
+                      <div className="auto-card-btn-row">
+                        <button
+                          className="auto-btn-view-details"
+                          onClick={() => {
+                            if (service.slug) {
+                              onNavigate('product', service.slug);
+                            } else {
+                              onNavigate('contact');
+                            }
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>View Details</span>
+                          <ArrowRight size={13} />
+                        </button>
+
+                        <button
+                          className="auto-btn-brochure"
+                          onClick={() => handleBrochureDownload(service)}
+                          title={`Download ${service.title} Brochure`}
+                        >
+                          <Download size={13} />
+                          <span>Brochure</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* CUSTOM MONITORING SOLUTION CTA CARD */}
+                {(!searchQuery && (activeFilter === 'All' || activeFilter === 'Data Center EMS' || activeFilter === 'Water Leak Detection' || activeFilter === 'Telemetry & BMS' || activeFilter === 'Critical Alerts' || activeFilter === 'Custom Solutions')) && (
+                  <div className="auto-custom-cta-card">
+                    <div className="auto-cta-inner">
+                      <div className="auto-cta-left">
+                        <div className="auto-cta-icon-box">
+                          <Activity size={22} className="text-blue-600" />
+                        </div>
+
+                        <h3 className="auto-cta-heading">Need Turnkey Server Room Monitoring Architecture?</h3>
+                        <p className="auto-cta-desc">
+                          Our instrumentation and facility automation engineers design custom multi-sensor layouts, Modbus BMS gateways, raised floor water leak cables, and automated alert matrices.
+                        </p>
+
+                        <ul className="auto-cta-checklist">
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Facility thermal mapping &amp; sensor placement plan</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Underfloor water leak cable layout design</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>SMS / Email alert gateway &amp; cloud dashboard setup</span>
+                          </li>
+                          <li>
+                            <Check size={13} className="text-blue-600 flex-shrink-0" />
+                            <span>Turnkey integration with PAC chillers &amp; fire panels</span>
+                          </li>
+                        </ul>
+
+                        <button
+                          className="auto-cta-btn"
+                          onClick={() => {
+                            onNavigate('contact');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                        >
+                          <span>Consult Monitoring Engineers</span>
+                          <ArrowRight size={14} />
+                        </button>
+                      </div>
+
+                      <div className="auto-cta-right-media">
+                        <img
+                          src="/case-studies/case-cleanroom.jpg"
+                          alt="HTI Server Room &amp; Critical Monitoring Telemetry"
+                          className="auto-cta-image"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+
+          {/* 5. TURNKEY ENGINEERING LIFECYCLE */}
+          {renderEngineeringLifecycle()}
+
+          {/* 6. TECHNICAL FAQ ACCORDION */}
+          {renderFaqSection()}
         </div>
       </div>
     );
@@ -2669,106 +3886,10 @@ export default function CategoryPage({
       </div>
 
       {/* 6. Turnkey Project Execution Methodology */}
-      <div className="category-methodology-section section bg-white border-y border-slate-200">
-        <div className="container">
-          <div className="section-title-wrap text-center mb-10">
-            <div className="section-tag inline-flex items-center gap-2">
-              <Award size={14} />
-              <span>Execution Integrity</span>
-            </div>
-            <h2 className="section-heading text-2xl font-bold text-slate-900 mt-2">
-              Our 4-Phase Turnkey Engineering Lifecycle
-            </h2>
-            <p className="section-desc max-w-2xl mx-auto text-slate-600 mt-2">
-              Every project awarded to HTI undergoes systematic site feasibility, CAD drawing approvals, factory testing, and statutory validation.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="glass-card p-6 border border-slate-200 rounded-xl bg-slate-50">
-              <div className="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 font-bold flex items-center justify-center mb-4">
-                01
-              </div>
-              <h4 className="font-bold text-slate-900 mb-2">Site Feasibility & CAD</h4>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Physical opening measurement, wind load / cycle rate calculations, and CAD General Arrangement (GA) drawings.
-              </p>
-            </div>
-
-            <div className="glass-card p-6 border border-slate-200 rounded-xl bg-slate-50">
-              <div className="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 font-bold flex items-center justify-center mb-4">
-                02
-              </div>
-              <h4 className="font-bold text-slate-900 mb-2">OEM Hardware Sourcing</h4>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Procurement of certified tier-1 motors, sensors, microcontrollers, and Flameproof Ex-d cast enclosures.
-              </p>
-            </div>
-
-            <div className="glass-card p-6 border border-slate-200 rounded-xl bg-slate-50">
-              <div className="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 font-bold flex items-center justify-center mb-4">
-                03
-              </div>
-              <h4 className="font-bold text-slate-900 mb-2">Precision Integration</h4>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Site installation, electrical wiring, FACP fire alarm trip integration, and differential pressure interlock calibration.
-              </p>
-            </div>
-
-            <div className="glass-card p-6 border border-slate-200 rounded-xl bg-slate-50">
-              <div className="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 font-bold flex items-center justify-center mb-4">
-                04
-              </div>
-              <h4 className="font-bold text-slate-900 mb-2">Testing & 24/7 SLA</h4>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                100% cycle stress testing, documentation handover for USFDA / NBC audit sign-offs, and AMC service agreements.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {renderEngineeringLifecycle()}
 
       {/* 7. Technical FAQ Accordion */}
-      {categoryMeta.faqs && categoryMeta.faqs.length > 0 && (
-        <div className="category-faq-section section">
-          <div className="container max-w-4xl">
-            <div className="section-title-wrap text-center mb-8">
-              <div className="section-tag inline-flex items-center gap-2">
-                <HelpCircle size={14} />
-                <span>Technical Clarifications</span>
-              </div>
-              <h3 className="section-heading text-2xl font-bold text-slate-900 mt-2">
-                Frequently Asked Questions on {categoryMeta.categoryName}
-              </h3>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              {categoryMeta.faqs.map((faq, idx) => {
-                const isOpen = activeFaq === idx;
-                return (
-                  <div
-                    key={idx}
-                    className="glass-card border border-slate-200 rounded-xl bg-white overflow-hidden transition-all shadow-sm"
-                  >
-                    <button
-                      className="w-full text-left px-6 py-4 flex items-center justify-between font-bold text-slate-900 text-base"
-                      onClick={() => toggleFaq(idx)}
-                    >
-                      <span>{faq.q}</span>
-                      {isOpen ? <ChevronUp size={18} className="text-sky-600" /> : <ChevronDown size={18} className="text-slate-400" />}
-                    </button>
-                    {isOpen && (
-                      <div className="px-6 pb-5 pt-1 text-slate-600 text-sm leading-relaxed border-t border-slate-100">
-                        {faq.a}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
+      {renderFaqSection()}
 
       {/* 8. Bottom Consultation Banner */}
       <div className="category-bottom-cta section">
