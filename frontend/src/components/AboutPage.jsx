@@ -74,6 +74,15 @@ export default function AboutPage({ onNavigate }) {
     }
   };
 
+  // The solution segment cards are clickable cards, so they must also respond
+  // to Enter / Space when they are focused.
+  const handleSegmentKey = (event, page) => {
+    if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+      event.preventDefault();
+      handleNav(page);
+    }
+  };
+
   const scrollToSolutions = () => {
     if (videoSectionRef.current) {
       videoSectionRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -173,7 +182,7 @@ export default function AboutPage({ onNavigate }) {
                 </div>
 
                 <div className="hero-pill-badge">
-                  <Leaf size={16} className="hero-pill-icon text-emerald-600" />
+                  <Leaf size={16} className="hero-pill-icon hero-pill-icon-emerald" />
                   <span>Hygiene Excellence</span>
                 </div>
 
@@ -549,8 +558,11 @@ export default function AboutPage({ onNavigate }) {
           <div className="solutions-grid">
             {/* Segment 1: Automation */}
             <div 
-              className="solution-segment-card cursor-pointer"
+              className="solution-segment-card solution-segment-card-link"
+              role="button"
+              tabIndex={0}
               onClick={() => handleNav('automation')}
+              onKeyDown={(e) => handleSegmentKey(e, 'automation')}
             >
               <div className="solution-card-media">
                 <img 
@@ -578,8 +590,11 @@ export default function AboutPage({ onNavigate }) {
 
             {/* Segment 2: Security Systems */}
             <div 
-              className="solution-segment-card cursor-pointer"
+              className="solution-segment-card solution-segment-card-link"
+              role="button"
+              tabIndex={0}
               onClick={() => handleNav('security-systems')}
+              onKeyDown={(e) => handleSegmentKey(e, 'security-systems')}
             >
               <div className="solution-card-media">
                 <img 
@@ -607,8 +622,11 @@ export default function AboutPage({ onNavigate }) {
 
             {/* Segment 3: Hygiene */}
             <div 
-              className="solution-segment-card cursor-pointer"
+              className="solution-segment-card solution-segment-card-link"
+              role="button"
+              tabIndex={0}
               onClick={() => handleNav('hygiene')}
+              onKeyDown={(e) => handleSegmentKey(e, 'hygiene')}
             >
               <div className="solution-card-media">
                 <img 

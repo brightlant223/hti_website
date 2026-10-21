@@ -1503,3 +1503,26 @@
     font-size: 11px;
   }
 }
+/* ==========================================================================
+   CLICKABLE SOLUTION SEGMENT CARDS + HYGIENE HERO PILL ICON
+   --------------------------------------------------------------------------
+   The solution segment cards are clickable navigation cards. Their markup
+   relied on .cursor-pointer, which has no rule in this project, so they
+   rendered with the default arrow cursor and could not be reached with the
+   keyboard. The cards are now exposed as buttons and given a real pointer.
+   ========================================================================== */
+
+.solution-segment-card-link {
+  cursor: pointer;
+}
+
+.solution-segment-card-link:focus-visible {
+  outline: 3px solid #0284c7;
+  outline-offset: 3px;
+  border-radius: 14px;
+}
+
+/* The hygiene pillar keeps its own emerald accent in the hero badge row. */
+.hero-pill-icon-emerald {
+  color: #059669;
+}
