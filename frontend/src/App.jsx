@@ -26,6 +26,7 @@ import ContactPage from './components/ContactPage';
 import PartnersPage from './components/PartnersPage';
 import BlogsPage from './components/BlogsPage';
 import CareersPage from './components/CareersPage';
+import PharmaCleanroomDetailView from './components/PharmaCleanroomDetailView';
 
 // Complete static seed data fallback for resilient offline loading
 import { productsData } from './data/productsData';
@@ -65,7 +66,7 @@ const parseUrlRoute = () => {
   if (path === '/automation' || path === '/automation/' || hash === '#/automation') {
     return { page: 'automation', param: null };
   }
-  if (path === '/security-systems' || path === '/security-systems/' || path === '/security' || path === '/cctv' || path === '/cctv-surveillance' || path === '/surveillance' || hash === '#/security-systems' || hash === '#security-systems') {
+  if (path === '/security-systems' || path === '/security-systems/' || path === '/security' || hash === '#/security-systems') {
     return { page: 'security-systems', param: null };
   }
   if (path === '/cleanroom-interlocks' || path === '/cleanroom-interlocks/' || path === '/interlocks' || hash === '#/cleanroom-interlocks') {
@@ -79,6 +80,9 @@ const parseUrlRoute = () => {
   }
   if (path === '/hygiene' || path === '/hygiene/' || hash === '#/hygiene') {
     return { page: 'hygiene', param: null };
+  }
+  if (path === '/server-room-monitoring' || path === '/server-room-monitoring/' || path === '/critical-monitoring' || path === '/critical-monitoring/' || path === '/monitoring' || hash === '#/server-room-monitoring') {
+    return { page: 'server-room-monitoring', param: null };
   }
 
   // Check dedicated company and client pages
@@ -99,6 +103,9 @@ const parseUrlRoute = () => {
   }
   if (path === '/careers' || path === '/careers/' || hash === '#/careers') {
     return { page: 'careers', param: null };
+  }
+  if (path === '/door-interlock-system' || path === '/door-interlock-system/' || path === '/door-interlock-systems' || hash === '#/door-interlock-system') {
+    return { page: 'product', param: 'door-interlock-system' };
   }
 
   return { page: 'home', param: null };
@@ -333,10 +340,7 @@ export default function App() {
       targetUrl = '/catalog';
       targetPage = 'catalog';
       targetParam = 'all';
-    } else if (page === 'security' || page === 'cctv') {
-      targetUrl = '/security-systems';
-      targetPage = 'security-systems';
-    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
+    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
       targetUrl = `/${page}`;
     } else if (page === 'home') {
       targetUrl = '/';
@@ -376,6 +380,8 @@ export default function App() {
       navigateTo('perimeter-defense');
     } else if (cleanId.includes('fire')) {
       navigateTo('fire-protection');
+    } else if (cleanId.includes('monitor') || cleanId.includes('server')) {
+      navigateTo('server-room-monitoring');
     } else if (cleanId.includes('hyg')) {
       navigateTo('hygiene');
     } else {
@@ -430,11 +436,19 @@ export default function App() {
       <main>
         {/* ROUTE 1: Product Detail Page (/product/:slug) */}
         {routeState.page === 'product' && (
-          <ProductDetailPage
-            product={activeProduct}
-            onNavigate={navigateTo}
-            onQuoteSubmit={handleInquirySubmitted}
-          />
+          (routeState.param === 'door-interlock-system' || routeState.param === 'door-interlock-systems') ? (
+            <PharmaCleanroomDetailView
+              product={activeProduct || { slug: 'door-interlock-system' }}
+              onNavigate={navigateTo}
+              onQuoteSubmit={handleInquirySubmitted}
+            />
+          ) : (
+            <ProductDetailPage
+              product={activeProduct}
+              onNavigate={navigateTo}
+              onQuoteSubmit={handleInquirySubmitted}
+            />
+          )
         )}
 
         {/* ROUTE 2: Dedicated Full Product Catalogue (/catalog) */}
@@ -450,8 +464,8 @@ export default function App() {
           </div>
         )}
 
-        {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /perimeter-defense, /fire-protection, /hygiene) */}
-        {['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene'].includes(routeState.page) && (
+        {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /perimeter-defense, /fire-protection, /hygiene, /server-room-monitoring) */}
+        {['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring'].includes(routeState.page) && (
           <CategoryPage
             categoryKey={routeState.page}
             onNavigate={navigateTo}
