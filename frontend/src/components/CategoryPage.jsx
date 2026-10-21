@@ -1444,7 +1444,7 @@ export default function CategoryPage({
           <div className="auto-breadcrumb-nav">
             <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
             <span className="auto-breadcrumb-sep">&gt;</span>
-            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Products</span>
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Industrial Access Automation</span>
           </div>
@@ -1817,10 +1817,11 @@ export default function CategoryPage({
           <div className="auto-breadcrumb-nav">
             <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
             <span className="auto-breadcrumb-sep">&gt;</span>
-            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Products</span>
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Cleanroom Interlocks &amp; Pass Boxes</span>
           </div>
+
 
           {/* 2. HERO SECTION */}
           <section className="auto-hero-section auto-scroll-reveal in-view">
@@ -2196,7 +2197,7 @@ export default function CategoryPage({
           <div className="auto-breadcrumb-nav">
             <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
             <span className="auto-breadcrumb-sep">&gt;</span>
-            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Products</span>
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Perimeter Defense &amp; Traffic Control</span>
           </div>
@@ -2575,7 +2576,7 @@ export default function CategoryPage({
           <div className="auto-breadcrumb-nav">
             <button className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
             <span className="auto-breadcrumb-sep">&gt;</span>
-            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Services</span>
+            <span className="auto-breadcrumb-link" onClick={() => onNavigate('home')}>Products</span>
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Fire Protection &amp; Life Safety</span>
           </div>
