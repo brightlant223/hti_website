@@ -7,6 +7,7 @@ import {
   Truck
 } from 'lucide-react';
 import './Careers.css';
+import CareersHero from './CareersHero';
 
 const JOB_POSITIONS = [
   {
@@ -724,149 +725,7 @@ export default function CareersPage({ onNavigate }) {
       </div>
 
       {/* ── HERO ─────────────────────────────────────── */}
-      <section className="careers-hero-section" aria-label="Careers Hero">
-        <div className="careers-hero-bg-glow careers-glow-cyan" aria-hidden="true" />
-        <div className="careers-hero-bg-glow careers-glow-red" aria-hidden="true" />
-        <div className="careers-hero-grid-pattern" aria-hidden="true" />
-        <div className="careers-hero-tech-line" aria-hidden="true" />
-        <div className="container">
-          <div className="careers-hero-container">
-            {/* Left Column: Text & CTAs */}
-            <div className="careers-hero-content">
-              <div className="careers-hero-badge hero-entrance-stagger-1">
-                <span className="hero-badge-pulse" aria-hidden="true">
-                  <span className="hero-badge-ping" />
-                  <span className="hero-badge-dot" />
-                </span>
-                <Briefcase size={13} className="careers-badge-icon" aria-hidden="true" />
-                <span>CAREERS AT HTI AUTOMATION</span>
-                <span className="hero-badge-sep" aria-hidden="true">·</span>
-                <span className="hero-badge-tag">ENGINEERING &amp; TECH</span>
-              </div>
-
-              <h1 className="careers-hero-title hero-entrance-stagger-2">
-                Build Your{' '}
-                <span className="careers-hero-title-highlight">Engineering Career</span>
-                <span className="careers-hero-title-break">at HTI Automation</span>
-              </h1>
-
-              <p className="careers-hero-desc hero-entrance-stagger-3">
-                Join a Mumbai-based engineering team that has been delivering mission-critical industrial
-                automation, pharma cleanroom interlocks, and life-safety infrastructure since 2014.
-                Do meaningful work. Grow fast. Make a real impact.
-              </p>
-
-              <div className="careers-hero-actions hero-entrance-stagger-4">
-                <a
-                  href="#open-positions"
-                  className="btn-primary careers-cta-primary"
-                  onClick={(e) => { e.preventDefault(); scrollTo('open-positions'); }}
-                  id="careers-hero-explore-btn"
-                >
-                  <span>View Open Positions</span>
-                  <ArrowRight size={17} className="btn-arrow-icon" aria-hidden="true" />
-                </a>
-                <a
-                  href="#life-at-hti"
-                  className="btn-secondary careers-cta-secondary"
-                  onClick={(e) => { e.preventDefault(); scrollTo('life-at-hti'); }}
-                  id="careers-hero-life-btn"
-                >
-                  <Heart size={16} className="btn-heart-icon" aria-hidden="true" />
-                  <span>Life at HTI</span>
-                </a>
-              </div>
-
-              <div className="careers-hero-pillars hero-entrance-stagger-5">
-                <div className="careers-pillar-item">
-                  <div className="pillar-icon-shell"><Cpu size={15} aria-hidden="true" /></div>
-                  <span>PLC &amp; Industrial Automation</span>
-                </div>
-                <div className="careers-pillar-item">
-                  <div className="pillar-icon-shell"><ShieldCheck size={15} aria-hidden="true" /></div>
-                  <span>Pharma Cleanroom Systems</span>
-                </div>
-                <div className="careers-pillar-item">
-                  <div className="pillar-icon-shell"><Award size={15} aria-hidden="true" /></div>
-                  <span>Pan-India Project Deployments</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Visual Image with Technical Overlays */}
-            <div className="careers-hero-visual hero-visual-entrance">
-              <div className="careers-visual-backdrop-plate" aria-hidden="true" />
-
-              <div className="careers-image-frame">
-                <img
-                  src="/careers-hero-team.jpg"
-                  alt="HTI Automation engineering team at work"
-                  className="careers-hero-image"
-                  loading="eager"
-                  width="1280"
-                  height="720"
-                />
-
-                {/* Protective gradient layer for bottom badges */}
-                <div className="careers-image-gradient-overlay" aria-hidden="true" />
-
-                {/* Moving Technical Line/Scanline */}
-                <div className="tech-scan-line" aria-hidden="true" />
-
-                {/* Engineering Corner Markers (Crosshairs) */}
-                <div className="frame-crosshair crosshair-tl" aria-hidden="true" />
-                <div className="frame-crosshair crosshair-tr" aria-hidden="true" />
-                <div className="frame-crosshair crosshair-bl" aria-hidden="true" />
-                <div className="frame-crosshair crosshair-br" aria-hidden="true" />
-
-                {/* Technical Specification Badge */}
-                <div className="careers-tech-tag" aria-hidden="true">
-                  <span className="tech-tag-dot" />
-                  <span>CAD REF // HTI-ENG-2026</span>
-                </div>
-
-                {/* Top Floating Badge (Team highlight) */}
-                <div className="careers-floating-badge top-floating">
-                  <span className="live-status-dot" aria-hidden="true" />
-                  <span className="floating-badge-text">Multidisciplinary Engineering Team</span>
-                </div>
-
-                {/* Bottom Left Specification Pill (Pharma & Industrial) */}
-                <div className="careers-spec-badge bottom-left-spec">
-                  <ShieldCheck size={13} className="spec-badge-icon" aria-hidden="true" />
-                  <span className="spec-badge-label">Pharma &amp; Industrial Systems</span>
-                </div>
-
-                {/* Bottom Right Floating Metric Card with subtle float animation */}
-                <div className="careers-floating-card bottom-floating careers-card-float-anim">
-                  <div className="floating-metric-row">
-                    <div className="floating-metric-icon-shell" aria-hidden="true">
-                      <Award size={18} />
-                    </div>
-                    <div className="floating-metric-num">10+</div>
-                    <div className="floating-metric-info">
-                      <span className="metric-title">Years of Innovation</span>
-                      <span className="metric-sub">Serving India Since 2014</span>
-                    </div>
-                  </div>
-                  <div className="floating-metric-footer">
-                    <span className="metric-footer-badge">500+ Projects</span>
-                    <span className="metric-footer-sep" aria-hidden="true">·</span>
-                    <span className="metric-footer-text">Pan-India Deployments</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Engineering Blueprint Axis Line */}
-              <div className="careers-visual-axis-line" aria-hidden="true">
-                <span className="axis-label">AXIS // 19.0760° N, 72.8777° E</span>
-                <span className="axis-dash" />
-                <span className="axis-label">FIELD COMMISSIONING HQ</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CareersHero scrollTo={scrollTo} />
 
 
 
