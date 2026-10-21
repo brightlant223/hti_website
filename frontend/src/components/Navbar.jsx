@@ -720,7 +720,7 @@ export default function Navbar({
           description: 'Flameproof & safe programmable airlock cascading interlock controllers.',
           image: '/products/cleanroom-interlocks.jpg',
           icon: Lock,
-          slug: 'door-interlock-systems'
+          slug: 'door-interlock-system'
         },
         {
           title: 'Dynamic & Static Pass Boxes',

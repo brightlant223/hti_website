@@ -26,6 +26,7 @@ import ContactPage from './components/ContactPage';
 import PartnersPage from './components/PartnersPage';
 import BlogsPage from './components/BlogsPage';
 import CareersPage from './components/CareersPage';
+import PharmaCleanroomDetailView from './components/PharmaCleanroomDetailView';
 
 // Complete static seed data fallback for resilient offline loading
 import { productsData } from './data/productsData';
@@ -98,6 +99,9 @@ const parseUrlRoute = () => {
   }
   if (path === '/careers' || path === '/careers/' || hash === '#/careers') {
     return { page: 'careers', param: null };
+  }
+  if (path === '/door-interlock-system' || path === '/door-interlock-system/' || path === '/door-interlock-systems' || hash === '#/door-interlock-system') {
+    return { page: 'product', param: 'door-interlock-system' };
   }
 
   return { page: 'home', param: null };
@@ -429,11 +433,19 @@ export default function App() {
       <main>
         {/* ROUTE 1: Product Detail Page (/product/:slug) */}
         {routeState.page === 'product' && (
-          <ProductDetailPage
-            product={activeProduct}
-            onNavigate={navigateTo}
-            onQuoteSubmit={handleInquirySubmitted}
-          />
+          (routeState.param === 'door-interlock-system' || routeState.param === 'door-interlock-systems') ? (
+            <PharmaCleanroomDetailView
+              product={activeProduct || { slug: 'door-interlock-system' }}
+              onNavigate={navigateTo}
+              onQuoteSubmit={handleInquirySubmitted}
+            />
+          ) : (
+            <ProductDetailPage
+              product={activeProduct}
+              onNavigate={navigateTo}
+              onQuoteSubmit={handleInquirySubmitted}
+            />
+          )
         )}
 
         {/* ROUTE 2: Dedicated Full Product Catalogue (/catalog) */}
