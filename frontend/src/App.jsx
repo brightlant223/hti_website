@@ -30,6 +30,7 @@ import CareersPage from './components/CareersPage';
 // Complete static seed data fallback for resilient offline loading
 import { productsData } from './data/productsData';
 import { getProductBySlug } from './data/productCatalogueData';
+import { scrollToTop, scrollToElement } from './utils/scroll';
 
 // Helper to determine initial page and parameter from URL path
 const parseUrlRoute = () => {
@@ -352,13 +353,13 @@ export default function App() {
       setTimeout(() => {
         const el = document.getElementById(paramOrSection);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
+          scrollToElement(el, 90);
         } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          scrollToTop();
         }
       }, 60);
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToTop();
     }
   };
 
@@ -562,10 +563,7 @@ export default function App() {
       />
 
       {/* Footer */}
-      <Footer 
-        onCategoryClick={handleSelectSegment} 
-        onNavigate={navigateTo}
-      />
+      <Footer onNavigate={navigateTo} />
 
       {/* Floating WhatsApp Quick Connect & AI Chatbot Assistant */}
       <WhatsAppAndChatbot
