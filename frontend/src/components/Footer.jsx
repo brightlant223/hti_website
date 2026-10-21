@@ -152,6 +152,7 @@ export default function Footer({ onNavigate }) {
             © {CURRENT_YEAR} HTI Automation and Security System Pvt Ltd. All Rights Reserved.
           </div>
 
+          <div className="footer-legal-links">
             {/* Real destinations so middle-click / "copy link" behaves sensibly.
                 The SPA handler keeps the transition instant. */}
             <a
