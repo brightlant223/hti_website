@@ -80,23 +80,23 @@ const PROCESS_STEPS = [
  */
 export default function CareersProcess({ scrollTo }) {
   const sectionRef = useRef(null);
-  
+
   // Track scroll progress (0.0 to 1.0) through the section
   const [signalProgress, setSignalProgress] = useState(0);
-  
+
   // Viewport entrance visibility flag for staggered entrance animation
   const [isInView, setIsInView] = useState(false);
-  
+
   // Hover or keyboard-focused step index (strictly single active step; null on mouse leave)
   const [focusedStep, setFocusedStep] = useState(null);
-  
+
   // Final state trigger
   const [isSystemLive, setIsSystemLive] = useState(false);
 
   // ── 1. Scroll Position & Viewport Observer ──────────────────────────────────
   useEffect(() => {
     // Immediate fallback for users who prefer reduced motion
-    const prefersReducedMotion = typeof window !== 'undefined' && 
+    const prefersReducedMotion = typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (prefersReducedMotion) {
@@ -226,7 +226,7 @@ export default function CareersProcess({ scrollTo }) {
       <div className="process-ambient-glow-red" aria-hidden="true" />
 
       <div className="process-container">
-        
+
         {/* ── HEADER ─────────────────────────────────────────── */}
         <div className="process-header">
           <div className="process-eyebrow">
@@ -305,6 +305,7 @@ export default function CareersProcess({ scrollTo }) {
                   key={step.num}
                   className={[
                     'process-step-card',
+                    `process-step-${step.num}`,
                     `is-status-${status.toLowerCase()}`,
                     isActive ? 'is-active' : '',
                     isPassed ? 'is-passed' : '',
@@ -340,7 +341,6 @@ export default function CareersProcess({ scrollTo }) {
                     <span className="process-step-num" aria-hidden="true">
                       {step.num}
                     </span>
-                    <span className="process-stage-label">STAGE {step.num}</span>
                   </div>
 
                   {/* Step Title & Main Description */}
@@ -388,7 +388,7 @@ export default function CareersProcess({ scrollTo }) {
 
         {/* ── FINAL STATE: SYSTEM LIVE & APPLY NOW ──────────── */}
         <div className={`process-system-live-wrap ${isSystemLive ? 'is-live-active' : ''}`}>
-          
+
           {/* Pure CSS Confetti & Spark Burst (Plays once when live unlocks) */}
           {isSystemLive && (
             <div className="process-spark-burst" aria-hidden="true">

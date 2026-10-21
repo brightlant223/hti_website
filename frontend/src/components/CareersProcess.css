@@ -606,6 +606,137 @@ html.dark .process-step-card.is-expanded .process-step-title {
   color: #38bdf8;
 }
 
+/* ── 8B. 4TH CARD ("04 - DECISION & OFFER"): BRAND RED TO BLUE GRADIENT ── */
+/* Number "04" must ALWAYS have a strong gradient from brand red to brand blue */
+.process-step-04 .process-step-num,
+.process-step-card:nth-child(4) .process-step-num,
+.process-step-04.is-active .process-step-num,
+.process-step-04.is-passed .process-step-num,
+.process-step-card:nth-child(4).is-active .process-step-num,
+.process-step-card:nth-child(4).is-passed .process-step-num {
+  background: linear-gradient(135deg, #ef4444 0%, #0284c7 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  -webkit-text-stroke: 0px transparent !important;
+  color: transparent !important;
+  filter: drop-shadow(0 2px 8px rgba(239, 68, 68, 0.32));
+  opacity: 1 !important;
+}
+
+/* Hover state: slightly brighter gradient */
+.process-step-04:hover .process-step-num,
+.process-step-04.is-expanded .process-step-num,
+.process-step-card:nth-child(4):hover .process-step-num,
+.process-step-card:nth-child(4).is-expanded .process-step-num {
+  background: linear-gradient(135deg, #f87171 0%, #38bdf8 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 3px 12px rgba(239, 68, 68, 0.5));
+}
+
+/* 4th Card Title ("Decision & Offer") in brand red accent */
+.process-step-04 .process-step-title,
+.process-step-card:nth-child(4) .process-step-title {
+  color: #dc2626 !important;
+}
+
+.process-step-04:hover .process-step-title,
+.process-step-04.is-expanded .process-step-title,
+.process-step-card:nth-child(4):hover .process-step-title,
+.process-step-card:nth-child(4).is-expanded .process-step-title {
+  color: #ef4444 !important;
+}
+
+/* 4th Card OFFER tag in brand red accent */
+.process-step-04 .process-accent-pill,
+.process-step-card:nth-child(4) .process-accent-pill {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.28);
+  color: #dc2626 !important;
+}
+
+.process-step-04:hover .process-accent-pill,
+.process-step-04.is-expanded .process-accent-pill,
+.process-step-card:nth-child(4):hover .process-accent-pill,
+.process-step-card:nth-child(4).is-expanded .process-accent-pill {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #ef4444 !important;
+}
+
+/* 4th Card top border and hover accent */
+.process-step-04 .process-card-top-border,
+.process-step-card:nth-child(4) .process-card-top-border {
+  background: linear-gradient(90deg, #ef4444 0%, #0284c7 100%) !important;
+}
+
+.process-step-04:hover,
+.process-step-04.is-expanded {
+  border-color: rgba(239, 68, 68, 0.35);
+  box-shadow: 0 16px 36px -10px rgba(239, 68, 68, 0.16),
+              0 0 0 1px rgba(239, 68, 68, 0.25);
+}
+
+/* 4th Card Dark Mode */
+html.dark .process-step-04 .process-step-num,
+html.dark .process-step-card:nth-child(4) .process-step-num {
+  background: linear-gradient(135deg, #ef4444 0%, #38bdf8 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  -webkit-text-stroke: 0px transparent !important;
+  color: transparent !important;
+  filter: drop-shadow(0 2px 10px rgba(239, 68, 68, 0.45));
+}
+
+html.dark .process-step-04:hover .process-step-num,
+html.dark .process-step-04.is-expanded .process-step-num,
+html.dark .process-step-card:nth-child(4):hover .process-step-num,
+html.dark .process-step-card:nth-child(4).is-expanded .process-step-num {
+  background: linear-gradient(135deg, #fca5a5 0%, #7dd3fc 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 3px 14px rgba(248, 113, 113, 0.6));
+}
+
+html.dark .process-step-04 .process-step-title,
+html.dark .process-step-card:nth-child(4) .process-step-title {
+  color: #f87171 !important;
+}
+
+html.dark .process-step-04:hover .process-step-title,
+html.dark .process-step-04.is-expanded .process-step-title,
+html.dark .process-step-card:nth-child(4):hover .process-step-title,
+html.dark .process-step-card:nth-child(4).is-expanded .process-step-title {
+  color: #fca5a5 !important;
+}
+
+html.dark .process-step-04 .process-accent-pill,
+html.dark .process-step-card:nth-child(4) .process-accent-pill {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #f87171 !important;
+}
+
+html.dark .process-step-04:hover .process-accent-pill,
+html.dark .process-step-04.is-expanded .process-accent-pill,
+html.dark .process-step-card:nth-child(4):hover .process-accent-pill,
+html.dark .process-step-card:nth-child(4).is-expanded .process-accent-pill {
+  background: rgba(239, 68, 68, 0.26);
+  border-color: rgba(248, 113, 113, 0.55);
+  color: #fca5a5 !important;
+}
+
+html.dark .process-step-04:hover,
+html.dark .process-step-04.is-expanded {
+  border-color: rgba(248, 113, 113, 0.4);
+  box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(248, 113, 113, 0.3);
+}
+
 .process-step-desc {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
   font-size: 0.92rem;
@@ -901,13 +1032,32 @@ html.dark .process-live-text {
 /* ── 12. MOBILE RESPONSIVENESS (<640px) ─────────────────────────────────── */
 @media (max-width: 640px) {
   .process-commissioning-section {
-    padding: 70px 0 80px;
+    padding: 60px 0 70px;
+  }
+
+  .process-container {
+    padding: 0 16px;
+  }
+
+  .process-header {
+    margin-bottom: 28px;
+  }
+
+  .process-heading {
+    font-size: clamp(1.8rem, 6vw, 2.3rem);
+  }
+
+  .process-intro-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 18px;
   }
 
   .process-telemetry-strip {
     border-radius: 12px;
-    padding: 10px 14px;
+    padding: 8px 12px;
     gap: 8px;
+    margin-top: 4px;
   }
 
   .process-telemetry-sep {
@@ -916,17 +1066,17 @@ html.dark .process-live-text {
 
   .process-sequence-wrapper {
     position: relative;
-    padding-left: 28px;
-    margin-top: 28px;
+    padding-left: 24px;
+    margin-top: 24px;
   }
 
   /* Vertical Timeline Track on Left Side */
   .process-track-container {
     display: block;
     position: absolute;
-    left: 8px;
-    top: 20px;
-    bottom: 20px;
+    left: 6px;
+    top: 14px;
+    bottom: 14px;
     width: 3px;
     height: auto;
     right: auto;
@@ -960,27 +1110,145 @@ html.dark .process-live-text {
     transform: translate(-50%, -50%);
   }
 
-  /* Single Column Stack */
+  /* Single Column Stack with 10-12px gap */
   .process-steps-grid {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 11px;
   }
 
+  /* Compact Row Layout: Big number on left, tag + title + description on right */
   .process-step-card {
-    padding: 22px 18px;
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    grid-template-areas:
+      "num header"
+      "num title"
+      "num desc"
+      "detail detail"
+      "hint hint";
+    padding: 14px 16px;
+    gap: 8px;
+    height: auto;
     min-height: 44px;
+    align-items: start;
+    transform: none !important;
+  }
+
+  .process-step-card:hover,
+  .process-step-card.is-expanded {
+    transform: none !important;
+  }
+
+  /* Big Number on Left (~40px) */
+  .process-num-row {
+    grid-area: num;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 0;
+    padding-top: 1px;
+    width: 46px;
   }
 
   .process-step-num {
-    font-size: 2.8rem;
+    font-size: 40px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.04em;
+  }
+
+  .process-stage-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Tag + Status on Top Right */
+  .process-step-header-row {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0;
+  }
+
+  .process-status-badge {
+    padding: 2px 7px;
+  }
+
+  .process-status-text {
+    font-size: 0.6rem;
+  }
+
+  .process-accent-pill {
+    font-size: 0.62rem;
+    padding: 2px 7px;
+  }
+
+  /* Title: 18px */
+  .process-step-title {
+    grid-area: title;
+    font-size: 18px !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+  }
+
+  /* Description: 14px, line-height 1.45 */
+  .process-step-desc {
+    grid-area: desc;
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+    margin: 0 !important;
+    flex-grow: 0;
+  }
+
+  /* Expanding Detail Panel */
+  .process-detail-panel {
+    grid-area: detail;
+    width: 100%;
+  }
+
+  .process-detail-panel.is-open {
+    margin-top: 6px;
+  }
+
+  .process-detail-inner {
+    gap: 8px;
+  }
+
+  .process-detail-val {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .process-time-row {
+    padding: 4px 8px;
+  }
+
+  /* Bottom Expand Hint */
+  .process-expand-hint {
+    grid-area: hint;
+    margin-top: 4px;
+    padding-top: 4px;
+    font-size: 0.62rem;
+  }
+
+  /* System Live & CTA */
+  .process-system-live-wrap {
+    margin-top: 36px;
+    gap: 16px;
   }
 
   .process-apply-now-btn {
     width: 100%;
     justify-content: center;
-    padding: 14px 20px;
-    min-height: 48px;
+    padding: 13px 20px;
+    min-height: 44px;
   }
 }
 
