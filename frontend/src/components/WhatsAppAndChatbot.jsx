@@ -20,10 +20,23 @@ import {
 } from 'lucide-react';
 
 const WHATSAPP_NUMBER = '919892756077';
-const WHATSAPP_DEFAULT_MSG = 'Hello HTI Automation, I would like to inquire about your automation, cleanroom interlocks and security systems.';
+const WHATSAPP_DEFAULT_MSG = 'Hello HTI Automation & Security Systems, I would like to inquire about your automation, cleanroom interlocks and security solutions. Please share catalog and details.';
 
 // Smart Knowledge Base for Instant Interactive Answers
 const KNOWLEDGE_RESPONSES = [
+  {
+    triggers: ['hi', 'hello', 'hey', 'namaste', 'morning', 'afternoon', 'evening', 'help', 'hti', 'start', 'assist'],
+    response: `Hello! 👋 Welcome to HTI Automation & Security Systems Pvt. Ltd.
+
+We are leading manufacturers and turnkey integrators for:
+• USFDA 21 CFR Cleanroom Door Interlocking & Pass Boxes
+• Heavy-Duty Automatic Sliding / Telescopic Gates & Boom Barriers
+• Turnkey Fire Fighting, Addressable Fire Alarms & 4K AI CCTV Surveillance
+• Flap Barriers, Turnstiles & Biometric Time-Attendance Systems
+
+How can our engineering team assist your project today? You can ask any question here or connect directly with our engineers on WhatsApp!`,
+    pills: ['Chat on WhatsApp ↗', 'Request Tech Quote', 'Cleanroom Interlocks', 'Gates & Barriers']
+  },
   {
     triggers: ['interlock', 'cleanroom', 'pass box', 'door interlock', 'usfda', 'cgmp', 'airlock'],
     response: `HTI specializes in USFDA 21 CFR Part 11 and cGMP compliant Door Interlocking & Pass Box Systems!
@@ -35,7 +48,7 @@ Key capabilities:
 • GPS synchronized Master-Slave digital clocks
 
 Would you like a formal technical quotation or to talk with our cleanroom engineer?`,
-    pills: ['Request Interlock Quote', 'Chat on WhatsApp', 'Cleanroom Brochure']
+    pills: ['Request Interlock Quote', 'Chat on WhatsApp ↗', 'Cleanroom Brochure']
   },
   {
     triggers: ['gate', 'sliding gate', 'boom barrier', 'turnstile', 'barrier', 'cantilever', 'telescopic', 'shutter'],
@@ -47,7 +60,7 @@ Would you like a formal technical quotation or to talk with our cleanroom engine
 • Biometric Turnstiles & Speed Flap Barriers for reception access
 
 All systems include optical safety photobeams and remote smartphone/PLC trigger compatibility.`,
-    pills: ['Get Gate Proposal', 'Chat on WhatsApp', 'Explore Product Catalog']
+    pills: ['Get Gate Proposal', 'Chat on WhatsApp ↗', 'Explore Product Catalog']
   },
   {
     triggers: ['fire', 'alarm', 'cctv', 'security', 'surveillance', 'biometric', 'camera', 'hydrant'],
@@ -71,7 +84,7 @@ Unit No - 825, Plot No C-3C, Goodwill Bizhubb, Next to Ikea, TTC Industrial Area
 📞 **Phone / WhatsApp:** +91 9892756077
 ✉️ **Email:** info@htisystems.in
 ⏱️ **Hours:** Mon - Sat: 9:00 AM - 7:00 PM IST (24/7 SLA on-call emergency support)`,
-    pills: ['Open WhatsApp Chat', 'Fill Inquiry Form', 'Browse 33+ Systems']
+    pills: ['Chat on WhatsApp ↗', 'Fill Inquiry Form', 'Browse 33+ Systems']
   },
   {
     triggers: ['quote', 'price', 'pricing', 'proposal', 'cost', 'quotation', 'brochure'],
@@ -94,8 +107,9 @@ export default function WhatsAppAndChatbot({ onNavigate, onQuoteClick }) {
     {
       id: 1,
       sender: 'bot',
-      text: 'Hello! 👋 Welcome to HTI Automation & Security Systems. How can I assist you with your industrial or pharma facility today?',
-      time: 'Just now'
+      text: 'Hello! 👋 Welcome to HTI Automation & Security Systems Pvt. Ltd. How can our engineering team assist you with your industrial or pharma facility today?',
+      time: 'Just now',
+      pills: ['Chat on WhatsApp ↗', 'Cleanroom Interlocks', 'Industrial Gates', 'Get Quotation']
     }
   ]);
   const [inputText, setInputText] = useState('');
@@ -139,9 +153,17 @@ export default function WhatsAppAndChatbot({ onNavigate, onQuoteClick }) {
     setTimeout(() => {
       const lower = query.toLowerCase();
 
-      // Handle specific quick button clicks
+      // Handle specific quick button clicks for WhatsApp
       if (lower.includes('whatsapp')) {
-        openWhatsApp(query);
+        const botMsg = {
+          id: Date.now() + 1,
+          sender: 'bot',
+          text: `Connecting you to HTI Automation WhatsApp Support (+91 9892756077)... 💬\n\nOur Senior Automation Specialist is available to review your technical requirements, share product catalogs, and prepare instant estimates.`,
+          time: getTime(),
+          pills: ['Request Tech Quote', 'Explore Products', 'Cleanroom Interlocks']
+        };
+        setMessages(prev => [...prev, botMsg]);
+        openWhatsApp(query.toLowerCase().includes('whatsapp') ? WHATSAPP_DEFAULT_MSG : query);
         setIsTyping(false);
         return;
       }
@@ -157,7 +179,7 @@ export default function WhatsAppAndChatbot({ onNavigate, onQuoteClick }) {
 
       const botReply = matched 
         ? matched.response 
-        : `Thank you for your inquiry about "${query}". HTI has executed 500+ automation and cleanroom projects across India. 
+        : `Thank you for your message regarding "${query}". HTI Automation & Security Systems has executed 500+ automation and cleanroom projects across India since 2014. 
 
 For customized sizing, CAD engineering review, or instant pricing, our Senior Automation Specialist is available right now on WhatsApp or phone at +91 9892756077.`;
 
@@ -176,7 +198,15 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
 
   const handlePillClick = (pill) => {
     if (pill.toLowerCase().includes('whatsapp')) {
-      openWhatsApp(`Inquiring about ${pill}`);
+      const botMsg = {
+        id: Date.now() + 1,
+        sender: 'bot',
+        text: `Opening WhatsApp chat with HTI Automation (+91 9892756077)... 💬\n\nOur engineering team will connect with you immediately.`,
+        time: getTime(),
+        pills: ['Request Tech Quote', 'Cleanroom Interlocks', 'Industrial Gates']
+      };
+      setMessages(prev => [...prev, botMsg]);
+      openWhatsApp(WHATSAPP_DEFAULT_MSG);
     } else if (pill.toLowerCase().includes('quote') || pill.toLowerCase().includes('proposal')) {
       if (onQuoteClick) onQuoteClick();
       else if (onNavigate) onNavigate('contact');
@@ -190,9 +220,8 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
   };
 
   const openWhatsApp = (customText = null) => {
-    const url = customText
-      ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(customText)}`
-      : `https://wa.me/${WHATSAPP_NUMBER}`;
+    const text = customText || WHATSAPP_DEFAULT_MSG;
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -202,7 +231,8 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
         id: Date.now(),
         sender: 'bot',
         text: 'Chat history cleared. How else can HTI Automation assist your project?',
-        time: getTime()
+        time: getTime(),
+        pills: ['Chat on WhatsApp ↗', 'Cleanroom Interlocks', 'Industrial Gates', 'Get Quotation']
       }
     ]);
   };
@@ -215,7 +245,7 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
       <div className="hti-floating-actions-container">
         {/* WhatsApp Quick Launcher Button with Rich Official 3D Glossy Glow */}
         <a
-          href={`https://wa.me/${WHATSAPP_NUMBER}`}
+          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_DEFAULT_MSG)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="hti-float-btn hti-whatsapp-float"
@@ -297,7 +327,7 @@ For customized sizing, CAD engineering review, or instant pricing, our Senior Au
           <div className="chatbot-sub-bar">
             <span>Direct WhatsApp Helpline:</span>
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_DEFAULT_MSG)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="sub-bar-wa-link"

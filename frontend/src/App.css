@@ -93,15 +93,15 @@
 }
 
 .nav-scrolled .hti-logo-container {
-  height: 44px;
+  height: 50px;
 }
 
 .nav-scrolled .hti-logo-img {
-  height: 41px;
+  height: 48px;
 }
 
 .nav-scrolled .brand-divider-line {
-  height: 32px;
+  height: 38px;
 }
 
 .main-nav-inner {
@@ -116,14 +116,15 @@
 .bright-brand {
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 16px;
   text-decoration: none;
   cursor: pointer;
   flex-shrink: 0;
 }
 
 .hti-logo-container {
-  height: 48px;
+  height: 60px;
+  min-width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,22 +132,23 @@
 }
 
 .hti-logo-img {
-  height: 46px; /* Moderately increased from 38px (~21% increase) for balanced, prominent branding */
+  height: 58px; /* High-end, bold, impactful HTI branding */
   width: auto;
   object-fit: contain;
   display: block;
-  filter: drop-shadow(0 1px 2px rgba(239, 68, 68, 0.12));
-  transition: transform 0.2s ease;
+  filter: drop-shadow(0 2px 10px rgba(239, 68, 68, 0.20));
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
 }
 
 .bright-brand:hover .hti-logo-img {
-  transform: scale(1.02);
+  transform: scale(1.03);
+  filter: drop-shadow(0 4px 16px rgba(239, 68, 68, 0.30));
 }
 
 .brand-divider-line {
-  width: 2px;
-  height: 36px;
-  background: linear-gradient(180deg, rgba(239, 68, 68, 0.2) 0%, rgba(2, 132, 199, 0.45) 50%, rgba(15, 23, 42, 0.15) 100%);
+  width: 2.5px;
+  height: 46px;
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.35) 0%, rgba(2, 132, 199, 0.55) 50%, rgba(15, 23, 42, 0.15) 100%);
   border-radius: 2px;
   margin: 0 1px;
   flex-shrink: 0;
@@ -164,9 +166,9 @@
 
 .brand-word-bold {
   font-family: var(--font-heading, sans-serif);
-  font-size: 1.12rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  font-size: 1.28rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
   color: #0f172a;
   text-transform: uppercase;
   background: linear-gradient(135deg, #0f172a 60%, #1e293b 100%);
@@ -177,22 +179,22 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.62rem;
+  font-size: 0.70rem;
   font-weight: 700;
   color: #64748b;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 .brand-badge-pill {
   background: #fef2f2;
   color: #dc2626;
-  font-size: 0.58rem;
+  font-size: 0.64rem;
   font-weight: 800;
-  padding: 1px 5px;
+  padding: 1.5px 6px;
   border-radius: 4px;
-  border: 1px solid rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.25);
   letter-spacing: 0.04em;
 }
 
@@ -2192,35 +2194,35 @@
   }
 
   .bright-brand {
-    gap: 8px;
+    gap: 10px;
   }
 
   .hti-logo-container {
-    height: 42px;
+    height: 48px;
   }
 
   .hti-logo-img {
-    height: 38px; /* Proportionally increased from 32px (~19% increase) */
+    height: 44px;
   }
 
   .brand-divider-line {
-    height: 30px;
+    height: 34px;
     margin: 0;
   }
 
   .brand-word-bold {
-    font-size: 0.92rem;
+    font-size: 1.05rem;
     letter-spacing: 0.04em;
   }
 
   .bright-brand-sub {
-    font-size: 0.54rem;
+    font-size: 0.58rem;
     gap: 4px;
   }
 
   .brand-badge-pill {
-    font-size: 0.50rem;
-    padding: 1px 3px;
+    font-size: 0.52rem;
+    padding: 1px 4px;
   }
 
   .bright-theme-toggle {
@@ -14649,27 +14651,27 @@
   }
 
   .bright-brand {
-    gap: 6px;
+    gap: 7px;
   }
 
   .hti-logo-container {
-    height: 38px;
+    height: 42px;
   }
 
   .hti-logo-img {
-    height: 34px;
+    height: 38px;
   }
 
   .brand-divider-line {
-    height: 24px;
+    height: 28px;
   }
 
   .brand-word-bold {
-    font-size: 0.84rem;
+    font-size: 0.90rem;
   }
 
   .bright-brand-sub {
-    font-size: 0.48rem;
+    font-size: 0.50rem;
     gap: 3px;
   }
 

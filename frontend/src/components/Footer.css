@@ -65,23 +65,37 @@
 .footer-brand-title {
   display: flex;
   flex-direction: column;
-  line-height: 1.15;
+  line-height: 1.2;
   margin-bottom: 8px;
 }
 
-.brand-head-bold {
-  font-weight: 800;
-  color: #ffffff;
-  font-size: 0.98rem;
-  letter-spacing: 0.03em;
+.footer-hti-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.footer-hti-white-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  /* Pure crisp white filter rendering the stylized logo in glowing white */
+  filter: brightness(0) invert(1) drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
+  display: block;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.footer-hti-white-logo:hover {
+  transform: scale(1.04);
+  filter: brightness(0) invert(1) drop-shadow(0 4px 14px rgba(56, 189, 248, 0.5));
 }
 
 .brand-head-sub {
-  font-size: 0.67rem;
-  color: #94a3b8;
-  font-weight: 500;
-  margin-top: 2px;
-  letter-spacing: 0.01em;
+  font-size: 0.69rem;
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-top: 1px;
+  letter-spacing: 0.02em;
 }
 
 .footer-summary-text {
@@ -367,11 +381,11 @@
   .footer-brand-title {
     margin-bottom: 4px;
   }
-  .brand-head-bold {
-    font-size: 0.88rem;
+  .footer-hti-white-logo {
+    height: 30px;
   }
   .brand-head-sub {
-    font-size: 0.62rem;
+    font-size: 0.63rem;
   }
   .footer-summary-text {
     font-size: 0.68rem;
@@ -460,6 +474,9 @@
 @media (max-width: 380px) {
   .footer-wrap {
     padding: 10px 0 88px;
+  }
+  .footer-hti-white-logo {
+    height: 26px;
   }
   .footer-grid {
     gap: 6px 6px;

@@ -21,7 +21,13 @@ export default function Footer({ onCategoryClick, onNavigate }) {
           {/* Column 1: Company Profile & Trust */}
           <div className="footer-col col-brand-summary">
             <div className="footer-brand-title">
-              <span className="brand-head-bold">HTI</span>
+              <div className="footer-hti-brand-mark">
+                <img 
+                  src="/hti-logo.png" 
+                  alt="HTI" 
+                  className="footer-hti-white-logo" 
+                />
+              </div>
               <span className="brand-head-sub">Automation & Security Systems Pvt. Ltd.</span>
             </div>
 
