@@ -481,18 +481,18 @@ export default function AboutPage({ onNavigate }) {
             {/* Value 1: Integrity */}
             <div className="value-card">
               <div className="value-icon-circle">
-                <ShieldCheck size={20} />
+                <ShieldCheck size={18} />
               </div>
               <h4 className="value-card-title">Integrity</h4>
               <p className="value-card-desc">
-                We believe in transparent business practices and long-term relationships.
+                Transparent business practices & long-term trust.
               </p>
             </div>
 
             {/* Value 2: Customer Focus */}
             <div className="value-card">
               <div className="value-icon-circle">
-                <Users size={20} />
+                <Users size={18} />
               </div>
               <h4 className="value-card-title">Customer Focus</h4>
               <p className="value-card-desc">
@@ -503,33 +503,33 @@ export default function AboutPage({ onNavigate }) {
             {/* Value 3: Engineering Excellence */}
             <div className="value-card">
               <div className="value-icon-circle">
-                <Settings size={20} />
+                <Settings size={18} />
               </div>
               <h4 className="value-card-title">Engineering Excellence</h4>
               <p className="value-card-desc">
-                We deliver innovative and reliable solutions.
+                Innovative and reliable turnkey solutions.
               </p>
             </div>
 
             {/* Value 4: Quality Commitment */}
             <div className="value-card">
               <div className="value-icon-circle">
-                <Award size={20} />
+                <Award size={18} />
               </div>
               <h4 className="value-card-title">Quality Commitment</h4>
               <p className="value-card-desc">
-                We maintain the highest standards in products and services.
+                Highest standards in products & services.
               </p>
             </div>
 
             {/* Value 5: Sustainable Growth */}
             <div className="value-card">
               <div className="value-icon-circle">
-                <Leaf size={20} />
+                <Leaf size={18} />
               </div>
               <h4 className="value-card-title">Sustainable Growth</h4>
               <p className="value-card-desc">
-                We aim for a safer, cleaner and healthier future for all.
+                A safer, cleaner & healthier future for all.
               </p>
             </div>
           </div>
