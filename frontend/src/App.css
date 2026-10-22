@@ -189,7 +189,7 @@
 
 .brand-badge-pill {
   background: #fef2f2;
-  color: #dc2626;
+  color: #b91c1c;
   font-size: 0.64rem;
   font-weight: 800;
   padding: 1.5px 6px;
@@ -2428,7 +2428,7 @@
   padding: 0 6px;
   border-radius: 9999px;
   background: #eff6ff;
-  color: #0284c7;
+  color: #0369a1;
   font-size: 0.68rem;
   font-weight: 800;
   line-height: 1;
@@ -2466,7 +2466,7 @@
   border-radius: 8px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  color: #0284c7;
+  color: #0369a1;
   flex-shrink: 0;
 }
 
@@ -2487,7 +2487,7 @@
   padding: 4px 8px;
   border-radius: 9999px;
   background: #e0f2fe;
-  color: #0284c7;
+  color: #0369a1;
   font-size: 0.64rem;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -2504,7 +2504,7 @@
   min-height: 44px;
   padding: 0 14px;
   background: #f0f9ff;
-  color: #0284c7;
+  color: #0369a1;
   border: 1px solid #bae6fd;
   border-radius: 12px;
   font-family: inherit;
@@ -19065,7 +19065,7 @@
 
 /* Current section indication - App.jsx already passes `currentPage`. */
 .bright-nav-btn.is-active-section {
-  color: #0284c7;
+  color: #0369a1;
   background: #eff6ff;
   border-color: #bae6fd;
 }
@@ -19075,10 +19075,122 @@
 }
 
 .mobile-accordion-header.is-active-section .mobile-accordion-title {
-  color: #0284c7;
+  color: #0369a1;
 }
 
 .mobile-accordion-header.is-active-section .mobile-accordion-count {
   background: #0284c7;
   color: #ffffff;
+}
+
+
+/* ==========================================================================
+   NAVBAR - DARK THEME
+   --------------------------------------------------------------------------
+   The redesigned mobile actions, the compact brochure row, the consultation
+   action, the section count badges and the active-section marker were all
+   written for the light theme only. In dark mode they rendered as near-white
+   panels: the brochure heading ended up the same colour as its own row
+   (invisible) and the sticky action bar was white with near-white text
+   (unreadable). The dark theme is fixed to the surfaces the rest of the
+   drawer already uses (#090e1a drawer, #0f172a cards, #1e293b borders).
+   ========================================================================== */
+
+/* ---- mobile header controls: they sat as white blobs on the dark header ---- */
+[data-theme="dark"] .bright-mobile-theme-pill {
+  background: #0f172a;
+  border-color: #1e293b;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .bright-mobile-theme-pill:hover {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .bright-mobile-circle-toggle {
+  background: #0f172a;
+  border-color: #1e293b;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .bright-mobile-circle-toggle:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+/* ---- compact brochure row ---- */
+[data-theme="dark"] .mobile-brochure-row {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .mobile-brochure-row:hover {
+  background: #111c33;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .mobile-brochure-row .mobile-brochure-icon {
+  background: #111c33;
+  border-color: #1e293b;
+  color: #38bdf8;
+}
+
+/* The generic dark rule forces .mobile-brochure-heading to a near-white
+   colour, which made it invisible on the light row it used to sit in. */
+[data-theme="dark"] .mobile-brochure-row .mobile-brochure-heading {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .mobile-brochure-row .mobile-brochure-pill {
+  background: rgba(56, 189, 248, 0.16);
+  color: #7dd3fc;
+}
+
+/* ---- consultation action ---- */
+[data-theme="dark"] .mobile-consultation-btn {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.38);
+  color: #7dd3fc;
+}
+
+[data-theme="dark"] .mobile-consultation-btn:hover {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+}
+
+/* ---- section count badge ---- */
+[data-theme="dark"] .mobile-accordion-count {
+  background: rgba(56, 189, 248, 0.16);
+  color: #7dd3fc;
+}
+
+/* ---- current section ----
+   The accordion header is forced transparent with !important in dark mode,
+   so the active state needs its own override to stay visible. */
+[data-theme="dark"] .mobile-accordion-header.is-active-section {
+  background: rgba(56, 189, 248, 0.10) !important;
+}
+
+[data-theme="dark"] .mobile-accordion-header.is-active-section .mobile-accordion-title {
+  color: #7dd3fc !important;
+}
+
+[data-theme="dark"] .mobile-accordion-header.is-active-section .mobile-accordion-count {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .bright-nav-btn.is-active-section {
+  background: rgba(56, 189, 248, 0.14);
+  border-color: rgba(56, 189, 248, 0.38);
+  color: #7dd3fc;
+}
+
+/* ---- sticky action bar ---- */
+[data-theme="dark"] .mobile-drawer-footer {
+  background: #090e1a;
+  border-top-color: #1e293b;
+  box-shadow: 0 -8px 18px rgba(0, 0, 0, 0.35);
 }
