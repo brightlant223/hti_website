@@ -199,6 +199,18 @@ export default function Navbar({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Which top-level section the current route belongs to. App.jsx already
+  // passes `currentPage`, but it was never used, so the navigation never
+  // showed where the visitor currently is.
+  const activeSection = (() => {
+    const p = (currentPage || '').toLowerCase();
+    if (['automation', 'security-systems', 'cleanroom-interlocks',
+      'perimeter-defense', 'fire-protection', 'hygiene'].includes(p)) return 'services';
+    if (['catalog', 'product'].includes(p)) return 'products';
+    if (['about', 'clients', 'partners', 'blogs', 'careers', 'contact'].includes(p)) return 'company';
+    return null;
+  })();
+
   const handleNavClick = (page, sectionId = null, e = null) => {
     if (e && e.preventDefault) e.preventDefault();
     if (dropdownTimeoutRef.current) {
@@ -999,10 +1011,11 @@ export default function Navbar({
               onFocus={() => handleFocusDropdown('services')}
             >
               <button
-                className={`bright-nav-btn ${activeDropdown === 'services' ? 'services-pill-btn is-active-pill' : ''}`}
+                className={`bright-nav-btn ${activeDropdown === 'services' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'services' ? 'is-active-section' : ''}`}
                 onClick={() => toggleDropdown('services')}
                 aria-expanded={activeDropdown === 'services'}
                 aria-haspopup="true"
+                aria-current={activeSection === 'services' ? 'page' : undefined}
               >
                 <span>Services</span>
                 {activeDropdown === 'services' ? (
@@ -1021,10 +1034,11 @@ export default function Navbar({
               onFocus={() => handleFocusDropdown('products')}
             >
               <button
-                className={`bright-nav-btn ${activeDropdown === 'products' ? 'services-pill-btn is-active-pill' : ''}`}
+                className={`bright-nav-btn ${activeDropdown === 'products' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'products' ? 'is-active-section' : ''}`}
                 onClick={() => toggleDropdown('products')}
                 aria-expanded={activeDropdown === 'products'}
                 aria-haspopup="true"
+                aria-current={activeSection === 'products' ? 'page' : undefined}
               >
                 <span>Products</span>
                 {activeDropdown === 'products' ? (
@@ -1043,10 +1057,11 @@ export default function Navbar({
               onFocus={() => handleFocusDropdown('company')}
             >
               <button
-                className={`bright-nav-btn ${activeDropdown === 'company' ? 'services-pill-btn is-active-pill' : ''}`}
+                className={`bright-nav-btn ${activeDropdown === 'company' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'company' ? 'is-active-section' : ''}`}
                 onClick={() => toggleDropdown('company')}
                 aria-expanded={activeDropdown === 'company'}
                 aria-haspopup="true"
+                aria-current={activeSection === 'company' ? 'page' : undefined}
               >
                 <span>Company</span>
                 {activeDropdown === 'company' ? (
@@ -1109,15 +1124,14 @@ export default function Navbar({
                 const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
                 if (onThemeChange) onThemeChange(nextTheme);
               }}
-              title={`Switch theme (Current: ${resolvedTheme})`}
-              aria-label="Toggle display theme"
+              title={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} theme`}
+              aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} theme`}
             >
               {resolvedTheme === 'dark' ? (
-                <Moon size={15} className="mobile-theme-icon" />
+                <Moon size={16} className="mobile-theme-icon" />
               ) : (
-                <Sun size={15} className="mobile-theme-icon" />
+                <Sun size={16} className="mobile-theme-icon" />
               )}
-              <ChevronDown size={12} className="mobile-theme-chevron" />
             </button>
 
             <button
@@ -1563,9 +1577,10 @@ export default function Navbar({
             {/* Accordion Item: Services */}
             <div className="mobile-accordion-group">
               <button
-                className="mobile-accordion-header"
+                className={`mobile-accordion-header ${activeSection === 'services' ? 'is-active-section' : ''}`}
                 onClick={() => setMobileAccordion(mobileAccordion === 'services' ? null : 'services')}
                 aria-expanded={mobileAccordion === 'services'}
+                aria-current={activeSection === 'services' ? 'page' : undefined}
               >
                 <span className="mobile-accordion-heading">
                   <span className="mobile-accordion-title">Services</span>
@@ -1602,9 +1617,10 @@ export default function Navbar({
             {/* Accordion Item: Products */}
             <div className="mobile-accordion-group">
               <button
-                className="mobile-accordion-header"
+                className={`mobile-accordion-header ${activeSection === 'products' ? 'is-active-section' : ''}`}
                 onClick={() => setMobileAccordion(mobileAccordion === 'products' ? null : 'products')}
                 aria-expanded={mobileAccordion === 'products'}
+                aria-current={activeSection === 'products' ? 'page' : undefined}
               >
                 <span className="mobile-accordion-heading">
                   <span className="mobile-accordion-title">Products</span>
@@ -1649,9 +1665,10 @@ export default function Navbar({
             {/* Accordion Item: Company */}
               <div className="mobile-accordion-group">
                 <button
-                  className="mobile-accordion-header"
+                  className={`mobile-accordion-header ${activeSection === 'company' ? 'is-active-section' : ''}`}
                   onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
                   aria-expanded={mobileAccordion === 'company'}
+                  aria-current={activeSection === 'company' ? 'page' : undefined}
                 >
                   <span className="mobile-accordion-heading">
                     <span className="mobile-accordion-title">Company</span>
