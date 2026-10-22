@@ -4,6 +4,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Segments from './components/Segments';
+import ProductShowcase from './components/ProductShowcase';
 import ProductsCatalog from './components/ProductsCatalog';
 import ProductModal from './components/ProductModal';
 import DoorInterlockSimulator from './components/DoorInterlockSimulator';
@@ -24,9 +25,13 @@ import AboutPage from './components/AboutPage';
 import ContactPage from './components/ContactPage';
 import PartnersPage from './components/PartnersPage';
 import BlogsPage from './components/BlogsPage';
+import CareersPage from './components/CareersPage';
+import PharmaCleanroomDetailView from './components/PharmaCleanroomDetailView';
 
 // Complete static seed data fallback for resilient offline loading
-import { productsData, getProductBySlug } from './data/productsData';
+import { productsData } from './data/productsData';
+import { getProductBySlug } from './data/productCatalogueData';
+import { scrollToTop, scrollToElement } from './utils/scroll';
 
 // Helper to determine initial page and parameter from URL path
 const parseUrlRoute = () => {
@@ -34,14 +39,27 @@ const parseUrlRoute = () => {
   const path = window.location.pathname.toLowerCase();
   const hash = window.location.hash.toLowerCase();
 
-  // Check product detail route /product/:slug
+  // Check product detail route /product/:slug or /products/:slug
   if (path.startsWith('/product/')) {
     const slug = path.replace('/product/', '').replace(/\/$/, '');
+    return { page: 'product', param: slug };
+  }
+  if (path.startsWith('/products/')) {
+    const slug = path.replace('/products/', '').replace(/\/$/, '');
     return { page: 'product', param: slug };
   }
   if (hash.startsWith('#/product/')) {
     const slug = hash.replace('#/product/', '');
     return { page: 'product', param: slug };
+  }
+  if (hash.startsWith('#/products/')) {
+    const slug = hash.replace('#/products/', '');
+    return { page: 'product', param: slug };
+  }
+
+  // Check dedicated product catalogue route (/catalog or /products)
+  if (path === '/catalog' || path === '/catalog/' || path === '/catalogue' || path === '/products' || path === '/products/' || hash === '#/catalog' || hash === '#catalog') {
+    return { page: 'catalog', param: null };
   }
 
   // Check dedicated category pages
@@ -54,8 +72,17 @@ const parseUrlRoute = () => {
   if (path === '/cleanroom-interlocks' || path === '/cleanroom-interlocks/' || path === '/interlocks' || hash === '#/cleanroom-interlocks') {
     return { page: 'cleanroom-interlocks', param: null };
   }
+  if (path === '/perimeter-defense' || path === '/perimeter-defense/' || path === '/perimeter' || hash === '#/perimeter-defense') {
+    return { page: 'perimeter-defense', param: null };
+  }
+  if (path === '/fire-protection' || path === '/fire-protection/' || path === '/fire' || path === '/fire-safety' || hash === '#/fire-protection') {
+    return { page: 'fire-protection', param: null };
+  }
   if (path === '/hygiene' || path === '/hygiene/' || hash === '#/hygiene') {
     return { page: 'hygiene', param: null };
+  }
+  if (path === '/server-room-monitoring' || path === '/server-room-monitoring/' || path === '/critical-monitoring' || path === '/critical-monitoring/' || path === '/monitoring' || hash === '#/server-room-monitoring') {
+    return { page: 'server-room-monitoring', param: null };
   }
 
   // Check dedicated company and client pages
@@ -73,6 +100,12 @@ const parseUrlRoute = () => {
   }
   if (path === '/blogs' || path === '/blogs/' || hash === '#/blogs') {
     return { page: 'blogs', param: null };
+  }
+  if (path === '/careers' || path === '/careers/' || hash === '#/careers') {
+    return { page: 'careers', param: null };
+  }
+  if (path === '/door-interlock-system' || path === '/door-interlock-system/' || path === '/door-interlock-systems' || hash === '#/door-interlock-system') {
+    return { page: 'product', param: 'door-interlock-system' };
   }
 
   return { page: 'home', param: null };
@@ -283,6 +316,14 @@ export default function App() {
     fetchStats();
   };
 
+  const handleRefreshProjects = () => {
+    fetchStats();
+  };
+
+  const handleRefreshContent = () => {
+    fetchStats();
+  };
+
   // Centralized page, category, and product navigation
   const navigateTo = (page, paramOrSection = null) => {
     let targetUrl = '/';
@@ -292,7 +333,14 @@ export default function App() {
     if (page === 'product') {
       targetUrl = `/product/${paramOrSection}`;
       targetParam = paramOrSection;
-    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'hygiene', 'clients', 'about', 'contact', 'partners', 'blogs'].includes(page)) {
+    } else if (page === 'catalog') {
+      targetUrl = '/catalog';
+      targetParam = paramOrSection;
+    } else if (page === 'home' && paramOrSection === 'catalog') {
+      targetUrl = '/catalog';
+      targetPage = 'catalog';
+      targetParam = 'all';
+    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
       targetUrl = `/${page}`;
     } else if (page === 'home') {
       targetUrl = '/';
@@ -309,13 +357,13 @@ export default function App() {
       setTimeout(() => {
         const el = document.getElementById(paramOrSection);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
+          scrollToElement(el, 90);
         } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          scrollToTop();
         }
       }, 60);
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToTop();
     }
   };
 
@@ -328,6 +376,12 @@ export default function App() {
       navigateTo('security-systems');
     } else if (cleanId.includes('interlock')) {
       navigateTo('cleanroom-interlocks');
+    } else if (cleanId.includes('perim')) {
+      navigateTo('perimeter-defense');
+    } else if (cleanId.includes('fire')) {
+      navigateTo('fire-protection');
+    } else if (cleanId.includes('monitor') || cleanId.includes('server')) {
+      navigateTo('server-room-monitoring');
     } else if (cleanId.includes('hyg')) {
       navigateTo('hygiene');
     } else {
@@ -347,7 +401,7 @@ export default function App() {
   };
 
   const scrollToCatalog = () => {
-    navigateTo('home', 'catalog');
+    navigateTo('catalog', 'all');
   };
 
   const scrollToDemo = () => {
@@ -382,15 +436,36 @@ export default function App() {
       <main>
         {/* ROUTE 1: Product Detail Page (/product/:slug) */}
         {routeState.page === 'product' && (
-          <ProductDetailPage
-            product={activeProduct}
-            onNavigate={navigateTo}
-            onQuoteSubmit={handleInquirySubmitted}
-          />
+          (routeState.param === 'door-interlock-system' || routeState.param === 'door-interlock-systems') ? (
+            <PharmaCleanroomDetailView
+              product={activeProduct || { slug: 'door-interlock-system' }}
+              onNavigate={navigateTo}
+              onQuoteSubmit={handleInquirySubmitted}
+            />
+          ) : (
+            <ProductDetailPage
+              product={activeProduct}
+              onNavigate={navigateTo}
+              onQuoteSubmit={handleInquirySubmitted}
+            />
+          )
         )}
 
-        {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /hygiene) */}
-        {['automation', 'security-systems', 'cleanroom-interlocks', 'hygiene'].includes(routeState.page) && (
+        {/* ROUTE 2: Dedicated Full Product Catalogue (/catalog) */}
+        {routeState.page === 'catalog' && (
+          <div className="dedicated-catalog-page-wrapper">
+            <ProductsCatalog
+              initialCategory={routeState.param || selectedCategory || 'all'}
+              isDedicatedPage={true}
+              onSelectProduct={(p) => navigateTo('product', typeof p === 'string' ? p : (p?.slug || 'automatic-sliding-swing-doors'))}
+              onNavigate={navigateTo}
+              onQuickQuote={handleQuickQuote}
+            />
+          </div>
+        )}
+
+        {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /perimeter-defense, /fire-protection, /hygiene, /server-room-monitoring) */}
+        {['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring'].includes(routeState.page) && (
           <CategoryPage
             categoryKey={routeState.page}
             onNavigate={navigateTo}
@@ -427,10 +502,15 @@ export default function App() {
 
         {/* ROUTE 7: Dedicated Technical Blogs Page (/blogs) */}
         {routeState.page === 'blogs' && (
-          <BlogsPage onNavigate={navigateTo} />
+          <BlogsPage onNavigate={navigateTo} blogs={blogs} />
         )}
 
-        {/* ROUTE 8: Default Landing Home Page (/) */}
+        {/* ROUTE 8: Dedicated Careers Page (/careers) */}
+        {routeState.page === 'careers' && (
+          <CareersPage onNavigate={navigateTo} />
+        )}
+
+        {/* ROUTE 9: Default Landing Home Page (/) */}
         {routeState.page === 'home' && (
           <>
             {/* Hero Section */}
@@ -439,20 +519,20 @@ export default function App() {
               onExploreClick={scrollToCatalog}
               onDemoClick={scrollToDemo}
               onQuoteClick={scrollToContact}
+              onNavigate={navigateTo}
+            />
+
+            {/* Concise, Image-Led Homepage Product Showcase */}
+            <ProductShowcase
+              onSelectCategory={(catId) => navigateTo('catalog', catId)}
+              onSelectProduct={(slug) => navigateTo('product', slug)}
+              onExploreCatalog={() => navigateTo('catalog', 'all')}
+              onNavigate={navigateTo}
+              onQuickQuote={handleQuickQuote}
             />
 
             {/* 3 Core Product Segments */}
             <Segments onSelectSegment={handleSelectSegment} />
-
-            {/* Product Catalog with Realtime Search & Category Tabs */}
-            <ProductsCatalog
-              products={products}
-              loading={loading}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-              onSelectProduct={(p) => navigateTo('product', p.slug)}
-              onQuickQuote={handleQuickQuote}
-            />
 
             {/* Door Interlock Logic Simulator & Why Choose HTI */}
             <DoorInterlockSimulator
@@ -492,13 +572,12 @@ export default function App() {
         onProductsChanged={handleRefreshProducts}
         onBlogsChanged={handleRefreshBlogs}
         onClientsChanged={handleRefreshClients}
+        onProjectsChanged={handleRefreshProjects}
+        onContentChanged={handleRefreshContent}
       />
 
       {/* Footer */}
-      <Footer 
-        onCategoryClick={handleSelectSegment} 
-        onNavigate={navigateTo}
-      />
+      <Footer onNavigate={navigateTo} />
 
       {/* Floating WhatsApp Quick Connect & AI Chatbot Assistant */}
       <WhatsAppAndChatbot

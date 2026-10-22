@@ -1,642 +1,886 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  ArrowLeft, CheckCircle2, ShieldCheck, Download, Send, PhoneCall, 
-  MessageSquare, Layers, Cpu, Flame, Wrench, Share2, Sparkles, Building2,
-  Check, FileText, ExternalLink, ArrowRight, AlertTriangle, BatteryCharging,
-  Settings, CheckSquare, Zap, Clock
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import {
+  AlertCircle,
+  ShieldCheck,
+  Wrench,
+  Settings,
+  Send,
+  Play,
+  Check,
+  FileText,
+  Radio,
+  Leaf,
+  Award,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  CheckCircle2,
+  Zap,
+  Layers,
+  Lock,
+  Cpu,
+  Activity,
+  Volume2,
+  Sparkles,
+  Truck,
+  ArrowRight
 } from 'lucide-react';
-import { productsData } from '../data/productsData';
+import { getProductBySlug } from '../data/productCatalogueData';
+import { scrollToTop } from '../utils/scroll';
+import './ProductDetailPage.css';
 
-export default function ProductDetailPage({ 
-  product, 
-  onNavigate, 
-  onQuoteSubmit 
+// Specialized Cleanroom Interactive Demonstrations
+import PassBoxDemo from './PassBoxDemo';
+import DigitalClockDemo from './DigitalClockDemo';
+import ChillerCleanroomDoorDemo from './ChillerCleanroomDoorDemo';
+import DoorInterlockSimulator from './DoorInterlockSimulator';
+
+// Map icon string names to Lucide components
+const ICON_MAP = {
+  ShieldCheck,
+  Wrench,
+  Settings,
+  Zap,
+  Lock,
+  Cpu,
+  Layers,
+  Radio,
+  Activity,
+  Volume2,
+  Award,
+  Leaf,
+  FileText,
+  Sparkles,
+  Truck,
+  CheckCircle2,
+  Check
+};
+
+const resolveIcon = (name, fallback = Settings, size = 20, className = '') => {
+  if (!name) return React.createElement(fallback, { size, className });
+  const Comp = ICON_MAP[name] || fallback;
+  return React.createElement(Comp, { size, className });
+};
+
+export default function ProductDetailPage({
+  product: productProp,
+  onNavigate,
+  onQuoteSubmit
 }) {
+  const videoRef = useRef(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const [modalSubmitted, setModalSubmitted] = useState(false);
+  const [modalError, setModalError] = useState('');
+  const [carouselOffset, setCarouselOffset] = useState(0);
+
+  // Quote modal refs - used to move focus in, trap it and restore it on close
+  const quoteTriggerRef = useRef(null);
+  const modalBoxRef = useRef(null);
+  const modalFirstFieldRef = useRef(null);
+
+  // Always resolve the canonical product record from productCatalogueData
+  const rawSlug = typeof productProp === 'string'
+    ? productProp
+    : (productProp?.slug || 'automatic-sliding-swing-doors');
+
+  const product = useMemo(() => {
+    return getProductBySlug(rawSlug) || productProp;
+  }, [rawSlug, productProp]);
+
+  // Form state for quotation modal
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     company: '',
-    location: '',
-    quantity: '1 Unit / Turnkey Site',
-    accessories: [],
+    quantity: '1 Turnkey Site',
     message: ''
   });
-  const [submitted, setSubmitted] = useState(false);
-  const [copiedLink, setCopiedLink] = useState(false);
 
-  // Available add-ons / engineering accessories
-  const availableAccessories = [
-    'Emergency Battery Backup Unit',
-    'Active Infrared Presence & Safety Sensor',
-    'Certified Flameproof (Ex-d) Enclosure',
-    'FACP Fire Alarm Auto-Trip Interface Relay',
-    'Touchless Wave Sensor / Proximity Switch',
-    'Annual Maintenance Contract (AMC 24/7 SLA)'
-  ];
-
-  // Scroll to top on product change
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setSubmitted(false);
+  // Reset the per-product state when the visitor switches to another product.
+  // This is done during render (React's documented "adjust state when a prop
+  // changes" pattern) so the page never shows one product's form message or
+  // carousel position on a different product.
+  const [lastSlug, setLastSlug] = useState(rawSlug);
+  if (lastSlug !== rawSlug) {
+    setLastSlug(rawSlug);
+    setIsVideoPlaying(false);
+    setCarouselOffset(0);
+    setModalSubmitted(false);
+    setModalError('');
     setFormData(prev => ({
       ...prev,
-      accessories: [],
-      message: `Hello HTI Engineering, please share technical data sheet, GA drawing, and turnkey quotation for ${product?.name || 'this system'}.`
+      message: `Hello HTI Engineering, please share technical data sheet, CAD GA drawing, and turnkey quotation for ${product?.name || 'this system'}.`
     }));
-  }, [product]);
+  }
+
+  // Side effects that must run after the product has changed
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+    scrollToTop();
+  }, [rawSlug, product?.name]);
+
+  const openQuoteModal = () => {
+    setModalError('');
+    setIsQuoteModalOpen(true);
+  };
+
+  const closeQuoteModal = () => {
+    setIsQuoteModalOpen(false);
+    setModalError('');
+    // Return focus to the button that opened the dialog
+    if (quoteTriggerRef.current) quoteTriggerRef.current.focus();
+  };
+
+  // Escape closes the dialog and Tab is trapped inside it
+  useEffect(() => {
+    if (!isQuoteModalOpen) return undefined;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeQuoteModal();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      const box = modalBoxRef.current;
+      if (!box) return;
+      const focusables = box.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    // Focus the first field so keyboard users land inside the form
+    const t = setTimeout(() => {
+      if (modalFirstFieldRef.current) modalFirstFieldRef.current.focus();
+    }, 60);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      clearTimeout(t);
+    };
+  }, [isQuoteModalOpen]);
 
   if (!product) {
     return (
-      <div className="product-detail-page section">
-        <div className="container text-center py-16">
-          <h2 className="text-2xl font-bold mb-4 text-slate-800">Product Not Found</h2>
-          <p className="text-slate-500 mb-6">The product you are looking for is either archived or unavailable.</p>
-          <button 
-            className="btn btn-primary"
-            onClick={() => onNavigate('home', 'catalog')}
-          >
-            <ArrowLeft size={16} /> Return to Products Catalog
-          </button>
-        </div>
+      <div className="auto-doors-page-container" style={{ padding: '80px 24px', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px' }}>
+          Product System Not Found
+        </h2>
+        <p style={{ color: '#64748b', marginBottom: '24px' }}>
+          The requested industrial system may have been updated in our catalog.
+        </p>
+        <button
+          className="auto-btn-primary"
+          onClick={() => onNavigate && onNavigate('home', 'catalog')}
+        >
+          Return to Products Catalog
+        </button>
       </div>
     );
   }
 
-  // Find related products in the same category (excluding current)
-  const relatedProducts = productsData
-    .filter(p => p.category === product.category && p.slug !== product.slug)
-    .slice(0, 3);
+  // Determine badges
+  const categoryBadgeText = (product.categorySlug === 'access-automation' || product.category === 'Access Automation')
+    ? 'AUTOMATION'
+    : (product.categorySlug === 'traffic-perimeter' || product.category === 'Traffic & Perimeter')
+    ? 'TRAFFIC & PERIMETER'
+    : (product.categorySlug === 'pharma-cleanroom' || product.category === 'Pharma Cleanroom')
+    ? 'PHARMA CLEANROOM'
+    : (product.categorySlug === 'fire-life-safety' || product.category === 'Fire & Life Safety')
+    ? 'FIRE & LIFE SAFETY'
+    : (product.categorySlug === 'surveillance-alerts' || product.category === 'Surveillance & Alerts')
+    ? 'SURVEILLANCE & ALERTS'
+    : (product.category?.toUpperCase() || 'AUTOMATION');
 
+  const subBadgeText = product.subcategory || (
+    product.categorySlug === 'access-automation' ? 'ACCESS CONTROL' :
+    product.categorySlug === 'traffic-perimeter' ? 'VEHICLE ACCESS' :
+    product.categorySlug === 'pharma-cleanroom' ? 'AIRLOCK LOGIC' :
+    product.categorySlug === 'fire-life-safety' ? 'LIFE SAFETY' :
+    product.categorySlug === 'surveillance-alerts' ? 'AI TELEMETRY' :
+    'INDUSTRIAL GRADE'
+  );
+
+  const statusBadgeText = product.badge || 'HIGH DEMAND';
+
+  // Determine trust indicators (3 items)
+  const trustIndicators = product.trustIndicators && product.trustIndicators.length >= 3
+    ? product.trustIndicators.slice(0, 3)
+    : [
+        { text: 'ISO & CE Certified Quality', icon: 'ShieldCheck' },
+        { text: 'Turnkey PAN-India Installation', icon: 'Wrench' },
+        { text: 'OEM Warranty & Service Support', icon: 'Settings' }
+      ];
+
+  // Video Section details
+  const videoData = product.video || {
+    hasVideoFile: false,
+    poster: product.heroImage,
+    badge: 'PRODUCT VIDEO',
+    heading: `${product.name} in Action`,
+    description: `Watch how our ${product.name.toLowerCase()} delivers smooth, secure, and intelligent operation for modern commercial and industrial environments.`,
+    bullets: [
+      'Smooth & Quiet Operation',
+      'Access Control Integration',
+      'Heavy-Duty Construction',
+      'Safety & Obstruction Detection'
+    ]
+  };
+
+  const handleVideoPlayToggle = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsVideoPlaying(true);
+      } else {
+        videoRef.current.pause();
+        setIsVideoPlaying(false);
+      }
+    }
+  };
+
+  // Section D: Engineering & Technical Overview
+  const engineeringHeading = product.overview?.heading || 'Designed for Secure & Intelligent Access';
+  const engineeringDescription = (product.overview?.paragraphs && product.overview.paragraphs[0])
+    ? product.overview.paragraphs[0]
+    : (product.heroDescription || `Our ${product.name.toLowerCase()} is engineered for reliable performance, advanced system integration, and long-term durability across high-throughput commercial and industrial environments.`);
+
+  // 4 Feature Cards for Section D
+  const featureCircleClasses = ['circle-cyan', 'circle-red', 'circle-blue', 'circle-green'];
+  const defaultBenefitIcons = ['Settings', 'Lock', 'Cpu', 'ShieldCheck'];
+
+  const rawBenefits = (product.benefits && product.benefits.length > 0)
+    ? product.benefits
+    : [
+        {
+          title: 'Motorized Operation',
+          desc: 'Smooth and reliable automated movement engineered for high-traffic environments.',
+          iconName: 'Settings'
+        },
+        {
+          title: 'Access Control Integration',
+          desc: 'Seamlessly supports card, biometric, RFID, FASTag, and central PLC systems.',
+          iconName: 'Lock'
+        },
+        {
+          title: 'Heavy-Duty Construction',
+          desc: 'Built with certified materials for long-lasting performance in industrial applications.',
+          iconName: 'Cpu'
+        },
+        {
+          title: 'Safety & Obstruction Detection',
+          desc: 'Advanced active sensors and auto-reverse logic ensure safe and secure operation.',
+          iconName: 'ShieldCheck'
+        }
+      ];
+
+  const featureCards = rawBenefits.slice(0, 4);
+
+  // Section E: Specifications & Standards
+  const rawTableRows = product.specs?.tableRows || [];
+  const tableRows = rawTableRows.length > 0
+    ? rawTableRows
+    : [
+        { label: 'Drive Type', value: 'Electromechanical / Hydraulic' },
+        { label: 'Construction Material', value: 'Mild Steel / Stainless Steel / Aluminium' },
+        { label: 'Operating Speed', value: 'Microprocessor Adjustable' },
+        { label: 'Power Supply', value: '230V AC, 50Hz' },
+        { label: 'Access Control', value: 'Card, RFID, Biometric, dry contacts' },
+        { label: 'Safety Features', value: 'Obstacle detection, Auto stop, Safety sensors' },
+        { label: 'Duty Cycle', value: '100% Continuous Duty Rated' },
+        { label: 'Application', value: 'Commercial, Healthcare, Industrial, Logistics' }
+      ];
+
+  const complianceTitle = product.specs?.complianceTitle || 'Standards & Compliance';
+  const rawCompliance = product.specs?.complianceItems || [];
+  const complianceItems = rawCompliance.length > 0
+    ? rawCompliance
+    : [
+        'ISO Certified Quality Management',
+        'CE Standard Verified Components',
+        'Safety & Reliability Focus',
+        'Durable & Weather Resistant Ingress Protection',
+        'Professional Turnkey Commissioning'
+      ];
+
+  // Section F: Related Images (Target: 5 images in horizontal row)
+  const rawRelatedImages = product.relatedImages?.images || [];
+  const fallbackImages = [
+    { id: 1, src: product.heroImage || '/products/automatic-doors.jpg', caption: `${product.name} Primary Installation` },
+    { id: 2, src: '/hero-glass-atrium.jpg', caption: 'Commercial Facility Deployment' },
+    { id: 3, src: '/hero-security-command-center.jpg', caption: 'Central Operations Control' },
+    { id: 4, src: '/services/services-hero-access.jpg', caption: 'Turnkey Architectural Integration' },
+    { id: 5, src: '/products/cleanroom-interlocks.jpg', caption: 'Controlled Environment Suite' }
+  ];
+
+  const allAvailableImages = rawRelatedImages.length >= 3 ? rawRelatedImages : fallbackImages;
+
+  // Window of 5 images based on carouselOffset
+  const totalImgs = allAvailableImages.length;
+  const displayedImages = [];
+  const countToDisplay = Math.min(5, totalImgs);
+  for (let i = 0; i < countToDisplay; i++) {
+    displayedImages.push(allAvailableImages[(carouselOffset + i) % totalImgs]);
+  }
+
+  const handlePrevImages = () => {
+    setCarouselOffset(prev => (prev === 0 ? totalImgs - 1 : prev - 1));
+  };
+
+  const handleNextImages = () => {
+    setCarouselOffset(prev => (prev === totalImgs - 1 ? 0 : prev + 1));
+  };
+
+  // Modal handlers
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (modalError) setModalError('');
   };
 
-  const handleAccessoryToggle = (acc) => {
-    setFormData(prev => {
-      const exists = prev.accessories.includes(acc);
-      return {
-        ...prev,
-        accessories: exists ? prev.accessories.filter(a => a !== acc) : [...prev.accessories, acc]
-      };
-    });
-  };
 
-  const handleSubmit = (e) => {
+  const handleModalSubmit = async (e) => {
     e.preventDefault();
+    setModalError('');
+
     if (!formData.name || !formData.email || !formData.phone) {
-      alert('Please fill in your Name, Email, and Phone number.');
+      setModalError('Please fill in your Name, Email and Phone number.');
       return;
     }
-    
-    // Simulate inquiry dispatch
-    fetch('/api/inquiries', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        full_name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        company: formData.company || 'Not specified',
-        category: product.category,
-        product_name: product.name,
-        message: `${formData.message} [Location: ${formData.location || 'Mumbai'}] [Qty: ${formData.quantity}] [Selected Add-ons: ${formData.accessories.join(', ') || 'Standard'}]`
-      })
-    }).catch(() => {
-      // Offline fallback
-    });
 
-    setSubmitted(true);
-    if (onQuoteSubmit) onQuoteSubmit();
-  };
+    try {
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company || 'Not specified',
+          category: product.category || 'Automation',
+          product_name: product.name,
+          message: `${formData.message} [Scope/Qty: ${formData.quantity}]`
+        })
+      });
 
-  const handleCopyShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 2500);
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.detail || 'We could not send your request. Please try again.');
+      }
+
+      setModalSubmitted(true);
+      if (onQuoteSubmit) onQuoteSubmit();
+      setTimeout(() => {
+        setModalSubmitted(false);
+        setIsQuoteModalOpen(false);
+      }, 2400);
+    } catch (err) {
+      // Surface the failure instead of silently pretending it worked
+      setModalError(err.message || 'We could not send your request. Please try again.');
     }
   };
 
-  const handleBrochureDownload = () => {
-    alert(`Technical specification sheet for "${product.name}" has been requested. Our system will generate and email the PDF engineering package to you shortly.`);
+  const handleCategoryBreadcrumb = () => {
+    if (onNavigate) {
+      if (product.categoryPage) {
+        onNavigate(product.categoryPage);
+      } else {
+        onNavigate('home', 'catalog');
+      }
+    }
   };
 
+  // Determine if product uses interactive demo
+  const isInterlockDemo = product.slug === 'door-interlock-systems' || product.interactiveDemo === 'interlock';
+  const isPassBoxDemo = product.slug === 'pass-box-systems' || product.interactiveDemo === 'passbox';
+  const isDigitalClockDemo = product.slug === 'digital-gps-clocks' || product.interactiveDemo === 'digital-clock';
+  const isChillerDoorDemo = product.slug === 'chiller-clean-room-doors' || product.interactiveDemo === 'chiller-door';
+
   return (
-    <div className="product-detail-page">
-      {/* 1. Breadcrumb Bar */}
-      <div className="detail-breadcrumb-bar">
-        <div className="container">
-          <div className="breadcrumb-nav">
-            <button 
-              className="breadcrumb-link" 
-              onClick={() => onNavigate('home')}
-            >
-              Home
-            </button>
-            <span className="breadcrumb-separator">/</span>
-            <button 
-              className="breadcrumb-link"
-              onClick={() => {
-                const catPage = product.category.toLowerCase().includes('automation') 
-                  ? 'automation' 
-                  : product.category.toLowerCase().includes('security') 
-                  ? 'security-systems' 
-                  : 'hygiene';
-                onNavigate(catPage);
-              }}
-            >
-              {product.category}
-            </button>
-            <span className="breadcrumb-separator">/</span>
-            <span className="breadcrumb-current">{product.name}</span>
-          </div>
+    <div className="auto-doors-page-container">
 
-          <button 
-            className="back-btn"
-            onClick={() => onNavigate('home', 'catalog')}
-          >
-            <ArrowLeft size={15} />
-            <span>Back to All Products</span>
-          </button>
-        </div>
-      </div>
+      {/* =========================================================================
+          SECTION A: BREADCRUMBS
+          ========================================================================= */}
+      <nav className="auto-doors-breadcrumb" aria-label="Breadcrumb">
+        <button
+          className="auto-breadcrumb-btn"
+          onClick={() => onNavigate && onNavigate('home')}
+        >
+          Home
+        </button>
+        <span className="auto-breadcrumb-sep">&gt;</span>
+        <button
+          className="auto-breadcrumb-btn"
+          onClick={handleCategoryBreadcrumb}
+        >
+          {product.category || 'Automation'}
+        </button>
+        <span className="auto-breadcrumb-sep">&gt;</span>
+        <span className="auto-breadcrumb-curr">{product.name}</span>
+      </nav>
 
-      {/* 2. Hero Banner (Light Theme) */}
-      <div className="detail-hero-banner">
-        <div className="container">
-          <div className="detail-hero-grid">
-            <div className="detail-hero-content">
-              <div className="detail-tag-row">
-                <span className="detail-category-badge">{product.category}</span>
-                <span className="detail-subcat-badge">{product.subcategory}</span>
-                {product.badge && (
-                  <span className="detail-highlight-badge">
-                    <Sparkles size={13} />
-                    {product.badge}
-                  </span>
-                )}
-              </div>
+      {/* =========================================================================
+          SECTION B: PRODUCT HERO (Two-Column Layout)
+          ========================================================================= */}
+      <section className="auto-doors-hero-section">
+        <div className="auto-doors-hero-grid">
 
-              <h1 className="detail-title">{product.name}</h1>
-              <p className="detail-tagline">{product.tagline}</p>
-
-              <div className="detail-hero-cta-row">
-                <a 
-                  href="#quote-form"
-                  className="btn btn-primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  <Send size={16} />
-                  <span>Request Instant Quotation</span>
-                </a>
-
-                <button 
-                  className="btn btn-secondary"
-                  onClick={handleBrochureDownload}
-                >
-                  <Download size={16} />
-                  <span>Download Specs PDF</span>
-                </button>
-
-                <button 
-                  className="btn-share-icon" 
-                  onClick={handleCopyShare}
-                  title="Share Product Page"
-                >
-                  {copiedLink ? <Check size={18} className="text-emerald-600" /> : <Share2 size={18} />}
-                </button>
-              </div>
-
-              <div className="detail-quick-stats">
-                <div className="quick-stat-item">
-                  <ShieldCheck size={18} className="text-sky-600" />
-                  <span>ISO & CE Certified Quality</span>
-                </div>
-                <div className="quick-stat-item">
-                  <Wrench size={18} className="text-sky-600" />
-                  <span>Turnkey PAN-India Installation</span>
-                </div>
-                <div className="quick-stat-item">
-                  <Cpu size={18} className="text-sky-600" />
-                  <span>OEM Warranty & Service Support</span>
-                </div>
-              </div>
+          {/* Left Column: Badges, Heading, Description, Quotation Button, Trust Row */}
+          <div className="auto-doors-hero-left">
+            <div className="auto-badge-row">
+              <span className="auto-badge-solid-blue">{categoryBadgeText}</span>
+              <span className="auto-badge-soft-blue">{subBadgeText}</span>
+              <span className="auto-badge-soft-pink">{statusBadgeText}</span>
             </div>
 
-            {/* Visual Engineering Preview Card */}
-            <div className="detail-preview-visual">
-              <div className="preview-glass-box">
-                <div className="preview-icon-badge">
-                  {product.category === 'Automation' ? (
-                    <Cpu size={44} className="text-sky-600" />
-                  ) : product.category === 'Security System' ? (
-                    <ShieldCheck size={44} className="text-red-500" />
-                  ) : (
-                    <Layers size={44} className="text-emerald-600" />
-                  )}
-                </div>
-                <h3 className="preview-box-title">{product.name}</h3>
-                <p className="preview-box-summary">{product.workSummary}</p>
-                
-                <div className="preview-status-pill">
-                  <span className="status-dot"></span>
-                  <span>Active Engineering Specification Available</span>
-                </div>
+            <h1 className="auto-doors-hero-title">{product.name}</h1>
 
-                <div className="preview-meta-row">
-                  <div className="preview-meta-col">
-                    <span className="meta-label">Category</span>
-                    <span className="meta-val">{product.category}</span>
-                  </div>
-                  <div className="preview-meta-col">
-                    <span className="meta-label">Lead Time</span>
-                    <span className="meta-val">Ready Stock / Custom</span>
-                  </div>
-                  <div className="preview-meta-col">
-                    <span className="meta-label">Compliance</span>
-                    <span className="meta-val">USFDA / NBC 2016</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            <p className="auto-doors-hero-desc">
+              {product.heroDescription || product.tagline}
+            </p>
 
-      {/* 3. Main Content Body & Specs */}
-      <div className="detail-main-body section">
-        <div className="container">
-          <div className="detail-columns-grid">
-            
-            {/* Left 65%: Overview, Features, Specs, Safety & Applications */}
-            <div className="detail-info-column">
-              
-              {/* Engineering Overview */}
-              <div className="detail-card">
-                <h2 className="detail-section-title">
-                  <FileText size={20} className="text-sky-600" />
-                  <span>Engineering & Technical Overview</span>
-                </h2>
-                <p className="detail-description-text">{product.description}</p>
-              </div>
-
-              {/* Key Features & System Capabilities */}
-              <div className="detail-card mt-6">
-                <h2 className="detail-section-title">
-                  <CheckCircle2 size={20} className="text-sky-600" />
-                  <span>Key Engineering Features</span>
-                </h2>
-                <div className="detail-features-grid">
-                  {product.features && product.features.map((feat, idx) => (
-                    <div key={idx} className="detail-feature-item">
-                      <div className="feature-check-icon">
-                        <Check size={16} />
-                      </div>
-                      <span className="feature-text">{feat}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Complete Technical Specifications Table */}
-              <div className="detail-card mt-6">
-                <h2 className="detail-section-title">
-                  <Cpu size={20} className="text-sky-600" />
-                  <span>Technical Specifications & Standards</span>
-                </h2>
-                <div className="specs-table-wrapper">
-                  <table className="specs-table">
-                    <tbody>
-                      {product.specs && Object.entries(product.specs).map(([specKey, specVal], idx) => (
-                        <tr key={idx} className={idx % 2 === 0 ? 'tr-even' : 'tr-odd'}>
-                          <td className="spec-key-col">{specKey}</td>
-                          <td className="spec-val-col">{specVal}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Fail-Safe & Life Safety Mechanisms */}
-              <div className="detail-card mt-6">
-                <h2 className="detail-section-title">
-                  <ShieldCheck size={20} className="text-red-500" />
-                  <span>Fail-Safe & Statutory Life-Safety Mechanisms</span>
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                    <div className="flex items-center gap-2 font-bold text-slate-800 mb-1">
-                      <BatteryCharging size={18} className="text-emerald-600" />
-                      <span>Emergency Power Auto-Release</span>
-                    </div>
-                    <p className="text-slate-600 text-sm">
-                      Integrated 24V linear battery reserve automatically operates or holds open the door/gate leaf during sudden grid failure.
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                    <div className="flex items-center gap-2 font-bold text-slate-800 mb-1">
-                      <Flame size={18} className="text-red-500" />
-                      <span>Fire Alarm Panel (FACP) Trip Relay</span>
-                    </div>
-                    <p className="text-slate-600 text-sm">
-                      Direct integration with building fire alarm panels ensures instantaneous lock drop and barrier opening upon smoke detection.
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                    <div className="flex items-center gap-2 font-bold text-slate-800 mb-1">
-                      <Zap size={18} className="text-amber-500" />
-                      <span>Anti-Pinch Obstacle Auto-Reverse</span>
-                    </div>
-                    <p className="text-slate-600 text-sm">
-                      Microprocessor-driven electronic torque monitoring detects the slightest resistance and reverses curtain or leaf traversal in &lt;0.2 sec.
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                    <div className="flex items-center gap-2 font-bold text-slate-800 mb-1">
-                      <Wrench size={18} className="text-sky-600" />
-                      <span>Personalized Key Manual Override</span>
-                    </div>
-                    <p className="text-slate-600 text-sm">
-                      High-security keyed clutch disengagement lever allows smooth manual operation during planned maintenance or electrical outages.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Target Industrial Applications */}
-              <div className="detail-card mt-6">
-                <h2 className="detail-section-title">
-                  <Building2 size={20} className="text-sky-600" />
-                  <span>Target Applications & Deployments</span>
-                </h2>
-                <div className="applications-badge-grid">
-                  {product.applications && product.applications.map((app, idx) => (
-                    <div key={idx} className="application-badge-item">
-                      <CheckCircle2 size={15} className="text-sky-600" />
-                      <span>{app}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Engineering Consultation Callout */}
-              <div className="engineer-callout-banner mt-6">
-                <div className="callout-icon">
-                  <PhoneCall size={30} />
-                </div>
-                <div>
-                  <h4 className="callout-title">Need Custom Clearances or CAD Drawings?</h4>
-                  <p className="callout-desc">
-                    Our technical application engineers in Mumbai provide site visits, bespoke mechanical design, CAD drawings, and fire/pharma statutory consultation.
-                  </p>
-                </div>
-                <a 
-                  href="tel:+919820112345" 
-                  className="btn btn-primary"
-                >
-                  <PhoneCall size={16} />
-                  <span>+91 98201 12345</span>
-                </a>
-              </div>
+            <div className="auto-btn-row">
+              <button
+                className="auto-btn-primary"
+                onClick={openQuoteModal}
+                id="btn-hero-instant-quotation"
+                ref={quoteTriggerRef}
+                type="button"
+              >
+                <span>Request Instant Quotation</span>
+                <ArrowRight size={16} />
+              </button>
             </div>
 
-            {/* Right 35%: Sticky Quote Inquiry Form */}
-            <div className="detail-sidebar-column">
-              <div id="quote-form" className="quote-sticky-card">
-                <div className="quote-card-header">
-                  <div className="quote-header-tag">DIRECT TECHNICAL DESK</div>
-                  <h3 className="quote-card-title">Request Official Quotation</h3>
-                  <p className="quote-card-subtitle">
-                    Get customized pricing, GA drawings, and lead times within 2 business hours.
-                  </p>
-                </div>
-
-                {submitted ? (
-                  <div className="quote-success-state">
-                    <div className="success-icon-wrap">
-                      <CheckCircle2 size={44} className="text-emerald-500 mx-auto" />
-                    </div>
-                    <h4>Inquiry Submitted!</h4>
-                    <p>
-                      Thank you for your interest in <strong>{product.name}</strong>. An HTI senior application engineer will contact you shortly with the official quotation.
-                    </p>
-                    <button 
-                      className="btn btn-secondary mt-4 w-full"
-                      onClick={() => setSubmitted(false)}
-                    >
-                      Submit Another Requirement
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="quote-form-body">
-                    <div className="form-group-sm">
-                      <label>Target Product</label>
-                      <input 
-                        type="text" 
-                        value={product.name} 
-                        readOnly 
-                        className="form-input readonly-input" 
-                      />
-                    </div>
-
-                    <div className="form-row-2">
-                      <div className="form-group-sm">
-                        <label>Your Name *</label>
-                        <input 
-                          type="text" 
-                          name="name" 
-                          required 
-                          placeholder="e.g. Rajesh Sharma"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          className="form-input" 
-                        />
-                      </div>
-                      <div className="form-group-sm">
-                        <label>Company / Organization</label>
-                        <input 
-                          type="text" 
-                          name="company" 
-                          placeholder="e.g. Glenmark Pharma"
-                          value={formData.company}
-                          onChange={handleInputChange}
-                          className="form-input" 
-                        />
-                      </div>
-                    </div>
-
-                    <div className="form-row-2">
-                      <div className="form-group-sm">
-                        <label>Email Address *</label>
-                        <input 
-                          type="email" 
-                          name="email" 
-                          required 
-                          placeholder="name@company.com"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className="form-input" 
-                        />
-                      </div>
-                      <div className="form-group-sm">
-                        <label>Phone / Mobile *</label>
-                        <input 
-                          type="tel" 
-                          name="phone" 
-                          required 
-                          placeholder="+91 98201 12345"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          className="form-input" 
-                        />
-                      </div>
-                    </div>
-
-                    <div className="form-row-2">
-                      <div className="form-group-sm">
-                        <label>Site Location / City</label>
-                        <input 
-                          type="text" 
-                          name="location" 
-                          placeholder="e.g. Mumbai, Pune, Vapi"
-                          value={formData.location}
-                          onChange={handleInputChange}
-                          className="form-input" 
-                        />
-                      </div>
-                      <div className="form-group-sm">
-                        <label>Estimated Quantity</label>
-                        <select 
-                          name="quantity"
-                          value={formData.quantity}
-                          onChange={handleInputChange}
-                          className="form-input"
-                        >
-                          <option value="1 Unit / Turnkey Site">1 Unit / Turnkey Site</option>
-                          <option value="2 - 5 Units">2 - 5 Units</option>
-                          <option value="6 - 15 Units">6 - 15 Units</option>
-                          <option value="15+ Multi-Site Project">15+ Multi-Site Project</option>
-                          <option value="Annual Maintenance Contract (AMC)">Annual Maintenance (AMC)</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Optional Accessories Selector */}
-                    <div className="form-group-sm">
-                      <label className="block mb-2">Select Optional Engineering Accessories:</label>
-                      <div className="flex flex-col gap-1.5 p-3 bg-slate-50 border border-slate-200 rounded-lg max-h-36 overflow-y-auto">
-                        {availableAccessories.map((acc, aIdx) => {
-                          const isChecked = formData.accessories.includes(acc);
-                          return (
-                            <label key={aIdx} className="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
-                              <input 
-                                type="checkbox" 
-                                checked={isChecked}
-                                onChange={() => handleAccessoryToggle(acc)}
-                                className="rounded text-sky-600"
-                              />
-                              <span>{acc}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    <div className="form-group-sm">
-                      <label>Specific Technical Requirements</label>
-                      <textarea 
-                        name="message"
-                        rows="3"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        className="form-input form-textarea"
-                      />
-                    </div>
-
-                    <button type="submit" className="btn btn-primary w-full quote-submit-btn">
-                      <Send size={16} />
-                      <span>Send Technical Inquiry</span>
-                    </button>
-
-                    <div className="quote-trust-footer">
-                      <ShieldCheck size={14} className="text-slate-400" />
-                      <span>Direct response from Mumbai engineering desk. Zero spam.</span>
-                    </div>
-                  </form>
-                )}
-              </div>
-
-              {/* Direct Technical Hotline Support Card */}
-              <div className="support-quick-card mt-6">
-                <h4 className="support-title">Direct Technical Helpline</h4>
-                <div className="support-list">
-                  <div className="support-item">
-                    <PhoneCall size={16} className="text-red-500 flex-shrink-0" />
-                    <div>
-                      <div className="support-role">Sales & Engineering Desk</div>
-                      <a href="tel:+919820112345" className="support-contact-link">+91 98201 12345</a>
-                    </div>
-                  </div>
-                  <div className="support-item">
-                    <MessageSquare size={16} className="text-sky-600 flex-shrink-0" />
-                    <div>
-                      <div className="support-role">Official Project Email</div>
-                      <a href="mailto:info@htiautomation.com" className="support-contact-link">info@htiautomation.com</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Related Products Showcase */}
-      {relatedProducts.length > 0 && (
-        <div className="related-products-section section">
-          <div className="container">
-            <div className="section-title-wrap">
-              <div className="section-tag">
-                <Layers size={14} />
-                <span>Related Solutions</span>
-              </div>
-              <h3 className="section-heading text-2xl font-bold text-slate-900 mt-2">
-                Explore More in <span className="gradient-text-red">{product.category}</span>
-              </h3>
-            </div>
-
-            <div className="related-products-grid">
-              {relatedProducts.map((rel) => (
-                <div key={rel.id} className="related-card">
-                  <div className="related-card-badge">{rel.subcategory}</div>
-                  <h4 className="related-card-title">{rel.name}</h4>
-                  <p className="related-card-summary">{rel.workSummary}</p>
-                  <button 
-                    className="btn btn-outline-cyan btn-sm mt-4 w-full"
-                    onClick={() => {
-                      onNavigate('product', rel.slug);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                  >
-                    <span>View Specifications</span>
-                    <ArrowRight size={14} />
-                  </button>
+            <div className="auto-trust-row">
+              {trustIndicators.map((item, idx) => (
+                <div key={idx} className="auto-trust-item">
+                  {resolveIcon(item.icon, ShieldCheck, 18, 'auto-trust-icon')}
+                  <span>{item.text}</span>
                 </div>
               ))}
             </div>
           </div>
+
+          {/* Right Column: Hero Showcase Image */}
+          <div className="auto-doors-hero-right">
+            <img
+              src={product.heroImage}
+              alt={`${product.name} Showcase`}
+              className="auto-hero-main-img"
+              loading="eager"
+            />
+            <div className="auto-hero-dots">
+              <span className="auto-hero-dot active"></span>
+              <span className="auto-hero-dot"></span>
+              <span className="auto-hero-dot"></span>
+              <span className="auto-hero-dot"></span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION C: PRODUCT VIDEO SECTION
+          ========================================================================= */}
+      <section className="auto-wide-card">
+        <div className="auto-doors-video-grid">
+
+          {/* Left Column: Interactive Simulation OR Video Player OR Visual Fallback */}
+          {isInterlockDemo ? (
+            <div className="auto-video-wrapper" style={{ aspectRatio: 'auto', background: 'transparent' }}>
+              <DoorInterlockSimulator onInquireInterlock={openQuoteModal} />
+            </div>
+          ) : isPassBoxDemo ? (
+            <div className="auto-video-wrapper" style={{ aspectRatio: 'auto', background: 'transparent' }}>
+              <PassBoxDemo />
+            </div>
+          ) : isDigitalClockDemo ? (
+            <div className="auto-video-wrapper" style={{ aspectRatio: 'auto', background: 'transparent' }}>
+              <DigitalClockDemo />
+            </div>
+          ) : isChillerDoorDemo ? (
+            <div className="auto-video-wrapper" style={{ aspectRatio: 'auto', background: 'transparent' }}>
+              <ChillerCleanroomDoorDemo />
+            </div>
+          ) : (
+            <div className="auto-video-wrapper">
+              {videoData.hasVideoFile && videoData.videoSrc ? (
+                <>
+                  <video
+                    ref={videoRef}
+                    src={videoData.videoSrc}
+                    poster={videoData.poster || product.heroImage}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="auto-html5-video"
+                    onPlay={() => setIsVideoPlaying(true)}
+                    onPause={() => setIsVideoPlaying(false)}
+                    onEnded={() => setIsVideoPlaying(false)}
+                  />
+                  {!isVideoPlaying && (
+                    <>
+                      <button
+                        className="auto-video-play-overlay"
+                        onClick={handleVideoPlayToggle}
+                        aria-label={`Play ${product.name} Video`}
+                      >
+                        <div className="auto-play-circle">
+                          <Play size={28} className="auto-play-icon" />
+                        </div>
+                      </button>
+                      <div className="auto-video-fallback-pill" style={{ pointerEvents: 'none' }}>
+                        HD Product Showcase
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <img
+                    src={videoData.poster || product.heroImage}
+                    alt={`${product.name} Preview`}
+                    className="auto-html5-video"
+                  />
+                  <div className="auto-video-play-overlay" style={{ cursor: 'default' }}>
+                    <div className="auto-play-circle" style={{ opacity: 0.9 }}>
+                      <Play size={28} className="auto-play-icon" />
+                    </div>
+                  </div>
+                  <div className="auto-video-fallback-pill">
+                    HD Product Showcase
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Right Column: Label, Heading, Description, 4 Bullet Points */}
+          <div className="auto-doors-video-content">
+            <span className="auto-card-kicker">
+              {videoData.badge || 'PRODUCT VIDEO'}
+            </span>
+
+            <h2 className="auto-card-heading">
+              {videoData.heading || `${product.name} in Action`}
+            </h2>
+
+            <p className="auto-card-desc">
+              {videoData.description}
+            </p>
+
+            <div className="auto-video-bullets-list">
+              {(videoData.bullets || []).map((bullet, idx) => {
+                const isOdd = idx % 2 !== 0;
+                const iconComp = idx === 0 ? Volume2 : idx === 1 ? Lock : idx === 2 ? Settings : ShieldCheck;
+                return (
+                  <div key={idx} className="auto-video-bullet-item">
+                    <div className={`auto-video-bullet-icon ${isOdd ? 'icon-red' : 'icon-blue'}`}>
+                      {React.createElement(iconComp, { size: 14 })}
+                    </div>
+                    <span>{bullet}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION D: ENGINEERING & TECHNICAL OVERVIEW
+          ========================================================================= */}
+      <section className="auto-engineering-section">
+        <div className="auto-engineering-header">
+          <span className="auto-card-kicker">ENGINEERING & TECHNICAL OVERVIEW</span>
+          <h2 className="auto-card-heading">{engineeringHeading}</h2>
+          <p className="auto-card-desc">{engineeringDescription}</p>
+        </div>
+
+        {/* 4 Feature Cards in a Row */}
+        <div className="auto-feature-cards-row">
+          {featureCards.map((card, idx) => {
+            const circleClass = featureCircleClasses[idx % featureCircleClasses.length];
+            const fallbackIcon = defaultBenefitIcons[idx % defaultBenefitIcons.length];
+            return (
+              <div key={idx} className="auto-feature-box">
+                <div className={`auto-feature-icon-circle ${circleClass}`}>
+                  {resolveIcon(card.iconName, ICON_MAP[fallbackIcon] || Settings, 22)}
+                </div>
+                <div className="auto-feature-content">
+                  <h3>{card.title}</h3>
+                  <p>{card.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION E: TECHNICAL SPECIFICATIONS & STANDARDS
+          ========================================================================= */}
+      <section className="auto-doors-specs-grid">
+
+        {/* Left Column: Specifications Table */}
+        <div className="auto-specs-card-left">
+          <h3 className="auto-specs-title">Technical Specifications</h3>
+          <div className="auto-specs-table-container">
+            <table className="auto-specs-table">
+              <tbody>
+                {tableRows.map((row, idx) => {
+                  const cleanLabel = (row.label || '').replace(/:$/, '');
+                  return (
+                    <tr key={idx} className={idx % 2 === 0 ? 'even-row' : ''}>
+                      <td className="auto-spec-label">{cleanLabel}</td>
+                      <td className="auto-spec-value">{row.value}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Right Column: Standards & Compliance Card */}
+        <div className="auto-specs-card-right">
+          <h3 className="auto-specs-title">{complianceTitle}</h3>
+          <div className="auto-compliance-list">
+            {complianceItems.map((item, idx) => (
+              <div key={idx} className="auto-compliance-item">
+                <div className="auto-compliance-icon-wrap">
+                  {idx === 0 ? <Award size={15} /> :
+                   idx === 1 ? <CheckCircle2 size={15} /> :
+                   idx === 2 ? <ShieldCheck size={15} /> :
+                   idx === 3 ? <Leaf size={15} /> :
+                   <Wrench size={15} />}
+                </div>
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </section>
+
+      {/* =========================================================================
+          SECTION F: RELATED IMAGES
+          ========================================================================= */}
+      <section className="auto-doors-related-section">
+        <div className="auto-related-header">
+          <div className="auto-related-header-left">
+            <h3>Related Images</h3>
+          </div>
+
+          <div className="auto-related-controls">
+            <button
+              className="auto-related-view-all"
+              onClick={() => onNavigate && onNavigate('catalog')}
+            >
+              View All
+            </button>
+            <div className="auto-arrow-btns-group">
+              <button
+                className="auto-arrow-btn"
+                onClick={handlePrevImages}
+                aria-label="Previous Related Images"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                className="auto-arrow-btn"
+                onClick={handleNextImages}
+                aria-label="Next Related Images"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="auto-related-grid">
+          {displayedImages.map((img, idx) => (
+            <div key={`${img.id || idx}-${idx}`} className="auto-related-card">
+              <div className="auto-related-media">
+                <img
+                  src={img.src}
+                  alt={img.caption || `${product.name} Installation View`}
+                  loading="lazy"
+                />
+              </div>
+              <div className="auto-related-caption">{img.caption}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION G: INSTANT QUOTATION MODAL
+          ========================================================================= */}
+      {isQuoteModalOpen && (
+        <div className="auto-modal-backdrop" onClick={closeQuoteModal}>
+          <div
+            className="auto-modal-box"
+            onClick={(e) => e.stopPropagation()}
+            ref={modalBoxRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="quote-modal-title"
+          >
+            <button
+              className="auto-modal-close-btn"
+              onClick={closeQuoteModal}
+              aria-label="Close quotation request"
+              type="button"
+            >
+              <X size={18} />
+            </button>
+
+            {modalSubmitted ? (
+              <div className="auto-modal-success">
+                <CheckCircle2 size={54} className="text-emerald-500 mx-auto" style={{ color: '#10b981', margin: '0 auto 12px' }} />
+                <h4>Quotation Request Received!</h4>
+                <p>
+                  Thank you! Our technical engineering team will review your specifications for <strong>{product.name}</strong> and contact you with a detailed technical proposal within 24 hours.
+                </p>
+              </div>
+            ) : (
+              <>
+                <h3 className="auto-modal-title" id="quote-modal-title">Request Instant Quotation</h3>
+                <p className="auto-modal-subtitle">
+                  {product.name} • Turnkey Engineering Support
+                </p>
+
+                {modalError && (
+                  <div className="auto-modal-error" role="alert">
+                    <AlertCircle size={16} />
+                    <span>{modalError}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleModalSubmit} noValidate>
+                  <div className="auto-form-group">
+                    <label className="auto-form-label" htmlFor="quote-name">Full Name *</label>
+                    <input
+                      id="quote-name"
+                      ref={modalFirstFieldRef}
+                      type="text"
+                      name="name"
+                      required
+                      autoComplete="name"
+                      placeholder="e.g. Rajesh Sharma"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="auto-form-input"
+                    />
+                  </div>
+
+                  <div className="auto-form-group">
+                    <label className="auto-form-label" htmlFor="quote-email">Corporate Email Address *</label>
+                    <input
+                      id="quote-email"
+                      type="email"
+                      name="email"
+                      required
+                      autoComplete="email"
+                      placeholder="e.g. rajesh@company.com"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="auto-form-input"
+                    />
+                  </div>
+
+                  <div className="auto-form-group">
+                    <label className="auto-form-label" htmlFor="quote-phone">Phone Number *</label>
+                    <input
+                      id="quote-phone"
+                      type="tel"
+                      name="phone"
+                      required
+                      autoComplete="tel"
+                      inputMode="tel"
+                      placeholder="e.g. +91 98765 43210"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="auto-form-input"
+                    />
+                  </div>
+
+                  <div className="auto-form-group">
+                    <label className="auto-form-label" htmlFor="quote-company">Company / Facility Name</label>
+                    <input
+                      id="quote-company"
+                      type="text"
+                      name="company"
+                      autoComplete="organization"
+                      placeholder="e.g. Torrent Pharma / L&T Realty"
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      className="auto-form-input"
+                    />
+                  </div>
+
+                  <div className="auto-form-group">
+                    <label className="auto-form-label" htmlFor="quote-quantity">Project Scope / Quantity</label>
+                    <input
+                      id="quote-quantity"
+                      type="text"
+                      name="quantity"
+                      placeholder="e.g. 4 Entrance Sets / Turnkey Site"
+                      value={formData.quantity}
+                      onChange={handleInputChange}
+                      className="auto-form-input"
+                    />
+                  </div>
+
+                  <div className="auto-form-group">
+                    <label className="auto-form-label" htmlFor="quote-message">Project Requirements / Notes</label>
+                    <textarea
+                      id="quote-message"
+                      name="message"
+                      rows={3}
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      className="auto-form-textarea"
+                    />
+                  </div>
+
+                  <button type="submit" className="auto-modal-submit-btn">
+                    <Send size={16} />
+                    <span>Submit Quotation Request</span>
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
         </div>
       )}
+
     </div>
   );
 }

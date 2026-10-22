@@ -1,9 +1,35 @@
-import React, { useState } from 'react';
-import { ArrowLeft, BookOpen, Clock, User, ArrowRight, Send, CheckCircle2, Filter, FileText, Download, ShieldCheck, Zap } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import './BlogsPage.css';
+import { 
+  Home, 
+  ChevronRight, 
+  BookOpen, 
+  Users, 
+  ShieldCheck, 
+  Filter, 
+  Clock, 
+  User, 
+  ArrowRight, 
+  ArrowLeft, 
+  Layers, 
+  Flame, 
+  DoorOpen, 
+  FileCheck, 
+  FileText, 
+  CheckCircle2, 
+  Send,
+  Search,
+  Sparkles,
+  Wind,
+  ScanLine,
+  SprayCan,
+  X
+} from 'lucide-react';
 
-export default function BlogsPage({ onNavigate }) {
+export default function BlogsPage({ onNavigate, blogs = [] }) {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
     'All',
@@ -13,16 +39,20 @@ export default function BlogsPage({ onNavigate }) {
     'Entrance Automation'
   ];
 
-  const articles = [
+  const defaultArticles = [
     {
       id: 1,
       slug: 'optimizing-cleanroom-differential-pressure',
       title: 'Optimizing Cleanroom Differential Pressure with Multi-Door Interlock Systems',
       category: 'Cleanroom Engineering',
-      author: 'Er. H. Mishra, Lead Systems Engineer',
+      categorySlug: 'cleanroom',
+      author: 'Er. H. Mishra',
+      authorRole: 'Lead Systems Engineer',
       readTime: '6 min read',
       date: 'October 2026',
-      badge: 'FDA & ISO Compliance',
+      badge: null,
+      image: '/case-studies/case-cleanroom.jpg',
+      icon: Layers,
       excerpt: 'Understanding the role of 2-to-12 door electrical interlocking, air cascade pressure balancing, and programmable delay timers in maintaining air classification under USFDA and ISO 14644-1 guidelines.',
       takeaways: [
         'Differential pressure gradient must be maintained between +15 Pa to +30 Pa between adjacent ISO class rooms.',
@@ -45,10 +75,14 @@ Where Q is air leakage rate through door gaps, Cd is discharge coefficient, A is
       slug: 'turnkey-fire-hydrant-nbc-compliance',
       title: 'Turnkey Fire Hydrant & FAS Compliance under National Building Code (NBC 2016)',
       category: 'Fire & Life Safety',
-      author: 'HTI Technical Projects Directorate',
+      categorySlug: 'fire',
+      author: 'HTI Technical Projects',
+      authorRole: 'Directorate',
       readTime: '5 min read',
       date: 'September 2026',
-      badge: 'Statutory Standard',
+      badge: 'NBC 2016 Compliance',
+      image: '/case-studies/case-fire-hydrant.jpg',
+      icon: Flame,
       excerpt: 'Key technical considerations for designing, installing, and commissioning high-pressure fire hydrant piping networks and addressable fire panels for industrial plants.',
       takeaways: [
         'Part 4 of NBC 2016 mandates dedicated fire water storage coupled with electric main, diesel standby, and jockey pumps.',
@@ -72,10 +106,14 @@ Pump Room Sizing Guidelines:
       slug: 'thermo-zone-air-curtains-energy-savings',
       title: 'Thermo-Zone Air Curtains: Slashing HVAC Energy Losses in Pharmaceutical Facilities',
       category: 'Hygiene & Energy Efficiency',
-      author: 'HTI Clean Environment Division',
+      categorySlug: 'hygiene',
+      author: 'HTI Clean Environment',
+      authorRole: 'Division',
       readTime: '4 min read',
       date: 'August 2026',
-      badge: 'Energy Savings',
+      badge: null,
+      image: '/case-studies/case-air-curtain.jpg',
+      icon: Wind,
       excerpt: 'How calibrated laminar air curtains prevent cold air escape, block flying insect ingress, and reduce corporate energy expenditures by up to 35%.',
       takeaways: [
         'Centrifugal twin-shaft blowers produce a laminar jet velocity of 18–24 m/s at the nozzle discharge plane.',
@@ -97,11 +135,15 @@ The air jet angle is calibrated at 15° outward tilt relative to the door openin
       slug: 'ai-video-analytics-boom-barriers-logistics',
       title: 'AI Video Analytics & Dual-Loop Boom Barriers: Securing Industrial Gate Corridors',
       category: 'Entrance Automation',
-      author: 'HTI Automation Engineering Team',
+      categorySlug: 'automation',
+      author: 'HTI Automation Engineering',
+      authorRole: 'Team',
       readTime: '5 min read',
       date: 'July 2026',
-      badge: 'High Security Automation',
-      excerpt: 'Integration of automatic number plate recognition (ANPR), radar anti-tailgating sensors, and brushless DC boom barriers for high-throughput logistics hubs.',
+      badge: null,
+      image: '/case-studies/case-boom-barrier.jpg',
+      icon: ScanLine,
+      excerpt: 'Integration of automatic number plate recognition (ANPR), radar anti-tailgating sensors, and brushless DC boom barriers for high-security industrial gate corridors.',
       takeaways: [
         'Brushless DC (BLDC) torque motors achieve 0.9 to 1.5 second opening speeds with 100% duty cycle rating.',
         'Dual inductive magnetic loops combined with microwave radar beams prevent arm drop on trailing trailers and tailgating vehicles.',
@@ -119,11 +161,15 @@ Safety is paramount: HTI utilizes dual inductive loops embedded in concrete pair
       slug: 'ss304-shoe-polishers-mist-air-showers',
       title: 'Static Dissipative SS304 Shoe Polishers & Mist Air Showers in Sterile Pharma Production',
       category: 'Hygiene & Energy Efficiency',
-      author: 'HTI Cleanroom Solutions Directorate',
+      categorySlug: 'hygiene',
+      author: 'HTI Cleanroom Solutions',
+      authorRole: 'Directorate',
       readTime: '4 min read',
       date: 'June 2026',
-      badge: 'Cleanroom Hygiene Protocol',
-      excerpt: 'Achieving zero-particulate transfer in personnel change rooms (PCR) using electro-polished SS304 motorized shoe polishers and HEPA mist air shower tunnels.',
+      badge: null,
+      image: '/case-studies/case-ss304-mist.jpg',
+      icon: SprayCan,
+      excerpt: 'Zero-particulate transfer in personnel change rooms (PCR) using electro-polished SS304 motorized shoe polishers and HEPA mist air shower tunnels.',
       takeaways: [
         'Heavy-duty nylon horsehair brush cylinders rotate at 1200 RPM with sensor-activated automatic 15-second cycles.',
         'Electro-polished Grade 304/316 stainless steel prevents microbial biofilm adherence and withstands 70% IPA wiping.',
@@ -135,191 +181,533 @@ HTI's SS304 Heavy-Duty Motorized Shoe Polishers utilize dual infrared optical se
 
 Constructed without exposed screws or crevices, our hygiene units satisfy both USFDA cGMP and EU-GMP Annex 1 hygiene sanitation criteria.`,
       tags: ['cGMP Annex 1', 'SS304 Hygiene', 'Shoe Polishers', 'Zero-Particulate']
+    },
+    {
+      id: 6,
+      slug: 'air-shower-pass-box-contamination-control',
+      title: 'Air Shower & Pass Box Integration for Contamination Control',
+      category: 'Cleanroom Engineering',
+      categorySlug: 'cleanroom',
+      author: 'HTI Cleanroom Validation',
+      authorRole: 'Cell',
+      readTime: '6 min read',
+      date: 'May 2026',
+      badge: null,
+      image: '/hero-cleanroom-interlock-chamber.jpg',
+      icon: Layers,
+      excerpt: 'Design and operational best practices for air showers, pass boxes, and personnel material flow in Grade B/C/D cleanrooms to minimize particulate transfer.',
+      takeaways: [
+        'High-velocity HEPA-filtered air nozzles (25-30 m/s) strip loose surface particulates from cleanroom garments in 15-second cycles.',
+        'Dynamic pass boxes with interlocked electromagnetic doors and UV germicidal lamps prevent cross-contamination during material transfer.',
+        'Differential pressure monitoring with magnehelic gauge integration ensures containment integrity across airlock boundaries.'
+      ],
+      content: `In pharmaceutical manufacturing, semiconductor fabrication, and biotechnology laboratories, personnel and materials entering critical areas represent the largest source of particulate contamination. Air showers and pass boxes serve as essential engineering controls at the boundary between different cleanliness classifications.
+
+HTI air showers utilize adjustable stainless steel nozzles delivering HEPA-filtered air at velocities exceeding 25 m/s. This scrub action dislodges surface particulates from cleanroom garments, which are then captured by pre-filters and high-efficiency HEPA H14 filters recirculated through negative-pressure plenums.
+
+Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressure gauges, and electronic door interlocking ensure that cleanroom grade classifications remain undisturbed during raw material and sampling transfer. Integrated UV-C germicidal lamps automatically cycle between door access events to maintain sterile contact surfaces.`,
+      tags: ['Cleanroom Airlocks', 'Pass Box Systems', 'HEPA Filtration', 'ISO 14644-1']
     }
   ];
 
-  const filteredArticles = selectedCategory === 'All' 
-    ? articles 
-    : articles.filter(a => a.category === selectedCategory);
+  // Merge backend blogs if available without dropping defaults
+  const articles = useMemo(() => {
+    if (blogs && blogs.length > 0) {
+      const apiArticles = blogs.map((b, idx) => ({
+        id: b.id || `api-${idx}`,
+        slug: b.slug || `article-${b.id || idx}`,
+        title: b.title,
+        category: b.category || 'Cleanroom Engineering',
+        categorySlug: (b.category || '').toLowerCase().includes('clean') ? 'cleanroom' :
+                      (b.category || '').toLowerCase().includes('fire') ? 'fire' :
+                      (b.category || '').toLowerCase().includes('hyg') ? 'hygiene' :
+                      (b.category || '').toLowerCase().includes('auto') ? 'automation' : 'cleanroom',
+        author: b.author || 'HTI Technical Staff',
+        authorRole: b.authorRole || 'Engineering Division',
+        readTime: b.readTime || `${Math.max(3, Math.ceil((b.content?.length || 500) / 400))} min read`,
+        date: b.date || 'Recent',
+        badge: b.badge || null,
+        image: b.image || defaultArticles[idx % defaultArticles.length].image,
+        icon: FileText,
+        excerpt: b.excerpt || b.content?.slice(0, 160) + '...',
+        takeaways: b.takeaways || [],
+        content: b.content || b.excerpt || '',
+        tags: b.tags || ['HTI Engineering']
+      }));
+      const existingTitles = new Set(apiArticles.map(a => a.title.toLowerCase().trim()));
+      const remainingDefaults = defaultArticles.filter(d => !existingTitles.has(d.title.toLowerCase().trim()));
+      return [...apiArticles, ...remainingDefaults];
+    }
+    return defaultArticles;
+  }, [blogs]);
+
+  // Fast category counts memoization
+  const categoryCounts = useMemo(() => {
+    const counts = { All: articles.length };
+    categories.forEach(cat => {
+      if (cat === 'All') return;
+      const catNorm = cat.toLowerCase().replace(/[^a-z]/g, '');
+      counts[cat] = articles.filter(art => {
+        const artCat = (art.category || '').toLowerCase().replace(/[^a-z]/g, '');
+        return artCat.includes(catNorm) || catNorm.includes(artCat);
+      }).length;
+    });
+    return counts;
+  }, [articles, categories]);
+
+  // Normalize category comparison and search for instant filtering
+  const filteredArticles = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+    return articles.filter(art => {
+      // Category match
+      let matchesCat = true;
+      if (selectedCategory !== 'All') {
+        const artCat = (art.category || '').toLowerCase().replace(/[^a-z]/g, '');
+        const selCat = selectedCategory.toLowerCase().replace(/[^a-z]/g, '');
+        matchesCat = artCat.includes(selCat) || selCat.includes(artCat);
+      }
+
+      // Search query match across title, excerpt, author, category, and tags
+      let matchesSearch = true;
+      if (query) {
+        const tagsString = (art.tags || []).join(' ').toLowerCase();
+        matchesSearch = 
+          art.title.toLowerCase().includes(query) ||
+          art.excerpt.toLowerCase().includes(query) ||
+          art.author.toLowerCase().includes(query) ||
+          (art.category || '').toLowerCase().includes(query) ||
+          tagsString.includes(query);
+      }
+
+      return matchesCat && matchesSearch;
+    });
+  }, [articles, selectedCategory, searchQuery]);
+
+  // Escape key listener to close active article
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && selectedArticle) {
+        setSelectedArticle(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedArticle]);
+
+  const handleSelectArticle = (art) => {
+    setSelectedArticle(art);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  };
+
+  const handleBackToArticles = () => {
+    setSelectedArticle(null);
+    window.scrollTo({ top: 320, behavior: 'smooth' });
+  };
 
   return (
     <div className="blogs-dedicated-page">
-      {/* 1. Breadcrumbs */}
-      <div className="detail-breadcrumb-bar">
+      {/* 1. Breadcrumb Bar */}
+      <div className="blogs-breadcrumb-bar">
         <div className="container">
-          <div className="breadcrumb-nav">
-            <button className="breadcrumb-link" onClick={() => onNavigate('home')}>Home</button>
-            <span className="breadcrumb-separator">/</span>
-            <span className="breadcrumb-current">Engineering Insights & Technical Articles</span>
-          </div>
-          <button className="back-btn" onClick={() => onNavigate('home')}>
-            <ArrowLeft size={15} />
-            <span>Back to Home</span>
-          </button>
-        </div>
-      </div>
-
-      {/* 2. Hero */}
-      <div className="blogs-page-hero">
-        <div className="container">
-          <div className="blogs-hero-inner">
-            <div className="category-hero-badge">
-              <BookOpen size={16} />
-              <span>TECHNICAL WHITEPAPERS & CASE STUDIES</span>
-            </div>
-            <h1 className="blogs-hero-title">Engineering Knowledge & Statutory Insights</h1>
-            <p className="blogs-hero-desc">
-              Authoritative whitepapers written by HTI application engineers covering USFDA cleanroom standards, NBC 2016 fire protection codes, and industrial entrance automation.
-            </p>
-
-            {/* Quick Stat Bar */}
-            <div className="blogs-hero-stats mt-6">
-              <div className="blogs-stat-pill">
-                <ShieldCheck size={16} className="text-cyan" />
-                <span>Peer-Reviewed by Senior Systems Engineers</span>
-              </div>
-              <div className="blogs-stat-pill">
-                <Zap size={16} className="text-cyan" />
-                <span>USFDA cGMP & NBC 2016 Compliant Guidance</span>
-              </div>
+          <div className="blogs-breadcrumb-inner">
+            <nav className="blogs-breadcrumb-nav" aria-label="Breadcrumb">
+              <button 
+                className="blogs-breadcrumb-link" 
+                onClick={() => onNavigate && onNavigate('home')}
+                title="Navigate to Home"
+              >
+                <Home size={13} className="breadcrumb-home-icon" />
+                <span>Home</span>
+              </button>
+              <ChevronRight size={12} className="blogs-breadcrumb-separator" />
+              <span className="blogs-breadcrumb-current" aria-current="page">
+                Engineering Insights & Technical Articles
+              </span>
+            </nav>
+            <div className="blogs-breadcrumb-stats">
+              <span>{articles.length} Authoritative Whitepapers Available</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 3. Category Filter Tabs */}
+      {/* 2. Hero Section: Two-Column Engineering Knowledge Portal */}
+      <section className="blogs-knowledge-hero">
+        <div className="hero-curved-bg-left" aria-hidden="true"></div>
+        <div className="hero-curved-bg-right" aria-hidden="true"></div>
+
+        <div className="container">
+          <div className="blogs-hero-grid">
+            {/* Left Column: Heading, Subtitle & Info Badges */}
+            <div className="blogs-hero-content-col">
+              <div className="hero-pill-badge">
+                <BookOpen size={14} className="hero-badge-icon" />
+                <span>TECHNICAL WHITEPAPERS & CASE STUDIES</span>
+              </div>
+
+              <h1 className="blogs-hero-main-heading">
+                Engineering Knowledge & <br className="hero-break" />
+                <span className="heading-royal-blue">Statutory Insights</span>
+              </h1>
+
+              <p className="blogs-hero-lead-text">
+                Authoritative whitepapers written by HTI application engineers covering USFDA cleanroom standards, NBC 2016 fire protection codes, and industrial entrance automation.
+              </p>
+
+              {/* Two Horizontal Information Badges */}
+              <div className="blogs-hero-capsules-row">
+                <div className="hero-info-capsule">
+                  <div className="capsule-icon-circle circle-blue">
+                    <Users size={15} />
+                  </div>
+                  <span className="capsule-text">Peer-Reviewed by Senior Systems Engineers</span>
+                </div>
+
+                <div className="hero-info-capsule">
+                  <div className="capsule-icon-circle circle-cyan">
+                    <ShieldCheck size={15} />
+                  </div>
+                  <span className="capsule-text">USFDA cGMP & NBC 2016 Compliant Guidance</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Dynamic 3-Panel Angled Industrial Composition */}
+            <div className="blogs-hero-composition-col">
+              <div className="hero-skew-composition-wrapper">
+                {/* Red Diagonal Accent Bar on the Left */}
+                <div className="skew-red-accent-slash" aria-hidden="true"></div>
+
+                {/* Panel 1: Cleanroom Engineering */}
+                <div className="hero-skew-panel skew-panel-cleanroom">
+                  <img 
+                    src="/case-studies/case-cleanroom.jpg" 
+                    alt="Cleanroom Engineering pharmaceutical facility" 
+                    className="skew-panel-img"
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
+                  />
+                  <div className="skew-panel-gradient-overlay"></div>
+                  <div className="skew-panel-pill pill-navy">
+                    <Layers size={13} className="pill-icon" />
+                    <span>Cleanroom Engineering</span>
+                  </div>
+                </div>
+
+                {/* Panel 2: Fire & Life Safety */}
+                <div className="hero-skew-panel skew-panel-fire">
+                  <img 
+                    src="/case-studies/case-fire-hydrant.jpg" 
+                    alt="Fire and Life Safety hydrant piping network" 
+                    className="skew-panel-img"
+                    loading="eager"
+                    decoding="async"
+                  />
+                  <div className="skew-panel-gradient-overlay"></div>
+                  <div className="skew-panel-pill pill-red">
+                    <Flame size={13} className="pill-icon" />
+                    <span>Fire & Life Safety</span>
+                  </div>
+                </div>
+
+                {/* Panel 3: Entrance Automation */}
+                <div className="hero-skew-panel skew-panel-automation">
+                  <img 
+                    src="/hero-glass-atrium.jpg" 
+                    alt="Entrance Automation automatic sliding glass doors" 
+                    className="skew-panel-img"
+                    loading="eager"
+                    decoding="async"
+                  />
+                  <div className="skew-panel-gradient-overlay"></div>
+                  <div className="skew-panel-pill pill-navy">
+                    <DoorOpen size={13} className="pill-icon" />
+                    <span>Entrance Automation</span>
+                  </div>
+                </div>
+
+                {/* Red Accent Dash at Bottom Right */}
+                <div className="skew-red-accent-dash" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Search Bar & Horizontal Engineering Discipline Filter Bar */}
       {!selectedArticle && (
-        <div className="blogs-filter-section">
+        <section className="blogs-filter-bar-section">
           <div className="container">
-            <div className="blogs-filter-row">
-              <div className="filter-label-wrap">
-                <Filter size={15} />
-                <span>Filter by Engineering Discipline:</span>
+            <div className="blogs-control-hub">
+              {/* Search Row */}
+              <div className="blogs-search-row">
+                <div className="blogs-search-input-box">
+                  <Search size={16} className="search-input-icon" />
+                  <input
+                    type="text"
+                    className="blogs-search-input"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search whitepapers, standards (USFDA, ISO, NBC 2016), systems..."
+                    aria-label="Search technical whitepapers"
+                  />
+                  {searchQuery && (
+                    <button
+                      className="btn-clear-search"
+                      onClick={() => setSearchQuery('')}
+                      title="Clear search"
+                      aria-label="Clear search query"
+                    >
+                      <X size={13} />
+                    </button>
+                  )}
+                </div>
+                <div className="blogs-search-status-badge">
+                  <BookOpen size={13} />
+                  <span>Showing {filteredArticles.length} of {articles.length} Whitepapers</span>
+                </div>
               </div>
-              <div className="filter-pills-wrap">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    className={`filter-pill-btn ${selectedCategory === cat ? 'active' : ''}`}
-                    onClick={() => setSelectedCategory(cat)}
-                  >
-                    {cat}
-                  </button>
-                ))}
+
+              {/* Discipline Filter Card */}
+              <div className="blogs-filter-bar-card">
+                <div className="filter-lead-label">
+                  <Filter size={15} className="filter-lead-icon" />
+                  <span>Engineering Discipline:</span>
+                </div>
+
+                <div className="filter-pills-scroll-track" role="tablist">
+                  {categories.map((cat) => {
+                    const isActive = selectedCategory === cat;
+                    const count = categoryCounts[cat] || 0;
+                    return (
+                      <button
+                        key={cat}
+                        role="tab"
+                        aria-selected={isActive}
+                        className={`discipline-filter-pill ${isActive ? 'is-active' : ''}`}
+                        onClick={() => setSelectedCategory(cat)}
+                      >
+                        <span>{cat}</span>
+                        <span className="pill-count-bubble">{count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       )}
 
-      {/* 4. Article Detail View */}
+      {/* 4. Article Detail Reader View (when user opens a whitepaper) */}
       {selectedArticle && (
-        <div className="article-reader-section section">
+        <section className="article-reader-section">
           <div className="container">
-            <div className="glass-card article-reading-card">
-              <button 
-                className="btn btn-secondary btn-sm mb-6"
-                onClick={() => setSelectedArticle(null)}
-              >
-                <ArrowLeft size={14} />
-                <span>Back to All Articles</span>
-              </button>
-
-              <div className="reader-badge-row">
-                <span className="detail-category-badge">{selectedArticle.category}</span>
-                <span className="detail-highlight-badge">{selectedArticle.badge}</span>
-                <span className="reader-time"><Clock size={13} /> {selectedArticle.readTime}</span>
-              </div>
-
-              <h1 className="reader-title mt-3">{selectedArticle.title}</h1>
-              
-              <div className="reader-meta-row mt-4 mb-8">
-                <div className="reader-author">
-                  <User size={16} className="text-cyan" />
-                  <span>{selectedArticle.author}</span>
-                </div>
-                <div className="reader-date">{selectedArticle.date}</div>
-              </div>
-
-              {/* Key Takeaways Card */}
-              {selectedArticle.takeaways && (
-                <div className="article-takeaways-box mb-8">
-                  <h4 className="takeaways-title">
-                    <CheckCircle2 size={18} className="text-emerald" />
-                    Key Engineering Takeaways
-                  </h4>
-                  <ul className="takeaways-list">
-                    {selectedArticle.takeaways.map((item, idx) => (
-                      <li key={idx}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <div className="reader-body-content">
-                {selectedArticle.content.split('\n\n').map((paragraph, pIdx) => (
-                  <p key={pIdx} className="reader-paragraph">{paragraph}</p>
-                ))}
-              </div>
-
-              <div className="reader-tags-row mt-8">
-                {selectedArticle.tags.map((tag, tIdx) => (
-                  <span key={tIdx} className="reader-tag-pill">#{tag}</span>
-                ))}
-              </div>
-
-              <div className="reader-cta-box glass-card mt-10">
-                <h4>Have a Project Requiring This Technology?</h4>
-                <p>Discuss technical specifications with the authoring engineering team at HTI.</p>
+            <div className="article-reader-container">
+              <div className="article-reading-sheet">
                 <button 
-                  className="btn btn-primary mt-4"
-                  onClick={() => onNavigate('contact')}
+                  className="btn-back-to-articles"
+                  onClick={handleBackToArticles}
+                  aria-label="Return to all whitepapers"
                 >
-                  <Send size={15} />
-                  <span>Inquire with Engineering Directorate</span>
+                  <ArrowLeft size={14} />
+                  <span>Back to All Articles</span>
+                </button>
+
+                <div className="reader-badge-row">
+                  <span className="reader-category-pill">
+                    {selectedArticle.category.toUpperCase()}
+                  </span>
+                  {selectedArticle.badge && (
+                    <span className="reader-special-badge">{selectedArticle.badge}</span>
+                  )}
+                  <span className="reader-time-pill">
+                    <Clock size={12} /> {selectedArticle.readTime}
+                  </span>
+                </div>
+
+                <h1 className="reader-title">{selectedArticle.title}</h1>
+                
+                <div className="reader-meta-row">
+                  <div className="reader-author-info">
+                    <div className="reader-author-avatar">
+                      <User size={15} />
+                    </div>
+                    <div className="reader-author-text">
+                      <span className="author-name">{selectedArticle.author}</span>
+                      <span className="author-role">{selectedArticle.authorRole}</span>
+                    </div>
+                  </div>
+                  <div className="reader-date-stamp">{selectedArticle.date}</div>
+                </div>
+
+                {/* Header Image if available */}
+                {selectedArticle.image && (
+                  <div className="reader-featured-media">
+                    <img 
+                      src={selectedArticle.image} 
+                      alt={selectedArticle.title} 
+                      className="reader-cover-img"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  </div>
+                )}
+
+                {/* Key Takeaways Card */}
+                {selectedArticle.takeaways && selectedArticle.takeaways.length > 0 && (
+                  <div className="reader-takeaways-card">
+                    <h4 className="takeaways-header-title">
+                      <CheckCircle2 size={18} className="takeaways-green-icon" />
+                      <span>Key Engineering Takeaways</span>
+                    </h4>
+                    <ul className="takeaways-checklist">
+                      {selectedArticle.takeaways.map((item, idx) => (
+                        <li key={idx} className="takeaways-check-item">
+                          <span className="takeaway-bullet">✓</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Body Text */}
+                <div className="reader-content-body">
+                  {selectedArticle.content.split('\n\n').map((paragraph, pIdx) => (
+                    <p key={pIdx} className="reader-body-p">{paragraph}</p>
+                  ))}
+                </div>
+
+                {/* Tags */}
+                {selectedArticle.tags && selectedArticle.tags.length > 0 && (
+                  <div className="reader-tags-strip">
+                    {selectedArticle.tags.map((tag, tIdx) => (
+                      <span key={tIdx} className="reader-tag-chip">#{tag}</span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Inquiry CTA */}
+                <div className="reader-inquiry-box">
+                  <div className="inquiry-text-col">
+                    <h4>Have an Industrial or Pharma Project Requiring This Technology?</h4>
+                    <p>Discuss statutory codes, equipment specs, and custom engineering with HTI specialists.</p>
+                  </div>
+                  <button 
+                    className="btn-inquire-engineering"
+                    onClick={() => onNavigate && onNavigate('contact')}
+                  >
+                    <Send size={15} />
+                    <span>Inquire with Engineering Directorate</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 5. Articles Grid (3 Cols on Desktop/Laptop, 2 Cols on Tablet, 1 Col on Mobile) */}
+      {!selectedArticle && (
+        <section className="blogs-cards-grid-section">
+          <div className="container">
+            {filteredArticles.length === 0 ? (
+              <div className="blogs-empty-state-card">
+                <BookOpen size={42} className="empty-icon" />
+                <h3>No whitepapers found matching your criteria</h3>
+                <p>Try switching to another discipline or clear your search term.</p>
+                <button 
+                  className="btn-reset-filters"
+                  onClick={() => {
+                    setSelectedCategory('All');
+                    setSearchQuery('');
+                  }}
+                >
+                  View All Whitepapers
                 </button>
               </div>
-            </div>
+            ) : (
+              <div className="blogs-three-column-grid">
+                {filteredArticles.map((art) => {
+                  return (
+                    <article key={art.id} className="engineering-whitepaper-card">
+                      {/* Landscape Thumbnail (16:9 aspect ratio) */}
+                      <div className="card-media-frame">
+                        <img 
+                          src={art.image} 
+                          alt={art.title} 
+                          className="card-media-image"
+                          loading="lazy"
+                          decoding="async"
+                          width="480"
+                          height="270"
+                        />
+                        {/* Overlay Badge (e.g. NBC 2016 Compliance on Card 2) */}
+                        {art.badge && (
+                          <div className="card-floating-compliance-badge">
+                            <FileCheck size={14} className="badge-check-icon" />
+                            <span>{art.badge}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Card Content */}
+                      <div className="card-body-shell">
+                        {/* Top Meta: Red Accent Category Pill & Reading Time */}
+                        <div className="card-meta-line">
+                          <span className="card-category-red-pill">
+                            <span className="cat-text">{art.category.toUpperCase()} →</span>
+                          </span>
+
+                          <span className="card-read-time-indicator">
+                            <Clock size={12} className="time-icon" />
+                            <span>{art.readTime}</span>
+                          </span>
+                        </div>
+
+                        {/* Article Title */}
+                        <h2 className="card-article-title" title={art.title}>
+                          {art.title}
+                        </h2>
+
+                        {/* Description */}
+                        <p className="card-article-description">
+                          {art.excerpt}
+                        </p>
+
+                        {/* Footer: Author Info on Left & Read Whitepaper Button on Right */}
+                        <div className="card-footer-anchor">
+                          <div className="card-author-identity">
+                            <div className="author-avatar-badge">
+                              <User size={13} />
+                            </div>
+                            <div className="author-identity-text">
+                              <span className="author-name-bold">{art.author}</span>
+                              {art.authorRole && (
+                                <span className="author-role-sub">{art.authorRole}</span>
+                              )}
+                            </div>
+                          </div>
+
+                          <button 
+                            className="btn-read-whitepaper-pill"
+                            onClick={() => handleSelectArticle(art)}
+                            aria-label={`Read whitepaper: ${art.title}`}
+                          >
+                            <span>Read Whitepaper</span>
+                            <ArrowRight size={13} className="btn-arrow-icon" />
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        </div>
-      )}
-
-      {/* 5. Articles Grid */}
-      {!selectedArticle && (
-        <div className="blogs-grid-section section">
-          <div className="container">
-            <div className="blogs-cards-grid">
-              {filteredArticles.map((art) => (
-                <div key={art.id} className="glass-card blog-article-card">
-                  <div className="article-top-row">
-                    <span className="article-cat-badge">{art.category}</span>
-                    <span className="article-read-time">
-                      <Clock size={12} />
-                      {art.readTime}
-                    </span>
-                  </div>
-
-                  <h3 className="article-card-title">{art.title}</h3>
-                  <p className="article-excerpt-text">{art.excerpt}</p>
-
-                  <div className="article-footer-row mt-6">
-                    <span className="article-author-name">{art.author}</span>
-                    <button 
-                      className="btn btn-outline-cyan btn-sm"
-                      onClick={() => {
-                        setSelectedArticle(art);
-                        window.scrollTo({ top: 300, behavior: 'smooth' });
-                      }}
-                    >
-                      <span>Read Whitepaper</span>
-                      <ArrowRight size={13} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        </section>
       )}
     </div>
   );

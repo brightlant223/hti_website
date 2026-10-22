@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './DoorInterlockSimulator.css';
 import { 
   ArrowRight, 
   Lock, 
@@ -7,14 +8,9 @@ import {
   Compass, 
   Shield, 
   Users, 
-  Camera, 
   PhoneCall, 
-  Check,
   ShieldCheck,
   Sparkles,
-  Award,
-  ArrowUpRight,
-  CheckCircle2,
   AlertTriangle,
   Activity,
   Wind,
@@ -210,7 +206,7 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
   ];
 
   return (
-    <section id="interlock-and-why" className="interlock-why-section">
+    <section id="interlock-demo" className="interlock-why-section">
       <div className="container">
         <div className="interlock-why-grid">
           {/* Left Column: Door Interlock Logic Simulator */}
@@ -231,14 +227,15 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
                 <div className="door-graphic-frame">
                   <div className={`door-graphic-leaf ${doorAOpen ? 'graphic-open' : ''}`}>
                     <div className="door-glass-window"></div>
+                    <div className="door-handle"></div>
                   </div>
                 </div>
                 <button 
                   className={`btn-door-status ${doorAOpen ? 'status-open' : 'status-btn-action'}`}
                   onClick={handleOpenDoorA}
                 >
-                  {doorAOpen ? <Unlock size={14} /> : <Lock size={14} />}
-                  <span>{doorAOpen ? 'Close Door' : 'Open'}</span>
+                  {doorAOpen ? <Unlock size={12} /> : <Lock size={12} />}
+                  <span>{doorAOpen ? 'Close' : 'Open'}</span>
                 </button>
               </div>
 
@@ -262,14 +259,15 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
                 <div className="door-graphic-frame">
                   <div className={`door-graphic-leaf ${doorBOpen ? 'graphic-open' : ''}`}>
                     <div className="door-glass-window"></div>
+                    <div className="door-handle"></div>
                   </div>
                 </div>
                 <button 
                   className={`btn-door-status ${doorBOpen ? 'status-open' : doorAOpen ? 'status-locked' : 'status-btn-action'}`}
                   onClick={handleOpenDoorB}
                 >
-                  {doorBOpen ? <Unlock size={14} /> : <Lock size={14} />}
-                  <span>{doorBOpen ? 'Close Door' : doorAOpen ? 'Locked' : 'Open'}</span>
+                  {doorBOpen ? <Unlock size={12} /> : <Lock size={12} />}
+                  <span>{doorBOpen ? 'Close' : doorAOpen ? 'Locked' : 'Open'}</span>
                 </button>
               </div>
             </div>
@@ -383,10 +381,11 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
           {/* Right Column: Why Choose HTI? */}
           <div className="why-choose-column-card">
             <div className="why-choose-backdrop-wrap">
-              <img 
-                src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80" 
-                alt="Corporate Architecture" 
+              <img
+                src="/hero-hti-building-collage.png"
+                alt="HTI corporate facility and engineering team"
                 className="why-backdrop-img"
+                loading="lazy"
               />
               <div className="why-backdrop-overlay"></div>
             </div>
@@ -420,7 +419,7 @@ export default function DoorInterlockSimulator({ onInquireInterlock }) {
                       </div>
                       <div className="why-text-box">
                         <div className="why-title-row">
-                          <h4 className="why-item-title">{item.title}</h4>
+                          <h3 className="why-item-title">{item.title}</h3>
                           <span 
                             className="why-item-badge" 
                             style={{ color: item.color, backgroundColor: item.bg, borderColor: item.border }}

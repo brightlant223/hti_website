@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  ShieldCheck,
-  Cpu,
-  Lock,
   ArrowRight,
-  CheckCircle2,
+  Play,
+  X,
+  Settings,
+  ShieldCheck,
+  Leaf,
   Award,
-  Users,
-  Building2
+  Cpu,
+  Building2,
+  Users
 } from 'lucide-react';
+import './Hero.css';
 
-// Animated counter component from 0 to target number on scroll (runs fast, stops, never resets)
+// Snappy animated counter component from 0 to target number on scroll
 function AnimatedNumber({ target, suffix = "+", duration = 550, isVisible }) {
   const [count, setCount] = useState(0);
   const animatedRef = useRef(false);
@@ -81,7 +84,6 @@ function AnimatedNumber({ target, suffix = "+", duration = 550, isVisible }) {
     };
   }, [isVisible, target, duration]);
 
-  // Guaranteed display: if animation ran or ended, always show target if count is somehow 0
   const displayCount = animatedRef.current && count === 0 ? target : count;
 
   return (
@@ -91,373 +93,252 @@ function AnimatedNumber({ target, suffix = "+", duration = 550, isVisible }) {
   );
 }
 
-const ROTATING_DOMAINS = [
-  { word: "Automation", sub: "Life-Safety, Security & Cleanroom Hygiene" },
-  { word: "Life-Safety", sub: "Automation, Security & Cleanroom Hygiene" },
-  { word: "Security", sub: "Automation, Life-Safety & Cleanroom Hygiene" },
-  { word: "Cleanroom Hygiene", sub: "Automation, Life-Safety & Security Systems" }
-];
-
-const CAROUSEL_SLIDES = [
-  {
-    id: 1,
-    title: "Pharma Cleanroom Robotics & Biometric Access",
-    image: "/hero-cleanroom-automation.jpg",
-    alt: "HTI Cleanroom Robotic Automation and Biometric Terminal",
-    tag: "Pharma Cleanroom & Access"
-  },
-  {
-    id: 2,
-    title: "Integrated Security Operations & CCTV Command Center",
-    image: "/hero-security-command-center.jpg",
-    alt: "HTI Integrated Security Operations and Surveillance Command Center",
-    tag: "AI CCTV & Security Operations"
-  },
-  {
-    id: 3,
-    title: "Automated High-Speed Sectional Doors & Logistics Docks",
-    image: "/hero-industrial-doors-dock.jpg",
-    alt: "HTI High-Speed Spiral Roll-up Doors and Dock Levellers",
-    tag: "Access Automation & Dock Systems"
-  },
-  {
-    id: 4,
-    title: "Multi-Door Cleanroom Interlock Airlock Systems",
-    image: "/hero-cleanroom-interlock-chamber.jpg",
-    alt: "HTI Cleanroom Interlock Corridor with Differential Pressure Display",
-    tag: "Air Barrier & Interlock Control"
-  }
-];
-
-export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteClick }) {
-  // Scroll-triggered counter visibility - triggers once, counts fast, never resets
+export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteClick, onNavigate }) {
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
   const statsRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
+  const videoRef = useRef(null);
+  const modalCloseRef = useRef(null);
 
+  // Close modal on ESC key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsVideoOpen(false);
+      }
+    };
+    if (isVideoOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+      // Move focus into the dialog for keyboard / screen-reader users
+      if (modalCloseRef.current) modalCloseRef.current.focus();
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isVideoOpen]);
+
+  // Stop playback when the modal closes so audio never continues in the background
+  useEffect(() => {
+    if (!isVideoOpen && videoRef.current) {
+      videoRef.current.pause();
+    }
+  }, [isVideoOpen]);
+
+  // Observer for stats visibility
   useEffect(() => {
     if (statsVisible) return;
-
     const el = statsRef.current;
     if (!el) return;
 
-    const markVisible = () => {
-      setStatsVisible(true);
-    };
+    const markVisible = () => setStatsVisible(true);
 
-    // 1. Direct bounding check
-    const checkBounding = () => {
-      if (!el) return false;
-      const rect = el.getBoundingClientRect();
-      if (rect.top <= window.innerHeight * 1.15 && rect.bottom >= -50) {
-        markVisible();
-        return true;
-      }
-      return false;
-    };
-
-    if (checkBounding()) return;
-
-    // 2. IntersectionObserver (reliable across all browsers)
-    let observer = null;
     if (typeof IntersectionObserver !== 'undefined') {
-      observer = new IntersectionObserver(
+      const observer = new IntersectionObserver(
         (entries) => {
           if (entries[0]?.isIntersecting) {
             markVisible();
-            if (observer) observer.disconnect();
+            observer.disconnect();
           }
         },
-        { threshold: 0, rootMargin: '80px 0px 80px 0px' }
+        { threshold: 0, rootMargin: '60px 0px 60px 0px' }
       );
       observer.observe(el);
+      return () => observer.disconnect();
+    } else {
+      const timer = setTimeout(markVisible, 500);
+      return () => clearTimeout(timer);
     }
-
-    // 3. Scroll & resize listeners fallback
-    const handleScroll = () => {
-      if (checkBounding()) {
-        clean();
-      }
-    };
-
-    const clean = () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-      document.removeEventListener('scroll', handleScroll, true);
-      if (observer) observer.disconnect();
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
-    document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
-
-    // 4. Safety fallback so numbers never stay stuck at 0
-    const safetyTimer = setTimeout(() => {
-      markVisible();
-    }, 700);
-
-    return () => {
-      clean();
-      clearTimeout(safetyTimer);
-    };
   }, [statsVisible]);
 
-  // Heading Typewriter State
-  const [domainIndex, setDomainIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(ROTATING_DOMAINS[0].word.length);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isPaused, setIsPaused] = useState(true);
-  const [subFading, setSubFading] = useState(false);
-
-  // 3D Card-Flip Carousel State (auto flip every 3.5s)
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [rotationDeg, setRotationDeg] = useState(0);
-  const [faceASlide, setFaceASlide] = useState(0);
-  const [faceBSlide, setFaceBSlide] = useState(1);
-  const [frontFace, setFrontFace] = useState('A');
-
-  // Automatic 3D card flip every 3.5 seconds
-  useEffect(() => {
-    const carouselTimer = setInterval(() => {
-      setRotationDeg(prev => prev + 180);
-      setFrontFace(prev => (prev === 'A' ? 'B' : 'A'));
-      setCurrentSlide(prev => (prev + 1) % CAROUSEL_SLIDES.length);
-    }, 3500);
-
-    return () => clearInterval(carouselTimer);
-  }, []);
-
-  // Update hidden back face silently after 3D flip finishes (850ms)
-  useEffect(() => {
-    const swapTimer = setTimeout(() => {
-      if (frontFace === 'B') {
-        setFaceASlide((currentSlide + 1) % CAROUSEL_SLIDES.length);
-      } else {
-        setFaceBSlide((currentSlide + 1) % CAROUSEL_SLIDES.length);
-      }
-    }, 850);
-
-    return () => clearTimeout(swapTimer);
-  }, [frontFace, currentSlide]);
-
-  const handleDotClick = (targetIndex) => {
-    if (targetIndex === currentSlide) return;
-    if (frontFace === 'A') {
-      setFaceBSlide(targetIndex);
-      setRotationDeg(prev => prev + 180);
-      setFrontFace('B');
+  const handlePillarClick = (categorySlug) => {
+    if (onNavigate) {
+      onNavigate(categorySlug);
     } else {
-      setFaceASlide(targetIndex);
-      setRotationDeg(prev => prev + 180);
-      setFrontFace('A');
+      window.location.href = `/${categorySlug}`;
     }
-    setCurrentSlide(targetIndex);
   };
 
-  useEffect(() => {
-    const currentWord = ROTATING_DOMAINS[domainIndex].word;
-
-    // Handle pause state when word is fully typed or fully deleted
-    if (isPaused) {
-      const pauseDuration = isDeleting ? 300 : (domainIndex === 0 && charIndex === currentWord.length ? 2600 : 2000);
-      const pauseTimer = setTimeout(() => {
-        setIsPaused(false);
-        if (charIndex === currentWord.length) {
-          setIsDeleting(true);
-          setSubFading(true);
-        } else if (charIndex === 0) {
-          setIsDeleting(false);
-          setDomainIndex((prev) => (prev + 1) % ROTATING_DOMAINS.length);
-          setSubFading(false);
-        }
-      }, pauseDuration);
-      return () => clearTimeout(pauseTimer);
+  // Keyboard activation for elements rendered as `role="button"`
+  const handleKeyActivate = (e, callback) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      callback();
     }
-
-    // Typing speed vs Deleting speed
-    const stepSpeed = isDeleting ? 45 : 85;
-    const typeTimer = setTimeout(() => {
-      if (!isDeleting) {
-        if (charIndex < currentWord.length) {
-          setCharIndex((prev) => prev + 1);
-          if (charIndex + 1 === currentWord.length) {
-            setIsPaused(true);
-          }
-        }
-      } else {
-        if (charIndex > 0) {
-          setCharIndex((prev) => prev - 1);
-          if (charIndex - 1 === 0) {
-            setIsPaused(true);
-          }
-        }
-      }
-    }, stepSpeed);
-
-    return () => clearTimeout(typeTimer);
-  }, [charIndex, isDeleting, isPaused, domainIndex]);
-
-  const displayedWord = ROTATING_DOMAINS[domainIndex].word.substring(0, charIndex);
+  };
 
   return (
-    <section id="hero" className="hero-section">
-      {/* Background Soft Glows */}
-      <div className="hero-glow-blob-1"></div>
-      <div className="hero-glow-blob-2"></div>
+    <section id="hero" className="hero-modern-section">
+      {/* Ambient Glows & Dot Patterns matching reference */}
+      <div className="hero-ambient-wrap">
+        <div className="hero-ambient-glow-coral"></div>
+        <div className="hero-ambient-glow-soft"></div>
+        <div className="hero-dot-grid hero-dot-grid-top"></div>
+        <div className="hero-dot-grid hero-dot-grid-bottom"></div>
+      </div>
 
-      <div className="container hero-container">
-        {/* Left Column: Headline, Copy, Actions & Trust Highlights */}
-        <div className="hero-content">
-          <div className="hero-badge-wrap">
-            <span className="hero-badge-pill">
-              <span className="badge-since-pill">★ SINCE 2014</span>
-              <span className="badge-tagline">
-                <span className="badge-text-full">Your Trusted Partner in Automation, Security & Hygiene</span>
-                <span className="badge-text-compact">Automation, Security & Hygiene</span>
-              </span>
-            </span>
+      <div className="container hero-modern-container">
+        {/* Left Column: Heading, Subtitle, Dual CTAs, 3 Pillars */}
+        <div className="hero-modern-content">
+          {/* Top Tag: Red Dash + SINCE 2014 */}
+          <div className="hero-since-tag">
+            <span className="hero-since-dash"></span>
+            <span className="hero-since-text">SINCE 2014</span>
           </div>
 
-          <h1 className="hero-title">
-            Advanced Industrial{' '}
-            <span className="hero-typing-slot">
-              <span className="hero-highlight-red">{displayedWord}</span>
-              <span className="hero-typing-cursor">|</span>
-            </span>
-            <br className="hero-title-br" />
-            <span className={`hero-title-sub ${subFading ? 'sub-fade-out' : 'sub-fade-in'}`}>
-              {ROTATING_DOMAINS[domainIndex].sub}
-            </span>
+          {/* Main Heading matching reference */}
+          <h1 className="hero-modern-title">
+            <span className="hero-title-dark">Automation &amp;</span>
+            <span className="hero-title-red">Security Solutions</span>
           </h1>
 
-          <p className="hero-description">
-            Advanced Industrial Automation, Life-Safety, Security & Cleanroom Hygiene
+          {/* Subtitle Description */}
+          <p className="hero-modern-description">
+            A reliable automation and security system provider, delivering high-quality products for industries, businesses and modern infrastructure.
+          </p>
 
-            HTI delivers advanced automation, fire safety, security, and cleanroom hygiene solutions with quality products and expert engineering, helping corporate and pharmaceutical industries achieve safer, smarter, and more efficient operations.          </p>
-
-          <div className="hero-cta-group">
-            <button className="btn-hero-red" onClick={onQuoteClick}>
-              <span>Get Enquiry / Proposal</span>
-              <ArrowRight size={17} />
+          {/* Dual CTAs: Explore Our Solutions & Watch Video */}
+          <div className="hero-modern-cta-row">
+            <button
+              className="btn-hero-explore"
+              onClick={onExploreClick || onQuoteClick}
+              id="btn-hero-explore-solutions"
+            >
+              <span>Explore Our Solutions</span>
+              <ArrowRight size={18} className="explore-arrow-icon" />
             </button>
-            <button className="btn-hero-outline" onClick={onExploreClick}>
-              <span>Browse Catalog (30+ Systems)</span>
+
+            <button
+              className="btn-hero-video-play"
+              onClick={() => setIsVideoOpen(true)}
+              id="btn-hero-watch-video"
+            >
+              <span className="video-play-icon">
+                <Play size={16} fill="currentColor" />
+              </span>
+              <span>Watch Video</span>
             </button>
           </div>
 
-          {/* Key Value Highlights with soft-blue circle checkmarks */}
-          <div className="hero-checkmarks">
-            <div className="check-item">
-              <div className="check-icon-circle">
-                <CheckCircle2 size={16} />
+          {/* 3 Bottom Feature Pillars matching reference */}
+          <div className="hero-pillars-grid">
+            {/* Pillar 1: Automation */}
+            <div
+              className="hero-pillar-item"
+              onClick={() => handlePillarClick('automation')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('automation'))}
+              role="button"
+              tabIndex={0}
+              title="Explore Automation Solutions"
+            >
+              <div className="pillar-icon-box pillar-icon-red">
+                <Settings size={22} />
               </div>
-              <span>Turnkey Design & Execution</span>
+              <div className="pillar-text-group">
+                <span className="pillar-label">Automation</span>
+                <span className="pillar-desc">Smart &amp; Efficient Solutions</span>
+              </div>
             </div>
-            <div className="check-item">
-              <div className="check-icon-circle">
-                <CheckCircle2 size={16} />
+
+            {/* Pillar 2: Security Systems */}
+            <div
+              className="hero-pillar-item"
+              onClick={() => handlePillarClick('security-systems')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('security-systems'))}
+              role="button"
+              tabIndex={0}
+              title="Explore Security Systems"
+            >
+              <div className="pillar-icon-box pillar-icon-blue">
+                <ShieldCheck size={22} />
               </div>
-              <span>USFDA / cGMP & WHO-GMP Ready</span>
+              <div className="pillar-text-group">
+                <span className="pillar-label">Security Systems</span>
+                <span className="pillar-desc">Safety You Can Trust</span>
+              </div>
             </div>
-            <div className="check-item">
-              <div className="check-icon-circle">
-                <CheckCircle2 size={16} />
+
+            {/* Pillar 3: Hygiene Solutions */}
+            <div
+              className="hero-pillar-item"
+              onClick={() => handlePillarClick('hygiene')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('hygiene'))}
+              role="button"
+              tabIndex={0}
+              title="Explore Hygiene Solutions"
+            >
+              <div className="pillar-icon-box pillar-icon-green">
+                <Leaf size={22} />
               </div>
-              <span>Dedicated Engineering Team</span>
+              <div className="pillar-text-group">
+                <span className="pillar-label">Hygiene Solutions</span>
+                <span className="pillar-desc">Clean &amp; Healthy Environments</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Cleanroom Automation Facility with 3D Flip Image Carousel */}
-        <div className="hero-visual">
-          <div className="hero-visual-frame">
-            {/* 3D Flip Carousel Scene */}
-            <div 
-              className="hero-carousel-3d-scene" 
-              style={{ transform: `rotateY(${rotationDeg}deg)` }}
+        {/* Right Column: Composite Art & Interactive Cards Hotspots */}
+        <div className="hero-modern-visual">
+          <div className="hero-art-stage">
+            <img
+              src="/hero-hti-building-collage.png"
+              alt="HTi Modern Corporate Facility, Automatic Doors, CCTV Security, and Hygiene Solutions"
+              className="hero-collage-img"
+              loading="eager"
+            />
+
+            {/* Interactive Hotspot 1: Automatic Doors & Gates */}
+            <div
+              className="hero-hotspot hotspot-doors"
+              onClick={() => handlePillarClick('automation')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('automation'))}
+              role="button"
+              tabIndex={0}
+              aria-label="View Automatic Doors and Gates"
+              title="View Automatic Doors & Gates"
             >
-              {/* Face A */}
-              <div className="hero-flip-face hero-flip-face-a">
-                <img 
-                  src={CAROUSEL_SLIDES[faceASlide].image} 
-                  alt={CAROUSEL_SLIDES[faceASlide].alt} 
-                  className="hero-cleanroom-img"
-                  loading="eager"
-                />
-              </div>
-
-              {/* Face B (rotated 180deg) */}
-              <div className="hero-flip-face hero-flip-face-b">
-                <img 
-                  src={CAROUSEL_SLIDES[faceBSlide].image} 
-                  alt={CAROUSEL_SLIDES[faceBSlide].alt} 
-                  className="hero-cleanroom-img"
-                  loading="eager"
-                />
-              </div>
+              <span className="hotspot-tooltip">View Doors &amp; Gates →</span>
             </div>
 
-            {/* Dynamic White & Red Wave Swoop Divider */}
-            <div className="hero-swoop-container">
-              <svg className="hero-swoop-svg" viewBox="0 0 120 400" preserveAspectRatio="none">
-                <path d="M 0,0 C 70,120 20,260 120,400 L 0,400 Z" fill="#ffffff" />
-                <path d="M 0,0 C 70,120 20,260 120,400" stroke="#e63946" strokeWidth="4" fill="none" strokeLinecap="round" />
-              </svg>
+            {/* Interactive Hotspot 2: CCTV & Access Control */}
+            <div
+              className="hero-hotspot hotspot-security"
+              onClick={() => handlePillarClick('security-systems')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('security-systems'))}
+              role="button"
+              tabIndex={0}
+              aria-label="View CCTV and Access Control"
+              title="View CCTV & Access Control"
+            >
+              <span className="hotspot-tooltip">View Security Systems →</span>
             </div>
 
-            {/* Floating Top-Left Glass Card: Smart Automation. Safer Tomorrow. */}
-            <div className="floating-smart-card">
-              <div className="smart-card-icon-box">
-                <div className="smart-shield-outer">
-                  <ShieldCheck size={28} className="smart-shield-icon" />
-                </div>
-              </div>
-              <div className="smart-card-text-block">
-                <div className="smart-heading-1">Smart Automation.</div>
-                <div className="smart-heading-2">Safer Tomorrow.</div>
-                <div className="smart-red-accent-line"></div>
-              </div>
-            </div>
-
-            {/* Glowing Translucent Shield Lock Badge overlaid on terminal */}
-            <div className="floating-shield-lock-badge">
-              <svg viewBox="0 0 70 82" className="shield-svg-shape">
-                <path
-                  d="M 35,4 C 55,4 66,14 66,32 C 66,54 48,72 35,78 C 22,72 4,54 4,32 C 4,14 15,4 35,4 Z"
-                  fill="rgba(255, 255, 255, 0.22)"
-                  stroke="rgba(255, 255, 255, 0.9)"
-                  strokeWidth="3.5"
-                />
-              </svg>
-              <div className="shield-lock-icon-wrap">
-                <Lock size={26} className="shield-lock-icon" />
-              </div>
-            </div>
-
-            {/* Interactive Carousel Pill Controls */}
-            <div className="hero-carousel-controls">
-              <span className="carousel-slide-tag">{CAROUSEL_SLIDES[currentSlide].tag}</span>
-              <div className="carousel-dots-list">
-                {CAROUSEL_SLIDES.map((_, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    className={`carousel-dot ${idx === currentSlide ? 'active' : ''}`}
-                    onClick={() => handleDotClick(idx)}
-                    aria-label={`Go to slide ${idx + 1}`}
-                  />
-                ))}
-              </div>
+            {/* Interactive Hotspot 3: Hygiene Solutions */}
+            <div
+              className="hero-hotspot hotspot-hygiene"
+              onClick={() => handlePillarClick('hygiene')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('hygiene'))}
+              role="button"
+              tabIndex={0}
+              aria-label="View Cleanroom Hygiene Solutions"
+              title="View Cleanroom Hygiene Solutions"
+            >
+              <span className="hotspot-tooltip">View Hygiene Solutions →</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Numerical Stats Banner Matching Reference Image */}
+      {/* Numerical Stats Banner Below Hero */}
       <div ref={statsRef} className="container hero-stats-container">
         <div className="stats-glass-strip">
           <div className="stat-col">
             <div className="stat-icon-circle">
-              <Award size={22} className="stat-circle-icon" />
+              <Award size={22} />
             </div>
             <div className="stat-text-box">
               <div className="stat-number stat-red">
@@ -471,7 +352,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
 
           <div className="stat-col">
             <div className="stat-icon-circle">
-              <Cpu size={22} className="stat-circle-icon" />
+              <Cpu size={22} />
             </div>
             <div className="stat-text-box">
               <div className="stat-number stat-blue">
@@ -485,7 +366,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
 
           <div className="stat-col">
             <div className="stat-icon-circle">
-              <Building2 size={22} className="stat-circle-icon" />
+              <Building2 size={22} />
             </div>
             <div className="stat-text-box">
               <div className="stat-number stat-blue">
@@ -499,7 +380,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
 
           <div className="stat-col">
             <div className="stat-icon-circle">
-              <Users size={22} className="stat-circle-icon" />
+              <Users size={22} />
             </div>
             <div className="stat-text-box">
               <div className="stat-number stat-blue">
@@ -511,13 +392,44 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
         </div>
       </div>
 
-      {/* Decorative Bottom Right Red Corner Swoop */}
-      <div className="hero-corner-swoop">
-        <svg viewBox="0 0 200 60" preserveAspectRatio="none">
-          <path d="M 0,60 C 80,60 120,20 200,0 L 200,60 Z" fill="#e63946" />
-        </svg>
-      </div>
+      {/* Full-Screen Video Modal */}
+      {isVideoOpen && (
+        <div
+          className="hero-video-modal-backdrop"
+          onClick={() => setIsVideoOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="HTI Corporate Automation and Facility Tour"
+        >
+          <div
+            className="hero-video-modal-box"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="hero-video-modal-header">
+              <div className="hero-video-modal-title">
+                <Play size={18} className="text-red-500" fill="currentColor" />
+                <span>HTI Corporate Automation &amp; Facility Tour</span>
+              </div>
+              <button
+                className="hero-video-close-btn"
+                onClick={() => setIsVideoOpen(false)}
+                aria-label="Close Video"
+                ref={modalCloseRef}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <video
+              ref={videoRef}
+              src="/gemini_generated_video_02f233ca.mp4"
+              controls
+              autoPlay
+              playsInline
+              className="hero-video-element"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
-

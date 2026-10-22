@@ -1,0 +1,28 @@
+/* ==========================================================================
+   HTI DOOR INTERLOCK LOGIC SIMULATOR
+   --------------------------------------------------------------------------
+   Dedicated, page-scoped styles for .interlock-why-section, the simulator
+   block that appears on the home page and on every category route.
+
+   Every rule is nested under .interlock-why-section so nothing here can
+   leak into the other templates that reuse .title-highlight-blue.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ACCENT COLOURS
+   --------------------------------------------------------------------------
+   The 'Why Choose HTI?' accent relied on .title-highlight-red, which has no
+   rule anywhere, so the word rendered in the inherited heading colour. It
+   now mirrors the blue accent used by the simulator heading above it.
+   -------------------------------------------------------------------------- */
+
+.interlock-why-section .title-highlight-red {
+  color: #ef4444;
+  position: relative;
+}
+
+/* The telemetry metric glyph relied on .text-blue, which also has no rule,
+   so the icon rendered in the inherited body colour. */
+.interlock-why-section .metric-icon-wrap.text-blue {
+  color: #2563eb;
+}

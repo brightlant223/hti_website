@@ -1,7 +1,12 @@
 import React from 'react';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, Globe, MapPin, ChevronRight, ShieldCheck, ExternalLink, ArrowUp } from 'lucide-react';
+import { scrollToTop } from '../utils/scroll';
+import './Footer.css';
 
-export default function Footer({ onCategoryClick, onNavigate }) {
+// Resolved once when the module loads rather than on every render
+const CURRENT_YEAR = new Date().getFullYear();
+
+export default function Footer({ onNavigate }) {
   const handleLinkClick = (page, sectionId = null) => {
     if (onNavigate) {
       onNavigate(page, sectionId);
@@ -11,118 +16,189 @@ export default function Footer({ onCategoryClick, onNavigate }) {
     }
   };
 
+  const handleBackToTop = () => {
+    scrollToTop();
+  };
+
+  // Every entry maps to a route that actually exists. The previous build
+  // passed section ids such as "access-control" / "cctv" that no page ever
+  // rendered, so those links silently dropped the user on the category top.
+  const quickLinks = [
+    { label: 'Home', page: 'home', section: 'hero' },
+    { label: 'About Us', page: 'about' },
+    { label: 'Our Solutions', page: 'automation' },
+    { label: 'Projects', page: 'clients' },
+    { label: 'Careers', page: 'careers' },
+    { label: 'Contact Us', page: 'contact' },
+  ];
+
+  const productSegments = [
+    { label: 'Access Automation', page: 'automation' },
+    { label: 'Perimeter & Traffic', page: 'perimeter-defense' },
+    { label: 'Cleanroom Interlocks', page: 'cleanroom-interlocks' },
+    { label: 'Fire & Life Safety', page: 'fire-protection' },
+    { label: 'Security & Surveillance', page: 'security-systems' },
+    { label: 'Hygiene Solutions', page: 'hygiene' },
+  ];
+
   return (
     <footer className="footer-wrap">
       <div className="container footer-container">
         <div className="footer-grid">
-          {/* Column 1: Company Profile & Core Contacts */}
+          {/* Column 1: Company Profile & Trust */}
           <div className="footer-col col-brand-summary">
-            <div className="footer-logo-row">
-              <img 
-                src="/hti-logo.png" 
-                alt="HTI Logo" 
-                className="footer-hti-logo" 
-              />
-              <div className="footer-brand-title">
-                <span className="brand-head-bold">AUTOMATION & SECURITY</span>
-                <span className="brand-head-sub">SYSTEMS PVT. LTD.</span>
+            <div className="footer-brand-title">
+              <div className="footer-hti-brand-mark">
+                <img
+                  src="/hti-logo.png"
+                  alt="HTI Automation and Security Systems"
+                  className="footer-hti-white-logo"
+                />
               </div>
+              <span className="brand-head-sub">Automation &amp; Security Systems Pvt. Ltd.</span>
             </div>
 
             <p className="footer-summary-text">
-              Your trusted partner in automation, security and hygiene solutions since 2014. Delivering quality products with a focus on service, backed by experienced engineering expertise.
+              Reliable automation &amp; security system provider since 2014. Committed to quality and 24/7 service.
             </p>
 
-            <div className="footer-direct-contacts">
-              <a href="mailto:info@htisystems.in" className="footer-contact-link">
-                <Mail size={15} className="footer-icon-blue" />
-                <span>info@htisystems.in</span>
-              </a>
-              <a href="tel:+919992756077" className="footer-contact-link">
-                <Phone size={15} className="footer-icon-blue" />
-                <span>+91 9992756077</span>
-              </a>
+            <div className="footer-trust-pill">
+              <ShieldCheck size={11} className="footer-pill-icon" />
+              <span>Certified Integrator • Since 2014</span>
             </div>
           </div>
 
           {/* Column 2: Quick Links */}
-          <div className="footer-col">
-            <h4 className="footer-column-heading">Quick Links</h4>
-            <div className="footer-links-two-col">
-              <ul className="footer-nav-list">
-                <li><button onClick={() => handleLinkClick('home', 'hero')}>Home</button></li>
-                <li><button onClick={() => handleLinkClick('about')}>About Us</button></li>
-                <li><button onClick={() => handleLinkClick('home', 'catalog')}>Products</button></li>
-                <li><button onClick={() => handleLinkClick('partners')}>Brands</button></li>
-                <li><button onClick={() => handleLinkClick('clients')}>Clients</button></li>
-              </ul>
-              <ul className="footer-nav-list">
-                <li><button onClick={() => handleLinkClick('home', 'capabilities')}>Services</button></li>
-                <li><button onClick={() => handleLinkClick('home', 'contact')}>Brochure</button></li>
-                <li><button onClick={() => handleLinkClick('blogs')}>Case Studies</button></li>
-                <li><button onClick={() => handleLinkClick('contact')}>Contact</button></li>
-                <li><button onClick={() => handleLinkClick('home', 'insights-and-quote')}>Enquire Now</button></li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Column 3: Our Products */}
-          <div className="footer-col">
-            <h4 className="footer-column-heading">Our Products</h4>
+          <nav className="footer-col col-quick-links" aria-label="Quick links">
+            <h3 className="footer-column-heading">Quick Links</h3>
             <ul className="footer-nav-list">
-              <li><button onClick={() => onCategoryClick && onCategoryClick('Automation')}>Automation</button></li>
-              <li><button onClick={() => onCategoryClick && onCategoryClick('Security System')}>Security Systems</button></li>
-              <li><button onClick={() => onCategoryClick && onCategoryClick('Hygiene')}>Hygiene Solutions</button></li>
-              <li><button onClick={() => onCategoryClick && onCategoryClick('Security System')}>Fire & Life Safety</button></li>
-              <li><button onClick={() => onCategoryClick && onCategoryClick('Automation')}>Cleanroom Solutions</button></li>
+              {quickLinks.map((link) => (
+                <li key={link.label}>
+                  <button type="button" onClick={() => handleLinkClick(link.page, link.section)}>
+                    <ChevronRight size={13} className="nav-arrow-icon" />
+                    <span>{link.label}</span>
+                  </button>
+                </li>
+              ))}
             </ul>
-          </div>
+          </nav>
+
+          {/* Column 3: Product Segments */}
+          <nav className="footer-col col-product-segments" aria-label="Product segments">
+            <h3 className="footer-column-heading">Product Segments</h3>
+            <ul className="footer-nav-list">
+              {productSegments.map((link) => (
+                <li key={link.label}>
+                  <button type="button" onClick={() => handleLinkClick(link.page)}>
+                    <ChevronRight size={13} className="nav-arrow-icon" />
+                    <span>{link.label}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
           {/* Column 4: Contact Us */}
           <div className="footer-col col-contact-details">
-            <h4 className="footer-column-heading">Contact Us</h4>
+            <h3 className="footer-column-heading">Contact Us</h3>
             <div className="footer-contact-entries">
               <div className="contact-entry-item">
-                <MapPin size={16} className="contact-entry-icon" />
-                <span>401 CR-4, Ram Mandir Road, Goregaon (West), Mumbai - 400104</span>
+                <div className="contact-icon-box">
+                  <Phone size={12} />
+                </div>
+                <div className="contact-entry-body">
+                  <a href="tel:+919892756077" className="contact-link">9892756077</a>
+                  <span className="contact-sep">/</span>
+                  <a href="tel:+919594917010" className="contact-link">9594917010</a>
+                </div>
               </div>
-              <div className="contact-entry-item">
-                <Phone size={16} className="contact-entry-icon" />
-                <span>+91 9992756077 / 9594917010</span>
-              </div>
-              <div className="contact-entry-item">
-                <Mail size={16} className="contact-entry-icon" />
-                <span>info@htisystems.in</span>
-              </div>
-            </div>
 
-            {/* Social Icons */}
-            <div className="footer-social-icons-row">
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-icon-btn" aria-label="LinkedIn">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-              </a>
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="social-icon-btn" aria-label="Facebook">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" className="social-icon-btn" aria-label="YouTube">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
-              </a>
+              <div className="contact-entry-item">
+                <div className="contact-icon-box">
+                  <Mail size={12} />
+                </div>
+                <div className="contact-entry-body">
+                  <a href="mailto:hti@htisystems.in" className="contact-link">hti@htisystems.in</a>
+                </div>
+              </div>
+
+              <div className="contact-entry-item">
+                <div className="contact-icon-box">
+                  <Globe size={12} />
+                </div>
+                <div className="contact-entry-body">
+                  <a href="https://www.htisystems.in" target="_blank" rel="noreferrer" className="contact-link">
+                    www.htisystems.in
+                    <ExternalLink size={10} className="contact-ext-icon" />
+                  </a>
+                </div>
+              </div>
+
+              <div className="contact-entry-item contact-address-item">
+                <div className="contact-icon-box contact-pin-box">
+                  <MapPin size={11} />
+                </div>
+                <div className="contact-entry-body contact-address-text">
+                  <address>825, Goodwill Bizhubb, Next to Ikea, Turbhe MIDC, Navi Mumbai - 400703</address>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Copyright & Legal Links Bar */}
+        {/* Bottom Copyright & Credits */}
         <div className="footer-bottom-bar">
           <div className="footer-copyright">
-            © 2024 HTI Automation & Security Systems Pvt. Ltd. All Rights Reserved.
+            © {CURRENT_YEAR} HTI Automation and Security System Pvt Ltd. All Rights Reserved.
           </div>
 
           <div className="footer-legal-links">
-            <a href="#privacy" onClick={(e) => { e.preventDefault(); handleLinkClick('about'); }}>Privacy Policy</a>
-            <span className="footer-dot-sep">|</span>
-            <a href="#terms" onClick={(e) => { e.preventDefault(); handleLinkClick('about'); }}>Terms of Use</a>
-            <span className="footer-dot-sep">|</span>
-            <a href="#sitemap" onClick={(e) => { e.preventDefault(); handleLinkClick('home'); }}>Sitemap</a>
+            {/* Real destinations so middle-click / "copy link" behaves sensibly.
+                The SPA handler keeps the transition instant. */}
+            <a
+              href="/about"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('about'); }}
+            >
+              Privacy Policy
+            </a>
+            <span className="footer-dot-sep" aria-hidden="true">•</span>
+            <a
+              href="/about"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('about'); }}
+            >
+              Terms of Use
+            </a>
+            <span className="footer-dot-sep" aria-hidden="true">•</span>
+            <a
+              href="/"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('home'); }}
+            >
+              Sitemap
+            </a>
+
+            <button
+              type="button"
+              className="footer-back-to-top"
+              onClick={handleBackToTop}
+              title="Back to top"
+              aria-label="Back to top"
+            >
+              <ArrowUp size={13} />
+              <span>Back to top</span>
+            </button>
+          </div>
+
+          <div className="footer-credit">
+            Designed with <span className="credit-heart" aria-label="love">❤️</span> by{' '}
+            <a
+              href="https://brightlant.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="brightlant-credit-link"
+              title="Brightlant - Innovative Web Engineering & Design"
+            >
+              Brightlant
+            </a>
           </div>
         </div>
       </div>
