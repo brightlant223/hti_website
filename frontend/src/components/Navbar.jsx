@@ -287,42 +287,42 @@ export default function Navbar({
       heroImage: '/services/services-hero-access.jpg',
       overviewDesc: 'Heavy-duty motorized access automation designed for corporate entrances, logistics warehouses, and pharma bays with 24/7 reliability.',
       features: [
-        { 
+        {
           title: 'Touchless Entry',
           description: 'Automatic Sliding & Swing Doors for hygienic and seamless access.',
           image: '/services/services-touchless-entry.jpg',
           icon: DoorClosed,
           slug: 'automatic-sliding-swing-doors'
         },
-        { 
+        {
           title: 'Perimeter Gate',
           description: 'Automatic Sliding & Swing Gates for industrial and commercial sites.',
           image: '/services/services-perimeter-gate.jpg',
           icon: ShieldCheck,
           slug: 'automatic-sliding-swing-gates'
         },
-        { 
+        {
           title: 'Trackless Gate',
           description: 'Telescopic & Cantilever Gates for wide and heavy-duty openings.',
           image: '/services/services-trackless-gate.jpg',
           icon: SlidersHorizontal,
           slug: 'telescopic-cantilever-gates'
         },
-        { 
+        {
           title: 'Rapid Airlock',
           description: 'High Speed Roll Up & Sectional Doors for high-traffic zones.',
           image: '/services/services-rapid-airlock.jpg',
           icon: Layers,
           slug: 'pvc-rapid-roll-up-doors'
         },
-        { 
+        {
           title: 'Logistics Bridge',
           description: 'Dock Levellers & Dock Shelters for efficient loading operations.',
           image: '/services/services-logistics-bridge.jpg',
           icon: Truck,
           slug: 'dock-levellers-dock-shelters'
         },
-        { 
+        {
           title: 'Heavy Security',
           description: 'Motorized Rolling Shutters for maximum site protection.',
           image: '/services/services-heavy-security.jpg',
@@ -344,42 +344,42 @@ export default function Navbar({
       heroImage: '/hero-cleanroom-interlock-chamber.jpg',
       overviewDesc: 'Microcontroller and PLC cleanroom interlocking logic, dynamic pass box hatches, and GPS master-slave clocks built for sterile pharma compliance.',
       features: [
-        { 
+        {
           title: 'Door Interlock (2-8 Door)',
           description: 'Flameproof & safe programmable interlocking for sterile cascades.',
           image: '/hero-cleanroom-interlock-chamber.jpg',
           icon: Lock,
           slug: 'door-interlock-systems'
         },
-        { 
+        {
           title: 'Pass Box Systems',
           description: 'Static & dynamic material transfer hatches with UV disinfection.',
           image: '/products/pass-box-system.jpg',
           icon: Layers,
           slug: 'pass-box-systems'
         },
-        { 
+        {
           title: 'Digital Clocks',
           description: 'GPS master-slave synchronized clocks with flameproof housings.',
           image: '/products/digital-clock-hero.jpg',
           icon: Activity,
           slug: 'digital-gps-clocks'
         },
-        { 
+        {
           title: 'Chiller & Cleanroom Doors',
           description: 'Insulated chiller doors and hermetically sealed flush cleanroom doors.',
           image: '/products/chiller-door-hero.jpg',
           icon: DoorClosed,
           slug: 'chiller-clean-room-doors'
         },
-        { 
+        {
           title: 'Acoustic Sound Doors',
           description: 'Heavy noise-dampening acoustic barrier doors for plant rooms.',
           image: '/case-studies/case-air-curtain.jpg',
           icon: Settings,
           slug: 'sound-proof-doors'
         },
-        { 
+        {
           title: 'Safety Override Buzzers',
           description: 'Emergency release logic and integrated audio buzzer alerts.',
           image: '/case-studies/case-ss304-mist.jpg',
@@ -401,42 +401,42 @@ export default function Navbar({
       heroImage: '/case-studies/case-boom-barrier.jpg',
       overviewDesc: 'High-frequency electromechanical boom barriers, optical turnstiles, anti-ram tyre killers, and multi-level car lifts for secure facilities.',
       features: [
-        { 
+        {
           title: 'Boom Barriers',
           description: 'High-duty electromechanical & hydraulic automated barrier arms.',
           image: '/services/service-boom-barrier.jpg',
           icon: SlidersHorizontal,
           slug: 'boom-barriers'
         },
-        { 
+        {
           title: 'Optical Turnstiles',
           description: 'Biometric speed gates & swing flap barriers for corporate lobbies.',
           image: '/hero-glass-atrium.jpg',
           icon: User,
           slug: 'turnstiles-flap-barriers-speed-gates'
         },
-        { 
+        {
           title: 'Tyre Killers & Bollards',
           description: 'Heavy hydraulic tyre spikes & crash-rated anti-ram bollards.',
           image: '/services/service-bollards-blockers.jpg',
           icon: ShieldCheck,
           slug: 'bollards-tyre-killers-car-lifts'
         },
-        { 
+        {
           title: 'Car Lift Systems',
           description: 'Hydraulic multi-tier car parking lifts & heavy goods vehicle lifts.',
           image: '/services/services-trackless-gate.jpg',
           icon: Truck,
           slug: 'bollards-tyre-killers-car-lifts'
         },
-        { 
+        {
           title: 'Parking Management',
           description: 'FASTag RFID tolling, ticket dispensers & bay occupancy sensors.',
           image: '/services/services-hero-access.jpg',
           icon: Cpu,
           slug: 'parking-intrusion-alarms'
         },
-        { 
+        {
           title: 'Visitor Management',
           description: 'QR digital gate passes, facial recognition & badge printing.',
           image: '/hero-security-command-center.jpg',
@@ -458,42 +458,42 @@ export default function Navbar({
       heroImage: '/case-studies/case-fire-hydrant.jpg',
       overviewDesc: 'Comprehensive life safety infrastructure covering conventional & addressable fire alarm panels, fire hydrant networks, and certified fire doors.',
       features: [
-        { 
+        {
           title: 'Addressable Fire Alarms',
           description: 'Multi-zone detection panels, optical smoke sensors & heat probes.',
           image: '/services/service-fire-alarm.jpg',
           icon: Flame,
           slug: 'fire-alarm-system'
         },
-        { 
+        {
           title: 'Hydrant & Sprinkler Arrays',
           description: 'Water deluge networks, certified landing valves & pump skids.',
           image: '/case-studies/case-fire-hydrant.jpg',
           icon: Activity,
           slug: 'fire-hydrant-sprinkler-systems'
         },
-        { 
+        {
           title: 'Fire Rated Doors & Shutters',
           description: '120-240 minute certified fire-resistant doors & auto drop shutters.',
           image: '/services/service-fire-doors.jpg',
           icon: Lock,
           slug: 'fire-rated-doors-shutters'
         },
-        { 
+        {
           title: 'Public Address (PA)',
           description: 'Voice evacuation systems, emergency sirens & plant horns.',
           image: '/hero-security-command-center.jpg',
           icon: MessageSquare,
           slug: 'public-address-system'
         },
-        { 
+        {
           title: 'Gas Leak Detection',
           description: 'Toxic, combustible, VOC & ammonia gas monitoring sensors.',
           image: '/case-studies/case-ss304-mist.jpg',
           icon: ShieldCheck,
           slug: 'gas-detection-systems'
         },
-        { 
+        {
           title: 'Emergency Auto Trip',
           description: 'Relay integration with access doors, AHU shut-off & fire pumps.',
           image: '/services/service-emergency-trip.jpg',
@@ -516,42 +516,42 @@ export default function Navbar({
       heroImage: '/hero-security-command-center.jpg',
       overviewDesc: 'High-definition IP surveillance, biometric time attendance, multi-zone video door phones, and central security control room infrastructure.',
       features: [
-        { 
+        {
           title: '4K AI CCTV Systems',
           description: 'Network IP dome/bullet cameras, ANPR & thermal perimeter beams.',
           image: '/hero-security-command-center.jpg',
           icon: Cpu,
           category: 'Security System'
         },
-        { 
+        {
           title: 'Biometric Access',
           description: 'Contactless face verification, fingerprint & RFID attendance.',
           image: '/hero-glass-atrium.jpg',
           icon: User,
           category: 'Security System'
         },
-        { 
+        {
           title: 'Video Door Phones',
           description: 'IP multi-channel video intercom & electronic door release.',
           image: '/services/services-touchless-entry.jpg',
           icon: PhoneCall,
           category: 'Security System'
         },
-        { 
+        {
           title: 'Central VMS Command',
           description: 'Multi-screen enterprise video management & surveillance hardware.',
           image: '/hero-security-command-center.jpg',
           icon: Monitor,
           category: 'Security System'
         },
-        { 
+        {
           title: 'Fault Annunciators',
           description: 'Visual window annunciator systems for critical machine alerts.',
           image: '/case-studies/case-fire-hydrant.jpg',
           icon: Activity,
           category: 'Security System'
         },
-        { 
+        {
           title: 'Remote Gate Release',
           description: 'Smartphone relay triggers & cloud perimeter entrance controls.',
           image: '/services/services-perimeter-gate.jpg',
@@ -574,42 +574,42 @@ export default function Navbar({
       heroImage: '/case-studies/case-air-curtain.jpg',
       overviewDesc: '24/7 environmental monitoring for server rooms, toxic & combustible gas detection arrays, and touchless washroom sanitary engineering.',
       features: [
-        { 
+        {
           title: 'Server Room Alert Monitor',
           description: 'Temperature, humidity, water leak & power trip SMS/email alerts.',
           image: '/hero-security-command-center.jpg',
           icon: Activity,
           category: 'Security System'
         },
-        { 
+        {
           title: 'Toxic Gas Detection',
           description: 'Catalytic & electrochemical sensors for hazardous plant rooms.',
           image: '/case-studies/case-cleanroom.jpg',
           icon: Flame,
           category: 'Security System'
         },
-        { 
+        {
           title: 'Industrial Air Curtains',
           description: 'Thermal & insect air barriers for warehouse entry thresholds.',
           image: '/case-studies/case-air-curtain.jpg',
           icon: Layers,
           category: 'Hygiene'
         },
-        { 
+        {
           title: 'Touchless Sensor Taps',
           description: 'Commercial brass infrared automatic faucets & urinal flushes.',
           image: '/case-studies/case-ss304-mist.jpg',
           icon: Sparkles,
           category: 'Hygiene'
         },
-        { 
+        {
           title: 'Dual Hand Dryers',
           description: 'High-speed HEPA filtered hygienic touchless hand dryers.',
           image: '/case-studies/case-ss304-mist.jpg',
           icon: ShieldCheck,
           category: 'Hygiene'
         },
-        { 
+        {
           title: 'Trip Alarm Annunciators',
           description: 'Real-time telemetry for pump failure & chiller room exceptions.',
           image: '/services/services-heavy-security.jpg',
@@ -673,13 +673,7 @@ export default function Navbar({
           icon: Truck,
           slug: 'high-speed-roll-up-doors'
         },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore all certified pedestrian & gate automation systems with datasheets.',
-          image: '/products/automatic-doors.jpg',
-          icon: Layers,
-          isCatalogLink: true
-        }
+
       ]
     },
     {
@@ -731,13 +725,7 @@ export default function Navbar({
           icon: Flame,
           slug: 'tyre-killers-road-blockers'
         },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore crash-rated barriers, bollards, tyre killers & parking systems.',
-          image: '/products/boom-barriers.jpg',
-          icon: Layers,
-          isCatalogLink: true
-        }
+
       ]
     },
     {
@@ -789,13 +777,7 @@ export default function Navbar({
           icon: Sparkles,
           slug: 'hermetic-cleanroom-doors'
         },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore cGMP & USFDA 21 CFR Part 11 interlocking and contamination equipment.',
-          image: '/hero-cleanroom-interlock-chamber.jpg',
-          icon: Layers,
-          isCatalogLink: true
-        }
+
       ]
     },
     {
@@ -847,13 +829,7 @@ export default function Navbar({
           icon: Settings,
           slug: 'public-address-system'
         },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore multi-loop addressable fire panels, hydrants & UL certified doors.',
-          image: '/products/fire-alarm.jpg',
-          icon: Layers,
-          isCatalogLink: true
-        }
+
       ]
     },
     {
@@ -905,13 +881,7 @@ export default function Navbar({
           icon: Lock,
           slug: 'wireless-intrusion-detection'
         },
-        {
-          title: 'Full Division Catalog',
-          description: 'Explore 4K AI IP cameras, facial biometric terminals & telemetry arrays.',
-          image: '/hero-security-command-center.jpg',
-          icon: Layers,
-          isCatalogLink: true
-        }
+
       ]
     }
   ];
@@ -936,8 +906,8 @@ export default function Navbar({
               <span>info@htisystems.in</span>
             </a>
             <span className="top-sep">|</span>
-            <button 
-              className="top-link-btn" 
+            <button
+              className="top-link-btn"
               onClick={() => handleNavClick('contact')}
             >
               <span>Contact Us</span>
@@ -1004,7 +974,7 @@ export default function Navbar({
           {/* Desktop Nav Items */}
           <div className="bright-nav-links desktop-only">
             {/* Services Pill / Dropdown */}
-            <div 
+            <div
               className="nav-item-dropdown"
               onMouseEnter={() => handleMouseEnterDropdown('services')}
               onMouseLeave={handleMouseLeaveDropdown}
@@ -1027,7 +997,7 @@ export default function Navbar({
             </div>
 
             {/* Products Dropdown (Horizontal Mega Menu) */}
-            <div 
+            <div
               className="nav-item-dropdown"
               onMouseEnter={() => handleMouseEnterDropdown('products')}
               onMouseLeave={handleMouseLeaveDropdown}
@@ -1050,7 +1020,7 @@ export default function Navbar({
             </div>
 
             {/* Company Dropdown (Horizontal - exactly like Brightlant screenshot) */}
-            <div 
+            <div
               className="nav-item-dropdown"
               onMouseEnter={() => handleMouseEnterDropdown('company')}
               onMouseLeave={handleMouseLeaveDropdown}
@@ -1155,7 +1125,7 @@ export default function Navbar({
 
         {/* 1. SERVICES MEGA DROPDOWN (Reference-Matched Premium Panel) */}
         {activeDropdown === 'services' && (
-          <div 
+          <div
             className="bright-mega-panel-wrapper"
             onMouseEnter={() => handleMouseEnterDropdown('services')}
             onMouseLeave={handleMouseLeaveDropdown}
@@ -1237,15 +1207,15 @@ export default function Navbar({
                       {currentGroup.headingPrimary}{' '}
                       <span className="heading-blue-accent">{currentGroup.headingAccent}</span>
                     </h3>
-                    
+
                     <p className="mega-panel-desc">{currentGroup.overviewDesc}</p>
                   </div>
 
                   {currentGroup.heroImage && (
                     <div className="mega-feature-hero-media">
-                      <img 
-                        src={currentGroup.heroImage} 
-                        alt={currentGroup.title} 
+                      <img
+                        src={currentGroup.heroImage}
+                        alt={currentGroup.title}
                         className="mega-hero-img"
                         loading="eager"
                       />
@@ -1258,8 +1228,8 @@ export default function Navbar({
                   {currentGroup.features.map((feat, fIdx) => {
                     const CardIcon = feat.icon || Cpu;
                     return (
-                      <div 
-                        key={fIdx} 
+                      <div
+                        key={fIdx}
                         className="mega-subservice-card"
                         onClick={() => {
                           if (feat.slug) {
@@ -1289,9 +1259,9 @@ export default function Navbar({
                       >
                         {/* Landscape Image with Overlapping Icon Badge */}
                         <div className="subservice-card-media">
-                          <img 
-                            src={feat.image || currentGroup.heroImage} 
-                            alt={feat.title} 
+                          <img
+                            src={feat.image || currentGroup.heroImage}
+                            alt={feat.title}
                             className="subservice-card-img"
                             loading="lazy"
                           />
@@ -1321,7 +1291,7 @@ export default function Navbar({
 
         {/* 2. PRODUCTS MEGA DROPDOWN (Reference-Matched Premium Panel - Exactly like Services) */}
         {activeDropdown === 'products' && (
-          <div 
+          <div
             className="bright-mega-panel-wrapper"
             onMouseEnter={() => handleMouseEnterDropdown('products')}
             onMouseLeave={handleMouseLeaveDropdown}
@@ -1400,15 +1370,15 @@ export default function Navbar({
                       {currentProductGroup.headingPrimary}{' '}
                       <span className="heading-blue-accent">{currentProductGroup.headingAccent}</span>
                     </h3>
-                    
+
                     <p className="mega-panel-desc">{currentProductGroup.overviewDesc}</p>
                   </div>
 
                   {currentProductGroup.heroImage && (
                     <div className="mega-feature-hero-media">
-                      <img 
-                        src={currentProductGroup.heroImage} 
-                        alt={currentProductGroup.title} 
+                      <img
+                        src={currentProductGroup.heroImage}
+                        alt={currentProductGroup.title}
                         className="mega-hero-img"
                         loading="eager"
                       />
@@ -1421,8 +1391,8 @@ export default function Navbar({
                   {currentProductGroup.products.map((prod, pIdx) => {
                     const CardIcon = prod.icon || Cpu;
                     return (
-                      <div 
-                        key={pIdx} 
+                      <div
+                        key={pIdx}
                         className="mega-subservice-card"
                         onClick={() => {
                           setActiveDropdown(null);
@@ -1450,9 +1420,9 @@ export default function Navbar({
                       >
                         {/* Landscape Image with Overlapping Icon Badge */}
                         <div className="subservice-card-media">
-                          <img 
-                            src={prod.image || currentProductGroup.heroImage} 
-                            alt={prod.title} 
+                          <img
+                            src={prod.image || currentProductGroup.heroImage}
+                            alt={prod.title}
                             className="subservice-card-img"
                             loading="lazy"
                           />
@@ -1482,7 +1452,7 @@ export default function Navbar({
 
         {/* 3. COMPANY HORIZONTAL DROPDOWN (Dedicated Separate Pages) */}
         {activeDropdown === 'company' && (
-          <div 
+          <div
             className="bright-horizontal-dropdown desktop-only"
             onMouseEnter={() => handleMouseEnterDropdown('company')}
             onMouseLeave={handleMouseLeaveDropdown}
@@ -1663,123 +1633,123 @@ export default function Navbar({
             </div>
 
             {/* Accordion Item: Company */}
-              <div className="mobile-accordion-group">
-                <button
-                  className={`mobile-accordion-header ${activeSection === 'company' ? 'is-active-section' : ''}`}
-                  onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
-                  aria-expanded={mobileAccordion === 'company'}
-                  aria-current={activeSection === 'company' ? 'page' : undefined}
-                >
-                  <span className="mobile-accordion-heading">
-                    <span className="mobile-accordion-title">Company</span>
-                    <span className="mobile-accordion-count" aria-hidden="true">5</span>
-                  </span>
-                  {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                </button>
+            <div className="mobile-accordion-group">
+              <button
+                className={`mobile-accordion-header ${activeSection === 'company' ? 'is-active-section' : ''}`}
+                onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
+                aria-expanded={mobileAccordion === 'company'}
+                aria-current={activeSection === 'company' ? 'page' : undefined}
+              >
+                <span className="mobile-accordion-heading">
+                  <span className="mobile-accordion-title">Company</span>
+                  <span className="mobile-accordion-count" aria-hidden="true">5</span>
+                </span>
+                {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              </button>
 
-                {mobileAccordion === 'company' && (
-                  <div className="mobile-accordion-body">
-                    <button
-                      className="mobile-clean-sublink"
-                      onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}
-                    >
-                      <span className="mobile-clean-title">About Us</span>
-                      <ArrowRight size={16} className="mobile-clean-arrow" />
-                    </button>
+              {mobileAccordion === 'company' && (
+                <div className="mobile-accordion-body">
+                  <button
+                    className="mobile-clean-sublink"
+                    onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}
+                  >
+                    <span className="mobile-clean-title">About Us</span>
+                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                  </button>
 
-                    <button
-                      className="mobile-clean-sublink"
-                      onClick={() => { setMobileMenuOpen(false); handleNavClick('clients'); }}
-                    >
-                      <span className="mobile-clean-title">Our Clients</span>
-                      <ArrowRight size={16} className="mobile-clean-arrow" />
-                    </button>
+                  <button
+                    className="mobile-clean-sublink"
+                    onClick={() => { setMobileMenuOpen(false); handleNavClick('clients'); }}
+                  >
+                    <span className="mobile-clean-title">Our Clients</span>
+                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                  </button>
 
-                    <button
-                      className="mobile-clean-sublink"
-                      onClick={() => { setMobileMenuOpen(false); handleNavClick('careers'); }}
-                    >
-                      <span className="mobile-clean-title">Careers</span>
-                      <ArrowRight size={16} className="mobile-clean-arrow" />
-                    </button>
+                  <button
+                    className="mobile-clean-sublink"
+                    onClick={() => { setMobileMenuOpen(false); handleNavClick('careers'); }}
+                  >
+                    <span className="mobile-clean-title">Careers</span>
+                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                  </button>
 
-                    <button
-                      className="mobile-clean-sublink"
-                      onClick={() => { setMobileMenuOpen(false); handleNavClick('blogs'); }}
-                    >
-                      <span className="mobile-clean-title">Blogs</span>
-                      <ArrowRight size={16} className="mobile-clean-arrow" />
-                    </button>
+                  <button
+                    className="mobile-clean-sublink"
+                    onClick={() => { setMobileMenuOpen(false); handleNavClick('blogs'); }}
+                  >
+                    <span className="mobile-clean-title">Blogs</span>
+                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                  </button>
 
-                    <button
-                      className="mobile-clean-sublink"
-                      onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
-                    >
-                      <span className="mobile-clean-title">Contact Us</span>
-                      <ArrowRight size={16} className="mobile-clean-arrow" />
-                    </button>
-                  </div>
-                )}
-              </div>
+                  <button
+                    className="mobile-clean-sublink"
+                    onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
+                  >
+                    <span className="mobile-clean-title">Contact Us</span>
+                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                  </button>
+                </div>
+              )}
+            </div>
 
-              {/* Mobile Action Area - kept pinned to the bottom of the drawer so
+            {/* Mobile Action Area - kept pinned to the bottom of the drawer so
                   the brochure, the quote CTA and the consultation link are
                   always one tap away, whatever the accordion content length. */}
-              <div className="mobile-drawer-footer">
+            <div className="mobile-drawer-footer">
 
-                {/* Compact Brochure Row - one line instead of a tall card */}
-                <button
-                  className="mobile-brochure-row"
-                  onClick={(e) => {
-                    setMobileMenuOpen(false);
-                    handleDownloadBrochure(e);
-                  }}
-                  type="button"
-                  aria-label="Request the HTI product brochure PDF"
-                >
-                  <span className="mobile-brochure-icon">
-                    <FileText size={16} />
-                  </span>
-                  <span className="mobile-brochure-heading">Product Brochure</span>
-                  <span className="mobile-brochure-pill">
-                    <Download size={12} />
-                    PDF
-                  </span>
-                </button>
+              {/* Compact Brochure Row - one line instead of a tall card */}
+              <button
+                className="mobile-brochure-row"
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  handleDownloadBrochure(e);
+                }}
+                type="button"
+                aria-label="Request the HTI product brochure PDF"
+              >
+                <span className="mobile-brochure-icon">
+                  <FileText size={16} />
+                </span>
+                <span className="mobile-brochure-heading">Product Brochure</span>
+                <span className="mobile-brochure-pill">
+                  <Download size={12} />
+                  PDF
+                </span>
+              </button>
 
-                {/* Primary CTA - Request a Quote */}
-                <button
-                  className="mobile-cta-primary"
-                  onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
-                  type="button"
-                >
-                  <PhoneCall size={16} />
-                  <span>Request a Technical Quote</span>
-                  <ArrowRight size={16} />
-                </button>
+              {/* Primary CTA - Request a Quote */}
+              <button
+                className="mobile-cta-primary"
+                onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
+                type="button"
+              >
+                <PhoneCall size={16} />
+                <span>Request a Technical Quote</span>
+                <ArrowRight size={16} />
+              </button>
 
-                {/* Secondary CTA - the proposal form on the home page */}
-                <button
-                  className="mobile-consultation-btn"
-                  onClick={() => { setMobileMenuOpen(false); handleNavClick('home', 'insights-and-quote'); }}
-                  type="button"
-                >
-                  <Sparkles size={15} />
-                  <span>Get Free Consultation</span>
-                </button>
+              {/* Secondary CTA - the proposal form on the home page */}
+              <button
+                className="mobile-consultation-btn"
+                onClick={() => { setMobileMenuOpen(false); handleNavClick('home', 'insights-and-quote'); }}
+                type="button"
+              >
+                <Sparkles size={15} />
+                <span>Get Free Consultation</span>
+              </button>
 
-                <button
-                  className="bright-admin-btn w-full justify-center py-3"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    if (onOpenAdmin) onOpenAdmin();
-                  }}
-                  type="button"
-                >
-                  <User size={17} />
-                  <span>Open Admin Portal</span>
-                </button>
-              </div>
+              <button
+                className="bright-admin-btn w-full justify-center py-3"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onOpenAdmin) onOpenAdmin();
+                }}
+                type="button"
+              >
+                <User size={17} />
+                <span>Open Admin Portal</span>
+              </button>
+            </div>
           </div>
         )}
       </nav>
