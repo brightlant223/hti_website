@@ -7,98 +7,126 @@ import {
   ShieldCheck,
   Leaf,
   Award,
-  Cpu,
   Building2,
-  Users
+  Users,
+  DoorClosed,
+  Globe
 } from 'lucide-react';
 import './Hero.css';
 
-// Snappy animated counter component from 0 to target number on scroll
-function AnimatedNumber({ target, suffix = "+", duration = 550, isVisible }) {
-  const [count, setCount] = useState(0);
-  const animatedRef = useRef(false);
-  const spanRef = useRef(null);
-
-  useEffect(() => {
-    if (animatedRef.current) return;
-
-    const startAnimation = () => {
-      if (animatedRef.current) return;
-      animatedRef.current = true;
-
-      const startVal = 0;
-      const endVal = Number(target) || 0;
-      const startTime = performance.now();
-      let frameId;
-
-      const tick = (now) => {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-
-        // Snappy cubic ease-out
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-        const current = Math.round(startVal + (endVal - startVal) * easeOut);
-
-        setCount(current);
-
-        if (progress < 1) {
-          frameId = requestAnimationFrame(tick);
-        } else {
-          setCount(endVal);
-        }
-      };
-
-      frameId = requestAnimationFrame(tick);
-    };
-
-    if (isVisible) {
-      startAnimation();
-      return;
-    }
-
-    // Direct element observer as a guarantee
-    let observer = null;
-    if (typeof IntersectionObserver !== 'undefined' && spanRef.current) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0]?.isIntersecting) {
-            startAnimation();
-            if (observer) observer.disconnect();
-          }
-        },
-        { threshold: 0, rootMargin: '60px 0px 60px 0px' }
-      );
-      observer.observe(spanRef.current);
-    }
-
-    // Fallback: If still not triggered after 600ms, start anyway
-    const fallbackTimer = setTimeout(() => {
-      if (!animatedRef.current) {
-        startAnimation();
-      }
-    }, 600);
-
-    return () => {
-      if (observer) observer.disconnect();
-      clearTimeout(fallbackTimer);
-    };
-  }, [isVisible, target, duration]);
-
-  const displayCount = animatedRef.current && count === 0 ? target : count;
-
-  return (
-    <span ref={spanRef}>
-      {displayCount}{suffix}
-    </span>
-  );
-}
+// Six stationary metrics matching Reference Image 2 exactly
+const METRICS_DATA = [
+  {
+    id: 'projects-delivered',
+    target: 500,
+    suffix: '+',
+    label: 'Projects Delivered',
+    icon: Building2,
+    colorClass: 'metric-icon-blue'
+  },
+  {
+    id: 'satisfied-clients',
+    target: 300,
+    suffix: '+',
+    label: 'Satisfied Clients',
+    icon: Users,
+    colorClass: 'metric-icon-purple'
+  },
+  {
+    id: 'years-experience',
+    target: 10,
+    suffix: '+',
+    label: 'Years of Experience',
+    icon: Award,
+    colorClass: 'metric-icon-red'
+  },
+  {
+    id: 'industry-verticals',
+    target: 12,
+    suffix: '+',
+    label: 'Industry Verticals',
+    icon: Settings,
+    colorClass: 'metric-icon-cyan'
+  },
+  {
+    id: 'team-members',
+    target: 30,
+    suffix: '+',
+    label: 'Team Members',
+    icon: Users,
+    colorClass: 'metric-icon-amber'
+  },
+  {
+    id: 'global-partners',
+    target: 15,
+    suffix: '+',
+    label: 'Global Partners',
+    icon: Globe,
+    colorClass: 'metric-icon-green'
+  }
+];
 
 export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteClick, onNavigate }) {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
-  const statsRef = useRef(null);
-  const [statsVisible, setStatsVisible] = useState(false);
   const videoRef = useRef(null);
   const modalCloseRef = useRef(null);
+
+  // Six stationary metric counters looping smoothly in place (0 -> target -> hold -> loop)
+  const [metricCounts, setMetricCounts] = useState(() => METRICS_DATA.map((m) => m.target));
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      setMetricCounts(METRICS_DATA.map((m) => m.target));
+      return;
+    }
+
+    let animationFrameId;
+    let cycleTimeout;
+    let isCancelled = false;
+    const ANIMATION_DURATION = 1800; // 1.8s count up
+    const HOLD_DURATION = 2600;      // 2.6s hold at target value
+    const RESET_PAUSE = 400;         // 0.4s pause before restart
+
+    const runCycle = () => {
+      if (isCancelled) return;
+      const startTime = performance.now();
+
+      const step = (currentTime) => {
+        if (isCancelled) return;
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / ANIMATION_DURATION, 1);
+        // ease-out quad curve
+        const ease = 1 - (1 - progress) * (1 - progress);
+
+        setMetricCounts(METRICS_DATA.map((m) => Math.round(m.target * ease)));
+
+        if (progress < 1) {
+          animationFrameId = requestAnimationFrame(step);
+        } else {
+          // Reached target: hold then loop
+          cycleTimeout = setTimeout(() => {
+            if (isCancelled) return;
+            setMetricCounts(METRICS_DATA.map(() => 0));
+            cycleTimeout = setTimeout(() => {
+              if (isCancelled) return;
+              runCycle();
+            }, RESET_PAUSE);
+          }, HOLD_DURATION);
+        }
+      };
+
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    runCycle();
+
+    return () => {
+      isCancelled = true;
+      cancelAnimationFrame(animationFrameId);
+      clearTimeout(cycleTimeout);
+    };
+  }, []);
 
   // Close modal on ESC key
   useEffect(() => {
@@ -110,7 +138,6 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
     if (isVideoOpen) {
       window.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
-      // Move focus into the dialog for keyboard / screen-reader users
       if (modalCloseRef.current) modalCloseRef.current.focus();
     } else {
       document.body.style.overflow = '';
@@ -128,32 +155,6 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
     }
   }, [isVideoOpen]);
 
-  // Observer for stats visibility
-  useEffect(() => {
-    if (statsVisible) return;
-    const el = statsRef.current;
-    if (!el) return;
-
-    const markVisible = () => setStatsVisible(true);
-
-    if (typeof IntersectionObserver !== 'undefined') {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0]?.isIntersecting) {
-            markVisible();
-            observer.disconnect();
-          }
-        },
-        { threshold: 0, rootMargin: '60px 0px 60px 0px' }
-      );
-      observer.observe(el);
-      return () => observer.disconnect();
-    } else {
-      const timer = setTimeout(markVisible, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [statsVisible]);
-
   const handlePillarClick = (categorySlug) => {
     if (onNavigate) {
       onNavigate(categorySlug);
@@ -162,7 +163,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
     }
   };
 
-  // Keyboard activation for elements rendered as `role="button"`
+  // Keyboard activation for interactive cards/buttons
   const handleKeyActivate = (e, callback) => {
     if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
       e.preventDefault();
@@ -172,24 +173,25 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
 
   return (
     <section id="hero" className="hero-modern-section">
-      {/* Ambient Glows & Dot Patterns matching reference */}
-      <div className="hero-ambient-wrap">
+      {/* Ambient Glows & Dot Matrix matching Reference Image 2 */}
+      <div className="hero-ambient-wrap" aria-hidden="true">
         <div className="hero-ambient-glow-coral"></div>
         <div className="hero-ambient-glow-soft"></div>
         <div className="hero-dot-grid hero-dot-grid-top"></div>
         <div className="hero-dot-grid hero-dot-grid-bottom"></div>
       </div>
 
-      <div className="container hero-modern-container">
+      {/* Main Two-Part Composition: Left Content & Edge-to-Edge Right Visual */}
+      <div className="hero-stage-layout">
         {/* Left Column: Heading, Subtitle, Dual CTAs, 3 Pillars */}
-        <div className="hero-modern-content">
+        <div className="hero-left-column">
           {/* Top Tag: Red Dash + SINCE 2014 */}
           <div className="hero-since-tag">
             <span className="hero-since-dash"></span>
             <span className="hero-since-text">SINCE 2014</span>
           </div>
 
-          {/* Main Heading matching reference */}
+          {/* Main Heading matching Reference Image 2 */}
           <h1 className="hero-modern-title">
             <span className="hero-title-dark">Automation &amp;</span>
             <span className="hero-title-red">Security Solutions</span>
@@ -223,7 +225,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
             </button>
           </div>
 
-          {/* 3 Bottom Feature Pillars matching reference */}
+          {/* 3 Bottom Feature Pillars matching Reference Image 2 */}
           <div className="hero-pillars-grid">
             {/* Pillar 1: Automation */}
             <div
@@ -281,112 +283,81 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
           </div>
         </div>
 
-        {/* Right Column: Composite Art & Interactive Cards Hotspots */}
-        <div className="hero-modern-visual">
-          <div className="hero-art-stage">
+        {/* Right Column: Architectural Building Visual + 3 Native HTML Overlapping Cards (55–60% width) */}
+        <div className="hero-right-visual-area">
+          <div className="hero-composition-stage">
+            {/* Architectural Building Graphic organically integrated into the background */}
             <img
               src="/hero-hti-building-collage.png"
-              alt="HTi Modern Corporate Facility, Automatic Doors, CCTV Security, and Hygiene Solutions"
-              className="hero-collage-img"
+              alt="HTI Modern Automation & Security Corporate Headquarters"
+              className="hero-building-backdrop-img"
               loading="eager"
+              width={1108}
+              height={920}
             />
 
-            {/* Interactive Hotspot 1: Automatic Doors & Gates */}
-            <div
-              className="hero-hotspot hotspot-doors"
-              onClick={() => handlePillarClick('automation')}
-              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('automation'))}
-              role="button"
-              tabIndex={0}
-              aria-label="View Automatic Doors and Gates"
-              title="View Automatic Doors & Gates"
-            >
-              <span className="hotspot-tooltip">View Doors &amp; Gates →</span>
-            </div>
-
-            {/* Interactive Hotspot 2: CCTV & Access Control */}
-            <div
-              className="hero-hotspot hotspot-security"
-              onClick={() => handlePillarClick('security-systems')}
-              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('security-systems'))}
-              role="button"
-              tabIndex={0}
-              aria-label="View CCTV and Access Control"
-              title="View CCTV & Access Control"
-            >
-              <span className="hotspot-tooltip">View Security Systems →</span>
-            </div>
-
-            {/* Interactive Hotspot 3: Hygiene Solutions */}
-            <div
-              className="hero-hotspot hotspot-hygiene"
-              onClick={() => handlePillarClick('hygiene')}
-              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('hygiene'))}
-              role="button"
-              tabIndex={0}
-              aria-label="View Cleanroom Hygiene Solutions"
-              title="View Cleanroom Hygiene Solutions"
-            >
-              <span className="hotspot-tooltip">View Hygiene Solutions →</span>
+            {/* Clickable Hotspots over the 3 service cards in the building image (zero overlapping image elements) */}
+            <div className="hero-cards-hotspots" aria-label="Service Divisions Navigation">
+              <button
+                type="button"
+                className="hero-hotspot hotspot-doors"
+                onClick={() => handlePillarClick('automation')}
+                aria-label="Automatic Doors & Gates"
+                title="Automatic Doors & Gates"
+              />
+              <button
+                type="button"
+                className="hero-hotspot hotspot-security"
+                onClick={() => handlePillarClick('security-systems')}
+                aria-label="CCTV & Access Control"
+                title="CCTV & Access Control"
+              />
+              <button
+                type="button"
+                className="hero-hotspot hotspot-hygiene"
+                onClick={() => handlePillarClick('hygiene')}
+                aria-label="Hygiene Solutions"
+                title="Hygiene Solutions"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Numerical Stats Banner Below Hero */}
-      <div ref={statsRef} className="container hero-stats-container">
-        <div className="stats-glass-strip">
-          <div className="stat-col">
-            <div className="stat-icon-circle">
-              <Award size={22} />
-            </div>
-            <div className="stat-text-box">
-              <div className="stat-number stat-red">
-                <AnimatedNumber target={12} isVisible={statsVisible} duration={500} />
-              </div>
-              <div className="stat-label">Years of Excellence</div>
-            </div>
-          </div>
+      {/* KEY METRICS SECTION — STATIONARY LOOPING NUMBER COUNTERS (Reference Image 2) */}
+      <div className="hero-metrics-banner-wrap">
+        {/* Organic Curved Wave Connector matching Reference Image 2 */}
+        <div className="hero-metrics-wave-top" aria-hidden="true">
+          <svg viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none">
+            <path
+              d="M0,60 C240,12 480,2 720,28 C960,54 1240,58 1440,60 L1440,60 L0,60 Z"
+              fill="#081736"
+            />
+          </svg>
+        </div>
 
-          <div className="stat-divider"></div>
-
-          <div className="stat-col">
-            <div className="stat-icon-circle">
-              <Cpu size={22} />
-            </div>
-            <div className="stat-text-box">
-              <div className="stat-number stat-blue">
-                <AnimatedNumber target={30} isVisible={statsVisible} duration={550} />
-              </div>
-              <div className="stat-label">Systems Delivered</div>
-            </div>
-          </div>
-
-          <div className="stat-divider"></div>
-
-          <div className="stat-col">
-            <div className="stat-icon-circle">
-              <Building2 size={22} />
-            </div>
-            <div className="stat-text-box">
-              <div className="stat-number stat-blue">
-                <AnimatedNumber target={15} isVisible={statsVisible} duration={500} />
-              </div>
-              <div className="stat-label">Industries Served</div>
-            </div>
-          </div>
-
-          <div className="stat-divider"></div>
-
-          <div className="stat-col">
-            <div className="stat-icon-circle">
-              <Users size={22} />
-            </div>
-            <div className="stat-text-box">
-              <div className="stat-number stat-blue">
-                <AnimatedNumber target={500} isVisible={statsVisible} duration={650} />
-              </div>
-              <div className="stat-label">Happy Clients</div>
+        <div className="hero-metrics-banner">
+          <div className="hero-metrics-inner">
+            {/* Six Evenly Spaced Stationary Metrics Columns */}
+            <div className="hero-metrics-grid" role="region" aria-label="Key Company Metrics">
+              {METRICS_DATA.map((metric, index) => {
+                const IconComponent = metric.icon;
+                const currentCount = metricCounts[index] ?? metric.target;
+                return (
+                  <div key={metric.id} className="hero-metric-item">
+                    <div className={`metric-icon-bubble ${metric.colorClass}`}>
+                      <IconComponent size={20} />
+                    </div>
+                    <div className="metric-loop-data">
+                      <div className="metric-loop-number">
+                        {currentCount}
+                        {metric.suffix}
+                      </div>
+                      <div className="metric-loop-label">{metric.label}</div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

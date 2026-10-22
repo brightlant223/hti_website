@@ -1055,10 +1055,21 @@ export default function Navbar({
             </button>
           </div>
 
-          {/* Right Action Group: Theme Toggle + Consultation CTA */}
-          {/* Right Action Group: Theme Toggle + Admin Portal */}
-          {/* Right Action Group: Theme Toggle + Admin Portal */}
+          {/* Right Action Group: Get a Quote CTA + Theme Toggle + Admin Portal */}
           <div className="bright-nav-actions desktop-only">
+            {/* Direct Get a Quote CTA Button matching Reference Image 2 */}
+            <button
+              className="bright-nav-quote-btn"
+              onClick={() => handleNavClick('contact')}
+              title="Request a Technical Proposal & Quote"
+              type="button"
+              id="nav-get-a-quote-btn"
+            >
+              <PhoneCall size={14} className="nav-quote-phone-icon" />
+              <span>Get a Quote</span>
+              <ArrowRight size={14} className="nav-quote-arrow-icon" />
+            </button>
+
             {/* Direct 1-Click Theme Toggle: Only 1 Icon, Instant Dark/Light Switch */}
             <button
               className={`bright-theme-toggle ${resolvedTheme === 'dark' ? 'is-dark' : 'is-light'}`}

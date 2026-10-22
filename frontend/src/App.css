@@ -1794,6 +1794,46 @@
   gap: 12px;
 }
 
+/* Get a Quote Red Pill Button matching Reference Image 2 */
+.bright-nav-quote-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #dc2626;
+  color: #ffffff;
+  border: 1.5px solid #dc2626;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.28);
+  transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+.bright-nav-quote-btn:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.38);
+}
+
+.nav-quote-phone-icon {
+  flex-shrink: 0;
+}
+
+.nav-quote-arrow-icon {
+  transition: transform 0.22s ease;
+  flex-shrink: 0;
+}
+
+.bright-nav-quote-btn:hover .nav-quote-arrow-icon {
+  transform: translateX(3px);
+}
+
 /* Theme Toggle Container & Interactive Switcher */
 .theme-toggle-container {
   position: relative;
