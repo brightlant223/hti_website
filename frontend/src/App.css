@@ -1,6 +1,22 @@
 /* ==========================================================================
    BRIGHTLANT-STYLE MODERN NAVBAR SYSTEM
    ========================================================================== */
+:root {
+  --header-height: 116px;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --header-height: 70px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-height: 64px;
+  }
+}
+
 .navbar-wrapper {
   position: sticky;
   top: 0;
@@ -345,15 +361,32 @@
   left: 50%;
   transform: translateX(-50%);
   width: min(94vw, 1340px);
-  max-height: calc(100vh - 100px);
+  max-height: calc(100dvh - var(--header-height, 116px) - 20px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 20px;
   box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(2, 132, 199, 0.04);
   z-index: 1050;
-  overflow: hidden;
   display: block;
   animation: megaPanelFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bright-mega-panel-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bright-mega-panel-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bright-mega-panel-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
 }
 
 @keyframes megaPanelFadeIn {
@@ -872,12 +905,31 @@
   left: 0;
   width: 100%;
   height: auto;
+  max-height: calc(100dvh - var(--header-height, 116px) - 20px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
   background: #ffffff;
   border-top: 1px solid #f1f5f9;
   border-bottom: 1px solid #e2e8f0;
   box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.09);
   z-index: 1050;
   animation: slideDownHoriz 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bright-horizontal-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bright-horizontal-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bright-horizontal-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
 }
 
 @keyframes slideDownHoriz {
@@ -11505,7 +11557,10 @@
   .auto-service-card,
   .auto-card-img,
   .auto-phase-card,
-  .auto-pulse-dot {
+  .auto-pulse-dot,
+  .bright-mega-panel-wrapper,
+  .bright-horizontal-dropdown,
+  .bright-mobile-drawer {
     animation: none !important;
     transition: none !important;
     transform: none !important;

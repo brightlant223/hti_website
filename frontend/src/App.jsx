@@ -354,14 +354,18 @@ export default function App() {
 
     // Handle scroll to specific ID if navigating to home section
     if (page === 'home' && typeof paramOrSection === 'string' && !paramOrSection.includes('/')) {
-      setTimeout(() => {
-        const el = document.getElementById(paramOrSection);
-        if (el) {
-          scrollToElement(el, 90);
-        } else {
-          scrollToTop();
-        }
-      }, 60);
+      if (paramOrSection === 'hero') {
+        scrollToTop();
+      } else {
+        setTimeout(() => {
+          const el = document.getElementById(paramOrSection);
+          if (el) {
+            scrollToElement(el);
+          } else {
+            scrollToTop();
+          }
+        }, 60);
+      }
     } else {
       scrollToTop();
     }
@@ -414,7 +418,7 @@ export default function App() {
   };
 
   // Find active product for product detail route
-  const activeProduct = routeState.page === 'product' 
+  const activeProduct = routeState.page === 'product'
     ? (getProductBySlug(routeState.param) || products.find(p => p.slug === routeState.param) || productsData[0])
     : null;
 
@@ -489,9 +493,9 @@ export default function App() {
 
         {/* ROUTE 5: Dedicated Contact Us Page (/contact) */}
         {routeState.page === 'contact' && (
-          <ContactPage 
-            onNavigate={navigateTo} 
-            onInquirySubmitted={handleInquirySubmitted} 
+          <ContactPage
+            onNavigate={navigateTo}
+            onInquirySubmitted={handleInquirySubmitted}
           />
         )}
 
@@ -540,9 +544,9 @@ export default function App() {
             />
 
             {/* Global Technology Partners & Our Esteemed Clients */}
-            <PartnersClients 
-              partners={partners} 
-              clients={clients} 
+            <PartnersClients
+              partners={partners}
+              clients={clients}
               onViewAllClients={() => navigateTo('clients')}
               onNavigate={navigateTo}
             />

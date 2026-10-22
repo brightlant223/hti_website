@@ -51,7 +51,9 @@ export default function Navbar({
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null); // 'services' | 'products' | 'company' | null
+  const [openMenu, setOpenMenu] = useState(null); // 'services' | 'products' | 'company' | null
+  const activeDropdown = openMenu;
+  const setActiveDropdown = setOpenMenu;
   // Tracks whether the open panel was opened by a click. A hover-opened panel
   // must NOT be closed by the subsequent click of the same nav button.
   const [openedByClick, setOpenedByClick] = useState(false);
@@ -64,6 +66,10 @@ export default function Navbar({
   const mobileToggleRef = useRef(null);
   const mobileDrawerRef = useRef(null);
   const navBarRef = useRef(null);
+  const servicesTriggerRef = useRef(null);
+  const productsTriggerRef = useRef(null);
+  const companyTriggerRef = useRef(null);
+  const justClosedByEscRef = useRef(false);
 
   // The header height changes with the logo size, the scroll state and the
   // breakpoint. Measure it so the mobile drawer/backdrop always start exactly
@@ -71,10 +77,15 @@ export default function Navbar({
   const [navHeight, setNavHeight] = useState(81);
 
   useEffect(() => {
-    const el = navBarRef.current;
+    const el = navRef.current;
     if (!el) return undefined;
 
-    const update = () => setNavHeight(Math.round(el.getBoundingClientRect().height));
+    const update = () => {
+      const height = Math.round(el.getBoundingClientRect().height);
+      setNavHeight(height);
+      document.documentElement.style.setProperty('--header-height', `${height}px`);
+      document.documentElement.style.setProperty('--hti-nav-h', `${height}px`);
+    };
     update();
 
     let ro;
@@ -109,6 +120,9 @@ export default function Navbar({
   // Keyboard users tabbing to a nav item should get the same panel a mouse
   // user gets on hover.
   const handleFocusDropdown = (name) => {
+    if (justClosedByEscRef.current) {
+      return;
+    }
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
     }
@@ -124,57 +138,126 @@ export default function Navbar({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdown on click outside
+  // Close open dropdown or mobile drawer on route change
   useEffect(() => {
+    setOpenMenu(null);
+    setOpenedByClick(false);
+    setMobileMenuOpen(false);
+  }, [currentPage]);
+
+  // STEP 2: ONE SHARED EFFECT for openMenu !== null
+  // DESKTOP (>1024px): close on scroll > 10px from where menu opened, click outside, focus outside
+  useEffect(() => {
+    if (!openMenu) return;
+
+    const initialScrollY = window.scrollY;
+
+    const handleScroll = (e) => {
+      if (window.innerWidth <= 1024) return;
+      // Ignore scroll events originating inside the open menu panel
+      if (e.target && e.target !== document && e.target !== window) {
+        if (navRef.current && navRef.current.contains(e.target)) {
+          return;
+        }
+      }
+      if (Math.abs(window.scrollY - initialScrollY) > 10) {
+        setOpenMenu(null);
+        setOpenedByClick(false);
+      }
+    };
+
     const handleClickOutside = (e) => {
       if (navRef.current && !navRef.current.contains(e.target)) {
-        setActiveDropdown(null);
+        setOpenMenu(null);
         setOpenedByClick(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
-  // Close the open panel when keyboard focus moves completely outside the nav
-  useEffect(() => {
     const handleFocusIn = (e) => {
-      if (!activeDropdown) return;
       if (navRef.current && !navRef.current.contains(e.target)) {
-        setActiveDropdown(null);
+        setOpenMenu(null);
         setOpenedByClick(false);
       }
     };
-    document.addEventListener('focusin', handleFocusIn);
-    return () => document.removeEventListener('focusin', handleFocusIn);
-  }, [activeDropdown]);
 
-  // Lock body scroll and set class when mobile menu is open
+    window.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('focusin', handleFocusIn);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll, { capture: true });
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('focusin', handleFocusIn);
+    };
+  }, [openMenu]);
+
+  // Esc key closes open dropdown and/or mobile drawer, and restores focus without reopening
   useEffect(() => {
-    if (mobileMenuOpen) {
+    if (!openMenu && !mobileMenuOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (openMenu) {
+          const menuToClose = openMenu;
+          justClosedByEscRef.current = true;
+          setOpenMenu(null);
+          setOpenedByClick(false);
+          if (menuToClose === 'services' && servicesTriggerRef.current) {
+            servicesTriggerRef.current.focus();
+          } else if (menuToClose === 'products' && productsTriggerRef.current) {
+            productsTriggerRef.current.focus();
+          } else if (menuToClose === 'company' && companyTriggerRef.current) {
+            companyTriggerRef.current.focus();
+          }
+          requestAnimationFrame(() => {
+            justClosedByEscRef.current = false;
+          });
+        }
+        if (mobileMenuOpen) {
+          setMobileMenuOpen(false);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [openMenu, mobileMenuOpen]);
+
+  // MOBILE / TABLET (<=1024px): Lock background scroll without layout shift
+  useEffect(() => {
+    const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024;
+    const isLocked = mobileMenuOpen || (openMenu !== null && isMobileOrTablet);
+
+    if (isLocked) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      const prevOverflow = document.body.style.overflow;
+      const prevPaddingRight = document.body.style.paddingRight;
+
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
       document.body.style.overflow = 'hidden';
       document.documentElement.classList.add('mobile-menu-active');
-      // Move focus into the drawer so keyboard users are not stranded behind it
-      if (mobileDrawerRef.current) {
-        const firstFocusable = mobileDrawerRef.current.querySelector(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        if (firstFocusable) firstFocusable.focus();
-      }
-    } else {
-      document.body.style.overflow = '';
-      document.documentElement.classList.remove('mobile-menu-active');
+
+      return () => {
+        document.body.style.overflow = prevOverflow;
+        document.body.style.paddingRight = prevPaddingRight;
+        document.documentElement.classList.remove('mobile-menu-active');
+      };
     }
-    return () => {
-      document.body.style.overflow = '';
-      document.documentElement.classList.remove('mobile-menu-active');
-    };
+  }, [mobileMenuOpen, openMenu, currentPage]);
+
+  // Focus first focusable element in drawer ONLY when mobileMenuOpen changes to true (stops focus-steal on accordion changes)
+  useEffect(() => {
+    if (mobileMenuOpen && mobileDrawerRef.current) {
+      const firstFocusable = mobileDrawerRef.current.querySelector(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (firstFocusable) firstFocusable.focus();
+    }
   }, [mobileMenuOpen]);
 
   // Return focus to the hamburger button when the drawer closes.
-  // The previous guard required the toggle to already hold focus, which can
-  // never be true once focus has been moved into the drawer, so closing the
-  // drawer dropped keyboard focus onto <body>.
   const wasMobileMenuOpenRef = useRef(false);
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -186,18 +269,6 @@ export default function Navbar({
       if (mobileToggleRef.current) mobileToggleRef.current.focus();
     }
   }, [mobileMenuOpen]);
-
-  // Close dropdowns on escape key
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setActiveDropdown(null);
-        setMobileMenuOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   // Which top-level section the current route belongs to. App.jsx already
   // passes `currentPage`, but it was never used, so the navigation never
@@ -226,6 +297,8 @@ export default function Navbar({
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
+    } else if (page === 'home') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }
   };
 
@@ -947,7 +1020,7 @@ export default function Navbar({
             className="bright-brand"
             onClick={(e) => {
               e.preventDefault();
-              handleNavClick('home', 'hero');
+              handleNavClick('home');
             }}
           >
             <div className="hti-logo-container">
@@ -981,6 +1054,7 @@ export default function Navbar({
               onFocus={() => handleFocusDropdown('services')}
             >
               <button
+                ref={servicesTriggerRef}
                 className={`bright-nav-btn ${activeDropdown === 'services' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'services' ? 'is-active-section' : ''}`}
                 onClick={() => toggleDropdown('services')}
                 aria-expanded={activeDropdown === 'services'}
@@ -1004,6 +1078,7 @@ export default function Navbar({
               onFocus={() => handleFocusDropdown('products')}
             >
               <button
+                ref={productsTriggerRef}
                 className={`bright-nav-btn ${activeDropdown === 'products' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'products' ? 'is-active-section' : ''}`}
                 onClick={() => toggleDropdown('products')}
                 aria-expanded={activeDropdown === 'products'}
@@ -1027,6 +1102,7 @@ export default function Navbar({
               onFocus={() => handleFocusDropdown('company')}
             >
               <button
+                ref={companyTriggerRef}
                 className={`bright-nav-btn ${activeDropdown === 'company' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'company' ? 'is-active-section' : ''}`}
                 onClick={() => toggleDropdown('company')}
                 aria-expanded={activeDropdown === 'company'}

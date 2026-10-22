@@ -44,9 +44,11 @@ export const scrollToTop = (behavior = 'smooth') => {
 };
 
 /** Smooth-scroll to a specific element, accounting for the sticky header. */
-export const scrollToElement = (element, offset = 0) => {
+export const scrollToElement = (element, offset = null) => {
   if (!element) return;
-  const top = element.getBoundingClientRect().top + window.scrollY - offset;
+  const navEl = document.querySelector('.navbar-wrapper');
+  const headerOffset = typeof offset === 'number' ? offset : (navEl ? navEl.offsetHeight : 116);
+  const top = element.getBoundingClientRect().top + window.scrollY - headerOffset;
   // When the element is already at (or above) the top of the document there
   // is nothing to scroll to - go all the way up instead.
   if (top <= 0) {

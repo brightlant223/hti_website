@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import './ClientsPage.css';
-import { 
-  Users, 
-  Factory, 
-  Globe, 
-  ShieldCheck, 
-  ArrowRight, 
-  ChevronRight, 
+import {
+  Users,
+  Factory,
+  Globe,
+  ShieldCheck,
+  ArrowRight,
+  ChevronRight,
   Home,
   Search,
   CheckCircle2,
@@ -53,9 +53,9 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
     return clientsData.filter((client) => {
       const matchesCategory = selectedCategory === 'all' || client.category === selectedCategory;
       const q = searchQuery.toLowerCase().trim();
-      const matchesSearch = !q || 
-        client.name.toLowerCase().includes(q) || 
-        client.sector.toLowerCase().includes(q) || 
+      const matchesSearch = !q ||
+        client.name.toLowerCase().includes(q) ||
+        client.sector.toLowerCase().includes(q) ||
         (client.solution && client.solution.toLowerCase().includes(q));
       return matchesCategory && matchesSearch;
     });
@@ -78,8 +78,8 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
       <div className="clients-breadcrumb-container">
         <div className="container">
           <nav className="clients-breadcrumb-nav" aria-label="Breadcrumb">
-            <button 
-              className="clients-breadcrumb-link" 
+            <button
+              className="clients-breadcrumb-link"
               onClick={() => onNavigate && onNavigate('home', 'hero')}
             >
               <Home size={13} className="breadcrumb-home-icon" />
@@ -107,7 +107,7 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
           </h1>
 
           <p className="clients-hero-subtitle">
-            Partnering with leading pharmaceutical plants, FMCG giants, high-tech research institutions, 
+            Partnering with leading pharmaceutical plants, FMCG giants, high-tech research institutions,
             and manufacturing leaders to engineer precision automation and security infrastructure.
           </p>
 
@@ -184,7 +184,7 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
             <div className="clients-search-box">
               <Search size={16} className="search-box-icon" />
               <label className="sr-only" htmlFor="clients-search-input">Search clients or sector</label>
-                <input
+              <input
                 type="text"
                 id="clients-search-input"
                 placeholder="Search clients or sector..."
@@ -193,8 +193,8 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
                 className="clients-search-input"
               />
               {searchQuery && (
-                <button 
-                  className="search-clear-btn" 
+                <button
+                  className="search-clear-btn"
                   onClick={() => setSearchQuery('')}
                   title="Clear search"
                 >
@@ -214,7 +214,7 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
               <Building2 size={40} className="empty-state-icon" />
               <h3>No matching clients found</h3>
               <p>Try clearing your search query or selecting a different category.</p>
-              <button 
+              <button
                 className="clients-reset-btn"
                 onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
               >
@@ -250,7 +250,7 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
                     <div className="client-card-body">
                       <h2 className="client-brand-name">{client.name}</h2>
                       <p className="client-sector-title">{client.sector}</p>
-                      
+
                       {/* Solution Deployed Badge */}
                       {client.solution && (
                         <div className="client-solution-badge">
@@ -338,18 +338,18 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
                 Become Our Next <span className="cta-title-accent">Success Story</span>
               </h2>
               <p className="cta-description">
-                Join 450+ leading pharmaceutical, industrial, and commercial enterprises who trust 
+                Join 450+ leading pharmaceutical, industrial, and commercial enterprises who trust
                 HTI Automation for precision engineering, statutory compliance, and zero-downtime performance.
               </p>
               <div className="cta-actions-flex">
-                <button 
+                <button
                   className="cta-primary-btn"
                   onClick={handleQuoteClick}
                 >
                   <span>Request Technical Consultation</span>
                   <ArrowRight size={16} />
                 </button>
-                <button 
+                <button
                   className="cta-secondary-btn"
                   onClick={handleCatalogClick}
                 >
