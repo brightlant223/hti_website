@@ -2102,31 +2102,52 @@
   }
 }
 
+.mobile-accordion-group,
 .mobile-bright-section {
   border-bottom: 1px solid #f1f5f9;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
 }
 
+.mobile-accordion-header,
 .mobile-bright-header {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: none;
-  border: none;
-  padding: 10px 4px;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 12px 4px;
   font-size: 0.95rem;
   cursor: pointer;
   color: #0f172a;
-  min-height: 44px;
+  min-height: 46px;
   box-sizing: border-box;
   border-radius: 8px;
-  transition: background 0.18s ease;
+  transition: background 0.18s ease, color 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .mobile-accordion-header:hover,
-.mobile-accordion-header:active {
-  background: #f8fafc;
+.mobile-bright-header:hover {
+  background: #f8fafc !important;
+}
+
+.mobile-accordion-header:active,
+.mobile-bright-header:active {
+  background: #f1f5f9 !important;
+}
+
+.mobile-accordion-header:focus,
+.mobile-accordion-header:focus-visible,
+.mobile-bright-header:focus,
+.mobile-bright-header:focus-visible {
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .mobile-accordion-title {
@@ -16737,8 +16758,30 @@
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
-[data-theme="dark"] .mobile-accordion-header {
+[data-theme="dark"] .mobile-accordion-header,
+[data-theme="dark"] .mobile-bright-header {
+  background: transparent !important;
+  background-color: transparent !important;
   color: #f8fafc !important;
+}
+
+[data-theme="dark"] .mobile-accordion-header:hover,
+[data-theme="dark"] .mobile-bright-header:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .mobile-accordion-header:active,
+[data-theme="dark"] .mobile-bright-header:active {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .mobile-accordion-header:focus,
+[data-theme="dark"] .mobile-accordion-header:focus-visible,
+[data-theme="dark"] .mobile-bright-header:focus,
+[data-theme="dark"] .mobile-bright-header:focus-visible {
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 [data-theme="dark"] .mobile-accordion-header svg {
