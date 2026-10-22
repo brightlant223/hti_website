@@ -115,7 +115,8 @@
   color: #38bdf8;
   padding: 2px 7px;
   border-radius: 9999px;
-  font-size: 0.67rem;
+  /* 0.67rem rendered at 10.72px - under the 11px legibility floor. */
+  font-size: 0.72rem;
   font-weight: 600;
   width: fit-content;
 }
@@ -145,7 +146,7 @@
   left: 0;
   width: 16px;
   height: 2px;
-  background: #0284c7;
+  background: #38bdf8;
   border-radius: 2px;
 }
 
@@ -159,7 +160,7 @@
   padding: 0;
 }
 
-.footer-nav-list li button {
+.footer-nav-list li a {
   background: none;
   border: none;
   color: #94a3b8;
@@ -167,14 +168,19 @@
   line-height: 1.35;
   padding: 1px 0;
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  transition: all 0.2s ease;
+  /* WCAG 2.5.8 (Target Size, Minimum) wants 24x24 CSS px. The rows were only
+     18px tall, so they were listed in the "small targets" audit. */
+  min-height: 24px;
+  border-radius: 6px;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.footer-nav-list li button:hover {
+.footer-nav-list li a:hover {
   color: #ffffff;
   transform: translateX(3px);
 }
@@ -187,8 +193,8 @@
   transition: color 0.2s ease;
 }
 
-.footer-nav-list li button:hover .nav-arrow-icon {
-  color: #0284c7;
+.footer-nav-list li a:hover .nav-arrow-icon {
+  color: #38bdf8;
 }
 
 /* Contact Details */
@@ -258,6 +264,9 @@
   align-items: center;
   gap: 3px;
   font-size: 0.74rem;
+  /* Keeps the phone / mail / web links at the 24px minimum target size. */
+  min-height: 24px;
+  border-radius: 5px;
 }
 
 .contact-link:hover {
@@ -265,7 +274,7 @@
 }
 
 .contact-sep {
-  color: #475569;
+  color: #7f8c9e;
 }
 
 .contact-ext-icon {
@@ -281,13 +290,15 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.72rem;
-  color: #64748b;
+  color: #7f8c9e;
   flex-wrap: wrap;
   gap: 10px;
 }
 
 .footer-copyright {
-  color: #64748b;
+  /* #64748b only reached 4.05:1 on the dark footer panel, below the 4.5:1
+     WCAG AA floor for this small text. */
+  color: #7f8c9e;
   letter-spacing: 0.01em;
 }
 
@@ -301,6 +312,10 @@
   color: #94a3b8;
   text-decoration: none;
   transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border-radius: 5px;
 }
 
 .footer-legal-links a:hover {
@@ -308,7 +323,7 @@
 }
 
 .footer-dot-sep {
-  color: #475569;
+  color: #7f8c9e;
   user-select: none;
   font-size: 0.75rem;
 }
@@ -333,17 +348,43 @@
   50% { transform: scale(1.25); }
 }
 
+/* Studio credit ------------------------------------------------------------
+   The credit used to be a flat magenta (#d946ef). It now carries a pink
+   gradient. The flat colour stays as the declaration so that a browser
+   without background-clip:text still shows readable pink text instead of
+   invisible transparent glyphs. */
 .brightlant-credit-link {
-  color: #d946ef;
+  color: #ec4899;
   font-weight: 700;
   text-decoration: none;
   transition: all 0.2s ease;
   letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  /* 24px minimum target size for the inline credit link. */
+  min-height: 24px;
+  border-radius: 5px;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .brightlant-credit-link {
+    background-image: linear-gradient(100deg, #f9a8d4 0%, #f472b6 28%, #ec4899 58%, #d946ef 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .brightlant-credit-link:hover {
+    background-image: linear-gradient(100deg, #fbcfe8 0%, #f9a8d4 28%, #f472b6 58%, #e879f9 100%);
+  }
 }
 
 .brightlant-credit-link:hover {
-  color: #f43f5e;
+  /* The gradient makes currentColor transparent, so the underline needs its
+     own colour or it would vanish with it. */
   text-decoration: underline;
+  text-decoration-color: #f472b6;
   text-underline-offset: 3px;
 }
 
@@ -377,6 +418,31 @@
 
 .footer-back-to-top svg {
   flex-shrink: 0;
+}
+
+/* ==========================================================================
+   KEYBOARD FOCUS
+   index.css resets `button { outline: none }` globally, and the footer had
+   no focus styling of its own - so every footer control was invisible to
+   keyboard users (WCAG 2.4.7 Focus Visible, level A). Each control now
+   paints a clear ring, and the nav arrow lights up on focus just like hover.
+   ========================================================================== */
+.footer-nav-list li a:focus-visible,
+.contact-link:focus-visible,
+.footer-legal-links a:focus-visible,
+.footer-back-to-top:focus-visible,
+.brightlant-credit-link:focus-visible {
+  outline: 2px solid #7dd3fc;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.footer-nav-list li a:focus-visible {
+  color: #ffffff;
+}
+
+.footer-nav-list li a:focus-visible .nav-arrow-icon {
+  color: #38bdf8;
 }
 
 /* ==========================================================================
@@ -431,6 +497,16 @@
   .contact-address-item {
     grid-column: 1 / -1;
   }
+  /* Stacking the bottom bar keeps the copyright, the legal links and the
+     studio credit from competing for the same line on narrow tablets. This
+     used to live in App.css under a 768px breakpoint, which left the
+     769-840px band overflowing. */
+  .footer-bottom-bar {
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    gap: 8px;
+  }
 }
 
 /* 4. MOBILES (<= 600px) - ULTRA SLIM
@@ -467,7 +543,7 @@
     margin-bottom: 6px;
   }
   .footer-trust-pill {
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     padding: 2px 7px;
     gap: 4px;
   }
@@ -487,7 +563,7 @@
   .footer-nav-list {
     gap: 1px;
   }
-  .footer-nav-list li button {
+  .footer-nav-list li a {
     font-size: 0.76rem;
     line-height: 1.3;
     padding: 8px 0;
@@ -540,7 +616,7 @@
     gap: 8px;
   }
   .footer-credit {
-    font-size: 0.66rem;
+    font-size: 0.72rem;
     justify-content: center;
   }
   .footer-dot-sep {
@@ -562,7 +638,7 @@
   .footer-grid {
     gap: 6px 6px;
   }
-  .footer-nav-list li button {
+  .footer-nav-list li a {
     font-size: 0.73rem;
   }
   .contact-entry-item {
@@ -588,7 +664,7 @@
     gap: 0;
   }
 
-  .footer-nav-list li button {
+  .footer-nav-list li a {
     min-height: 44px;
     padding: 8px 0;
   }

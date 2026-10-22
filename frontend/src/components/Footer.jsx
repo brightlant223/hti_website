@@ -23,22 +23,26 @@ export default function Footer({ onNavigate }) {
   // Every entry maps to a route that actually exists. The previous build
   // passed section ids such as "access-control" / "cctv" that no page ever
   // rendered, so those links silently dropped the user on the category top.
+  //
+  // Each entry also carries its real path so the control is a genuine anchor:
+  // middle-click / "open in new tab" / "copy link address" behave the way a
+  // visitor expects, and assistive tech announces it as a link.
   const quickLinks = [
-    { label: 'Home', page: 'home', section: 'hero' },
-    { label: 'About Us', page: 'about' },
-    { label: 'Our Solutions', page: 'automation' },
-    { label: 'Projects', page: 'clients' },
-    { label: 'Careers', page: 'careers' },
-    { label: 'Contact Us', page: 'contact' },
+    { label: 'Home', page: 'home', href: '/', section: 'hero' },
+    { label: 'About Us', page: 'about', href: '/about' },
+    { label: 'Our Solutions', page: 'automation', href: '/automation' },
+    { label: 'Projects', page: 'clients', href: '/clients' },
+    { label: 'Careers', page: 'careers', href: '/careers' },
+    { label: 'Contact Us', page: 'contact', href: '/contact' },
   ];
 
   const productSegments = [
-    { label: 'Access Automation', page: 'automation' },
-    { label: 'Perimeter & Traffic', page: 'perimeter-defense' },
-    { label: 'Cleanroom Interlocks', page: 'cleanroom-interlocks' },
-    { label: 'Fire & Life Safety', page: 'fire-protection' },
-    { label: 'Security & Surveillance', page: 'security-systems' },
-    { label: 'Hygiene Solutions', page: 'hygiene' },
+    { label: 'Access Automation', page: 'automation', href: '/automation' },
+    { label: 'Perimeter & Traffic', page: 'perimeter-defense', href: '/perimeter-defense' },
+    { label: 'Cleanroom Interlocks', page: 'cleanroom-interlocks', href: '/cleanroom-interlocks' },
+    { label: 'Fire & Life Safety', page: 'fire-protection', href: '/fire-protection' },
+    { label: 'Security & Surveillance', page: 'security-systems', href: '/security-systems' },
+    { label: 'Hygiene Solutions', page: 'hygiene', href: '/hygiene' },
   ];
 
   return (
@@ -74,10 +78,13 @@ export default function Footer({ onNavigate }) {
             <ul className="footer-nav-list">
               {quickLinks.map((link) => (
                 <li key={link.label}>
-                  <button type="button" onClick={() => handleLinkClick(link.page, link.section)}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => { e.preventDefault(); handleLinkClick(link.page, link.section); }}
+                  >
                     <ChevronRight size={13} className="nav-arrow-icon" />
                     <span>{link.label}</span>
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -89,10 +96,13 @@ export default function Footer({ onNavigate }) {
             <ul className="footer-nav-list">
               {productSegments.map((link) => (
                 <li key={link.label}>
-                  <button type="button" onClick={() => handleLinkClick(link.page)}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => { e.preventDefault(); handleLinkClick(link.page); }}
+                  >
                     <ChevronRight size={13} className="nav-arrow-icon" />
                     <span>{link.label}</span>
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -108,7 +118,7 @@ export default function Footer({ onNavigate }) {
                 </div>
                 <div className="contact-entry-body">
                   <a href="tel:+919892756077" className="contact-link">9892756077</a>
-                  <span className="contact-sep">/</span>
+                  <span className="contact-sep" aria-hidden="true">/</span>
                   <a href="tel:+919594917010" className="contact-link">9594917010</a>
                 </div>
               </div>
