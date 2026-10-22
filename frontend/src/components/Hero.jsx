@@ -9,12 +9,11 @@ import {
   Award,
   Building2,
   Users,
-  DoorClosed,
   Globe
 } from 'lucide-react';
 import './Hero.css';
 
-// Six stationary metrics matching Reference Image 2 exactly
+// Six stationary metrics matching Reference Image
 const METRICS_DATA = [
   {
     id: 'projects-delivered',
@@ -96,7 +95,6 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
         if (isCancelled) return;
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / ANIMATION_DURATION, 1);
-        // ease-out quad curve
         const ease = 1 - (1 - progress) * (1 - progress);
 
         setMetricCounts(METRICS_DATA.map((m) => Math.round(m.target * ease)));
@@ -104,7 +102,6 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
         if (progress < 1) {
           animationFrameId = requestAnimationFrame(step);
         } else {
-          // Reached target: hold then loop
           cycleTimeout = setTimeout(() => {
             if (isCancelled) return;
             setMetricCounts(METRICS_DATA.map(() => 0));
@@ -148,7 +145,6 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
     };
   }, [isVideoOpen]);
 
-  // Stop playback when the modal closes so audio never continues in the background
   useEffect(() => {
     if (!isVideoOpen && videoRef.current) {
       videoRef.current.pause();
@@ -163,7 +159,6 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
     }
   };
 
-  // Keyboard activation for interactive cards/buttons
   const handleKeyActivate = (e, callback) => {
     if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
       e.preventDefault();
@@ -173,7 +168,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
 
   return (
     <section id="hero" className="hero-modern-section">
-      {/* Ambient Glows & Dot Matrix matching Reference Image 2 */}
+      {/* Ambient Glows & Dot Matrix matching Reference Image */}
       <div className="hero-ambient-wrap" aria-hidden="true">
         <div className="hero-ambient-glow-coral"></div>
         <div className="hero-ambient-glow-soft"></div>
@@ -181,9 +176,9 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
         <div className="hero-dot-grid hero-dot-grid-bottom"></div>
       </div>
 
-      {/* Main Two-Part Composition: Left Content & Edge-to-Edge Right Visual */}
+      {/* Main Two-Part Composition: Left Content & Right Interactive Visual */}
       <div className="hero-stage-layout">
-        {/* Left Column: Heading, Subtitle, Dual CTAs, 3 Pillars */}
+        {/* Left Column: Heading, Subtitle, Dual CTAs, 3 Feature Highlights */}
         <div className="hero-left-column">
           {/* Top Tag: Red Dash + SINCE 2014 */}
           <div className="hero-since-tag">
@@ -191,7 +186,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
             <span className="hero-since-text">SINCE 2014</span>
           </div>
 
-          {/* Main Heading matching Reference Image 2 */}
+          {/* Main Heading matching Reference Image */}
           <h1 className="hero-modern-title">
             <span className="hero-title-dark">Automation &amp;</span>
             <span className="hero-title-red">Security Solutions</span>
@@ -225,9 +220,9 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
             </button>
           </div>
 
-          {/* 3 Bottom Feature Pillars matching Reference Image 2 */}
+          {/* 3 Bottom Feature Highlights matching Reference Image */}
           <div className="hero-pillars-grid">
-            {/* Pillar 1: Automation */}
+            {/* Feature 1: Automation */}
             <div
               className="hero-pillar-item"
               onClick={() => handlePillarClick('automation')}
@@ -245,7 +240,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
               </div>
             </div>
 
-            {/* Pillar 2: Security Systems */}
+            {/* Feature 2: Security Systems */}
             <div
               className="hero-pillar-item"
               onClick={() => handlePillarClick('security-systems')}
@@ -263,7 +258,7 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
               </div>
             </div>
 
-            {/* Pillar 3: Hygiene Solutions */}
+            {/* Feature 3: Hygiene Solutions */}
             <div
               className="hero-pillar-item"
               onClick={() => handlePillarClick('hygiene')}
@@ -283,50 +278,155 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
           </div>
         </div>
 
-        {/* Right Column: Architectural Building Visual + 3 Native HTML Overlapping Cards (55–60% width) */}
+        {/* Right Column: Architectural Building Visual + 3 Interactive Floating Service Cards */}
         <div className="hero-right-visual-area">
-          <div className="hero-composition-stage">
-            {/* Architectural Building Graphic organically integrated into the background */}
-            <img
-              src="/hero-hti-building-collage.png"
-              alt="HTI Modern Automation & Security Corporate Headquarters"
-              className="hero-building-backdrop-img"
-              loading="eager"
-              width={1108}
-              height={920}
-            />
+          {/* Decorative Backdrop SVG Shapes (Soft Coral & Dynamic Red Arc) */}
+          <div className="hero-right-backdrop-shape" aria-hidden="true">
+            <svg className="hero-backdrop-svg" viewBox="0 0 680 580" fill="none" preserveAspectRatio="none">
+              <path
+                d="M180,40 C360,-30 600,30 660,220 C710,380 610,530 440,560 C270,590 100,510 50,370 C5,240 40,110 180,40 Z"
+                fill="url(#heroCoralGrad)"
+              />
+              <path
+                d="M60,410 Q160,545 340,540"
+                stroke="#dc2626"
+                strokeWidth="4"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <defs>
+                <linearGradient id="heroCoralGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#fee2e2" stopOpacity="0.95" />
+                  <stop offset="55%" stopColor="#fecaca" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#ffe4e6" stopOpacity="0.5" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
 
-            {/* Clickable Hotspots over the 3 service cards in the building image (zero overlapping image elements) */}
-            <div className="hero-cards-hotspots" aria-label="Service Divisions Navigation">
-              <button
-                type="button"
-                className="hero-hotspot hotspot-doors"
-                onClick={() => handlePillarClick('automation')}
-                aria-label="Automatic Doors & Gates"
-                title="Automatic Doors & Gates"
+          {/* Central Glass Building Container with HTI Logo */}
+          <div className="hero-building-frame-wrap">
+            <div className="hero-building-frame">
+              <img
+                src="/hero-building-hti.jpg"
+                alt="HTI Modern Automation & Security Headquarters"
+                className="hero-building-img"
+                loading="eager"
               />
-              <button
-                type="button"
-                className="hero-hotspot hotspot-security"
-                onClick={() => handlePillarClick('security-systems')}
-                aria-label="CCTV & Access Control"
-                title="CCTV & Access Control"
-              />
-              <button
-                type="button"
-                className="hero-hotspot hotspot-hygiene"
-                onClick={() => handlePillarClick('hygiene')}
-                aria-label="Hygiene Solutions"
-                title="Hygiene Solutions"
-              />
+            </div>
+          </div>
+
+          {/* Three Stacked Interactive Service Cards on the Right */}
+          <div className="hero-floating-cards-column" aria-label="HTI Service Divisions">
+            {/* Card 1: Automatic Doors & Gates */}
+            <div
+              className="hero-service-card card-doors"
+              onClick={() => handlePillarClick('automation')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('automation'))}
+              role="button"
+              tabIndex={0}
+              title="Explore Automatic Doors & Gates"
+            >
+              <div className="service-card-media">
+                <img
+                  src="/hero-card-doors.jpg"
+                  alt="Automatic Doors & Gates"
+                  className="service-card-img"
+                  loading="eager"
+                />
+              </div>
+              <div className="service-card-pill pill-dark">
+                <div className="pill-left-content">
+                  <div className="pill-icon-box icon-box-dark">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect x="3" y="3" width="8" height="18" rx="1.5" />
+                      <rect x="13" y="3" width="8" height="18" rx="1.5" />
+                      <line x1="8" y1="11" x2="8" y2="13" />
+                      <line x1="16" y1="11" x2="16" y2="13" />
+                    </svg>
+                  </div>
+                  <span className="pill-text">Automatic Doors &amp; Gates</span>
+                </div>
+                <div className="pill-arrow-btn">
+                  <ArrowRight size={14} />
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: CCTV & Access Control */}
+            <div
+              className="hero-service-card card-cctv"
+              onClick={() => handlePillarClick('security-systems')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('security-systems'))}
+              role="button"
+              tabIndex={0}
+              title="Explore CCTV & Access Control"
+            >
+              <div className="service-card-media">
+                <img
+                  src="/hero-card-cctv.jpg"
+                  alt="CCTV & Access Control"
+                  className="service-card-img"
+                  loading="eager"
+                />
+              </div>
+              <div className="service-card-pill pill-light">
+                <div className="pill-left-content">
+                  <div className="pill-icon-box icon-box-blue">
+                    <ShieldCheck size={16} />
+                  </div>
+                  <span className="pill-text">CCTV &amp; Access Control</span>
+                </div>
+                <div className="pill-arrow-btn">
+                  <ArrowRight size={14} />
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: Hygiene Solutions */}
+            <div
+              className="hero-service-card card-hygiene"
+              onClick={() => handlePillarClick('hygiene')}
+              onKeyDown={(e) => handleKeyActivate(e, () => handlePillarClick('hygiene'))}
+              role="button"
+              tabIndex={0}
+              title="Explore Hygiene Solutions"
+            >
+              <div className="service-card-media">
+                <img
+                  src="/hero-card-hygiene.jpg"
+                  alt="Hygiene Solutions"
+                  className="service-card-img"
+                  loading="eager"
+                />
+              </div>
+              <div className="service-card-pill pill-light">
+                <div className="pill-left-content">
+                  <div className="pill-icon-box icon-box-green">
+                    <Leaf size={16} />
+                  </div>
+                  <span className="pill-text">Hygiene Solutions</span>
+                </div>
+                <div className="pill-arrow-btn">
+                  <ArrowRight size={14} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* KEY METRICS SECTION — STATIONARY LOOPING NUMBER COUNTERS (Reference Image 2) */}
+      {/* KEY METRICS SECTION — STATIONARY LOOPING NUMBER COUNTERS */}
       <div className="hero-metrics-banner-wrap">
-        {/* Organic Curved Wave Connector matching Reference Image 2 */}
         <div className="hero-metrics-wave-top" aria-hidden="true">
           <svg viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none">
             <path
@@ -338,7 +438,6 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
 
         <div className="hero-metrics-banner">
           <div className="hero-metrics-inner">
-            {/* Six Evenly Spaced Stationary Metrics Columns */}
             <div className="hero-metrics-grid" role="region" aria-label="Key Company Metrics">
               {METRICS_DATA.map((metric, index) => {
                 const IconComponent = metric.icon;
@@ -370,34 +469,31 @@ export default function Hero({ stats = {}, onExploreClick, onDemoClick, onQuoteC
           onClick={() => setIsVideoOpen(false)}
           role="dialog"
           aria-modal="true"
-          aria-label="HTI Corporate Automation and Facility Tour"
         >
           <div
-            className="hero-video-modal-box"
+            className="hero-video-modal-dialog"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="hero-video-modal-header">
-              <div className="hero-video-modal-title">
-                <Play size={18} className="text-red-500" fill="currentColor" />
-                <span>HTI Corporate Automation &amp; Facility Tour</span>
-              </div>
-              <button
-                className="hero-video-close-btn"
-                onClick={() => setIsVideoOpen(false)}
-                aria-label="Close Video"
-                ref={modalCloseRef}
+            <button
+              className="btn-modal-close"
+              onClick={() => setIsVideoOpen(false)}
+              aria-label="Close Video"
+              ref={modalCloseRef}
+            >
+              <X size={20} />
+            </button>
+            <div className="hero-video-player-wrap">
+              <video
+                ref={videoRef}
+                controls
+                autoPlay
+                playsInline
+                className="hero-modal-video"
+                src="/gemini_generated_video_02f233ca.mp4"
               >
-                <X size={20} />
-              </button>
+                Your browser does not support HTML5 video.
+              </video>
             </div>
-            <video
-              ref={videoRef}
-              src="/gemini_generated_video_02f233ca.mp4"
-              controls
-              autoPlay
-              playsInline
-              className="hero-video-element"
-            />
           </div>
         </div>
       )}

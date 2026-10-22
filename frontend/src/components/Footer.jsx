@@ -186,7 +186,7 @@ export default function Footer({ onNavigate }) {
               Sitemap
             </a>
 
-            <button
+            {/* <button
               type="button"
               className="footer-back-to-top"
               onClick={handleBackToTop}
@@ -195,11 +195,12 @@ export default function Footer({ onNavigate }) {
             >
               <ArrowUp size={13} />
               <span>Back to top</span>
-            </button>
+            </button> */}
           </div>
 
+
           <div className="footer-credit">
-            Designed with <span className="credit-heart" aria-label="love">❤️</span> by{' '}
+            Designed &amp; Developed by{' '}
             <a
               href="https://brightlant.com"
               target="_blank"
@@ -210,6 +211,7 @@ export default function Footer({ onNavigate }) {
               Brightlant
             </a>
           </div>
+
         </div>
       </div>
     </footer>

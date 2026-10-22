@@ -16364,11 +16364,8 @@
 /* Full-width continuous ticker wrapper */
 .clients-marquee-wrapper {
   position: relative;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
   padding: 12px 0 16px;
 }
