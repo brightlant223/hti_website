@@ -171,10 +171,19 @@ export default function Navbar({
     };
   }, [mobileMenuOpen]);
 
-  // Return focus to the hamburger button when the drawer closes
+  // Return focus to the hamburger button when the drawer closes.
+  // The previous guard required the toggle to already hold focus, which can
+  // never be true once focus has been moved into the drawer, so closing the
+  // drawer dropped keyboard focus onto <body>.
+  const wasMobileMenuOpenRef = useRef(false);
   useEffect(() => {
-    if (!mobileMenuOpen && mobileToggleRef.current && document.activeElement === mobileToggleRef.current) {
-      mobileToggleRef.current.focus();
+    if (mobileMenuOpen) {
+      wasMobileMenuOpenRef.current = true;
+      return;
+    }
+    if (wasMobileMenuOpenRef.current) {
+      wasMobileMenuOpenRef.current = false;
+      if (mobileToggleRef.current) mobileToggleRef.current.focus();
     }
   }, [mobileMenuOpen]);
 
@@ -184,7 +193,6 @@ export default function Navbar({
       if (e.key === 'Escape') {
         setActiveDropdown(null);
         setMobileMenuOpen(false);
-        setThemeDropdownOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -1118,6 +1126,8 @@ export default function Navbar({
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu-drawer"
+              ref={mobileToggleRef}
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
 
@@ -1542,7 +1552,14 @@ export default function Navbar({
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="bright-mobile-drawer mobile-menu-drawer" id="mobile-menu-drawer">
+          <div
+            className="bright-mobile-drawer mobile-menu-drawer"
+            id="mobile-menu-drawer"
+            ref={mobileDrawerRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile Navigation Menu"
+          >
             {/* Accordion Item: Services */}
             <div className="mobile-accordion-group">
               <button
