@@ -2677,6 +2677,20 @@
     padding: 8px 14px;
     font-size: 0.82rem;
   }
+
+  /* The "Get a Quote" CTA was added to the header after this breakpoint was
+     written, so between 1025px and 1034px the right-hand controls ran 8px
+     past the viewport and the admin button was clipped. Tighten the CTA and
+     the action gap so the whole header fits. */
+  .bright-nav-quote-btn {
+    padding: 7px 12px;
+    gap: 6px;
+    font-size: 0.84rem;
+  }
+
+  .bright-nav-actions {
+    gap: 10px;
+  }
 }
 
 @media (max-width: 1024px) {
