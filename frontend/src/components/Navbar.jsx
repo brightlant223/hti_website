@@ -1567,7 +1567,10 @@ export default function Navbar({
                 onClick={() => setMobileAccordion(mobileAccordion === 'services' ? null : 'services')}
                 aria-expanded={mobileAccordion === 'services'}
               >
-                <span className="mobile-accordion-title">Services</span>
+                <span className="mobile-accordion-heading">
+                  <span className="mobile-accordion-title">Services</span>
+                  <span className="mobile-accordion-count" aria-hidden="true">{serviceGroups.length}</span>
+                </span>
                 {mobileAccordion === 'services' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
               </button>
 
@@ -1603,7 +1606,10 @@ export default function Navbar({
                 onClick={() => setMobileAccordion(mobileAccordion === 'products' ? null : 'products')}
                 aria-expanded={mobileAccordion === 'products'}
               >
-                <span className="mobile-accordion-title">Products</span>
+                <span className="mobile-accordion-heading">
+                  <span className="mobile-accordion-title">Products</span>
+                  <span className="mobile-accordion-count" aria-hidden="true">{productGroups.length}</span>
+                </span>
                 {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
               </button>
 
@@ -1647,7 +1653,10 @@ export default function Navbar({
                   onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
                   aria-expanded={mobileAccordion === 'company'}
                 >
-                  <span className="mobile-accordion-title">Company</span>
+                  <span className="mobile-accordion-heading">
+                    <span className="mobile-accordion-title">Company</span>
+                    <span className="mobile-accordion-count" aria-hidden="true">5</span>
+                  </span>
                   {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
 
@@ -1696,41 +1705,51 @@ export default function Navbar({
                 )}
               </div>
 
-              {/* Premium Attractive Brochure Action Card */}
-              <button
-                className="mobile-brochure-card"
-                onClick={(e) => {
-                  setMobileMenuOpen(false);
-                  handleDownloadBrochure(e);
-                }}
-                type="button"
-                aria-label="Download HTI Company Brochure PDF"
-              >
-                <div className="mobile-brochure-left">
-                  <div className="mobile-brochure-icon-box">
-                    <Download size={16} />
-                  </div>
-                  <div className="mobile-brochure-labels">
-                    <span className="mobile-brochure-heading">Brochure</span>
-                    <span className="mobile-brochure-pill">PDF</span>
-                  </div>
-                </div>
-                <ArrowRight size={16} className="mobile-brochure-chevron" />
-              </button>
-
-              {/* Primary CTA - Request a Quote */}
-              <button
-                className="mobile-cta-primary"
-                onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
-                type="button"
-              >
-                <PhoneCall size={16} />
-                <span>Request a Technical Quote</span>
-                <ArrowRight size={16} />
-              </button>
-
-              {/* Mobile CTAs */}
+              {/* Mobile Action Area - kept pinned to the bottom of the drawer so
+                  the brochure, the quote CTA and the consultation link are
+                  always one tap away, whatever the accordion content length. */}
               <div className="mobile-drawer-footer">
+
+                {/* Compact Brochure Row - one line instead of a tall card */}
+                <button
+                  className="mobile-brochure-row"
+                  onClick={(e) => {
+                    setMobileMenuOpen(false);
+                    handleDownloadBrochure(e);
+                  }}
+                  type="button"
+                  aria-label="Request the HTI product brochure PDF"
+                >
+                  <span className="mobile-brochure-icon">
+                    <FileText size={16} />
+                  </span>
+                  <span className="mobile-brochure-heading">Product Brochure</span>
+                  <span className="mobile-brochure-pill">
+                    <Download size={12} />
+                    PDF
+                  </span>
+                </button>
+
+                {/* Primary CTA - Request a Quote */}
+                <button
+                  className="mobile-cta-primary"
+                  onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
+                  type="button"
+                >
+                  <PhoneCall size={16} />
+                  <span>Request a Technical Quote</span>
+                  <ArrowRight size={16} />
+                </button>
+
+                {/* Secondary CTA - the proposal form on the home page */}
+                <button
+                  className="mobile-consultation-btn"
+                  onClick={() => { setMobileMenuOpen(false); handleNavClick('home', 'insights-and-quote'); }}
+                  type="button"
+                >
+                  <Sparkles size={15} />
+                  <span>Get Free Consultation</span>
+                </button>
 
                 <button
                   className="bright-admin-btn w-full justify-center py-3"

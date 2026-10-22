@@ -2066,7 +2066,9 @@
   background: #ffffff;
   border-top: 1px solid #f1f5f9;
   border-bottom: 1px solid #e2e8f0;
-  padding: 16px 18px 40px;
+  /* The bottom padding now belongs to the sticky .mobile-drawer-footer
+     action area, so the action bar can sit flush against the drawer edge. */
+  padding: 16px 18px 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -2395,6 +2397,140 @@
   justify-content: center;
   padding-top: 12px;
   padding-bottom: 12px;
+}
+
+/* ==========================================================================
+   MOBILE DRAWER - COUNT BADGES, COMPACT BROCHURE ROW, CONSULTATION CTA
+   --------------------------------------------------------------------------
+   Keeps the section header readable, replaces the tall brochure card with a
+   one-line row, and adds a lighter consultation action next to the primary
+   quote CTA.
+   ========================================================================== */
+
+/* Title and count badge stay together on the left of a section header. */
+.mobile-accordion-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mobile-accordion-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 9999px;
+  background: #eff6ff;
+  color: #0284c7;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Compact brochure row - one line instead of a tall bordered card. */
+.mobile-brochure-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.mobile-brochure-row:hover {
+  background: #ffffff;
+  border-color: #0284c7;
+}
+
+.mobile-brochure-row .mobile-brochure-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #0284c7;
+  flex-shrink: 0;
+}
+
+.mobile-brochure-row .mobile-brochure-heading {
+  font-weight: 600;
+  font-size: 0.86rem;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-brochure-row .mobile-brochure-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  background: #e0f2fe;
+  color: #0284c7;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+/* Secondary consultation action - deliberately lighter than the red CTA. */
+.mobile-consultation-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 14px;
+  background: #f0f9ff;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.mobile-consultation-btn:hover {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+/* Pin the action area to the bottom of the drawer so the brochure, the quote
+   CTA and the consultation link stay reachable however long the accordion
+   content above them is. */
+.mobile-drawer-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding: 14px 0 18px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -8px 18px rgba(15, 23, 42, 0.06);
 }
 
 /* Primary CTA inside the mobile drawer */
