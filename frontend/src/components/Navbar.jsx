@@ -7,6 +7,7 @@ import {
   X,
   ChevronDown,
   ChevronUp,
+  ChevronRight,
   Download,
   Sun,
   Moon,
@@ -1052,7 +1053,7 @@ export default function Navbar({
             <button
               className="bright-nav-btn brochure-btn"
               onClick={handleDownloadBrochure}
-              title="Download Product Catalog & Specs"
+              title="Download Company Brochure PDF"
               type="button"
             >
               <Download size={14} className="brochure-icon" />
@@ -1539,266 +1540,87 @@ export default function Navbar({
           </div>
         )}
 
-        {/* 3. Mobile Slide-down Navigation Drawer (Exact Brightlant Design) */}
+        {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="bright-mobile-drawer">
-            {/* 1. SERVICES Accordion (6) */}
-            <div className="mobile-bright-section">
+          <div className="bright-mobile-drawer mobile-menu-drawer" id="mobile-menu-drawer">
+            {/* Accordion Item: Services */}
+            <div className="mobile-accordion-group">
               <button
-                type="button"
-                className="mobile-bright-header"
+                className="mobile-accordion-header"
                 onClick={() => setMobileAccordion(mobileAccordion === 'services' ? null : 'services')}
                 aria-expanded={mobileAccordion === 'services'}
               >
-                <div className="mobile-bright-title-wrap">
-                  <span className="mobile-bright-title">SERVICES</span>
-                  <span className="mobile-bright-badge">6</span>
-                </div>
-                {mobileAccordion === 'services' ? (
-                  <ChevronUp size={18} className="mobile-bright-chevron" />
-                ) : (
-                  <ChevronDown size={18} className="mobile-bright-chevron" />
-                )}
+                <span className="mobile-accordion-title">Services</span>
+                {mobileAccordion === 'services' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
               </button>
 
               {mobileAccordion === 'services' && (
-                <div className="mobile-bright-sublist">
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('automation')}
-                  >
-                    Industrial Access Automation
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('cleanroom-interlocks')}
-                  >
-                    Cleanroom Interlocks & Pass Boxes
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('security-systems')}
-                  >
-                    Traffic & Perimeter Control
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('security-systems')}
-                  >
-                    Fire & Life Safety Systems
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('security-systems')}
-                  >
-                    Surveillance & Biometrics
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('hygiene')}
-                  >
-                    Cold Storage & Cleanroom Doors
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem-all"
-                    onClick={() => handleNavClick('home', 'catalog')}
-                  >
-                    All services
-                  </button>
+                <div className="mobile-accordion-body">
+                  {serviceGroups.map((g) => (
+                    <button
+                      key={g.id}
+                      className="mobile-clean-sublink"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        if (g.page) {
+                          handleNavClick(g.page);
+                        } else if (g.section) {
+                          handleNavClick('home', g.section);
+                        } else {
+                          handleCategoryClick(g.category);
+                        }
+                      }}
+                    >
+                      <span className="mobile-clean-title">{g.title}</span>
+                      <ArrowRight size={16} className="mobile-clean-arrow" />
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
 
-            {/* 2. PRODUCTS Accordion (5) */}
-            <div className="mobile-bright-section">
+            {/* Accordion Item: Products */}
+            <div className="mobile-accordion-group">
               <button
-                type="button"
-                className="mobile-bright-header"
+                className="mobile-accordion-header"
                 onClick={() => setMobileAccordion(mobileAccordion === 'products' ? null : 'products')}
                 aria-expanded={mobileAccordion === 'products'}
               >
-                <div className="mobile-bright-title-wrap">
-                  <span className="mobile-bright-title">PRODUCTS</span>
-                  <span className="mobile-bright-badge">5</span>
-                </div>
-                {mobileAccordion === 'products' ? (
-                  <ChevronUp size={18} className="mobile-bright-chevron" />
-                ) : (
-                  <ChevronDown size={18} className="mobile-bright-chevron" />
-                )}
+                <span className="mobile-accordion-title">Products</span>
+                {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
               </button>
 
               {mobileAccordion === 'products' && (
-                <div className="mobile-bright-sublist">
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleCategoryClick('Automation')}
+                <div className="mobile-accordion-body">
+                  {productGroups.map((group) => (
+                    <button
+                      key={group.id}
+                      className="mobile-clean-sublink"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        if (group.page && onNavigate) {
+                          onNavigate(group.page);
+                        } else if (onNavigate) {
+                          onNavigate('catalog', group.categoryId);
+                        }
+                      }}
+                    >
+                      <span className="mobile-clean-title">{group.title}</span>
+                      <ArrowRight size={16} className="mobile-clean-arrow" />
+                    </button>
+                  ))}
+                  <button
+                    className="mobile-clean-sublink mobile-clean-all"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      if (onNavigate) onNavigate('catalog', 'all');
+                    }}
                   >
-                    Access Automation & Doors
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleCategoryClick('Security System')}
-                  >
-                    Traffic & Perimeter Barriers
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleCategoryClick('Hygiene')}
-                  >
-                    Cleanroom Interlocks & Pass Boxes
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleCategoryClick('Fire & Life Safety')}
-                  >
-                    Fire & Life Safety Systems
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleCategoryClick('Surveillance')}
-                  >
-                    Surveillance & Biometrics
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem-all"
-                    onClick={() => handleNavClick('home', 'catalog')}
-                  >
-                    All products
+                    <span className="mobile-clean-title">View All Products</span>
+                    <ArrowRight size={16} className="mobile-clean-arrow" />
                   </button>
                 </div>
               )}
-            </div>
-
-            {/* 3. COMPANY Accordion (5) */}
-            <div className="mobile-bright-section">
-              <button
-                type="button"
-                className="mobile-bright-header"
-                onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
-                aria-expanded={mobileAccordion === 'company'}
-              >
-                <div className="mobile-bright-title-wrap">
-                  <span className="mobile-bright-title">COMPANY</span>
-                  <span className="mobile-bright-badge">5</span>
-                </div>
-                {mobileAccordion === 'company' ? (
-                  <ChevronUp size={18} className="mobile-bright-chevron" />
-                ) : (
-                  <ChevronDown size={18} className="mobile-bright-chevron" />
-                )}
-              </button>
-
-              {mobileAccordion === 'company' && (
-                <div className="mobile-bright-sublist">
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('about')}
-                  >
-                    About Us
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('clients')}
-                  >
-                    Our Clients
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('partners')}
-                  >
-                    Partners & Alliances
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('blogs')}
-                  >
-                    Technical Blogs
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem"
-                    onClick={() => handleNavClick('contact')}
-                  >
-                    Contact Office
-                  </button>
-                  <button 
-                    type="button"
-                    className="mobile-bright-subitem-all"
-                    onClick={() => handleNavClick('about')}
-                  >
-                    Company overview
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* 4. Brochure Row with PDF Download Pill (Matches screenshot) */}
-            <div className="mobile-bright-brochure-row" onClick={handleDownloadBrochure}>
-              <div className="mobile-brochure-left">
-                <FileText size={18} className="mobile-brochure-icon" />
-                <span className="mobile-brochure-text">Brochure</span>
-              </div>
-              <button 
-                type="button"
-                className="mobile-brochure-pdf-pill"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDownloadBrochure(e);
-                }}
-                aria-label="Download PDF Brochure"
-              >
-                <Download size={13} />
-                <span>PDF</span>
-              </button>
-            </div>
-
-            {/* 5. Primary CTA: Get Free Consultation (Matches screenshot) */}
-            <button
-              type="button"
-              className="mobile-bright-consultation-btn"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                handleNavClick('home', 'contact');
-              }}
-            >
-              <span>Get Free Consultation</span>
-              <ArrowUpRight size={18} />
-            </button>
-
-            {/* 6. Admin Portal link */}
-            <div className="mobile-bright-admin-wrap">
-              <button
-                type="button"
-                className="mobile-bright-admin-btn"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  if (onOpenAdmin) onOpenAdmin();
-                }}
-              >
-                <User size={15} />
-                <span>Admin Portal</span>
-                {inquiryCount > 0 && (
-                  <span className="mobile-admin-count">{inquiryCount}</span>
-                )}
-              </button>
             </div>
 
             {/* Accordion Item: Company */}
@@ -1808,78 +1630,50 @@ export default function Navbar({
                   onClick={() => setMobileAccordion(mobileAccordion === 'company' ? null : 'company')}
                   aria-expanded={mobileAccordion === 'company'}
                 >
-                  <div className="flex-center-gap">
-                    <span className="mobile-pill-tag">COMPANY</span>
-                    <span className="mobile-accordion-title">Company</span>
-                  </div>
+                  <span className="mobile-accordion-title">Company</span>
                   {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
 
                 {mobileAccordion === 'company' && (
                   <div className="mobile-accordion-body">
                     <button
-                      className="mobile-service-sublink"
+                      className="mobile-clean-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}
                     >
-                      <div className="mobile-sublink-icon-box">
-                        <Building2 size={15} style={{ color: '#0284c7' }} />
-                      </div>
-                      <div className="mobile-sublink-text">
-                        <div className="mobile-service-title">About Us</div>
-                        <div className="mobile-service-tagline">Our story, values &amp; engineering ethos since 2014</div>
-                      </div>
+                      <span className="mobile-clean-title">About Us</span>
+                      <ArrowRight size={16} className="mobile-clean-arrow" />
                     </button>
 
                     <button
-                      className="mobile-service-sublink"
+                      className="mobile-clean-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('clients'); }}
                     >
-                      <div className="mobile-sublink-icon-box">
-                        <Users size={15} style={{ color: '#059669' }} />
-                      </div>
-                      <div className="mobile-sublink-text">
-                        <div className="mobile-service-title">Our Clients</div>
-                        <div className="mobile-service-tagline">100+ prestigious pharma &amp; commercial installations</div>
-                      </div>
+                      <span className="mobile-clean-title">Our Clients</span>
+                      <ArrowRight size={16} className="mobile-clean-arrow" />
                     </button>
 
                     <button
-                      className="mobile-service-sublink"
+                      className="mobile-clean-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('careers'); }}
                     >
-                      <div className="mobile-sublink-icon-box">
-                        <Briefcase size={15} style={{ color: '#7c3aed' }} />
-                      </div>
-                      <div className="mobile-sublink-text">
-                        <div className="mobile-service-title">Careers</div>
-                        <div className="mobile-service-tagline">Explore engineering careers &amp; join our growing team</div>
-                      </div>
+                      <span className="mobile-clean-title">Careers</span>
+                      <ArrowRight size={16} className="mobile-clean-arrow" />
                     </button>
 
                     <button
-                      className="mobile-service-sublink"
+                      className="mobile-clean-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('blogs'); }}
                     >
-                      <div className="mobile-sublink-icon-box">
-                        <BookOpen size={15} style={{ color: '#2563eb' }} />
-                      </div>
-                      <div className="mobile-sublink-text">
-                        <div className="mobile-service-title">Blogs</div>
-                        <div className="mobile-service-tagline">Cleanroom standards, USFDA compliance &amp; notes</div>
-                      </div>
+                      <span className="mobile-clean-title">Blogs</span>
+                      <ArrowRight size={16} className="mobile-clean-arrow" />
                     </button>
 
                     <button
-                      className="mobile-service-sublink"
+                      className="mobile-clean-sublink"
                       onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
                     >
-                      <div className="mobile-sublink-icon-box">
-                        <PhoneCall size={15} style={{ color: '#dc2626' }} />
-                      </div>
-                      <div className="mobile-sublink-text">
-                        <div className="mobile-service-title font-semibold text-primary">Contact Us</div>
-                        <div className="mobile-service-tagline">Talk to our engineering team in Navi Mumbai</div>
-                      </div>
+                      <span className="mobile-clean-title">Contact Us</span>
+                      <ArrowRight size={16} className="mobile-clean-arrow" />
                     </button>
                   </div>
                 )}
@@ -1893,14 +1687,14 @@ export default function Navbar({
                   handleDownloadBrochure(e);
                 }}
                 type="button"
-                aria-label="Download HTI Product Brochure PDF"
+                aria-label="Download HTI Company Brochure PDF"
               >
                 <div className="mobile-brochure-left">
                   <div className="mobile-brochure-icon-box">
                     <Download size={16} />
                   </div>
                   <div className="mobile-brochure-labels">
-                    <span className="mobile-brochure-heading">Download Product Brochure</span>
+                    <span className="mobile-brochure-heading">Brochure</span>
                     <span className="mobile-brochure-pill">PDF</span>
                   </div>
                 </div>
