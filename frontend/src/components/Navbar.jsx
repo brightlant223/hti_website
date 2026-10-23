@@ -60,6 +60,7 @@ export default function Navbar({
   const [selectedServiceGroup, setSelectedServiceGroup] = useState(0);
   const [selectedProductGroup, setSelectedProductGroup] = useState(0);
   const [mobileAccordion, setMobileAccordion] = useState(null);
+  const [mobileProductGroup, setMobileProductGroup] = useState(null);
 
   const navRef = useRef(null);
   const dropdownTimeoutRef = useRef(null);
@@ -735,18 +736,17 @@ export default function Navbar({
         {
           title: 'Motorized Rolling Shutters',
           description: 'Heavy-gauge motorized roll-up shutters for industrial site defense.',
-          image: '/services/services-heavy-security.jpg',
+          image: '/products/motorized-rolling-shutters.jpg',
           icon: Layers,
           slug: 'motorized-industrial-rolling-shutters'
         },
         {
           title: 'PVC High Speed Roll Up Doors',
           description: 'PVC high-speed rapid roll-up airlock doors for logistics & clean areas.',
-          image: '/services/services-rapid-airlock.jpg',
+          image: '/products/rapid-doors.jpg',
           icon: Truck,
           slug: 'high-speed-roll-up-doors'
         },
-
       ]
     },
     {
@@ -780,25 +780,24 @@ export default function Navbar({
         {
           title: 'Optical Speed Flap Turnstiles',
           description: 'Biometric pedestrian speed gates & optical barriers for corporate lobbies.',
-          image: '/services/services-heavy-security.jpg',
+          image: '/products/optical-speed-turnstiles.jpg',
           icon: Users,
           slug: 'optical-flap-turnstiles'
         },
         {
           title: 'Anti-Ram Hydraulic Crash Bollards',
           description: 'K4/K12 crash-certified retractable bollards for high-security portals.',
-          image: '/services/service-bollards-blockers.jpg',
+          image: '/products/hydraulic-crash-bollards.jpg',
           icon: Lock,
           slug: 'hydraulic-crash-bollards'
         },
         {
           title: 'Tyre Killers & Road Blockers',
           description: 'Heavy-duty electro-hydraulic road blockers and steel tyre shredders.',
-          image: '/case-studies/case-boom-barrier.jpg',
-          icon: Flame,
+          image: '/products/tyre-killers-road-blockers.jpg',
+          icon: ShieldCheck,
           slug: 'tyre-killers-road-blockers'
         },
-
       ]
     },
     {
@@ -812,7 +811,7 @@ export default function Navbar({
       badge: 'USFDA CFR PART 11 CLEANROOM',
       headingPrimary: 'USFDA 21 CFR Part 11',
       headingAccent: 'Cleanroom & Interlock Logic.',
-      heroImage: '/products/cleanroom-interlocks.jpg',
+      heroImage: '/case-studies/case-cleanroom.jpg',
       overviewDesc: 'Certified 2–8 door programmable interlocking logic, dynamic UV pass boxes, GPS synchronized clocks, and hermetic cleanroom doors.',
       products: [
         {
@@ -820,7 +819,7 @@ export default function Navbar({
           description: 'Flameproof & safe programmable airlock cascading interlock controllers.',
           image: '/products/cleanroom-interlocks.jpg',
           icon: Lock,
-          slug: 'door-interlock-system'
+          slug: 'door-interlock-systems'
         },
         {
           title: 'Dynamic & Static Pass Boxes',
@@ -846,11 +845,10 @@ export default function Navbar({
         {
           title: 'Hermetically Sealed Cleanroom Doors',
           description: 'Airtight flush-fit antimicrobial cleanroom swing and sliding doors.',
-          image: '/hero-cleanroom-interlock-chamber.jpg',
+          image: '/products/cleanroom-door-pharma.jpg',
           icon: Sparkles,
           slug: 'hermetic-cleanroom-doors'
         },
-
       ]
     },
     {
@@ -870,14 +868,14 @@ export default function Navbar({
         {
           title: 'Addressable Fire Alarm Systems',
           description: 'Multi-loop microprocessor addressable fire panels with smoke sensors.',
-          image: '/products/fire-alarm.jpg',
+          image: '/cctv-featured-fire-panel.jpg',
           icon: Flame,
           slug: 'addressable-fire-alarm-system'
         },
         {
           title: 'Industrial Fire Hydrant & Sprinklers',
           description: 'Turnkey diesel hydrant booster pumps, deluge valves & sprinkler piping.',
-          image: '/services/service-emergency-trip.jpg',
+          image: '/case-studies/case-fire-hydrant.jpg',
           icon: Activity,
           slug: 'fire-hydrant-sprinkler-systems'
         },
@@ -891,18 +889,17 @@ export default function Navbar({
         {
           title: 'Clean Agent Gas Suppression',
           description: 'Novec 1230 & FM-200 waterless fire extinguishing for server rooms.',
-          image: '/case-studies/case-fire-hydrant.jpg',
+          image: '/products/gas-suppression-systems.jpg',
           icon: Sparkles,
           slug: 'gas-suppression-systems'
         },
         {
           title: 'Public Address & Voice Evacuation',
           description: 'Zoned emergency acoustic voice alarm and paging audio networks.',
-          image: '/services/service-fire-alarm.jpg',
-          icon: Settings,
+          image: '/products/voice-evacuation-system.jpg',
+          icon: PhoneCall,
           slug: 'public-address-system'
         },
-
       ]
     },
     {
@@ -916,45 +913,44 @@ export default function Navbar({
       badge: '4K AI TELEMETRY & SECURITY',
       headingPrimary: 'Enterprise 4K AI Surveillance &',
       headingAccent: 'Biometric Access Control.',
-      heroImage: '/products/cctv-biometrics.jpg',
+      heroImage: '/hero-security-command-center.jpg',
       overviewDesc: 'High-resolution AI-powered IP surveillance cameras, facial recognition biometric terminals, and 24/7 server room environment telemetry.',
       products: [
         {
           title: 'CCTV Surveillance (Analogue & IP 4K)',
           description: 'Ultra-HD 4K AI analytics cameras, perimeter intrusion & central VMS.',
-          image: '/products/cctv-biometrics.jpg',
+          image: '/cctv-featured-dome.jpg',
           icon: Activity,
           slug: 'cctv-surveillance-system'
         },
         {
           title: 'Biometric Attendance & Access Terminals',
           description: 'Multi-modal touchless face recognition, fingerprint & RFID access.',
-          image: '/products/cctv-biometrics.jpg',
+          image: '/cctv-featured-biometric.jpg',
           icon: Users,
           slug: 'biometric-access-attendance'
         },
         {
           title: 'Server Room Environment Telemetry',
           description: '24/7 temperature, humidity, water leak, and smoke SNMP sensors.',
-          image: '/hero-security-command-center.jpg',
+          image: '/cctv-featured-telemetry.jpg',
           icon: Cpu,
           slug: 'server-room-monitoring'
         },
         {
           title: 'Microprocessor Alarm Annunciators',
           description: 'Industrial multi-window visual annunciators with audio buzzer alerts.',
-          image: '/about-security-camera.jpg',
+          image: '/products/alarm-annunciators.jpg',
           icon: ShieldCheck,
           slug: 'alarm-annunciators'
         },
         {
           title: 'Wireless Intrusion Detection Systems',
           description: 'Grade-2 perimeter vibration, magnetic reed, and microwave beam barriers.',
-          image: '/services/services-heavy-security.jpg',
+          image: '/products/wireless-intrusion-detection.jpg',
           icon: Lock,
           slug: 'wireless-intrusion-detection'
         },
-
       ]
     }
   ];
@@ -1473,8 +1469,8 @@ export default function Navbar({
                   )}
                 </div>
 
-                {/* 6 Product Cards Grid (3 Columns x 2 Rows) */}
-                <div className="mega-subservice-cards-grid">
+                {/* 5 Product Cards Grid (3 Columns on Top, 2 Columns Below) */}
+                <div className="mega-subservice-cards-grid mega-products-cards-grid">
                   {currentProductGroup.products.map((prod, pIdx) => {
                     const CardIcon = prod.icon || Cpu;
                     return (
@@ -1688,23 +1684,75 @@ export default function Navbar({
 
               {mobileAccordion === 'products' && (
                 <div className="mobile-accordion-body">
-                  {productGroups.map((group) => (
-                    <button
-                      key={group.id}
-                      className="mobile-clean-sublink"
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        if (group.page && onNavigate) {
-                          onNavigate(group.page);
-                        } else if (onNavigate) {
-                          onNavigate('catalog', group.categoryId);
-                        }
-                      }}
-                    >
-                      <span className="mobile-clean-title">{group.title}</span>
-                      <ArrowRight size={16} className="mobile-clean-arrow" />
-                    </button>
-                  ))}
+                  {productGroups.map((group) => {
+                    const GroupIcon = group.icon;
+                    const isGroupExpanded = mobileProductGroup === group.id;
+                    return (
+                      <div key={group.id} className={`mobile-product-group-block ${isGroupExpanded ? 'is-expanded' : ''}`}>
+                        <button
+                          className="mobile-product-group-header"
+                          onClick={() => setMobileProductGroup(isGroupExpanded ? null : group.id)}
+                          aria-expanded={isGroupExpanded}
+                        >
+                          <div className="mobile-product-group-info">
+                            <div className="mobile-product-group-icon">
+                              <GroupIcon size={16} />
+                            </div>
+                            <span className="mobile-clean-title">{group.title}</span>
+                          </div>
+                          {isGroupExpanded ? <ChevronUp size={16} className="mobile-clean-arrow" /> : <ChevronDown size={16} className="mobile-clean-arrow" />}
+                        </button>
+
+                        {isGroupExpanded && (
+                          <div className="mobile-product-sublist">
+                            <button
+                              className="mobile-product-overview-btn"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                if (group.page && onNavigate) {
+                                  onNavigate(group.page);
+                                } else if (onNavigate) {
+                                  onNavigate('catalog', group.categoryId);
+                                }
+                              }}
+                            >
+                              <span>Overview: {group.title}</span>
+                              <ArrowRight size={13} />
+                            </button>
+
+                            {group.products.map((prod, pIdx) => (
+                              <button
+                                key={pIdx}
+                                className="mobile-product-card-link"
+                                onClick={() => {
+                                  setMobileMenuOpen(false);
+                                  if (prod.isCatalogLink) {
+                                    if (onNavigate) onNavigate('catalog', group.categoryId);
+                                  } else if (prod.slug) {
+                                    handleProductClick(prod.slug);
+                                  } else {
+                                    if (onNavigate) onNavigate('catalog', group.categoryId);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src={prod.image || group.heroImage}
+                                  alt={prod.title}
+                                  className="mobile-product-card-thumb"
+                                  loading="lazy"
+                                />
+                                <div className="mobile-product-card-text">
+                                  <div className="mobile-product-card-name">{prod.title}</div>
+                                  <div className="mobile-product-card-sub">{prod.description}</div>
+                                </div>
+                                <ArrowRight size={14} className="mobile-clean-arrow" />
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                   <button
                     className="mobile-clean-sublink mobile-clean-all"
                     onClick={() => {
