@@ -369,6 +369,42 @@ export default function Navbar({
       }
       return;
     }
+    if (slug === 'door-interlock-system' || slug === 'door-interlock-systems' || slug === 'door-interlock-2-8-door' || slug === 'cleanroom-door-interlocks') {
+      if (onNavigate) {
+        onNavigate('door-interlock-system');
+      }
+      return;
+    }
+    if (slug === 'pass-box-systems' || slug === 'pass-box-system') {
+      if (onNavigate) {
+        onNavigate('pass-box-systems');
+      }
+      return;
+    }
+    if (slug === 'digital-clocks' || slug === 'digital-gps-clocks' || slug === 'digital-clock') {
+      if (onNavigate) {
+        onNavigate('digital-clocks');
+      }
+      return;
+    }
+    if (slug === 'chiller-cleanroom-doors' || slug === 'chiller-clean-room-doors') {
+      if (onNavigate) {
+        onNavigate('chiller-cleanroom-doors');
+      }
+      return;
+    }
+    if (slug === 'acoustic-sound-doors' || slug === 'sound-proof-doors') {
+      if (onNavigate) {
+        onNavigate('acoustic-sound-doors');
+      }
+      return;
+    }
+    if (slug === 'safety-override-buzzers') {
+      if (onNavigate) {
+        onNavigate('safety-override-buzzers');
+      }
+      return;
+    }
     if (onNavigate) {
       onNavigate('product', slug);
     }
@@ -466,7 +502,7 @@ export default function Navbar({
           description: 'Flameproof & safe programmable interlocking for sterile cascades.',
           image: '/hero-cleanroom-interlock-chamber.jpg',
           icon: Lock,
-          slug: 'door-interlock-systems'
+          slug: 'door-interlock-system'
         },
         {
           title: 'Pass Box Systems',
@@ -480,28 +516,28 @@ export default function Navbar({
           description: 'GPS master-slave synchronized clocks with flameproof housings.',
           image: '/products/digital-clock-hero.jpg',
           icon: Activity,
-          slug: 'digital-gps-clocks'
+          slug: 'digital-clocks'
         },
         {
           title: 'Chiller & Cleanroom Doors',
           description: 'Insulated chiller doors and hermetically sealed flush cleanroom doors.',
           image: '/products/chiller-door-hero.jpg',
           icon: DoorClosed,
-          slug: 'chiller-clean-room-doors'
+          slug: 'chiller-cleanroom-doors'
         },
         {
           title: 'Acoustic Sound Doors',
           description: 'Heavy noise-dampening acoustic barrier doors for plant rooms.',
           image: '/case-studies/case-air-curtain.jpg',
           icon: Settings,
-          slug: 'sound-proof-doors'
+          slug: 'acoustic-sound-doors'
         },
         {
           title: 'Safety Override Buzzers',
           description: 'Emergency release logic and integrated audio buzzer alerts.',
           image: '/case-studies/case-ss304-mist.jpg',
           icon: ShieldCheck,
-          slug: 'door-interlock-systems'
+          slug: 'safety-override-buzzers'
         }
       ]
     },

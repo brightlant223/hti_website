@@ -33,6 +33,12 @@ import TracklessGatePage from './components/TracklessGatePage';
 import RapidAirlockPage from './components/RapidAirlockPage';
 import LogisticsBridgePage from './components/LogisticsBridgePage';
 import HeavySecurityPage from './components/HeavySecurityPage';
+import DoorInterlockPage from './components/DoorInterlockPage';
+import PassBoxPage from './components/PassBoxPage';
+import DigitalClocksPage from './components/DigitalClocksPage';
+import ChillerCleanroomDoorsPage from './components/ChillerCleanroomDoorsPage';
+import AcousticSoundDoorsPage from './components/AcousticSoundDoorsPage';
+import SafetyOverrideBuzzersPage from './components/SafetyOverrideBuzzersPage';
 
 // Complete static seed data fallback for resilient offline loading
 import { productsData } from './data/productsData';
@@ -54,6 +60,12 @@ const parseUrlRoute = () => {
     if (rawSlug === 'rapid-airlock' || rawSlug === 'pvc-rapid-roll-up-doors' || rawSlug === 'high-speed-roll-up-doors') return { page: 'rapid-airlock', param: null };
     if (rawSlug === 'logistics-bridge' || rawSlug === 'dock-levellers-dock-shelters') return { page: 'logistics-bridge', param: null };
     if (rawSlug === 'heavy-security' || rawSlug === 'motorized-rolling-shutters' || rawSlug === 'motorized-industrial-rolling-shutters') return { page: 'heavy-security', param: null };
+    if (rawSlug === 'door-interlock-system' || rawSlug === 'door-interlock-systems' || rawSlug === 'door-interlock-2-8-door' || rawSlug === 'cleanroom-door-interlocks') return { page: 'door-interlock-system', param: null };
+    if (rawSlug === 'pass-box-systems' || rawSlug === 'pass-box-system') return { page: 'pass-box-systems', param: null };
+    if (rawSlug === 'digital-clocks' || rawSlug === 'digital-gps-clocks' || rawSlug === 'digital-clock') return { page: 'digital-clocks', param: null };
+    if (rawSlug === 'chiller-cleanroom-doors' || rawSlug === 'chiller-clean-room-doors') return { page: 'chiller-cleanroom-doors', param: null };
+    if (rawSlug === 'acoustic-sound-doors' || rawSlug === 'sound-proof-doors') return { page: 'acoustic-sound-doors', param: null };
+    if (rawSlug === 'safety-override-buzzers') return { page: 'safety-override-buzzers', param: null };
     return { page: 'product', param: rawSlug };
   }
 
@@ -124,6 +136,24 @@ const parseUrlRoute = () => {
   }
   if (path === '/heavy-security' || path === '/heavy-security/' || path === '/motorized-rolling-shutters' || path === '/motorized-industrial-rolling-shutters' || path === '/services/heavy-security' || hash === '#/heavy-security') {
     return { page: 'heavy-security', param: null };
+  }
+  if (path === '/door-interlock-system' || path === '/door-interlock-system/' || path === '/door-interlock-systems' || path === '/door-interlock-2-8-door' || hash === '#/door-interlock-system') {
+    return { page: 'door-interlock-system', param: null };
+  }
+  if (path === '/pass-box-systems' || path === '/pass-box-systems/' || path === '/pass-box-system' || hash === '#/pass-box-systems') {
+    return { page: 'pass-box-systems', param: null };
+  }
+  if (path === '/digital-clocks' || path === '/digital-clocks/' || path === '/digital-gps-clocks' || path === '/digital-clock' || hash === '#/digital-clocks') {
+    return { page: 'digital-clocks', param: null };
+  }
+  if (path === '/chiller-cleanroom-doors' || path === '/chiller-cleanroom-doors/' || path === '/chiller-clean-room-doors' || hash === '#/chiller-cleanroom-doors') {
+    return { page: 'chiller-cleanroom-doors', param: null };
+  }
+  if (path === '/acoustic-sound-doors' || path === '/acoustic-sound-doors/' || path === '/sound-proof-doors' || hash === '#/acoustic-sound-doors') {
+    return { page: 'acoustic-sound-doors', param: null };
+  }
+  if (path === '/safety-override-buzzers' || path === '/safety-override-buzzers/' || hash === '#/safety-override-buzzers') {
+    return { page: 'safety-override-buzzers', param: null };
   }
 
   return { page: 'home', param: null };
@@ -360,7 +390,7 @@ export default function App() {
       targetParam = 'all';
     } else if (page === 'touchless-entry') {
       targetUrl = '/touchless-entry';
-    } else if (['perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security'].includes(page)) {
+    } else if (['perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security', 'door-interlock-system', 'pass-box-systems', 'digital-clocks', 'chiller-cleanroom-doors', 'acoustic-sound-doors', 'safety-override-buzzers'].includes(page)) {
       targetUrl = `/${page}`;
     } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
       targetUrl = `/${page}`;
@@ -504,22 +534,57 @@ export default function App() {
           />
         )}
 
+        {/* Dedicated Cleanroom Interlocks & Pass Boxes Product Pages */}
+        {(routeState.page === 'door-interlock-system' || (routeState.page === 'product' && (routeState.param === 'door-interlock-system' || routeState.param === 'door-interlock-systems' || routeState.param === 'door-interlock-2-8-door' || routeState.param === 'cleanroom-door-interlocks'))) && (
+          <DoorInterlockPage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {(routeState.page === 'pass-box-systems' || (routeState.page === 'product' && (routeState.param === 'pass-box-systems' || routeState.param === 'pass-box-system'))) && (
+          <PassBoxPage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {(routeState.page === 'digital-clocks' || (routeState.page === 'product' && (routeState.param === 'digital-clocks' || routeState.param === 'digital-gps-clocks' || routeState.param === 'digital-clock'))) && (
+          <DigitalClocksPage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {(routeState.page === 'chiller-cleanroom-doors' || (routeState.page === 'product' && (routeState.param === 'chiller-cleanroom-doors' || routeState.param === 'chiller-clean-room-doors'))) && (
+          <ChillerCleanroomDoorsPage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {(routeState.page === 'acoustic-sound-doors' || (routeState.page === 'product' && (routeState.param === 'acoustic-sound-doors' || routeState.param === 'sound-proof-doors'))) && (
+          <AcousticSoundDoorsPage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {(routeState.page === 'safety-override-buzzers' || (routeState.page === 'product' && routeState.param === 'safety-override-buzzers')) && (
+          <SafetyOverrideBuzzersPage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
         {/* ROUTE 1: Product Detail Page (/product/:slug) */}
         {routeState.page === 'product' && 
-          !['touchless-entry', 'touchless-entry-solutions', 'perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security', 'automatic-sliding-swing-gates', 'telescopic-cantilever-gates', 'pvc-rapid-roll-up-doors', 'high-speed-roll-up-doors', 'dock-levellers-dock-shelters', 'motorized-rolling-shutters', 'motorized-industrial-rolling-shutters'].includes(routeState.param) && (
-          (routeState.param === 'door-interlock-system' || routeState.param === 'door-interlock-systems') ? (
-            <PharmaCleanroomDetailView
-              product={activeProduct || { slug: 'door-interlock-system' }}
-              onNavigate={navigateTo}
-              onQuoteSubmit={handleInquirySubmitted}
-            />
-          ) : (
-            <ProductDetailPage
-              product={activeProduct}
-              onNavigate={navigateTo}
-              onQuoteSubmit={handleInquirySubmitted}
-            />
-          )
+          !['touchless-entry', 'touchless-entry-solutions', 'perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security', 'automatic-sliding-swing-gates', 'telescopic-cantilever-gates', 'pvc-rapid-roll-up-doors', 'high-speed-roll-up-doors', 'dock-levellers-dock-shelters', 'motorized-rolling-shutters', 'motorized-industrial-rolling-shutters', 'door-interlock-system', 'door-interlock-systems', 'door-interlock-2-8-door', 'cleanroom-door-interlocks', 'pass-box-systems', 'pass-box-system', 'digital-clocks', 'digital-gps-clocks', 'digital-clock', 'chiller-cleanroom-doors', 'chiller-clean-room-doors', 'acoustic-sound-doors', 'sound-proof-doors', 'safety-override-buzzers'].includes(routeState.param) && (
+          <ProductDetailPage
+            product={activeProduct}
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
         )}
 
         {/* ROUTE 2: Dedicated Full Product Catalogue (/catalog) */}

@@ -31,10 +31,21 @@ import {
   Truck,
   User,
   Check,
-  HelpCircle
+  HelpCircle,
+  Building2,
+  Phone,
+  Mail,
+  MapPin,
+  Clock
 } from 'lucide-react';
 import { INDUSTRIAL_ACCESS_PAGES } from '../data/industrialAccessPagesData';
+import { CLEANROOM_PAGES } from '../data/cleanroomPagesData';
 import './TouchlessEntryPage.css';
+
+const ALL_PAGES = {
+  ...INDUSTRIAL_ACCESS_PAGES,
+  ...CLEANROOM_PAGES
+};
 
 // Icon resolver mapping string names to Lucide components
 const ICON_MAP = {
@@ -71,7 +82,7 @@ export default function IndustrialAccessProductPage({
   onNavigate,
   onQuoteSubmit
 }) {
-  const pageData = INDUSTRIAL_ACCESS_PAGES[slug] || INDUSTRIAL_ACCESS_PAGES['perimeter-gate'];
+  const pageData = ALL_PAGES[slug] || INDUSTRIAL_ACCESS_PAGES[slug] || INDUSTRIAL_ACCESS_PAGES['perimeter-gate'];
 
   // Video player state
   const videoRef = useRef(null);
@@ -193,6 +204,20 @@ export default function IndustrialAccessProductPage({
       setIsQuoteModalOpen(false);
       setQuoteSuccess(false);
     }, 2500);
+  };
+
+  const [inlineSuccess, setInlineSuccess] = useState(false);
+  const handleInlineSubmit = (e) => {
+    e.preventDefault();
+    setInlineSuccess(true);
+    if (onQuoteSubmit) {
+      onQuoteSubmit({
+        ...formData,
+        product: `${pageData.titleLine1} Solution`,
+        source: `${pageData.titleLine1} Page Direct Contact Form`
+      });
+    }
+    setTimeout(() => setInlineSuccess(false), 4000);
   };
 
   const openLightbox = (index) => {
@@ -342,6 +367,21 @@ export default function IndustrialAccessProductPage({
                 })}
               </div>
             </div>
+          </div>
+
+          {/* Smooth Scroll Cue to Transition to Next Section */}
+          <div className="hero-scroll-cue-wrapper">
+            <button
+              className="hero-scroll-cue"
+              onClick={() => {
+                const el = document.getElementById('product-cards-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              aria-label="Scroll down to explore products"
+            >
+              <span>Scroll to explore full system details</span>
+              <ChevronDown size={15} className="scroll-cue-icon" />
+            </button>
           </div>
         </div>
       </section>
@@ -822,6 +862,187 @@ export default function IndustrialAccessProductPage({
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* 8B. DEDICATED CONTACT & PROPOSAL SECTION */}
+      <section className="touchless-contact-section" id="contact-section">
+        <div className="touchless-container">
+          <div className="section-header-centered">
+            <span className="section-eyebrow">GET IN TOUCH</span>
+            <h2 className="section-title">Technical Consultation &amp; Turnkey Quotation</h2>
+            <div className="section-title-underline center-underline"></div>
+            <p className="section-subtitle-desc">
+              Speak directly with HTI's industrial automation engineers to receive custom technical drawings, specification sheets, and competitive factory-direct quotations.
+            </p>
+          </div>
+
+          <div className="contact-section-grid">
+            <div className="contact-info-panel">
+              <span className="contact-panel-badge">
+                <Building2 size={13} />
+                <span>HTI ENGINEERING DIVISION</span>
+              </span>
+
+              <h3 className="contact-panel-title">HTI Automation &amp; Security Systems Pvt. Ltd.</h3>
+              <p className="contact-panel-desc">
+                Pioneering automated industrial entrances, perimeter gates, cleanroom airlocks, and life-safety systems with full turnkey commissioning across India.
+              </p>
+
+              <div className="contact-details-stack">
+                <div className="contact-detail-row">
+                  <div className="contact-icon-bubble">
+                    <Phone size={18} />
+                  </div>
+                  <div className="contact-detail-content">
+                    <span className="contact-detail-label">Direct Engineering Helpline</span>
+                    <a href="tel:+919820000000" className="contact-detail-val">+91 98200 00000 / 022-28000000</a>
+                  </div>
+                </div>
+
+                <div className="contact-detail-row">
+                  <div className="contact-icon-bubble">
+                    <Mail size={18} />
+                  </div>
+                  <div className="contact-detail-content">
+                    <span className="contact-detail-label">Technical Proposals &amp; CAD</span>
+                    <a href="mailto:sales@htiautomation.com" className="contact-detail-val">sales@htiautomation.com</a>
+                  </div>
+                </div>
+
+                <div className="contact-detail-row">
+                  <div className="contact-icon-bubble">
+                    <MapPin size={18} />
+                  </div>
+                  <div className="contact-detail-content">
+                    <span className="contact-detail-label">Head Office &amp; Works</span>
+                    <span className="contact-detail-val">Mumbai / Pune Industrial Corridor, Maharashtra, India</span>
+                  </div>
+                </div>
+
+                <div className="contact-detail-row">
+                  <div className="contact-icon-bubble">
+                    <Clock size={18} />
+                  </div>
+                  <div className="contact-detail-content">
+                    <span className="contact-detail-label">Working Hours</span>
+                    <span className="contact-detail-val">Mon – Sat: 9:00 AM – 7:00 PM IST (24h Proposal SLA)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="contact-compliance-badge-box">
+                <ShieldCheck size={28} style={{ color: '#38bdf8', minWidth: '28px' }} />
+                <span>
+                  <strong>Turnkey Warranty:</strong> 24-Month Comprehensive Warranty, genuine European drive motors, and scheduled preventive maintenance AMC nationwide.
+                </span>
+              </div>
+            </div>
+
+            <div className="contact-form-card">
+              <h3 className="contact-form-title">Request Specifications &amp; Commercial Proposal</h3>
+              <p className="contact-form-subtitle">Fill in your requirements below and our technical team will respond promptly.</p>
+
+              {inlineSuccess && (
+                <div className="contact-form-success-banner">
+                  <CheckCircle2 size={20} />
+                  <span>Thank you! Your inquiry has been registered. Our engineering specialist will contact you shortly.</span>
+                </div>
+              )}
+
+              <form onSubmit={handleInlineSubmit}>
+                <div className="contact-form-grid">
+                  <div>
+                    <label className="contact-input-label">Full Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Ramesh Patel"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="contact-text-input"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="contact-input-label">Work Email *</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="e.g. ramesh@organization.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="contact-text-input"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="contact-input-label">Phone Number *</label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="e.g. +91 98200 00000"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="contact-text-input"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="contact-input-label">Company / Plant Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Bharat Logistics Hub"
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                      className="contact-text-input"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="contact-input-label">Target System / Product</label>
+                    <input
+                      type="text"
+                      value={formData.productType}
+                      readOnly
+                      className="contact-text-input"
+                      style={{ backgroundColor: '#f1f5f9', cursor: 'not-allowed' }}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="contact-input-label">Estimated Quantity</label>
+                    <select
+                      value={formData.quantity}
+                      onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                      className="contact-select-input"
+                    >
+                      <option value="1 Unit (Pilot Project)">1 Unit (Pilot Project)</option>
+                      <option value="2-4 Units (Standard Facility)">2-4 Units (Standard Facility)</option>
+                      <option value="5-10 Units (Full Plant Upgrade)">5-10 Units (Full Plant Upgrade)</option>
+                      <option value="10+ Units (Enterprise Turnkey)">10+ Units (Enterprise Turnkey)</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group-full">
+                    <label className="contact-input-label">Project Scope / Technical Notes</label>
+                    <textarea
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="contact-textarea-input"
+                      rows={3}
+                    ></textarea>
+                  </div>
+                </div>
+
+                <button type="submit" className="contact-form-submit-btn">
+                  <span>Submit Inquiry for Technical Proposal</span>
+                  <ArrowRight size={18} />
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
