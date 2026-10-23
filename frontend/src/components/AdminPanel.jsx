@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import './AdminDashboard.css';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
   FileText, Package, MessageSquare, Search, AlertCircle,
@@ -12,6 +13,56 @@ import {
   ArrowRight, CheckSquare, MessageCircle, HeartHandshake,
   Server, Link, Image, Hash, Info, Sun, Moon
 } from 'lucide-react';
+
+// Custom animated number count-up hook with cleanup and prefers-reduced-motion support
+function useCountUp(target, duration = 650) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const end = typeof target === 'number' ? target : parseInt(target, 10);
+    if (isNaN(end)) {
+      setCount(target || 0);
+      return;
+    }
+
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCount(end);
+      return;
+    }
+
+    let startTimestamp = null;
+    let animationFrameId = null;
+
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      // Ease out quad
+      const ease = 1 - (1 - progress) * (1 - progress);
+      setCount(Math.floor(ease * end));
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(step);
+      } else {
+        setCount(end);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [target, duration]);
+
+  return count;
+}
+
+function AnimatedNumber({ value }) {
+  const animatedValue = useCountUp(value);
+  return <span>{animatedValue}</span>;
+}
 
 export default function AdminPanel({
   isOpen,
@@ -1207,6 +1258,50 @@ export default function AdminPanel({
     }
   };
 
+  // Telemetry metrics calculation for visual gauges and widgets
+  // Placed above ALL conditional early returns (isOpen, isAuthenticated) to adhere strictly to Rules of Hooks
+  const diskMetrics = useMemo(() => {
+    const rawFree = systemHealth?.disk?.free_gb;
+    const rawTotal = systemHealth?.disk?.total_gb;
+    if (rawFree === undefined || rawFree === null || rawTotal === undefined || rawTotal === null) {
+      return null;
+    }
+    const free = typeof rawFree === 'number' ? rawFree : parseFloat(rawFree);
+    const total = typeof rawTotal === 'number' ? rawTotal : parseFloat(rawTotal);
+    if (isNaN(free) || isNaN(total) || total <= 0 || free < 0) {
+      return null;
+    }
+    const used = Math.max(0, total - free);
+    const freePct = Math.min(100, Math.max(0, Math.round((free / total) * 100)));
+    return { free, total, used, freePct };
+  }, [systemHealth?.disk]);
+
+  const dbMetrics = useMemo(() => {
+    const rawMb = systemHealth?.database?.file_size_mb;
+    if (rawMb === undefined || rawMb === null) {
+      return null;
+    }
+    const mb = typeof rawMb === 'number' ? rawMb : parseFloat(rawMb);
+    if (isNaN(mb) || mb < 0) {
+      return null;
+    }
+    return { mb };
+  }, [systemHealth?.database]);
+
+  const getAuditCategoryInfo = (module = '') => {
+    const m = String(module).toLowerCase();
+    if (m.includes('security') || m.includes('auth') || m.includes('user')) {
+      return { color: 'blue', label: module || 'Security' };
+    }
+    if (m.includes('health') || m.includes('system') || m.includes('backup')) {
+      return { color: 'green', label: module || 'System Health' };
+    }
+    if (m.includes('inquir') || m.includes('lead') || m.includes('alert')) {
+      return { color: 'amber', label: module || 'Inquiries' };
+    }
+    return { color: 'slate', label: module || 'General' };
+  };
+
   if (!isOpen) return null;
 
   // ===================== FILTERED LISTS =====================
@@ -1415,30 +1510,30 @@ export default function AdminPanel({
   // =========================================================================
   return (
     <div className="admin-overlay" onClick={onClose}>
-      <div className={`admin-dashboard-container theme-${adminTheme}`} onClick={e => e.stopPropagation()}>
+      <div className={`admin-dashboard-container adm-dashboard-container theme-${adminTheme}`} onClick={e => e.stopPropagation()}>
         {/* SIDEBAR NAVIGATION */}
-        <aside className="admin-sidebar">
+        <aside className="admin-sidebar adm-sidebar">
           {/* Brand Box */}
-          <div className="sidebar-brand">
-            <div className="sidebar-logo-icon">
-              <img src="/hti-logo.png" alt="HTI Logo" className="sidebar-hti-logo-img" />
+          <div className="sidebar-brand adm-sidebar-brand">
+            <div className="sidebar-logo-icon adm-sidebar-logo-icon">
+              <img src="/hti-logo.png" alt="HTI Logo" className="sidebar-hti-logo-img adm-sidebar-hti-logo-img" />
             </div>
             <div>
-              <div className="sidebar-brand-title">HTI CONTROL</div>
-              <div className="sidebar-brand-status">
-                <span className="live-dot" />
+              <div className="sidebar-brand-title adm-sidebar-brand-title">HTI CONTROL</div>
+              <div className="sidebar-brand-status adm-sidebar-brand-status">
+                <span className="live-dot adm-live-dot" />
                 <span>BMS OPERATIONAL</span>
               </div>
             </div>
           </div>
 
           {/* Navigation Links (All 9 Modules from PDF) */}
-          <nav className="sidebar-nav">
-            <div className="sidebar-section-label">EXECUTIVE NEXUS</div>
+          <nav className="sidebar-nav adm-sidebar-nav">
+            <div className="sidebar-section-label adm-sidebar-section-label">EXECUTIVE NEXUS</div>
 
             {/* 1. Dashboard Overview */}
             <button
-              className={`sidebar-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
+              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
               onClick={() => setActiveTab('dashboard')}
             >
               <LayoutDashboard size={17} />
@@ -1447,136 +1542,139 @@ export default function AdminPanel({
 
             {/* 2. Product Management */}
             <button
-              className={`sidebar-nav-item ${activeTab === 'products' ? 'active' : ''}`}
+              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'products' ? 'active' : ''}`}
               onClick={() => setActiveTab('products')}
             >
               <Package size={17} />
               <span>Products</span>
-              <span className="sidebar-counter">{products.length}</span>
+              <span className="sidebar-counter adm-sidebar-counter">{products.length}</span>
             </button>
 
             {/* 3. Blogs & Technical Articles */}
             <button
-              className={`sidebar-nav-item ${activeTab === 'blogs' ? 'active' : ''}`}
+              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'blogs' ? 'active' : ''}`}
               onClick={() => setActiveTab('blogs')}
             >
               <FileText size={17} />
               <span>Blogs & Tech</span>
-              <span className="sidebar-counter">{blogs.length}</span>
+              <span className="sidebar-counter adm-sidebar-counter">{blogs.length}</span>
             </button>
 
             {/* 4. Clients & Technology Partners */}
             <button
-              className={`sidebar-nav-item ${activeTab === 'clients_partners' ? 'active' : ''}`}
+              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'clients_partners' ? 'active' : ''}`}
               onClick={() => setActiveTab('clients_partners')}
             >
               <Building2 size={17} />
               <span>Clients & Partners</span>
-              <span className="sidebar-counter">{clients.length + partners.length}</span>
+              <span className="sidebar-counter adm-sidebar-counter">{clients.length + partners.length}</span>
             </button>
 
             {/* 6. Projects & Installations (Case Studies) */}
             <button
-              className={`sidebar-nav-item ${activeTab === 'projects' ? 'active' : ''}`}
+              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'projects' ? 'active' : ''}`}
               onClick={() => setActiveTab('projects')}
             >
               <Briefcase size={17} />
               <span>Projects</span>
-              <span className="sidebar-counter">{projects.length}</span>
+              <span className="sidebar-counter adm-sidebar-counter">{projects.length}</span>
             </button>
 
             {/* 7. Website Content Management */}
             <button
-              className={`sidebar-nav-item ${activeTab === 'content' ? 'active' : ''}`}
+              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'content' ? 'active' : ''}`}
               onClick={() => setActiveTab('content')}
             >
               <Globe size={17} />
               <span>Website Content</span>
-              <span className="sidebar-badge-new" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8' }}>CMS</span>
+              <span className="sidebar-badge-new adm-sidebar-badge-new" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8' }}>CMS</span>
             </button>
 
-            <div className="sidebar-section-label mt-3">OPERATIONS & CONTROL</div>
+            <div className="sidebar-section-label adm-sidebar-section-label mt-3">OPERATIONS & CONTROL</div>
 
             {/* 5. Enquiries & Lead Management */}
             <button
-              className={`sidebar-nav-item ${activeTab === 'inquiries' ? 'active' : ''}`}
+              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'inquiries' ? 'active' : ''}`}
               onClick={() => setActiveTab('inquiries')}
             >
               <MessageSquare size={17} />
               <span>Enquiries & Leads</span>
               {unansweredInquiries.length > 0 ? (
-                <span className="sidebar-badge-new">{unansweredInquiries.length} New</span>
+                <span className="sidebar-badge-new adm-sidebar-badge-new">{unansweredInquiries.length} New</span>
               ) : (
-                <span className="sidebar-counter">{inquiries.length}</span>
+                <span className="sidebar-counter adm-sidebar-counter">{inquiries.length}</span>
               )}
             </button>
 
             {/* 8. Admin Users & Permissions */}
             <button
-              className={`sidebar-nav-item ${activeTab === 'users' ? 'active' : ''}`}
+              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'users' ? 'active' : ''}`}
               onClick={() => setActiveTab('users')}
             >
               <Users size={17} />
               <span>Users & Security</span>
-              <span className="sidebar-counter">{adminUsers.length || 3}</span>
+              <span className="sidebar-counter adm-sidebar-counter">{adminUsers.length}</span>
             </button>
 
             {/* 9. Settings & System Health */}
             <button
-              className={`sidebar-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
               onClick={() => setActiveTab('settings')}
             >
               <Settings size={17} />
               <span>System Health</span>
-              <span className="sidebar-counter" style={{ color: '#10b981' }}>Live</span>
+              <span className="sidebar-counter adm-sidebar-counter" style={{ color: '#10b981' }}>Live</span>
             </button>
           </nav>
 
           {/* Sidebar Telemetry Box (Real Measured Values) */}
-          <div className="sidebar-telemetry-box">
-            <div className="telemetry-row">
-              <span className="telemetry-label">SQLite Database</span>
-              <span className="telemetry-val">
-                {systemHealth?.database?.file_size_mb ? `${systemHealth.database.file_size_mb} MB` : '122 KB'}
+          <div className="sidebar-telemetry-box adm-sidebar-telemetry-box">
+            <div className="telemetry-row adm-sidebar-telemetry-row">
+              <span className="telemetry-label adm-sidebar-telemetry-label">SQLite Database</span>
+              <span className="telemetry-val adm-sidebar-telemetry-val">
+                {dbMetrics ? `${dbMetrics.mb} MB` : (systemHealth?.database?.file_size_mb ? `${systemHealth.database.file_size_mb} MB` : 'Live Connected')}
               </span>
             </div>
-            <div className="telemetry-row">
-              <span className="telemetry-label">Disk Storage</span>
-              <span className="telemetry-val telemetry-val-live">
-                <span className="telemetry-live-dot" />
-                {systemHealth?.disk?.free_gb ? `${systemHealth.disk.free_gb} GB Free` : '218 GB Free'}
+            <div className="telemetry-row adm-sidebar-telemetry-row">
+              <span className="telemetry-label adm-sidebar-telemetry-label">Disk Storage</span>
+              <span className="telemetry-val adm-sidebar-telemetry-val live">
+                <span className="telemetry-live-dot adm-live-dot" />
+                {diskMetrics ? `${diskMetrics.free} GB Free` : (systemHealth?.disk?.free_gb ? `${systemHealth.disk.free_gb} GB Free` : 'Live Connected')}
               </span>
             </div>
-            <div className="telemetry-row">
-              <span className="telemetry-label">Security Role</span>
-              <span className="telemetry-badge-active">{userRole}</span>
+            <div className="telemetry-row adm-sidebar-telemetry-row">
+              <span className="telemetry-label adm-sidebar-telemetry-label">Security Role</span>
+              <span className="telemetry-badge-active adm-sidebar-role-badge">{userRole}</span>
             </div>
           </div>
 
           {/* Sidebar User Footer */}
-          <div className="sidebar-footer">
-            <div className="sidebar-user-info">
-              <div className="sidebar-user-avatar">
+          <div className="sidebar-footer adm-sidebar-footer">
+            <div className="sidebar-user-info adm-sidebar-user-info">
+              <div className="sidebar-user-avatar adm-sidebar-user-avatar">
                 <span>{currentUser.slice(0, 2).toUpperCase()}</span>
               </div>
-              <div className="sidebar-user-details">
-                <div className="user-name">{currentUser}</div>
-                <div className="user-role">{userRole}</div>
+              <div className="sidebar-user-details adm-sidebar-user-details">
+                <div className="user-name adm-sidebar-user-name">{currentUser}</div>
+                <div className="user-role adm-sidebar-user-role">{userRole}</div>
               </div>
             </div>
 
-            <button className="sidebar-logout-btn" onClick={handleLogout} title="Log Out Safely">
+            <button className="sidebar-logout-btn adm-sidebar-logout-btn" onClick={handleLogout} title="Log Out Safely" aria-label="Log Out">
               <LogOut size={16} />
             </button>
           </div>
         </aside>
 
         {/* MAIN WORKSPACE */}
-        <div className="admin-main-area">
+        <div className="admin-main-area adm-main-area">
           {/* Top Bar */}
-          <div className="admin-topbar">
-            <div className="admin-topbar-title-wrap">
-              <h2 className="admin-topbar-title">
+          <div className="admin-topbar adm-topbar">
+            <div className="admin-topbar-title-wrap adm-topbar-title-wrap">
+              <div className="adm-mobile-avatar" title={`Admin: ${currentUser}`}>
+                <span>{currentUser.slice(0, 2).toUpperCase()}</span>
+              </div>
+              <h2 className="admin-topbar-title adm-topbar-title">
                 {activeTab === 'dashboard' && 'Executive Dashboard & Live System Telemetry'}
                 {activeTab === 'products' && 'Product Catalogue & Specifications Manager'}
                 {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
@@ -1587,41 +1685,53 @@ export default function AdminPanel({
                 {activeTab === 'users' && 'Administrative Access Control & Audit Log'}
                 {activeTab === 'settings' && 'System Health, Tested Backups & Settings'}
               </h2>
-              <span className="topbar-live-tag">
-                <span className="tag-dot" />
+              <span className="topbar-live-tag adm-topbar-live-tag">
+                <span className="tag-dot adm-tag-dot" />
                 <span>SQLite Realtime: {systemHealth?.database?.path ? 'backend/hti.db' : 'Live Connected'}</span>
               </span>
             </div>
 
-            <div className="admin-topbar-actions">
+            <div className="admin-topbar-actions adm-topbar-actions">
               <button
-                className="topbar-btn theme-toggle-btn"
+                className="topbar-btn adm-topbar-btn theme-toggle-btn"
                 onClick={toggleAdminTheme}
                 title={`Switch to ${adminTheme === 'light' ? 'Dark Console' : 'Bright Light'} Mode`}
+                aria-label="Toggle Console Theme"
               >
                 {adminTheme === 'light' ? (
                   <>
                     <Sun size={15} style={{ color: '#d97706' }} />
-                    <span>Light Mode</span>
+                    <span className="adm-btn-text">Light Mode</span>
                   </>
                 ) : (
                   <>
                     <Moon size={15} style={{ color: '#38bdf8' }} />
-                    <span>Dark Mode</span>
+                    <span className="adm-btn-text">Dark Mode</span>
                   </>
                 )}
               </button>
 
               <button
-                className={`topbar-btn ${loading ? 'spinning' : ''}`}
+                className="topbar-btn adm-topbar-btn"
                 onClick={refreshAllData}
                 title="Refresh Live Data"
+                aria-label="Sync live data"
+                aria-live="polite"
               >
-                <RefreshCw size={15} />
-                <span>Sync</span>
+                <RefreshCw size={15} className={loading ? 'adm-spin' : ''} />
+                <span className="adm-btn-text">{loading ? 'Syncing...' : 'Sync'}</span>
               </button>
 
-              <button className="topbar-close-btn" onClick={onClose} aria-label="Close Admin Console">
+              <button
+                className="adm-mobile-logout-btn"
+                onClick={handleLogout}
+                title="Log Out Safely"
+                aria-label="Log Out"
+              >
+                <LogOut size={16} />
+              </button>
+
+              <button className="topbar-close-btn adm-topbar-close-btn" onClick={onClose} aria-label="Close Admin Console">
                 <X size={18} />
               </button>
             </div>
@@ -1639,39 +1749,45 @@ export default function AdminPanel({
               MODULE 1: DASHBOARD OVERVIEW
               ========================================================================= */}
           {activeTab === 'dashboard' && (
-            <div className="admin-body-content">
+            <div className="admin-body-content adm-body-content">
               {/* Welcome Banner */}
-              <div className="dashboard-welcome-banner">
-                <div className="welcome-text-wrap">
-                  <div className="welcome-badge">
+              <div className="adm-welcome-banner">
+                <div className="adm-welcome-text-wrap">
+                  <div className="adm-welcome-badge">
+                    <span className="adm-pulse-dot-wrap">
+                      <span className="adm-pulse-dot" />
+                      <span className="adm-pulse-ring" />
+                    </span>
                     <Sparkles size={13} />
                     <span>Executive Overview & Control</span>
                   </div>
-                  <h3 className="welcome-title">Welcome back, {currentUser}</h3>
-                  <p className="welcome-sub">
+                  <h3 className="adm-welcome-title">Welcome back, {currentUser}</h3>
+                  <p className="adm-welcome-sub">
                     All 9 HTI enterprise modules are online and verified. Database connection active with zero query errors.
                   </p>
                 </div>
-                <div className="welcome-chips-row">
-                  <div className="welcome-chip">
-                    <Activity size={15} className="chip-icon text-emerald" />
-                    <div className="chip-info">
-                      <span className="chip-title">System Uptime</span>
-                      <span className="chip-data">{systemHealth?.runtime?.uptime_formatted || 'Live'}</span>
+                <div className="adm-welcome-chips-row">
+                  <div className="adm-welcome-chip">
+                    <Activity size={15} className="adm-chip-icon text-emerald" style={{ color: '#059669' }} />
+                    <div className="adm-chip-info">
+                      <span className="adm-chip-title">System Uptime</span>
+                      <span className="adm-chip-data">{systemHealth?.runtime?.uptime_formatted || 'Live'}</span>
                     </div>
                   </div>
-                  <div className="welcome-chip">
-                    <Database size={15} className="chip-icon text-cyan" />
-                    <div className="chip-info">
-                      <span className="chip-title">SQLite Database</span>
-                      <span className="chip-data">{systemHealth?.database?.file_size_mb || '0.12'} MB</span>
+                  <div className="adm-welcome-chip">
+                    <Database size={15} className="adm-chip-icon text-cyan" style={{ color: '#0284c7' }} />
+                    <div className="adm-chip-info">
+                      <span className="adm-chip-title">SQLite Database</span>
+                      <span className="adm-chip-data">
+                        {dbMetrics ? `${dbMetrics.mb} MB` : (systemHealth?.database?.file_size_mb ? `${systemHealth.database.file_size_mb} MB` : 'Live')}
+                      </span>
                     </div>
                   </div>
-                  <div className="welcome-chip">
-                    <CheckCircle2 size={15} className="chip-icon text-amber" />
-                    <div className="chip-info">
-                      <span className="chip-title">Last Verified Backup</span>
-                      <span className="chip-data">{systemHealth?.last_backup?.timestamp?.split(' ')[0] || 'Today'}</span>
+                  <div className="adm-welcome-chip">
+                    <CheckCircle2 size={15} className="adm-chip-icon text-amber" style={{ color: '#d97706' }} />
+                    <div className="adm-chip-info">
+                      <span className="adm-chip-title">Last Verified Backup</span>
+                      <span className="adm-chip-data">{systemHealth?.last_backup?.timestamp?.split(' ')[0] || 'Today'}</span>
                     </div>
                   </div>
                 </div>
@@ -1679,255 +1795,320 @@ export default function AdminPanel({
 
               {/* Priority Unanswered Enquiries Alert Card */}
               {unansweredInquiries.length > 0 && (
-                <div className="admin-priority-card">
-                  <div className="priority-card-left">
-                    <div className="priority-icon-box">
-                      <AlertTriangle size={22} />
+                <div className="adm-priority-card">
+                  <div className="adm-priority-card-left">
+                    <div className="adm-priority-icon-box">
+                      <AlertTriangle size={20} className="adm-pulse-icon" />
                     </div>
                     <div>
-                      <div className="priority-card-title">
+                      <div className="adm-priority-card-title">
                         {unansweredInquiries.length} New Unanswered Sales {unansweredInquiries.length === 1 ? 'Enquiry' : 'Enquiries'} Awaiting Response
                       </div>
-                      <div className="priority-card-sub">
-                        Latest lead from <strong>{unansweredInquiries[0].full_name}</strong> ({unansweredInquiries[0].company || 'Independent Client'}) regarding <span className="priority-product-tag">{unansweredInquiries[0].product_name}</span>
+                      <div className="adm-priority-card-sub">
+                        Latest lead from <strong>{unansweredInquiries[0].full_name}</strong> ({unansweredInquiries[0].company || 'Independent Client'}) regarding <span className="adm-priority-product-tag">{unansweredInquiries[0].product_name}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="priority-card-actions">
-                    <button
-                      className="priority-action-btn"
-                      onClick={() => {
-                        setSelectedInquiry(unansweredInquiries[0]);
-                        setInquiryNotesText(unansweredInquiries[0].followup_notes || '');
-                        setActiveTab('inquiries');
-                      }}
-                    >
-                      <MessageSquare size={15} />
-                      <span>Review Lead #{unansweredInquiries[0].id}</span>
-                      <ArrowRight size={14} />
-                    </button>
-                  </div>
+                  <button
+                    className="adm-priority-action-btn"
+                    onClick={() => {
+                      setSelectedInquiry(unansweredInquiries[0]);
+                      setInquiryNotesText(unansweredInquiries[0].followup_notes || '');
+                      setActiveTab('inquiries');
+                    }}
+                  >
+                    <MessageSquare size={15} />
+                    <span>Review Lead #{unansweredInquiries[0].id}</span>
+                    <ArrowRight size={14} />
+                  </button>
                 </div>
               )}
 
-              {/* Metric KPI Cards Grid */}
-              <div className="dashboard-stats-grid">
+              {/* Metric KPI Cards Grid (5-card balanced single row) */}
+              <div className="adm-kpi-grid">
                 {/* 1. Products */}
-                <div className="dash-card">
-                  <div className="dash-card-header">
-                    <span className="dash-card-label">Catalog Products</span>
-                    <div className="dash-icon-box cyan"><Package size={20} /></div>
+                <div className="adm-kpi-card">
+                  <div className="adm-kpi-header">
+                    <span className="adm-kpi-label">Catalog Products</span>
+                    <div className="adm-kpi-icon-tile cyan"><Package size={18} /></div>
                   </div>
-                  <div className="dash-val">{products.length}</div>
-                  <div className="dash-sub-pills">
-                    <span className="dash-pill pill-success">
-                      <span className="dash-pill-dot" />
+                  <div className="adm-kpi-val"><AnimatedNumber value={products.length} /></div>
+                  <div className="adm-kpi-pills">
+                    <span className="adm-pill success">
+                      <span className="adm-pill-dot" />
                       {products.filter(p => p.is_featured).length} Featured
                     </span>
-                    <span className="dash-pill pill-neutral">
+                    <span className="adm-pill neutral">
                       {products.filter(p => p.is_published).length} Published
                     </span>
                   </div>
-                  <button className="dash-card-link" onClick={() => setActiveTab('products')}>
+                  <button className="adm-kpi-footer-link" onClick={() => setActiveTab('products')}>
                     <span>Manage Products</span>
-                    <ChevronRight size={15} />
+                    <ChevronRight size={14} />
                   </button>
                 </div>
 
                 {/* 2. Commercial Leads */}
-                <div className="dash-card">
-                  <div className="dash-card-header">
-                    <span className="dash-card-label">Commercial Leads</span>
-                    <div className="dash-icon-box amber"><MessageSquare size={20} /></div>
+                <div className="adm-kpi-card">
+                  <div className="adm-kpi-header">
+                    <span className="adm-kpi-label">Commercial Leads</span>
+                    <div className="adm-kpi-icon-tile amber"><MessageSquare size={18} /></div>
                   </div>
-                  <div className="dash-val">{inquiries.length}</div>
-                  <div className="dash-sub-pills">
-                    <span className={`dash-pill ${unansweredInquiries.length > 0 ? 'pill-danger' : 'pill-success'}`}>
-                      <span className="dash-pill-dot" />
+                  <div className="adm-kpi-val"><AnimatedNumber value={inquiries.length} /></div>
+                  <div className="adm-kpi-pills">
+                    <span className={`adm-pill ${unansweredInquiries.length > 0 ? 'danger' : 'success'}`}>
+                      <span className="adm-pill-dot" />
                       {unansweredInquiries.length} Unanswered
                     </span>
-                    <span className="dash-pill pill-neutral">
+                    <span className="adm-pill neutral">
                       {inquiries.filter(i => i.status === 'Converted').length} Converted
                     </span>
                   </div>
-                  <button className="dash-card-link" onClick={() => setActiveTab('inquiries')}>
+                  <button className="adm-kpi-footer-link" onClick={() => setActiveTab('inquiries')}>
                     <span>Open Lead Pipeline</span>
-                    <ChevronRight size={15} />
+                    <ChevronRight size={14} />
                   </button>
                 </div>
 
                 {/* 3. Blogs */}
-                <div className="dash-card">
-                  <div className="dash-card-header">
-                    <span className="dash-card-label">Technical Articles</span>
-                    <div className="dash-icon-box purple"><FileText size={20} /></div>
+                <div className="adm-kpi-card">
+                  <div className="adm-kpi-header">
+                    <span className="adm-kpi-label">Technical Articles</span>
+                    <div className="adm-kpi-icon-tile red"><FileText size={18} /></div>
                   </div>
-                  <div className="dash-val">{blogs.length}</div>
-                  <div className="dash-sub-pills">
-                    <span className="dash-pill pill-purple">
-                      <span className="dash-pill-dot" />
+                  <div className="adm-kpi-val"><AnimatedNumber value={blogs.length} /></div>
+                  <div className="adm-kpi-pills">
+                    <span className="adm-pill purple">
+                      <span className="adm-pill-dot" />
                       {blogs.filter(b => b.is_published).length} Published
                     </span>
-                    <span className="dash-pill pill-neutral">
+                    <span className="adm-pill neutral">
                       {blogs.filter(b => !b.is_published).length} Drafts
                     </span>
                   </div>
-                  <button className="dash-card-link" onClick={() => setActiveTab('blogs')}>
+                  <button className="adm-kpi-footer-link" onClick={() => setActiveTab('blogs')}>
                     <span>Manage Articles</span>
-                    <ChevronRight size={15} />
+                    <ChevronRight size={14} />
                   </button>
                 </div>
 
                 {/* 4. Clients & Partners */}
-                <div className="dash-card">
-                  <div className="dash-card-header">
-                    <span className="dash-card-label">Clients & Partners</span>
-                    <div className="dash-icon-box emerald"><Building2 size={20} /></div>
+                <div className="adm-kpi-card">
+                  <div className="adm-kpi-header">
+                    <span className="adm-kpi-label">Clients & Partners</span>
+                    <div className="adm-kpi-icon-tile emerald"><Building2 size={18} /></div>
                   </div>
-                  <div className="dash-val">{clients.length + partners.length}</div>
-                  <div className="dash-sub-pills">
-                    <span className="dash-pill pill-info">
+                  <div className="adm-kpi-val"><AnimatedNumber value={clients.length + partners.length} /></div>
+                  <div className="adm-kpi-pills">
+                    <span className="adm-pill cyan">
                       {clients.length} Clients
                     </span>
-                    <span className="dash-pill pill-emerald">
+                    <span className="adm-pill success">
                       {partners.length} Partners
                     </span>
                   </div>
-                  <button className="dash-card-link" onClick={() => setActiveTab('clients_partners')}>
+                  <button className="adm-kpi-footer-link" onClick={() => setActiveTab('clients_partners')}>
                     <span>View Roster</span>
-                    <ChevronRight size={15} />
+                    <ChevronRight size={14} />
                   </button>
                 </div>
 
-                {/* 5. Projects */}
-                <div className="dash-card">
-                  <div className="dash-card-header">
-                    <span className="dash-card-label">Turnkey Case Studies</span>
-                    <div className="dash-icon-box blue"><Briefcase size={20} /></div>
+                {/* 5. Turnkey Case Studies (Joined row - no longer orphan) */}
+                <div className="adm-kpi-card">
+                  <div className="adm-kpi-header">
+                    <span className="adm-kpi-label">Turnkey Case Studies</span>
+                    <div className="adm-kpi-icon-tile blue"><Briefcase size={18} /></div>
                   </div>
-                  <div className="dash-val">{projects.length}</div>
-                  <div className="dash-sub-pills">
-                    <span className="dash-pill pill-success">
-                      <span className="dash-pill-dot" />
+                  <div className="adm-kpi-val"><AnimatedNumber value={projects.length} /></div>
+                  <div className="adm-kpi-pills">
+                    <span className="adm-pill success">
+                      <span className="adm-pill-dot" />
                       {projects.filter(p => p.is_published).length} Published
                     </span>
-                    <span className="dash-pill pill-info">
+                    <span className="adm-pill cyan">
                       {projects.filter(p => p.client_approved).length} Approved
                     </span>
                   </div>
-                  <button className="dash-card-link" onClick={() => setActiveTab('projects')}>
+                  <button className="adm-kpi-footer-link" onClick={() => setActiveTab('projects')}>
                     <span>Manage Case Studies</span>
-                    <ChevronRight size={15} />
+                    <ChevronRight size={14} />
                   </button>
                 </div>
               </div>
 
               {/* Quick Actions Row */}
-              <div className="dashboard-section-block">
-                <div className="section-block-header">
+              <div className="adm-section-block">
+                <div className="adm-section-header">
                   <div>
-                    <h4 className="section-block-title">Executive Quick Actions</h4>
-                    <p className="section-block-sub">Fast-track common administrative tasks with 1-click workflows</p>
+                    <h4 className="adm-section-title">Executive Quick Actions</h4>
+                    <p className="adm-section-sub">Fast-track common administrative tasks with 1-click workflows</p>
                   </div>
                 </div>
 
-                <div className="dashboard-actions-grid">
-                  <button className="dash-action-btn primary" onClick={() => { setActiveTab('products'); handleOpenAddProduct(); }}>
+                <div className="adm-actions-grid">
+                  <button className="adm-action-btn primary" onClick={() => { setActiveTab('products'); handleOpenAddProduct(); }}>
                     <Plus size={16} />
                     <span>Add New Product</span>
                   </button>
 
-                  <button className="dash-action-btn secondary" onClick={() => { setActiveTab('blogs'); handleOpenAddBlog(); }}>
+                  <button className="adm-action-btn secondary" onClick={() => { setActiveTab('blogs'); handleOpenAddBlog(); }}>
                     <FileText size={16} />
                     <span>Publish Article</span>
                   </button>
 
-                  <button className="dash-action-btn secondary" onClick={() => { setActiveTab('projects'); handleOpenAddProject(); }}>
+                  <button className="adm-action-btn secondary" onClick={() => { setActiveTab('projects'); handleOpenAddProject(); }}>
                     <Briefcase size={16} />
                     <span>New Case Study</span>
                   </button>
 
-                  <button className="dash-action-btn secondary" onClick={() => { setActiveTab('clients_partners'); handleOpenAddClient(); }}>
+                  <button className="adm-action-btn secondary" onClick={() => { setActiveTab('clients_partners'); handleOpenAddClient(); }}>
                     <Building2 size={16} />
                     <span>Add Client / Partner</span>
                   </button>
 
-                  <button className="dash-action-btn secondary" onClick={handleExportInquiriesCSV}>
+                  <button className="adm-action-btn secondary" onClick={handleExportInquiriesCSV}>
                     <FileSpreadsheet size={16} />
                     <span>Export Leads (CSV)</span>
                   </button>
 
-                  <button className="dash-action-btn secondary" onClick={handleTriggerLiveBackup} disabled={isBackingUp}>
-                    <HardDrive size={16} className={isBackingUp ? 'animate-spin' : ''} />
+                  <button className="adm-action-btn secondary" onClick={handleTriggerLiveBackup} disabled={isBackingUp}>
+                    <HardDrive size={16} className={isBackingUp ? 'adm-spin' : ''} />
                     <span>{isBackingUp ? 'Backing Up...' : 'Instant DB Backup'}</span>
                   </button>
                 </div>
               </div>
 
               {/* System Telemetry & Recent Audit Activity Split */}
-              <div className="dashboard-grid-split">
-                {/* System Telemetry Card */}
-                <div className="dashboard-section-block" style={{ margin: 0 }}>
-                  <div className="section-block-header">
+              <div className="adm-grid-split">
+                {/* System Telemetry Card (Industrial B-style) */}
+                <div className="adm-split-card">
+                  <div className="adm-section-header">
                     <div>
-                      <h4 className="section-block-title">Measured System Telemetry</h4>
-                      <p className="section-block-sub">Live measured metrics verified directly from SQLite & host OS</p>
+                      <h4 className="adm-section-title">Measured System Telemetry</h4>
+                      <p className="adm-section-sub">Live measured metrics verified directly from SQLite & host OS</p>
                     </div>
                   </div>
 
-                  <div className="telemetry-items-stack">
-                    <div className="telemetry-item-row">
-                      <span className="telemetry-item-label">Database File Size</span>
-                      <strong className="telemetry-item-val val-cyan">
-                        {systemHealth?.database?.file_size_mb || '0.12'} MB ({systemHealth?.database?.file_size_bytes?.toLocaleString() || '122,880'} bytes)
-                      </strong>
+                  <div className="adm-telemetry-stack">
+                    {/* Disk Storage: gauge rendered ONLY if diskMetrics is valid and total > 0 */}
+                    <div className="adm-telemetry-row">
+                      <div className="adm-telemetry-lead">
+                        <div className="adm-telemetry-label-wrap">
+                          <span className="adm-telemetry-dot emerald" />
+                          <span className="adm-telemetry-label">Disk Storage (Host D:)</span>
+                        </div>
+                        <span className="adm-telemetry-mono-val">
+                          {diskMetrics ? (
+                            `${diskMetrics.free} GB Free of ${diskMetrics.total} GB`
+                          ) : (
+                            systemHealth?.disk?.free_gb && systemHealth?.disk?.total_gb
+                              ? `${systemHealth.disk.free_gb} GB Free of ${systemHealth.disk.total_gb} GB`
+                              : (systemHealth?.disk?.free_gb ? `${systemHealth.disk.free_gb} GB Free` : 'Host Storage Live')
+                          )}
+                        </span>
+                      </div>
+                      {diskMetrics && (
+                        <div className="adm-gauge-wrap" title={`${diskMetrics.freePct}% Free`}>
+                          <svg width="40" height="40" viewBox="0 0 44 44" className="adm-gauge-svg" aria-label={`Disk: ${diskMetrics.freePct}% Free`}>
+                            <circle cx="22" cy="22" r="17" className="adm-gauge-bg" />
+                            <circle
+                              cx="22"
+                              cy="22"
+                              r="17"
+                              className="adm-gauge-fill"
+                              strokeDasharray={106.8}
+                              strokeDashoffset={106.8 - (106.8 * (diskMetrics.freePct / 100))}
+                            />
+                          </svg>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="telemetry-item-row">
-                      <span className="telemetry-item-label">Disk Storage (Host D:)</span>
-                      <strong className="telemetry-item-val val-emerald">
-                        {systemHealth?.disk?.free_gb || '218'} GB Free of {systemHealth?.disk?.total_gb || '220'} GB
-                      </strong>
+                    {/* Database File Size: monospace value only, no arbitrary bar scale */}
+                    <div className="adm-telemetry-row">
+                      <div className="adm-telemetry-lead">
+                        <div className="adm-telemetry-label-wrap">
+                          <span className="adm-telemetry-dot cyan" />
+                          <span className="adm-telemetry-label">Database File Size</span>
+                        </div>
+                        <span className="adm-telemetry-mono-val">
+                          {dbMetrics ? (
+                            `${dbMetrics.mb} MB${systemHealth?.database?.file_size_bytes ? ` (${systemHealth.database.file_size_bytes.toLocaleString()} bytes)` : ''}`
+                          ) : (
+                            systemHealth?.database?.file_size_mb
+                              ? `${systemHealth.database.file_size_mb} MB${systemHealth?.database?.file_size_bytes ? ` (${systemHealth.database.file_size_bytes.toLocaleString()} bytes)` : ''}`
+                              : 'SQLite File Connected'
+                          )}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="telemetry-item-row">
-                      <span className="telemetry-item-label">Engine & Platform</span>
-                      <strong className="telemetry-item-val val-slate">
-                        FastAPI v2.0 • Python {systemHealth?.runtime?.python_version || '3.11'} • SQLite 3
-                      </strong>
+                    {/* Engine & Platform */}
+                    <div className="adm-telemetry-row">
+                      <div className="adm-telemetry-lead">
+                        <div className="adm-telemetry-label-wrap">
+                          <span className="adm-telemetry-dot slate" />
+                          <span className="adm-telemetry-label">Engine & Platform</span>
+                        </div>
+                        <span className="adm-telemetry-mono-val">
+                          FastAPI v2.0 • Python {systemHealth?.runtime?.python_version || '3.11'} • SQLite 3
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="telemetry-item-row">
-                      <span className="telemetry-item-label">Last Tested Backup</span>
-                      <strong className="telemetry-item-val val-amber">
-                        {systemHealth?.last_backup?.timestamp || '2026-10-17 13:53:00'}
-                      </strong>
+                    {/* Last Tested Backup */}
+                    <div className="adm-telemetry-row">
+                      <div className="adm-telemetry-lead">
+                        <div className="adm-telemetry-label-wrap">
+                          <span className="adm-telemetry-dot amber" />
+                          <span className="adm-telemetry-label">Last Tested Backup</span>
+                        </div>
+                        <span className="adm-telemetry-mono-val">
+                          {systemHealth?.last_backup?.timestamp || '2026-10-17 13:53:00'}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Recent Administrative Activity Log */}
-                <div className="dashboard-section-block" style={{ margin: 0 }}>
-                  <div className="section-block-header">
+                {/* Recent Administrative Activity Log (A-style Timeline) */}
+                <div className="adm-split-card">
+                  <div className="adm-section-header">
                     <div>
-                      <h4 className="section-block-title">Administrative Audit Stream</h4>
-                      <p className="section-block-sub">Immutable record of changes across all modules</p>
+                      <h4 className="adm-section-title">Administrative Audit Stream</h4>
+                      <p className="adm-section-sub">Immutable record of changes across all modules</p>
                     </div>
-                    <button className="topbar-btn" style={{ padding: '5px 12px', fontSize: '0.78rem' }} onClick={() => { setActiveTab('users'); setUserSubTab('audit_logs'); }}>
+                    <button
+                      className="adm-topbar-btn"
+                      style={{ padding: '4px 10px', fontSize: '0.74rem' }}
+                      onClick={() => { setActiveTab('users'); setUserSubTab('audit_logs'); }}
+                    >
                       View All
                     </button>
                   </div>
 
-                  <div className="audit-items-stack">
-                    {auditLogs.slice(0, 5).map(log => (
-                      <div key={log.id} className="audit-item-row">
-                        <div className="audit-item-head">
-                          <span className="audit-item-user">{log.username} <span className="audit-item-module">({log.module})</span></span>
-                          <span className="audit-item-time">{log.timestamp?.split(' ')[1] || log.timestamp}</span>
+                  <div className="adm-audit-timeline">
+                    {auditLogs.slice(0, 5).map(log => {
+                      const cat = getAuditCategoryInfo(log.module);
+                      return (
+                        <div key={log.id} className="adm-timeline-item">
+                          <div className="adm-timeline-line" />
+                          <div className={`adm-timeline-marker ${cat.color}`}>
+                            <span className="adm-timeline-dot" />
+                          </div>
+                          <div className="adm-timeline-content">
+                            <div className="adm-timeline-head">
+                              <div className="adm-timeline-user-wrap">
+                                <span className="adm-timeline-user">{log.username}</span>
+                                <span className={`adm-timeline-badge ${cat.color}`}>{cat.label}</span>
+                              </div>
+                              <span className="adm-timeline-time">{log.timestamp?.split(' ')[1] || log.timestamp}</span>
+                            </div>
+                            <div className="adm-timeline-details">{log.details}</div>
+                          </div>
                         </div>
-                        <div className="audit-item-details">{log.details}</div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
