@@ -1,12 +1,26 @@
-import React from 'react';
-import { Phone, Mail, Globe, MapPin, ChevronRight, ShieldCheck, ExternalLink, ArrowUp } from 'lucide-react';
-import { scrollToTop } from '../utils/scroll';
+import React, { useState } from 'react';
+import {
+  Phone,
+  Mail,
+  Globe,
+  MapPin,
+  ChevronRight,
+  ShieldCheck,
+  Headset,
+  ArrowRight
+} from 'lucide-react';
 import './Footer.css';
 
-// Resolved once when the module loads rather than on every render
 const CURRENT_YEAR = new Date().getFullYear();
 
 export default function Footer({ onNavigate }) {
+  // Mobile accordion collapse/expand state
+  const [openSection, setOpenSection] = useState(null);
+
+  const toggleSection = (name) => {
+    setOpenSection((prev) => (prev === name ? null : name));
+  };
+
   const handleLinkClick = (page, sectionId = null) => {
     if (onNavigate) {
       onNavigate(page, sectionId);
@@ -16,41 +30,42 @@ export default function Footer({ onNavigate }) {
     }
   };
 
-  const handleBackToTop = () => {
-    scrollToTop();
-  };
-
-  // Every entry maps to a route that actually exists. The previous build
-  // passed section ids such as "access-control" / "cctv" that no page ever
-  // rendered, so those links silently dropped the user on the category top.
-  //
-  // Each entry also carries its real path so the control is a genuine anchor:
-  // middle-click / "open in new tab" / "copy link address" behave the way a
-  // visitor expects, and assistive tech announces it as a link.
   const quickLinks = [
     { label: 'Home', page: 'home', href: '/', section: 'hero' },
     { label: 'About Us', page: 'about', href: '/about' },
-    { label: 'Our Solutions', page: 'automation', href: '/automation' },
+    { label: 'Our Products', page: 'catalog', href: '/catalog' },
+    { label: 'Services', page: 'automation', href: '/automation' },
     { label: 'Projects', page: 'clients', href: '/clients' },
     { label: 'Careers', page: 'careers', href: '/careers' },
     { label: 'Contact Us', page: 'contact', href: '/contact' },
   ];
 
   const productSegments = [
-    { label: 'Access Automation', page: 'automation', href: '/automation' },
-    { label: 'Perimeter & Traffic', page: 'perimeter-defense', href: '/perimeter-defense' },
-    { label: 'Cleanroom Interlocks', page: 'cleanroom-interlocks', href: '/cleanroom-interlocks' },
-    { label: 'Fire & Life Safety', page: 'fire-protection', href: '/fire-protection' },
-    { label: 'Security & Surveillance', page: 'security-systems', href: '/security-systems' },
-    { label: 'Hygiene Solutions', page: 'hygiene', href: '/hygiene' },
+    { label: 'CCTV Surveillance & Biometrics', page: 'security-systems', href: '/security-systems' },
+    { label: 'Access Control Systems', page: 'automation', href: '/automation' },
+    { label: 'Intrusion Alarm Systems', page: 'security-systems', href: '/security-systems' },
+    { label: 'Fire Detection & Alarm Systems', page: 'fire-protection', href: '/fire-protection' },
+    { label: 'Public Address Systems', page: 'security-systems', href: '/security-systems' },
+    { label: 'Networking & IT Infrastructure', page: 'server-room-monitoring', href: '/server-room-monitoring' },
+    { label: 'Building Automation Systems', page: 'automation', href: '/automation' },
+    { label: 'AMC & Support Services', page: 'contact', href: '/contact' },
   ];
 
   return (
     <footer className="footer-wrap">
+      {/* Background Graphic: Modern CCTV & Shield Cyber Hologram */}
+      <div className="footer-bg-graphic" aria-hidden="true">
+        <div className="footer-cctv-img-layer" />
+        <div className="footer-cyber-glow" />
+      </div>
+
       <div className="container footer-container">
         <div className="footer-grid">
-          {/* Column 1: Company Profile & Trust */}
+          {/* =========================================================
+              Column 1: Company Information & CTA
+             ========================================================= */}
           <div className="footer-col col-brand-summary">
+            {/* Logo & Company Name */}
             <div className="footer-brand-title">
               <div className="footer-hti-brand-mark">
                 <img
@@ -59,159 +74,302 @@ export default function Footer({ onNavigate }) {
                   className="footer-hti-white-logo"
                 />
               </div>
-              <span className="brand-head-sub">Automation &amp; Security Systems Pvt. Ltd.</span>
+              <h2 className="brand-head-company">
+                HTI Automation &amp; Security Systems Pvt. Ltd.
+              </h2>
             </div>
 
             <p className="footer-summary-text">
-              Reliable automation &amp; security system provider since 2014. Committed to quality and 24/7 service.
+              Delivering innovative automation and security solutions for a safer, smarter and more connected tomorrow.
             </p>
 
-            <div className="footer-trust-pill">
-              <ShieldCheck size={11} className="footer-pill-icon" />
-              <span>Certified Integrator • Since 2014</span>
+            {/* Badge & Social Icons Row (Side-by-Side on Mobile) */}
+            <div className="footer-trust-social-row">
+              {/* Certification Badge */}
+              <div className="footer-trust-pill">
+                <ShieldCheck size={12} className="footer-pill-icon" />
+                <span>Certified Integrator • Since 2014</span>
+              </div>
+
+              {/* Social Media Icons */}
+              <div className="footer-social-links" aria-label="Social media links">
+                <a
+                  href="https://www.linkedin.com/company/hti-automation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-btn"
+                  aria-label="LinkedIn"
+                  title="LinkedIn"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+
+                <a
+                  href="https://www.facebook.com/htiautomation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-btn"
+                  aria-label="Facebook"
+                  title="Facebook"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                  </svg>
+                </a>
+
+                <a
+                  href="https://www.instagram.com/htiautomation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-btn"
+                  aria-label="Instagram"
+                  title="Instagram"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                  </svg>
+                </a>
+
+                <a
+                  href="https://www.youtube.com/@htiautomation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-btn"
+                  aria-label="YouTube"
+                  title="YouTube"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Talk to Our Experts CTA Card */}
+            <div
+              className="footer-cta-card"
+              onClick={() => handleLinkClick('contact')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleLinkClick('contact'); }}
+              aria-label="Talk to our security solution experts"
+            >
+              <div className="footer-cta-icon-wrap">
+                <Headset size={16} className="footer-cta-headset-icon" />
+              </div>
+              <div className="footer-cta-content">
+                <span className="footer-cta-sub">Need a Security Solution?</span>
+                <span className="footer-cta-title">Talk to Our Experts</span>
+              </div>
+              <div className="footer-cta-btn" aria-hidden="true">
+                <ArrowRight size={12} />
+              </div>
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
+          {/* =========================================================
+              Column 2: Quick Links (Collapsible Accordion on Mobile)
+             ========================================================= */}
           <nav className="footer-col col-quick-links" aria-label="Quick links">
-            <h3 className="footer-column-heading">Quick Links</h3>
-            <ul className="footer-nav-list">
+            <button
+              type="button"
+              className={`footer-column-heading accordion-trigger ${openSection === 'links' ? 'is-active' : ''}`}
+              onClick={() => toggleSection('links')}
+              aria-expanded={openSection === 'links'}
+            >
+              <div className="heading-text-wrap">
+                <span>Quick Links</span>
+                <span className="heading-cyan-bar" />
+              </div>
+              <span className="accordion-toggle-icon" aria-hidden="true">
+                <ChevronRight size={14} className={`accordion-chevron ${openSection === 'links' ? 'rotated' : ''}`} />
+              </span>
+            </button>
+            <ul className={`footer-nav-list ${openSection === 'links' ? 'is-open' : ''}`}>
               {quickLinks.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    onClick={(e) => { e.preventDefault(); handleLinkClick(link.page, link.section); }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLinkClick(link.page, link.section);
+                    }}
+                    className="footer-nav-item"
                   >
-                    <ChevronRight size={13} className="nav-arrow-icon" />
-                    <span>{link.label}</span>
+                    <span className="nav-item-text">{link.label}</span>
+                    <ChevronRight size={12} className="nav-item-chevron" />
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* Column 3: Product Segments */}
+          {/* =========================================================
+              Column 3: Product Segments (Collapsible Accordion on Mobile)
+             ========================================================= */}
           <nav className="footer-col col-product-segments" aria-label="Product segments">
-            <h3 className="footer-column-heading">Product Segments</h3>
-            <ul className="footer-nav-list">
+            <button
+              type="button"
+              className={`footer-column-heading accordion-trigger ${openSection === 'products' ? 'is-active' : ''}`}
+              onClick={() => toggleSection('products')}
+              aria-expanded={openSection === 'products'}
+            >
+              <div className="heading-text-wrap">
+                <span>Product Segments</span>
+                <span className="heading-cyan-bar" />
+              </div>
+              <span className="accordion-toggle-icon" aria-hidden="true">
+                <ChevronRight size={14} className={`accordion-chevron ${openSection === 'products' ? 'rotated' : ''}`} />
+              </span>
+            </button>
+            <ul className={`footer-nav-list ${openSection === 'products' ? 'is-open' : ''}`}>
               {productSegments.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    onClick={(e) => { e.preventDefault(); handleLinkClick(link.page); }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLinkClick(link.page);
+                    }}
+                    className="footer-nav-item"
                   >
-                    <ChevronRight size={13} className="nav-arrow-icon" />
-                    <span>{link.label}</span>
+                    <span className="nav-item-text">{link.label}</span>
+                    <ChevronRight size={12} className="nav-item-chevron" />
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* Column 4: Contact Us */}
+          {/* =========================================================
+              Column 4: Contact Us
+             ========================================================= */}
           <div className="footer-col col-contact-details">
-            <h3 className="footer-column-heading">Contact Us</h3>
+            <div className="footer-column-heading static-heading">
+              <div className="heading-text-wrap">
+                <span>Contact Us</span>
+                <span className="heading-cyan-bar" />
+              </div>
+            </div>
+
             <div className="footer-contact-entries">
+              {/* Phone */}
               <div className="contact-entry-item">
-                <div className="contact-icon-box">
-                  <Phone size={12} />
+                <div className="contact-icon-box" aria-hidden="true">
+                  <Phone size={13} />
                 </div>
                 <div className="contact-entry-body">
-                  <a href="tel:+919892756077" className="contact-link">9892756077</a>
-                  <span className="contact-sep" aria-hidden="true">/</span>
-                  <a href="tel:+919594917010" className="contact-link">9594917010</a>
-                </div>
-              </div>
-
-              <div className="contact-entry-item">
-                <div className="contact-icon-box">
-                  <Mail size={12} />
-                </div>
-                <div className="contact-entry-body">
-                  <a href="mailto:hti@htisystems.in" className="contact-link">hti@htisystems.in</a>
-                </div>
-              </div>
-
-              <div className="contact-entry-item">
-                <div className="contact-icon-box">
-                  <Globe size={12} />
-                </div>
-                <div className="contact-entry-body">
-                  <a href="https://www.htisystems.in" target="_blank" rel="noreferrer" className="contact-link">
-                    www.htisystems.in
-                    <ExternalLink size={10} className="contact-ext-icon" />
+                  <a href="tel:+918308165121" className="contact-link">
+                    +91 83081 65121
                   </a>
                 </div>
               </div>
 
+              {/* Email */}
+              <div className="contact-entry-item">
+                <div className="contact-icon-box" aria-hidden="true">
+                  <Mail size={13} />
+                </div>
+                <div className="contact-entry-body">
+                  <a href="mailto:rathodshweta281@gmail.com" className="contact-link">
+                    rathodshweta281@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              {/* Website */}
+              <div className="contact-entry-item">
+                <div className="contact-icon-box" aria-hidden="true">
+                  <Globe size={13} />
+                </div>
+                <div className="contact-entry-body">
+                  <a
+                    href="https://www.hti-automation.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="contact-link"
+                  >
+                    www.hti-automation.com
+                  </a>
+                </div>
+              </div>
+
+              {/* Address */}
               <div className="contact-entry-item contact-address-item">
-                <div className="contact-icon-box contact-pin-box">
-                  <MapPin size={11} />
+                <div className="contact-icon-box contact-pin-box" aria-hidden="true">
+                  <MapPin size={13} />
                 </div>
                 <div className="contact-entry-body contact-address-text">
-                  <address>825, Goodwill Bizhubb, Next to Ikea, Turbhe MIDC, Navi Mumbai - 400703</address>
+                  <address>
+                    HTI Automation &amp; Security Systems Pvt. Ltd.,<br />
+                    Amravati, Maharashtra, India
+                  </address>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Copyright & Credits */}
+        {/* =========================================================
+            Bottom Copyright Bar & Legal Links
+           ========================================================= */}
         <div className="footer-bottom-bar">
-          <div className="footer-copyright">
-            © {CURRENT_YEAR} HTI Automation and Security System Pvt Ltd. All Rights Reserved.
+          <div className="footer-bottom-accent-strip" />
+
+          <div className="footer-bottom-row">
+            <div className="footer-copyright">
+              © {CURRENT_YEAR} HTI Automation &amp; Security Systems Pvt. Ltd. All Rights Reserved.
+            </div>
+
+            <div className="footer-legal-links">
+              <a
+                href="/about"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLinkClick('about');
+                }}
+              >
+                Privacy Policy
+              </a>
+              <span className="footer-dot-sep" aria-hidden="true">|</span>
+              <a
+                href="/about"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLinkClick('about');
+                }}
+              >
+                Terms of Use
+              </a>
+              <span className="footer-dot-sep" aria-hidden="true">|</span>
+              <a
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLinkClick('home');
+                }}
+              >
+                Sitemap
+              </a>
+              <span className="footer-dot-sep" aria-hidden="true">|</span>
+              <div className="footer-credit">
+                Designed &amp; Developed by{' '}
+                <a
+                  href="https://brightlant.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="brightlant-credit-link"
+                  title="Brightlant - Innovative Web Engineering & Design"
+                >
+                  Brightlant
+                </a>
+              </div>
+            </div>
           </div>
-
-          <div className="footer-legal-links">
-            {/* Real destinations so middle-click / "copy link" behaves sensibly.
-                The SPA handler keeps the transition instant. */}
-            <a
-              href="/about"
-              onClick={(e) => { e.preventDefault(); handleLinkClick('about'); }}
-            >
-              Privacy Policy
-            </a>
-            <span className="footer-dot-sep" aria-hidden="true">•</span>
-            <a
-              href="/about"
-              onClick={(e) => { e.preventDefault(); handleLinkClick('about'); }}
-            >
-              Terms of Use
-            </a>
-            <span className="footer-dot-sep" aria-hidden="true">•</span>
-            <a
-              href="/"
-              onClick={(e) => { e.preventDefault(); handleLinkClick('home'); }}
-            >
-              Sitemap
-            </a>
-
-            {/* <button
-              type="button"
-              className="footer-back-to-top"
-              onClick={handleBackToTop}
-              title="Back to top"
-              aria-label="Back to top"
-            >
-              <ArrowUp size={13} />
-              <span>Back to top</span>
-            </button> */}
-          </div>
-
-
-          <div className="footer-credit">
-            Designed &amp; Developed by{' '}
-            <a
-              href="https://brightlant.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="brightlant-credit-link"
-              title="Brightlant - Innovative Web Engineering & Design"
-            >
-              Brightlant
-            </a>
-          </div>
-
         </div>
       </div>
     </footer>
