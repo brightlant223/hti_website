@@ -27,6 +27,12 @@ import PartnersPage from './components/PartnersPage';
 import BlogsPage from './components/BlogsPage';
 import CareersPage from './components/CareersPage';
 import PharmaCleanroomDetailView from './components/PharmaCleanroomDetailView';
+import TouchlessEntryPage from './components/TouchlessEntryPage';
+import PerimeterGatePage from './components/PerimeterGatePage';
+import TracklessGatePage from './components/TracklessGatePage';
+import RapidAirlockPage from './components/RapidAirlockPage';
+import LogisticsBridgePage from './components/LogisticsBridgePage';
+import HeavySecurityPage from './components/HeavySecurityPage';
 
 // Complete static seed data fallback for resilient offline loading
 import { productsData } from './data/productsData';
@@ -40,21 +46,15 @@ const parseUrlRoute = () => {
   const hash = window.location.hash.toLowerCase();
 
   // Check product detail route /product/:slug or /products/:slug
-  if (path.startsWith('/product/')) {
-    const slug = path.replace('/product/', '').replace(/\/$/, '');
-    return { page: 'product', param: slug };
-  }
-  if (path.startsWith('/products/')) {
-    const slug = path.replace('/products/', '').replace(/\/$/, '');
-    return { page: 'product', param: slug };
-  }
-  if (hash.startsWith('#/product/')) {
-    const slug = hash.replace('#/product/', '');
-    return { page: 'product', param: slug };
-  }
-  if (hash.startsWith('#/products/')) {
-    const slug = hash.replace('#/products/', '');
-    return { page: 'product', param: slug };
+  if (path.startsWith('/product/') || path.startsWith('/products/') || hash.startsWith('#/product/') || hash.startsWith('#/products/')) {
+    const rawSlug = (path.startsWith('/product/') ? path.replace('/product/', '') : path.startsWith('/products/') ? path.replace('/products/', '') : hash.startsWith('#/product/') ? hash.replace('#/product/', '') : hash.replace('#/products/', '')).replace(/\/$/, '');
+    if (rawSlug === 'touchless-entry' || rawSlug === 'touchless-entry-solutions') return { page: 'touchless-entry', param: null };
+    if (rawSlug === 'perimeter-gate' || rawSlug === 'automatic-sliding-swing-gates') return { page: 'perimeter-gate', param: null };
+    if (rawSlug === 'trackless-gate' || rawSlug === 'telescopic-cantilever-gates') return { page: 'trackless-gate', param: null };
+    if (rawSlug === 'rapid-airlock' || rawSlug === 'pvc-rapid-roll-up-doors' || rawSlug === 'high-speed-roll-up-doors') return { page: 'rapid-airlock', param: null };
+    if (rawSlug === 'logistics-bridge' || rawSlug === 'dock-levellers-dock-shelters') return { page: 'logistics-bridge', param: null };
+    if (rawSlug === 'heavy-security' || rawSlug === 'motorized-rolling-shutters' || rawSlug === 'motorized-industrial-rolling-shutters') return { page: 'heavy-security', param: null };
+    return { page: 'product', param: rawSlug };
   }
 
   // Check dedicated product catalogue route (/catalog or /products)
@@ -106,6 +106,24 @@ const parseUrlRoute = () => {
   }
   if (path === '/door-interlock-system' || path === '/door-interlock-system/' || path === '/door-interlock-systems' || hash === '#/door-interlock-system') {
     return { page: 'product', param: 'door-interlock-system' };
+  }
+  if (path === '/touchless-entry' || path === '/touchless-entry/' || path === '/touchless-entry-solutions' || path === '/services/touchless-entry' || hash === '#/touchless-entry' || hash === '#touchless-entry') {
+    return { page: 'touchless-entry', param: null };
+  }
+  if (path === '/perimeter-gate' || path === '/perimeter-gate/' || path === '/automatic-sliding-swing-gates' || path === '/services/perimeter-gate' || hash === '#/perimeter-gate') {
+    return { page: 'perimeter-gate', param: null };
+  }
+  if (path === '/trackless-gate' || path === '/trackless-gate/' || path === '/telescopic-cantilever-gates' || path === '/services/trackless-gate' || hash === '#/trackless-gate') {
+    return { page: 'trackless-gate', param: null };
+  }
+  if (path === '/rapid-airlock' || path === '/rapid-airlock/' || path === '/pvc-rapid-roll-up-doors' || path === '/high-speed-roll-up-doors' || path === '/services/rapid-airlock' || hash === '#/rapid-airlock') {
+    return { page: 'rapid-airlock', param: null };
+  }
+  if (path === '/logistics-bridge' || path === '/logistics-bridge/' || path === '/dock-levellers-dock-shelters' || path === '/services/logistics-bridge' || hash === '#/logistics-bridge') {
+    return { page: 'logistics-bridge', param: null };
+  }
+  if (path === '/heavy-security' || path === '/heavy-security/' || path === '/motorized-rolling-shutters' || path === '/motorized-industrial-rolling-shutters' || path === '/services/heavy-security' || hash === '#/heavy-security') {
+    return { page: 'heavy-security', param: null };
   }
 
   return { page: 'home', param: null };
@@ -340,6 +358,10 @@ export default function App() {
       targetUrl = '/catalog';
       targetPage = 'catalog';
       targetParam = 'all';
+    } else if (page === 'touchless-entry') {
+      targetUrl = '/touchless-entry';
+    } else if (['perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security'].includes(page)) {
+      targetUrl = `/${page}`;
     } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
       targetUrl = `/${page}`;
     } else if (page === 'home') {
@@ -438,8 +460,53 @@ export default function App() {
       />
 
       <main>
+        {/* ROUTE 0: Dedicated Reference-Matched Touchless Entry Solutions Page */}
+        {(routeState.page === 'touchless-entry' || (routeState.page === 'product' && (routeState.param === 'touchless-entry' || routeState.param === 'touchless-entry-solutions'))) && (
+          <TouchlessEntryPage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {/* Dedicated Industrial Access Product Pages */}
+        {(routeState.page === 'perimeter-gate' || (routeState.page === 'product' && (routeState.param === 'perimeter-gate' || routeState.param === 'automatic-sliding-swing-gates'))) && (
+          <PerimeterGatePage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {(routeState.page === 'trackless-gate' || (routeState.page === 'product' && (routeState.param === 'trackless-gate' || routeState.param === 'telescopic-cantilever-gates'))) && (
+          <TracklessGatePage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {(routeState.page === 'rapid-airlock' || (routeState.page === 'product' && (routeState.param === 'rapid-airlock' || routeState.param === 'pvc-rapid-roll-up-doors' || routeState.param === 'high-speed-roll-up-doors'))) && (
+          <RapidAirlockPage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {(routeState.page === 'logistics-bridge' || (routeState.page === 'product' && (routeState.param === 'logistics-bridge' || routeState.param === 'dock-levellers-dock-shelters'))) && (
+          <LogisticsBridgePage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
+        {(routeState.page === 'heavy-security' || (routeState.page === 'product' && (routeState.param === 'heavy-security' || routeState.param === 'motorized-rolling-shutters' || routeState.param === 'motorized-industrial-rolling-shutters'))) && (
+          <HeavySecurityPage
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
         {/* ROUTE 1: Product Detail Page (/product/:slug) */}
-        {routeState.page === 'product' && (
+        {routeState.page === 'product' && 
+          !['touchless-entry', 'touchless-entry-solutions', 'perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security', 'automatic-sliding-swing-gates', 'telescopic-cantilever-gates', 'pvc-rapid-roll-up-doors', 'high-speed-roll-up-doors', 'dock-levellers-dock-shelters', 'motorized-rolling-shutters', 'motorized-industrial-rolling-shutters'].includes(routeState.param) && (
           (routeState.param === 'door-interlock-system' || routeState.param === 'door-interlock-systems') ? (
             <PharmaCleanroomDetailView
               product={activeProduct || { slug: 'door-interlock-system' }}

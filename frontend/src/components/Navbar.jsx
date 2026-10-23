@@ -333,6 +333,42 @@ export default function Navbar({
     setActiveDropdown(null);
     setOpenedByClick(false);
     setMobileMenuOpen(false);
+    if (slug === 'touchless-entry' || slug === 'touchless-entry-solutions' || slug === 'automatic-sliding-swing-doors') {
+      if (onNavigate) {
+        onNavigate('touchless-entry');
+      }
+      return;
+    }
+    if (slug === 'perimeter-gate' || slug === 'automatic-sliding-swing-gates') {
+      if (onNavigate) {
+        onNavigate('perimeter-gate');
+      }
+      return;
+    }
+    if (slug === 'trackless-gate' || slug === 'telescopic-cantilever-gates') {
+      if (onNavigate) {
+        onNavigate('trackless-gate');
+      }
+      return;
+    }
+    if (slug === 'rapid-airlock' || slug === 'pvc-rapid-roll-up-doors' || slug === 'high-speed-roll-up-doors') {
+      if (onNavigate) {
+        onNavigate('rapid-airlock');
+      }
+      return;
+    }
+    if (slug === 'logistics-bridge' || slug === 'dock-levellers-dock-shelters') {
+      if (onNavigate) {
+        onNavigate('logistics-bridge');
+      }
+      return;
+    }
+    if (slug === 'heavy-security' || slug === 'motorized-rolling-shutters' || slug === 'motorized-industrial-rolling-shutters') {
+      if (onNavigate) {
+        onNavigate('heavy-security');
+      }
+      return;
+    }
     if (onNavigate) {
       onNavigate('product', slug);
     }
@@ -373,42 +409,42 @@ export default function Navbar({
           description: 'Automatic Sliding & Swing Doors for hygienic and seamless access.',
           image: '/services/services-touchless-entry.jpg',
           icon: DoorClosed,
-          slug: 'automatic-sliding-swing-doors'
+          slug: 'touchless-entry'
         },
         {
           title: 'Perimeter Gate',
           description: 'Automatic Sliding & Swing Gates for industrial and commercial sites.',
           image: '/services/services-perimeter-gate.jpg',
           icon: ShieldCheck,
-          slug: 'automatic-sliding-swing-gates'
+          slug: 'perimeter-gate'
         },
         {
           title: 'Trackless Gate',
           description: 'Telescopic & Cantilever Gates for wide and heavy-duty openings.',
           image: '/services/services-trackless-gate.jpg',
           icon: SlidersHorizontal,
-          slug: 'telescopic-cantilever-gates'
+          slug: 'trackless-gate'
         },
         {
           title: 'Rapid Airlock',
           description: 'High Speed Roll Up & Sectional Doors for high-traffic zones.',
           image: '/services/services-rapid-airlock.jpg',
           icon: Layers,
-          slug: 'pvc-rapid-roll-up-doors'
+          slug: 'rapid-airlock'
         },
         {
           title: 'Logistics Bridge',
           description: 'Dock Levellers & Dock Shelters for efficient loading operations.',
           image: '/services/services-logistics-bridge.jpg',
           icon: Truck,
-          slug: 'dock-levellers-dock-shelters'
+          slug: 'logistics-bridge'
         },
         {
           title: 'Heavy Security',
           description: 'Motorized Rolling Shutters for maximum site protection.',
           image: '/services/services-heavy-security.jpg',
           icon: Settings,
-          slug: 'motorized-rolling-shutters'
+          slug: 'heavy-security'
         }
       ]
     },
