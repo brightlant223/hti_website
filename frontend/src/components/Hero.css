@@ -907,12 +907,12 @@
   }
 }
 
-/* 3. Tablets in Landscape & Portrait (769px – 1024px) */
+/* 3. Tablets (768px – 1024px) */
 @media (max-width: 1024px) {
   .hero-stage-layout {
     flex-direction: column;
     align-items: center;
-    gap: 36px;
+    gap: 32px;
     padding: 24px 20px 36px;
   }
 
@@ -929,7 +929,7 @@
   }
 
   .hero-modern-title {
-    font-size: clamp(2.5rem, 5.5vw, 3.4rem);
+    font-size: clamp(2.4rem, 5.2vw, 3.2rem);
     text-align: center;
   }
 
@@ -941,23 +941,26 @@
 
   .hero-modern-cta-row {
     justify-content: center;
-    margin-bottom: 28px;
+    margin-bottom: 26px;
   }
 
   .hero-pillars-grid {
     justify-content: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 16px;
   }
 
   .pillar-desc {
     max-width: 140px;
   }
 
-  /* Right Visual on Tablets: Balanced Side-by-Side Building + 3 Cards */
+  /* Right Visual on Tablets: Balanced Side-by-Side Building + 3 Cards Column */
   .hero-right-visual-area {
     width: 100%;
     max-width: 720px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
     gap: 16px;
     min-height: auto;
@@ -966,7 +969,7 @@
   .hero-building-frame-wrap {
     width: 53%;
     max-width: 360px;
-    height: 420px;
+    height: 400px;
     margin-right: 0;
     border-radius: 32px 80px 32px 50px;
   }
@@ -974,11 +977,13 @@
   .hero-floating-cards-column {
     width: 47%;
     max-width: 310px;
+    display: flex;
+    flex-direction: column;
     gap: 12px;
   }
 
   .hero-service-card {
-    height: 128px;
+    height: 122px;
     border-radius: 18px;
   }
 
@@ -992,81 +997,61 @@
   }
 }
 
-/* 4. Small Tablets & Phablets (641px – 768px) */
-@media (max-width: 768px) {
-  .hero-stage-layout {
-    gap: 30px;
-    padding: 20px 16px 30px;
+/* ==========================================================================
+   4. MOBILE DEVICES (320px – 767px)
+   Compact, Premium, Intentional Grid Composition
+   ========================================================================== */
+@media (max-width: 767px) {
+  .hero-modern-section {
+    min-height: auto;
+    padding: 0;
   }
 
-  .hero-modern-title {
-    font-size: clamp(2.2rem, 5.8vw, 2.9rem);
-  }
-
-  .hero-modern-description {
-    font-size: 0.96rem;
-    margin-bottom: 22px;
-  }
-
-  .hero-modern-cta-row {
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-
-  .hero-right-visual-area {
-    max-width: 600px;
-    gap: 12px;
-  }
-
-  .hero-building-frame-wrap {
-    width: 52%;
-    height: 380px;
-  }
-
-  .hero-floating-cards-column {
-    width: 48%;
-  }
-
-  .hero-service-card {
-    height: 116px;
-  }
-
-  .pill-text {
-    font-size: 0.72rem;
-  }
-
-  .pill-icon-box {
-    width: 20px;
-    height: 20px;
-  }
-
-  .pill-arrow-btn {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-/* 5. Mobile Devices (320px – 640px) */
-@media (max-width: 640px) {
   .hero-stage-layout {
     flex-direction: column;
     align-items: center;
-    gap: 26px;
-    padding: 16px 14px 26px;
+    gap: 18px;
+    padding: 16px 16px 22px;
     width: 100%;
     box-sizing: border-box;
   }
 
+  /* Ambient Glows reduced on mobile */
+  .hero-ambient-glow-coral {
+    width: 200px;
+    height: 200px;
+    filter: blur(40px);
+    top: -20px;
+    right: 5%;
+  }
+
+  .hero-ambient-glow-soft {
+    width: 160px;
+    height: 160px;
+    filter: blur(40px);
+    bottom: 40px;
+  }
+
+  .hero-dot-grid {
+    display: none;
+  }
+
+  /* Left Column: Heading, Subtitle, CTAs, Highlights */
   .hero-left-column {
     width: 100%;
     max-width: 100%;
     align-items: center;
     text-align: center;
     padding: 0;
+    margin: 0;
   }
 
   .hero-since-tag {
-    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 8px;
   }
 
   .hero-since-dash {
@@ -1076,143 +1061,258 @@
 
   .hero-since-text {
     font-size: 0.80rem;
+    font-weight: 800;
     letter-spacing: 0.18em;
   }
 
   .hero-modern-title {
-    font-size: clamp(1.85rem, 7.8vw, 2.45rem);
+    font-size: clamp(1.9rem, 6.5vw, 2.45rem);
     line-height: 1.12;
-    margin-bottom: 14px;
+    margin: 0 0 10px 0;
     text-align: center;
   }
 
   .hero-modern-description {
-    font-size: 0.94rem;
-    line-height: 1.55;
-    margin-bottom: 20px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin: 0 auto 16px;
     text-align: center;
-    padding: 0 4px;
+    max-width: 480px;
+    padding: 0;
   }
 
+  /* Dual Action Buttons: Side-by-side with wrapping when needed */
   .hero-modern-cta-row {
-    flex-direction: column;
-    width: 100%;
-    max-width: 320px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
-    margin: 0 auto 24px;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto 16px;
   }
 
   .btn-hero-explore,
   .btn-hero-video-play {
-    width: 100%;
+    flex: 1 1 150px;
+    max-width: 200px;
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 0.88rem;
+    border-radius: 9px;
     justify-content: center;
-    min-height: 48px;
-    font-size: 0.94rem;
-    padding: 12px 18px;
     box-sizing: border-box;
+    white-space: nowrap;
   }
 
-  /* Mobile Feature Highlights: Stacked Cleanly into Readable Cards */
+  /* Feature Highlights: Compact Badges in a Balanced Row/Wrap */
   .hero-pillars-grid {
-    flex-direction: column;
-    align-items: stretch;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
     width: 100%;
-    max-width: 340px;
-    gap: 10px;
+    max-width: 520px;
     margin: 0 auto;
   }
 
   .hero-pillar-item {
-    width: 100%;
-    background: rgba(248, 250, 252, 0.9);
-    border: 1px solid #f1f5f9;
-    border-radius: 14px;
-    padding: 9px 12px;
-    box-sizing: border-box;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 7px;
+    padding: 6px 11px;
+    background: rgba(248, 250, 252, 0.96);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    cursor: pointer;
     text-align: left;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    box-sizing: border-box;
+    flex-shrink: 0;
   }
 
   .pillar-icon-box {
-    width: 42px;
-    height: 42px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+
+  .pillar-icon-box svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .pillar-text-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
   }
 
   .pillar-label {
-    font-size: 0.92rem;
+    font-size: 0.78rem;
+    font-weight: 750;
+    line-height: 1.2;
+    color: #0b1a30;
+    white-space: nowrap;
   }
 
   .pillar-desc {
-    font-size: 0.76rem;
+    font-size: 0.65rem;
+    color: #64748b;
+    line-height: 1.2;
     max-width: none;
-    white-space: normal;
+    white-space: nowrap;
   }
 
-  /* Right Visual on Mobile: Stack Building on Top, 3 Cards Below */
+  /* Right Visual Area on Mobile: Building Frame on Top + 2-Column Mini Cards Grid Below */
   .hero-right-visual-area {
+    display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 380px;
-    gap: 14px;
+    max-width: 480px;
+    gap: 10px;
     min-height: auto;
     margin: 0 auto;
+    box-sizing: border-box;
   }
 
   .hero-right-backdrop-shape {
     display: none; /* Avoid mobile background overflow */
   }
 
+  /* Central Glass Building Frame */
   .hero-building-frame-wrap {
     width: 100%;
     max-width: 100%;
-    height: 250px;
+    height: 220px;
     margin-right: 0;
-    border-radius: 22px;
+    border-radius: 20px;
+    border: 2.5px solid #ffffff;
+    box-shadow: 0 10px 28px rgba(11, 26, 48, 0.12);
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
   .hero-building-frame {
-    border-radius: 22px;
-    border-width: 2.5px;
+    width: 100%;
+    height: 100%;
+    border-radius: 17px;
+    border: none;
+    box-shadow: none;
   }
 
   .hero-building-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     object-position: center 25%;
   }
 
+  /* Two-Column Mini Cards Grid */
   .hero-floating-cards-column {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
     width: 100%;
     max-width: 100%;
-    gap: 11px;
-    margin-left: 0;
+    margin: 0;
+    box-sizing: border-box;
   }
 
   .hero-service-card {
-    height: 128px;
-    border-radius: 16px;
-    border-width: 2.5px;
+    position: relative;
+    width: 100%;
+    height: 102px;
+    border-radius: 14px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 14px rgba(11, 26, 48, 0.10);
+    overflow: hidden;
+    box-sizing: border-box;
+    cursor: pointer;
   }
 
+  /* Third Card: Spans both columns for a balanced, grounded 2-column layout */
+  .hero-service-card.card-hygiene {
+    grid-column: 1 / -1;
+    height: 80px;
+  }
+
+  .service-card-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .service-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Floating Bottom Pill inside Mini Cards */
   .service-card-pill {
-    bottom: 9px;
-    left: 9px;
-    right: 9px;
-    padding: 5px 6px 5px 10px;
+    position: absolute;
+    bottom: 7px;
+    left: 7px;
+    right: 7px;
+    border-radius: 9999px;
+    padding: 4px 6px 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+
+  .pill-left-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .pill-icon-box {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border-radius: 5px;
+  }
+
+  .pill-icon-box svg {
+    width: 12px;
+    height: 12px;
   }
 
   .pill-text {
-    font-size: 0.76rem;
+    font-size: 0.72rem;
+    font-weight: 750;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
   }
 
   .pill-arrow-btn {
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   }
 
-  /* Metrics Grid on Mobile: 2 Columns */
+  .pill-arrow-btn svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  /* Metrics Banner Grid on Mobile: 2 Columns */
   .hero-metrics-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
@@ -1237,44 +1337,183 @@
   }
 }
 
-/* 6. Extra Small Screens (320px – 360px) */
-@media (max-width: 360px) {
+/* ==========================================================================
+   4B. STANDARD PHONES (376px – 430px)
+   ========================================================================== */
+@media (max-width: 430px) {
   .hero-stage-layout {
-    padding: 12px 8px 20px;
-    gap: 20px;
+    padding: 14px 16px 20px;
+    gap: 16px;
   }
 
   .hero-modern-title {
-    font-size: 1.72rem;
+    font-size: clamp(1.75rem, 7.2vw, 2.15rem);
+    margin-bottom: 8px;
   }
 
   .hero-modern-description {
     font-size: 0.88rem;
+    line-height: 1.48;
+    margin-bottom: 14px;
+    max-width: 380px;
+  }
+
+  .hero-modern-cta-row {
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .btn-hero-explore,
+  .btn-hero-video-play {
+    flex: 1 1 140px;
+    min-height: 42px;
+    padding: 9px 14px;
+    font-size: 0.84rem;
+  }
+
+  /* Clean compact highlight chips: hide description to fit nicely */
+  .pillar-desc {
+    display: none;
+  }
+
+  .hero-pillar-item {
+    padding: 5px 9px;
   }
 
   .hero-building-frame-wrap {
-    height: 210px;
+    height: 195px;
+    border-radius: 18px;
+  }
+
+  .hero-building-frame {
+    border-radius: 15px;
   }
 
   .hero-service-card {
-    height: 115px;
+    height: 96px;
+    border-radius: 12px;
   }
 
-  .service-card-pill {
-    padding: 4px 6px 4px 8px;
+  .hero-service-card.card-hygiene {
+    height: 74px;
   }
 
   .pill-text {
-    font-size: 0.70rem;
+    font-size: 0.68rem;
   }
 
-  .pill-arrow-btn {
+  .service-card-pill {
+    padding: 3.5px 5px 3.5px 7px;
+  }
+}
+
+/* ==========================================================================
+   4C. SMALL PHONES (320px – 375px)
+   ========================================================================== */
+@media (max-width: 375px) {
+  .hero-stage-layout {
+    padding: 12px 14px 18px;
+    gap: 14px;
+  }
+
+  .hero-modern-title {
+    font-size: clamp(1.55rem, 7.5vw, 1.78rem);
+    margin-bottom: 8px;
+  }
+
+  .hero-modern-description {
+    font-size: 0.82rem;
+    line-height: 1.42;
+    margin-bottom: 12px;
+  }
+
+  .hero-modern-cta-row {
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .btn-hero-explore,
+  .btn-hero-video-play {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 auto;
+    min-height: 40px;
+    padding: 9px 12px;
+    font-size: 0.82rem;
+  }
+
+  .hero-pillars-grid {
+    gap: 6px;
+  }
+
+  .hero-pillar-item {
+    padding: 4px 8px;
+    gap: 5px;
+    border-radius: 10px;
+  }
+
+  .pillar-icon-box {
     width: 24px;
     height: 24px;
+    min-width: 24px;
+  }
+
+  .pillar-icon-box svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .pillar-label {
+    font-size: 0.72rem;
+  }
+
+  .pillar-desc {
+    display: none;
+  }
+
+  .hero-building-frame-wrap {
+    height: 165px;
+    border-radius: 16px;
+  }
+
+  .hero-building-frame {
+    border-radius: 13px;
+  }
+
+  .hero-floating-cards-column {
+    gap: 8px;
+  }
+
+  .hero-service-card {
+    height: 88px;
+    border-radius: 11px;
+  }
+
+  .hero-service-card.card-hygiene {
+    height: 68px;
+  }
+
+  /* On narrow 2-column mini cards, hide arrow button to maximize label space */
+  .hero-service-card:not(.card-hygiene) .pill-arrow-btn {
+    display: none;
+  }
+
+  .service-card-pill {
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    padding: 3px 5px 3px 6px;
+  }
+
+  .pill-text {
+    font-size: 0.65rem;
   }
 
   .hero-metrics-inner {
-    padding: 0 10px;
+    padding: 0 8px;
   }
 
   .hero-metrics-grid {
@@ -1287,8 +1526,8 @@
   }
 
   .metric-icon-bubble {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
   .metric-loop-number {
@@ -1298,4 +1537,4 @@
   .metric-loop-label {
     font-size: 0.65rem;
   }
-}
+}
