@@ -553,22 +553,22 @@ export default function App() {
         )}
 
         {/* ROUTE 1: Product Detail Page (/product/:slug) */}
-        {routeState.page === 'product' && 
+        {routeState.page === 'product' &&
           !['touchless-entry', 'touchless-entry-solutions', 'perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security', 'automatic-sliding-swing-gates', 'telescopic-cantilever-gates', 'pvc-rapid-roll-up-doors', 'high-speed-roll-up-doors', 'dock-levellers-dock-shelters', 'motorized-rolling-shutters', 'motorized-industrial-rolling-shutters', ...FIRE_SAFETY_SLUGS].includes(routeState.param) && (
-          (routeState.param === 'door-interlock-system' || routeState.param === 'door-interlock-systems') ? (
-            <PharmaCleanroomDetailView
-              product={activeProduct || { slug: 'door-interlock-system' }}
-              onNavigate={navigateTo}
-              onQuoteSubmit={handleInquirySubmitted}
-            />
-          ) : (
-            <ProductDetailPage
-              product={activeProduct}
-              onNavigate={navigateTo}
-              onQuoteSubmit={handleInquirySubmitted}
-            />
-          )
-        )}
+            (routeState.param === 'door-interlock-system' || routeState.param === 'door-interlock-systems') ? (
+              <PharmaCleanroomDetailView
+                product={activeProduct || { slug: 'door-interlock-system' }}
+                onNavigate={navigateTo}
+                onQuoteSubmit={handleInquirySubmitted}
+              />
+            ) : (
+              <ProductDetailPage
+                product={activeProduct}
+                onNavigate={navigateTo}
+                onQuoteSubmit={handleInquirySubmitted}
+              />
+            )
+          )}
 
         {/* ROUTE 2: Dedicated Full Product Catalogue (/catalog) */}
         {routeState.page === 'catalog' && (

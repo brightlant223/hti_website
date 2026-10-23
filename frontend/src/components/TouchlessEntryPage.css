@@ -27,9 +27,22 @@
   position: relative;
   background-color: #ffffff;
   color: #0f172a;
-  padding: 44px 0 54px 0;
+  min-height: calc(100vh - var(--header-height, 80px));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 0 18px 0;
   overflow: hidden;
   border-bottom: 1px solid #e2e8f0;
+  box-sizing: border-box;
+}
+
+.touchless-hero-section .touchless-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  height: 100%;
 }
 
 .touchless-hero-ambient-glow {
@@ -60,9 +73,9 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 13px;
+  font-size: 12.5px;
   color: #64748b;
-  margin-bottom: 28px;
+  margin-bottom: 12px;
   position: relative;
   z-index: 2;
 }
@@ -92,16 +105,19 @@
 .touchless-hero-layout {
   display: grid;
   grid-template-columns: 1.15fr 1.25fr 1.1fr;
-  gap: 32px;
-  align-items: center;
+  gap: 28px;
+  align-items: stretch;
   position: relative;
   z-index: 2;
+  flex: 1;
 }
 
 /* Hero Left Column */
 .touchless-hero-left {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .touchless-badge-pill {
@@ -109,15 +125,15 @@
   align-items: center;
   gap: 8px;
   align-self: flex-start;
-  padding: 6px 14px;
+  padding: 5px 12px;
   background: #f0f9ff;
   border: 1px solid #7dd3fc;
   border-radius: 9999px;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: #0284c7;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
 }
 
@@ -145,11 +161,11 @@
 }
 
 .touchless-hero-title {
-  font-size: 46px;
+  font-size: 34px;
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.15;
   color: #0f172a;
-  margin: 0 0 12px 0;
+  margin: 0 0 6px 0;
   letter-spacing: -0.02em;
 }
 
@@ -160,38 +176,38 @@
 }
 
 .touchless-hero-tagline {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   color: #334155;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   letter-spacing: 0.01em;
 }
 
 .touchless-hero-desc {
-  font-size: 14.5px;
-  line-height: 1.65;
+  font-size: 13.5px;
+  line-height: 1.5;
   color: #64748b;
-  margin: 0 0 28px 0;
+  margin: 0 0 12px 0;
   max-width: 440px;
 }
 
 .touchless-hero-metrics-pills {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   flex-wrap: wrap;
-  margin-bottom: 26px;
+  margin-bottom: 14px;
 }
 
 .metric-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
+  gap: 5px;
+  padding: 4px 10px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 9999px;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   color: #334155;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
@@ -204,23 +220,23 @@
 .touchless-hero-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .touchless-btn-primary {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 13px 26px;
+  gap: 8px;
+  padding: 10px 22px;
   background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
   color: #ffffff;
   border: none;
   border-radius: 9999px;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
   transition: all 0.25s ease;
 }
 
@@ -241,12 +257,12 @@
 .touchless-btn-secondary {
   display: inline-flex;
   align-items: center;
-  padding: 13px 24px;
+  padding: 10px 20px;
   background: #ffffff;
   color: #1e293b;
   border: 1.5px solid #cbd5e1;
   border-radius: 9999px;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
@@ -267,23 +283,32 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
 }
 
 .touchless-door-showcase-frame {
   position: relative;
   width: 100%;
-  max-width: 440px;
+  max-width: 430px;
+  height: 100%;
+  min-height: 380px;
+  max-height: 440px;
   border-radius: 16px;
   padding: 8px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .door-viewport {
   position: relative;
   width: 100%;
-  height: 380px;
+  height: 100%;
+  flex: 1;
+  min-height: 360px;
   border-radius: 12px;
   overflow: hidden;
   background-color: #f1f5f9;
@@ -426,44 +451,55 @@
 .touchless-hero-right {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  justify-content: center;
 }
 
 .touchless-benefits-stack {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+  height: 100%;
+  max-height: 440px;
+  gap: 8px;
 }
 
 .benefit-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 18px;
+  gap: 12px;
+  padding: 8px 14px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
   transition: all 0.25s ease;
+  flex: 1;
 }
 
 .benefit-card:hover {
   background: #f8fafc;
   border-color: #0284c7;
   transform: translateX(4px);
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12);
+  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.1);
 }
 
 .benefit-icon-box {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
   border-radius: 50%;
   background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.2);
+}
+
+.benefit-icon-box svg {
+  width: 17px;
+  height: 17px;
 }
 
 .benefit-text {
@@ -472,17 +508,17 @@
 }
 
 .benefit-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #0f172a;
-  margin: 0 0 3px 0;
+  margin: 0 0 2px 0;
 }
 
 .benefit-desc {
-  font-size: 12px;
+  font-size: 11px;
   color: #64748b;
   margin: 0;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 /* ==========================================================================
@@ -1987,132 +2023,186 @@
    RESPONSIVE DESIGN (DESKTOP, LAPTOP, TABLET, MOBILE)
    ========================================================================== */
 
-/* 1. Small Laptops & Large Tablets (max-width: 1200px) */
-@media (max-width: 1200px) {
+/* 1. Small Laptops & Large Tablets (max-width: 1200px) and (min-width: 992px) */
+@media (max-width: 1200px) and (min-width: 992px) {
   .touchless-container {
-    padding: 0 20px;
+    padding: 0 18px;
+  }
+
+  .touchless-hero-section {
+    min-height: calc(100vh - var(--header-height, 80px));
+    padding: 12px 0 14px 0;
+  }
+
+  .touchless-breadcrumbs {
+    font-size: 11.5px;
+    margin-bottom: 8px;
   }
 
   .touchless-hero-layout {
-    grid-template-columns: 1.05fr 1.15fr 0.95fr;
-    gap: 20px;
+    grid-template-columns: 1.15fr 1.2fr 1.05fr;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .touchless-badge-pill {
+    padding: 4px 10px;
+    font-size: 9.5px;
+    margin-bottom: 6px;
   }
 
   .touchless-hero-title {
-    font-size: 38px;
+    font-size: 27px;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+
+  .touchless-hero-tagline {
+    font-size: 13.5px;
+    margin-bottom: 6px;
+  }
+
+  .touchless-hero-desc {
+    font-size: 12px;
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
+
+  .touchless-hero-metrics-pills {
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .metric-pill {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+
+  .touchless-hero-actions {
+    gap: 8px;
+  }
+
+  .touchless-btn-primary,
+  .touchless-btn-secondary {
+    padding: 8px 16px;
+    font-size: 12.5px;
+  }
+
+  .touchless-door-showcase-frame {
+    max-height: 380px;
+    min-height: 320px;
+    padding: 6px;
+  }
+
+  .door-viewport {
+    min-height: 300px;
+  }
+
+  .touchless-benefits-stack {
+    max-height: 380px;
+    gap: 6px;
+  }
+
+  .benefit-card {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .benefit-icon-box {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+
+  .benefit-icon-box svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .benefit-title {
+    font-size: 11.5px;
+    margin-bottom: 1px;
+  }
+
+  .benefit-desc {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .hero-scroll-cue-wrapper {
+    margin-top: 6px;
   }
 
   .touchless-products-grid {
-    gap: 14px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
   }
 
   .product-card-body {
-    padding: 16px 14px;
+    padding: 12px 10px;
   }
 
   .product-card-title {
-    font-size: 15px;
+    font-size: 14px;
+  }
+
+  .product-card-desc {
+    font-size: 11.5px;
   }
 
   .product-card-bullets li {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .gallery-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 12px;
   }
 }
 
-/* 2. Tablets & Small Laptops (max-width: 1024px) */
-@media (max-width: 1024px) {
+/* 2. Tablets & Medium Screens (max-width: 991px) and (min-width: 769px) */
+@media (max-width: 991px) and (min-width: 769px) {
+  .touchless-hero-section {
+    min-height: auto;
+    padding: 24px 0 32px 0;
+  }
+
   .touchless-hero-layout {
-    grid-template-columns: 1fr;
-    gap: 36px;
-  }
-
-  .touchless-hero-left {
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
     align-items: center;
-    text-align: center;
   }
 
-  .touchless-badge-pill {
-    align-self: center;
-  }
-
-  .touchless-hero-tagline {
-    text-align: center;
-  }
-
-  .touchless-hero-desc {
-    max-width: 600px;
-    margin: 0 auto 24px auto;
-    text-align: center;
-  }
-
-  .touchless-hero-metrics-pills {
-    justify-content: center;
-  }
-
-  .touchless-hero-actions {
-    justify-content: center;
-  }
-
-  .touchless-hero-center {
-    max-width: 520px;
-    margin: 0 auto;
-    width: 100%;
+  .touchless-hero-title {
+    font-size: 28px;
   }
 
   .touchless-hero-right {
-    max-width: 720px;
-    margin: 0 auto;
-    width: 100%;
+    grid-column: span 2;
+    max-width: 100%;
+    margin-top: 8px;
   }
 
   .touchless-benefits-stack {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-height: none;
   }
 
+  .benefit-card:nth-child(4),
   .benefit-card:nth-child(5) {
-    grid-column: span 2;
+    grid-column: span 1;
   }
 
-  .showcase-content-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .showcase-info-col {
-    max-width: 680px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .showcase-matrix-dots {
-    display: none;
-  }
-
-  .showcase-features-list {
-    max-width: 440px;
-    margin: 0 auto 28px auto;
-    text-align: left;
-  }
-
-  .showcase-action-row {
-    justify-content: center;
+  .door-viewport {
+    height: 320px;
+    min-height: 320px;
   }
 
   .touchless-products-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-  }
-
-  .workflow-and-app-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 16px;
   }
 
   .workflow-steps-horizontal {
@@ -2124,36 +2214,32 @@
     display: none;
   }
 
-  .application-tiles-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
   .specs-cert-grid {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: 32px;
   }
 
   .sensor-tab-content-card {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
     padding: 24px;
   }
 
   .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .showcase-content-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
   }
 
   .touchless-cta-box {
     flex-direction: column;
     text-align: center;
-    padding: 36px 28px;
-    gap: 24px;
-  }
-
-  .touchless-cta-box::after {
-    display: none;
+    padding: 32px 24px;
+    gap: 20px;
   }
 
   .cta-right-action {
@@ -2165,19 +2251,92 @@
 /* 3. Phablets & Mobile Landscape (max-width: 768px) */
 @media (max-width: 768px) {
   .touchless-hero-section {
-    padding: 36px 0 44px 0;
+    min-height: auto;
+    padding: 24px 0 32px 0;
+  }
+
+  .touchless-hero-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .touchless-hero-left {
+    align-items: center;
+    text-align: center;
+  }
+
+  .touchless-badge-pill {
+    align-self: center;
   }
 
   .touchless-hero-title {
-    font-size: 32px;
+    font-size: 28px;
+    line-height: 1.2;
+    text-align: center;
   }
 
   .touchless-hero-tagline {
-    font-size: 16px;
+    font-size: 15px;
+    text-align: center;
+  }
+
+  .touchless-hero-desc {
+    max-width: 600px;
+    margin: 0 auto 16px auto;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  .touchless-hero-metrics-pills {
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .touchless-hero-actions {
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .touchless-hero-center {
+    max-width: 440px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .door-viewport {
-    height: 300px;
+    height: 280px;
+    min-height: 280px;
+  }
+
+  .touchless-hero-right {
+    max-width: 100%;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .touchless-benefits-stack {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-height: none;
+  }
+
+  .benefit-card:nth-child(5) {
+    grid-column: span 2;
+  }
+
+  .touchless-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .workflow-steps-horizontal {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .step-arrow-connector {
+    display: none;
   }
 
   .sensor-tabs-nav {
@@ -2198,41 +2357,75 @@
   .sensor-tab-btn {
     flex-shrink: 0;
     white-space: nowrap;
-    padding: 10px 16px;
-    font-size: 13.5px;
+    padding: 8px 14px;
+    font-size: 12.5px;
   }
 
-  .application-tiles-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .form-two-col {
+  .sensor-tab-content-card {
     grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .specs-cert-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .showcase-content-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .showcase-info-col {
+    text-align: center;
+  }
+
+  .showcase-matrix-dots {
+    display: none;
+  }
+
+  .showcase-features-list {
+    max-width: 440px;
+    margin: 0 auto 20px auto;
+    text-align: left;
+  }
+
+  .showcase-action-row {
+    justify-content: center;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
 
-  .specs-table-actions {
+  .applications-grid-full {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .contact-section-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .touchless-cta-box {
+    flex-direction: column;
+    text-align: center;
+    padding: 28px 20px;
+    gap: 18px;
+  }
+
+  .cta-right-action {
     display: flex;
     justify-content: center;
-  }
-
-  .download-spec-btn {
     width: 100%;
-    max-width: 320px;
+  }
+
+  .cta-btn-lg {
+    width: 100%;
     justify-content: center;
-  }
-
-  .touchless-faq-section {
-    padding: 48px 0;
-  }
-
-  .faq-question-btn {
-    padding: 16px 20px;
-  }
-
-  .faq-q-text {
-    font-size: 14.5px;
   }
 }
 
@@ -2243,31 +2436,32 @@
   }
 
   .touchless-hero-section {
-    padding: 24px 0 36px 0;
+    min-height: auto;
+    padding: 18px 0 28px 0;
   }
 
   .touchless-breadcrumbs {
     font-size: 11px;
     gap: 5px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
   }
 
   .touchless-hero-title {
-    font-size: 28px;
+    font-size: 26px;
     line-height: 1.15;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .touchless-hero-tagline {
-    font-size: 14.5px;
-    margin-bottom: 12px;
+    font-size: 14px;
+    margin-bottom: 10px;
   }
 
   .touchless-hero-desc {
-    font-size: 13.5px;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 16px;
   }
 
   .touchless-hero-actions {
@@ -2280,12 +2474,13 @@
   .touchless-btn-secondary {
     width: 100%;
     justify-content: center;
-    padding: 13px 20px;
-    font-size: 14px;
+    padding: 12px 20px;
+    font-size: 13.5px;
   }
 
   .door-viewport {
-    height: 250px;
+    height: 240px;
+    min-height: 240px;
   }
 
   .touchless-hero-right {
@@ -2294,7 +2489,7 @@
 
   .touchless-benefits-stack {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
 
   .benefit-card:nth-child(5) {
@@ -2302,7 +2497,7 @@
   }
 
   .benefit-card {
-    padding: 12px 14px;
+    padding: 10px 12px;
   }
 
   .touchless-products-grid {
@@ -2311,90 +2506,67 @@
   }
 
   .product-card-media {
-    height: 200px;
+    height: 190px;
   }
 
   .section-header-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 10px;
+    margin-bottom: 20px;
   }
 
   .section-title {
     font-size: 22px;
   }
 
-  .view-all-link {
-    align-self: flex-start;
-  }
-
   .workflow-steps-horizontal {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
   }
 
   .workflow-step-card {
-    padding: 18px 16px;
+    padding: 16px 14px;
   }
 
-  .step-active-callout {
-    padding: 16px;
-    font-size: 13px;
+  .applications-grid-full {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 
   .gallery-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 12px;
+  }
+
+  .contact-form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .form-group-full {
+    grid-column: span 1;
+  }
+
+  .contact-form-card {
+    padding: 22px 16px;
+  }
+
+  .contact-info-panel {
+    padding: 24px 18px;
   }
 
   .touchless-cta-box {
-    padding: 28px 18px;
-    border-radius: 16px;
+    padding: 24px 16px;
+    border-radius: 14px;
   }
 
   .cta-title {
-    font-size: 20px;
+    font-size: 19px;
   }
 
   .cta-desc {
-    font-size: 13.5px;
-  }
-
-  .cta-right-action {
-    width: 100%;
-  }
-
-  .cta-btn-lg {
-    width: 100%;
-    justify-content: center;
-    font-size: 14px;
-  }
-
-  .sensor-spec-box {
-    padding: 18px;
-  }
-
-  .spec-metric-row {
-    font-size: 12.5px;
-  }
-
-  .sensor-inquire-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .quote-modal-header {
-    padding: 18px;
-  }
-
-  .quote-modal-title {
-    font-size: 17px;
-  }
-
-  .quote-modal-form {
-    padding: 18px;
-    gap: 14px;
+    font-size: 13px;
   }
 
   .form-modal-actions {
@@ -2425,62 +2597,45 @@
   .next-btn {
     right: 8px;
   }
-
-  .lightbox-caption-bar {
-    padding: 14px 18px;
-  }
 }
 
 /* 5. Extra Small Mobile Devices (max-width: 480px) */
 @media (max-width: 480px) {
   .touchless-container {
-    padding: 0 14px;
+    padding: 0 12px;
   }
 
   .touchless-hero-title {
-    font-size: 25px;
+    font-size: 23px;
   }
 
   .metric-pill {
-    font-size: 10.5px;
-    padding: 4px 8px;
+    font-size: 9.5px;
+    padding: 3px 6px;
   }
 
   .door-viewport {
-    height: 220px;
-  }
-
-  .application-tiles-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
-
-  .app-tile {
-    height: 110px;
-  }
-
-  .app-tile-label {
-    font-size: 11px;
-    padding: 6px 8px;
+    height: 200px;
+    min-height: 200px;
   }
 
   .tech-specs-table td {
-    padding: 10px 12px;
-    font-size: 12.5px;
+    padding: 8px 10px;
+    font-size: 12px;
   }
 
   .spec-label {
-    width: 48%;
+    width: 45%;
   }
 
   .video-controls-bar {
-    padding: 6px 10px;
-    gap: 8px;
+    padding: 6px 8px;
+    gap: 6px;
   }
 
   .control-btn {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
   }
 
   .video-time-display {
@@ -2488,13 +2643,428 @@
   }
 
   .video-center-play-btn {
-    width: 54px;
-    height: 54px;
+    width: 48px;
+    height: 48px;
   }
 
   .play-triangle {
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-left: 14px solid #ffffff;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 12px solid #ffffff;
   }
 }
+
+/* ==========================================================================
+   9. HERO SCROLL CUE & TRANSITION INDICATOR
+   ========================================================================== */
+.hero-scroll-cue-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+  position: relative;
+  z-index: 5;
+}
+
+.hero-scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 16px;
+  background: #ffffff;
+  border: 1.5px solid #bae6fd;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #0284c7;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
+  transition: all 0.25s ease;
+}
+
+.hero-scroll-cue:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  transform: translateY(2px);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.28);
+}
+
+.scroll-cue-icon {
+  animation: scrollBounce 2s infinite ease-in-out;
+}
+
+@keyframes scrollBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* ==========================================================================
+   10. DEDICATED FULL-WIDTH APPLICATIONS SECTION
+   ========================================================================== */
+.touchless-applications-section {
+  padding: 68px 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.applications-grid-full {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.app-card-full {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-card-full:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 32px rgba(2, 132, 199, 0.12);
+  border-color: #0284c7;
+}
+
+.app-card-full-media {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background-color: #0f172a;
+}
+
+.app-card-full-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.app-card-full:hover .app-card-full-img {
+  transform: scale(1.08);
+}
+
+.app-card-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(6px);
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.app-card-full-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.app-card-full-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+
+.app-card-full-desc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ==========================================================================
+   11. DEDICATED INLINE CONTACT & CONSULTATION SECTION
+   ========================================================================== */
+.touchless-contact-section {
+  padding: 68px 0;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.contact-section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 36px;
+  align-items: flex-start;
+}
+
+.contact-info-panel {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border-radius: 18px;
+  padding: 36px 32px;
+  color: #ffffff;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-info-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  right: -40px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.contact-panel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 5px 12px;
+  border-radius: 9999px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.contact-panel-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 12px 0;
+  line-height: 1.25;
+}
+
+.contact-panel-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin: 0 0 28px 0;
+}
+
+.contact-details-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.contact-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.contact-icon-bubble {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 10px;
+  background: rgba(2, 132, 199, 0.2);
+  border: 1px solid rgba(2, 132, 199, 0.4);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-detail-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-detail-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.contact-detail-val {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-detail-val:hover {
+  color: #38bdf8;
+}
+
+.contact-compliance-badge-box {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contact-compliance-badge-box span {
+  font-size: 12px;
+  color: #cbd5e1;
+  line-height: 1.45;
+}
+
+/* Contact Form Card */
+.contact-form-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 36px 36px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.contact-form-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+
+.contact-form-subtitle {
+  font-size: 13.5px;
+  color: #64748b;
+  margin: 0 0 24px 0;
+}
+
+.contact-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group-full {
+  grid-column: span 2;
+}
+
+.contact-input-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.contact-text-input,
+.contact-select-input,
+.contact-textarea-input {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 13.5px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  color: #0f172a;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.contact-text-input:focus,
+.contact-select-input:focus,
+.contact-textarea-input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.contact-textarea-input {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.contact-form-submit-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35);
+  transition: all 0.25s ease;
+}
+
+.contact-form-submit-btn:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.5);
+}
+
+.contact-form-success-banner {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #166534;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Responsive updates for new sections */
+@media (max-width: 1024px) {
+  .applications-grid-full {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .contact-section-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .applications-grid-full {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group-full {
+    grid-column: span 1;
+  }
+
+  .contact-form-card {
+    padding: 24px 18px;
+  }
+
+  .contact-info-panel {
+    padding: 28px 20px;
+  }
+}

@@ -472,7 +472,7 @@ export default function Navbar({
           description: 'Flameproof & safe programmable interlocking for sterile cascades.',
           image: '/hero-cleanroom-interlock-chamber.jpg',
           icon: Lock,
-          slug: 'door-interlock-systems'
+          slug: 'door-interlock-system'
         },
         {
           title: 'Pass Box Systems',
@@ -486,28 +486,28 @@ export default function Navbar({
           description: 'GPS master-slave synchronized clocks with flameproof housings.',
           image: '/products/digital-clock-hero.jpg',
           icon: Activity,
-          slug: 'digital-gps-clocks'
+          slug: 'digital-clocks'
         },
         {
           title: 'Chiller & Cleanroom Doors',
           description: 'Insulated chiller doors and hermetically sealed flush cleanroom doors.',
           image: '/products/chiller-door-hero.jpg',
           icon: DoorClosed,
-          slug: 'chiller-clean-room-doors'
+          slug: 'chiller-cleanroom-doors'
         },
         {
           title: 'Acoustic Sound Doors',
           description: 'Heavy noise-dampening acoustic barrier doors for plant rooms.',
           image: '/case-studies/case-air-curtain.jpg',
           icon: Settings,
-          slug: 'sound-proof-doors'
+          slug: 'acoustic-sound-doors'
         },
         {
           title: 'Safety Override Buzzers',
           description: 'Emergency release logic and integrated audio buzzer alerts.',
           image: '/case-studies/case-ss304-mist.jpg',
           icon: ShieldCheck,
-          slug: 'door-interlock-systems'
+          slug: 'safety-override-buzzers'
         }
       ]
     },
