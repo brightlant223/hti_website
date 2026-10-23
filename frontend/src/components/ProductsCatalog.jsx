@@ -24,16 +24,53 @@ const CATEGORY_TABS = [
   { id: 'surveillance-alerts', label: 'Surveillance & Alerts', count: 5, icon: Activity }
 ];
 
+const mapCategoryToSlug = (cat) => {
+  if (!cat) return 'access-automation';
+  const c = String(cat).toLowerCase();
+  if (c.includes('auto') || c.includes('door') || c.includes('gate') || c.includes('shutter')) return 'access-automation';
+  if (c.includes('perim') || c.includes('traffic') || c.includes('barrier') || c.includes('bollard') || c.includes('turnstile')) return 'traffic-perimeter';
+  if (c.includes('clean') || c.includes('interlock') || c.includes('pharma') || c.includes('pass box') || c.includes('clock') || c.includes('hygiene')) return 'pharma-cleanroom';
+  if (c.includes('fire') || c.includes('alarm') || c.includes('safety')) return 'fire-life-safety';
+  if (c.includes('sec') || c.includes('surveil') || c.includes('cctv') || c.includes('alert') || c.includes('monitor') || c.includes('biometric')) return 'surveillance-alerts';
+  return 'access-automation';
+};
+
+const normalizeDbProduct = (db) => {
+  const catSlug = mapCategoryToSlug(db.category);
+  const feats = Array.isArray(db.features) ? db.features : [];
+  return {
+    id: db.id,
+    slug: db.slug,
+    name: db.name,
+    category: db.category,
+    categorySlug: catSlug,
+    tagline: db.tagline || '',
+    heroDescription: db.description || '',
+    description: db.description || '',
+    badge: db.badge || '',
+    isFeatured: Boolean(db.is_featured),
+    image: db.image_url || '/products/automatic-doors.jpg',
+    image_url: db.image_url || '/products/automatic-doors.jpg',
+    keyFeatures: feats,
+    features: feats,
+    specs: db.specs || {},
+    brochure: Boolean(db.brochure_url),
+    brochure_url: db.brochure_url || '',
+    datasheet_url: db.datasheet_url || '',
+    video_url: db.video_url || '',
+    hasVideo: Boolean(db.video_url)
+  };
+};
+
 export default function ProductsCatalog({
   initialCategory = 'all',
   isDedicatedPage = false,
   onSelectProduct,
   onNavigate,
-  onQuickQuote
+  onQuickQuote,
+  dbProducts = []
 }) {
   // Category ids are lower-case slugs ('all', 'access-automation', ...).
-  // Callers may pass a display label such as 'All', which used to silently
-  // filter everything out and render an empty catalogue.
   const normalizeCategory = (value) => {
     if (!value) return 'all';
     const slug = String(value).trim().toLowerCase();
@@ -47,7 +84,42 @@ export default function ProductsCatalog({
     setActiveCategory(normalizeCategory(initialCategory));
   }, [initialCategory]);
 
-  const allProducts = useMemo(() => getAllProducts(), []);
+  const allProducts = useMemo(() => {
+    const staticItems = getAllProducts();
+    if (!Array.isArray(dbProducts) || dbProducts.length === 0) return staticItems;
+
+    // Filter out unpublished / drafts
+    const publishedDb = dbProducts.filter(p => p.is_published !== false);
+
+    const dbMap = new Map();
+    publishedDb.forEach(p => {
+      dbMap.set(p.slug, normalizeDbProduct(p));
+    });
+
+    const combined = [];
+    const seenSlugs = new Set();
+
+    // Process static catalogue items, updating with DB fields if available
+    staticItems.forEach(item => {
+      if (dbMap.has(item.slug)) {
+        combined.push({ ...item, ...dbMap.get(item.slug) });
+        seenSlugs.add(item.slug);
+      } else {
+        combined.push(item);
+        seenSlugs.add(item.slug);
+      }
+    });
+
+    // Append newly created products from database
+    publishedDb.forEach(p => {
+      if (!seenSlugs.has(p.slug)) {
+        combined.push(normalizeDbProduct(p));
+        seenSlugs.add(p.slug);
+      }
+    });
+
+    return combined;
+  }, [dbProducts]);
 
   // Filter products by selected category and search query
   const filteredProducts = useMemo(() => {

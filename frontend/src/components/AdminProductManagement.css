@@ -1,0 +1,1143 @@
+/* ==========================================================================
+   HTI CONTROL — ADMIN PRODUCT MANAGEMENT & ADD PRODUCT MODAL STYLES
+   Enterprise SaaS aesthetic inspired by Reference Image 1 & 2.
+   Fully responsive with light SaaS & dark mode support.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. PRODUCTS SUMMARY KPI CARDS
+   -------------------------------------------------------------------------- */
+.adm-products-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1024px) {
+  .adm-products-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .adm-products-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.adm-prod-stat-card {
+  background: var(--adm-bg-surface, #ffffff);
+  border: 1px solid var(--adm-border, #e2e8f0);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.adm-prod-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
+}
+
+.adm-prod-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.adm-prod-stat-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--adm-text-muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.adm-prod-stat-val {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--adm-text-primary, #0f172a);
+  font-family: var(--font-heading, "Plus Jakarta Sans", sans-serif);
+  line-height: 1.1;
+}
+
+.adm-prod-stat-sub {
+  font-size: 0.72rem;
+  color: var(--adm-text-muted, #94a3b8);
+}
+
+.adm-prod-stat-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-prod-stat-icon-wrap.blue {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #dbeafe;
+}
+
+.adm-prod-stat-icon-wrap.green {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.adm-prod-stat-icon-wrap.slate {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.adm-prod-stat-icon-wrap.amber {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+/* --------------------------------------------------------------------------
+   2. SEARCH & FILTERS TOOLBAR (Reference Image 1)
+   -------------------------------------------------------------------------- */
+.adm-products-toolbar {
+  background: var(--adm-bg-surface, #ffffff);
+  border: 1px solid var(--adm-border, #e2e8f0);
+  border-radius: 12px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+}
+
+.adm-products-search-wrap {
+  flex: 1;
+  min-width: 260px;
+  max-width: 460px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.adm-products-search-wrap .search-icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.adm-products-search-input {
+  width: 100%;
+  padding: 10px 38px 10px 40px;
+  border-radius: 9999px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.88rem;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.adm-products-search-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.adm-search-clear-btn {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adm-search-clear-btn:hover {
+  color: #0f172a;
+}
+
+.adm-products-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.adm-category-select,
+.adm-status-select {
+  padding: 9px 34px 9px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat calc(100% - 10px) center;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: all 0.2s ease;
+  min-width: 150px;
+}
+
+.adm-category-select:focus,
+.adm-status-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.adm-filter-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.adm-filter-pill-btn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+.adm-filter-pill-btn.active {
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.adm-view-toggle {
+  display: inline-flex;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.adm-view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 9px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.adm-view-btn.active {
+  background: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Primary + Add Product Button */
+.adm-btn-add-product {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border: 1px solid #1d4ed8;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.adm-btn-add-product:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.adm-btn-add-product:active {
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   3. SAAS PRODUCT TABLE (Reference Image 1)
+   -------------------------------------------------------------------------- */
+.adm-products-table-card {
+  background: var(--adm-bg-surface, #ffffff);
+  border: 1px solid var(--adm-border, #e2e8f0);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.adm-table-scroll-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.adm-modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.86rem;
+  text-align: left;
+}
+
+.adm-modern-table thead th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 13px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.adm-modern-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.adm-modern-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.adm-modern-table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  color: #1e293b;
+}
+
+.adm-modern-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Table Product Column (Thumbnail + Name + Subtitle) */
+.adm-table-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 280px;
+}
+
+.adm-table-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adm-table-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.adm-table-product-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 380px;
+}
+
+.adm-table-product-name {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 0.88rem;
+  line-height: 1.25;
+}
+
+.adm-table-product-desc {
+  font-size: 0.76rem;
+  color: #64748b;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Category Pill Badges (Image 1 pastel theme) */
+.adm-cat-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.adm-cat-pill.software {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.adm-cat-pill.automation {
+  background: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #fed7aa;
+}
+
+.adm-cat-pill.security {
+  background: #f5f3ff;
+  color: #7c3aed;
+  border: 1px solid #ddd6fe;
+}
+
+.adm-cat-pill.safety {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.adm-cat-pill.hygiene {
+  background: #ecfeff;
+  color: #0891b2;
+  border: 1px solid #a5f3fc;
+}
+
+.adm-cat-pill.default {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+/* Badge Labels (Image 1 theme) */
+.adm-badge-pill {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.adm-badge-pill.popular {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.adm-badge-pill.highdemand {
+  background: #eff6ff;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+}
+
+.adm-badge-pill.featured {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.adm-badge-pill.newlaunch {
+  background: #faf5ff;
+  color: #9333ea;
+  border: 1px solid #e9d5ff;
+}
+
+.adm-badge-pill.bestseller {
+  background: #f0fdfa;
+  color: #0d9488;
+  border: 1px solid #99f6e4;
+}
+
+.adm-badge-pill.certified {
+  background: #fefce8;
+  color: #ca8a04;
+  border: 1px solid #fef08a;
+}
+
+.adm-badge-pill.default {
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+/* Status Pill with Dot */
+.adm-status-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.adm-status-toggle-btn.published {
+  background: #ecfdf5;
+  color: #059669;
+  border-color: #a7f3d0;
+}
+
+.adm-status-toggle-btn.published:hover {
+  background: #d1fae5;
+}
+
+.adm-status-toggle-btn.draft {
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #cbd5e1;
+}
+
+.adm-status-toggle-btn.draft:hover {
+  background: #e2e8f0;
+}
+
+.adm-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.adm-status-dot.green {
+  background: #10b981;
+  box-shadow: 0 0 5px rgba(16, 185, 129, 0.6);
+}
+
+.adm-status-dot.neutral {
+  background: #94a3b8;
+}
+
+/* Action Buttons (Eye, Edit, Delete) */
+.adm-table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.adm-action-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.adm-action-icon-btn:hover {
+  background: #f8fafc;
+  color: #2563eb;
+  border-color: #bfdbfe;
+  transform: translateY(-1px);
+}
+
+.adm-action-icon-btn.delete:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+/* Pagination Bar */
+.adm-table-pagination {
+  padding: 14px 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: #64748b;
+  background: #fafcff;
+}
+
+.adm-pagination-btns {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.adm-page-nav-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.adm-page-nav-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.adm-page-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.adm-page-num-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adm-page-num-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   4. ADD / EDIT PRODUCT MODAL (Reference Image 2)
+   -------------------------------------------------------------------------- */
+.adm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: admFadeIn 0.2s ease-out;
+}
+
+.adm-modal-card-dialog {
+  background: var(--adm-bg-surface, #ffffff);
+  border: 1px solid var(--adm-border, #e2e8f0);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.35);
+  animation: admScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.adm-modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--adm-border, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--adm-bg-surface, #ffffff);
+}
+
+.adm-modal-header-titles {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.adm-modal-header-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-modal-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--adm-text-primary, #0f172a);
+}
+
+.adm-modal-subtitle {
+  margin: 2px 0 0 0;
+  font-size: 0.78rem;
+  color: var(--adm-text-muted, #64748b);
+}
+
+.adm-modal-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.adm-modal-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* Progress Step Tabs (Reference Image 2) */
+.adm-step-progress-bar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--adm-border, #e2e8f0);
+  overflow-x: auto;
+}
+
+.adm-step-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.adm-step-tab-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.adm-step-tab-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.adm-step-tab-btn.completed {
+  color: #059669;
+}
+
+.adm-step-num {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+/* Modal Body Content */
+.adm-modal-body-content {
+  padding: 24px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+/* Step 1: Form Fields */
+.adm-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 680px) {
+  .adm-form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.adm-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.adm-field-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--adm-text-secondary, #334155);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.adm-field-req {
+  color: #dc2626;
+}
+
+.adm-field-input,
+.adm-field-select,
+.adm-field-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.88rem;
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.adm-field-input:focus,
+.adm-field-select:focus,
+.adm-field-textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.adm-field-input.has-error,
+.adm-field-textarea.has-error {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.adm-field-error-msg {
+  font-size: 0.74rem;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.adm-slug-preview {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 3px;
+  font-family: monospace;
+}
+
+.adm-checkbox-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.adm-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+}
+
+.adm-checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+/* Step 2: Dynamic Specifications */
+.adm-specs-table-builder {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.adm-specs-table-header {
+  padding: 10px 16px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.adm-specs-rows {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.adm-spec-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adm-spec-key-input {
+  flex: 1;
+}
+
+.adm-spec-val-input {
+  flex: 1.5;
+}
+
+.adm-spec-del-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.adm-spec-del-btn:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+/* Step 3: Media Upload Dropzone & Grid */
+.adm-media-upload-box {
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.adm-media-upload-box:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.adm-media-preview-container {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.adm-media-preview-img {
+  width: 90px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #cbd5e1;
+}
+
+.adm-gallery-previews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.adm-gallery-thumb-item {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.adm-gallery-thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.adm-gallery-del-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Step 4: Customer Live Preview */
+.adm-customer-preview-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+.adm-preview-card-wrap {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.adm-preview-left {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.adm-preview-img-box {
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1e293b;
+  position: relative;
+}
+
+.adm-preview-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.adm-preview-right {
+  flex: 1;
+  min-width: 280px;
+}
+
+/* Modal Footer Action Buttons */
+.adm-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--adm-border, #e2e8f0);
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adm-btn-secondary {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.adm-btn-secondary:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.adm-btn-draft {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.adm-btn-draft:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+
+.adm-btn-publish {
+  padding: 9px 20px;
+  border-radius: 8px;
+  border: 1px solid #1d4ed8;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  transition: all 0.2s ease;
+}
+
+.adm-btn-publish:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* Animations */
+@keyframes admFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes admScaleIn {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}

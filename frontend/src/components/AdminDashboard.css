@@ -343,11 +343,12 @@
 }
 
 .adm-sidebar-nav-item.active {
-  background: rgba(2, 132, 199, 0.08);
-  border-color: rgba(2, 132, 199, 0.15);
-  border-left: 3px solid var(--accent-cyan);
-  color: var(--accent-cyan);
+  background: #e8f2ff;
+  border-color: #bfdbfe;
+  border-left: 3px solid #2563eb;
+  color: #2563eb;
   font-weight: 700;
+  border-radius: 9px;
 }
 
 .adm-dashboard-container.theme-dark .adm-sidebar-nav-item.active {

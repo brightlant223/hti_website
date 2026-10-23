@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './AdminDashboard.css';
+import AdminProductsManager from './AdminProductsManager';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
   FileText, Package, MessageSquare, Search, AlertCircle,
@@ -1545,7 +1546,7 @@ export default function AdminPanel({
               className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'products' ? 'active' : ''}`}
               onClick={() => setActiveTab('products')}
             >
-              <Package size={17} />
+              <Eye size={17} />
               <span>Products</span>
               <span className="sidebar-counter adm-sidebar-counter">{products.length}</span>
             </button>
@@ -1674,24 +1675,36 @@ export default function AdminPanel({
               <div className="adm-mobile-avatar" title={`Admin: ${currentUser}`}>
                 <span>{currentUser.slice(0, 2).toUpperCase()}</span>
               </div>
-              <h2 className="admin-topbar-title adm-topbar-title">
-                {activeTab === 'dashboard' && 'Executive Dashboard & Live System Telemetry'}
-                {activeTab === 'products' && 'Product Catalogue & Specifications Manager'}
-                {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
-                {activeTab === 'clients_partners' && 'Enterprise Clients & Technology Partners Roster'}
-                {activeTab === 'inquiries' && 'Commercial Enquiries & Lead Pipeline Management'}
-                {activeTab === 'projects' && 'Completed Turnkey Projects & Case Studies'}
-                {activeTab === 'content' && 'Live Website Content & Copy CMS'}
-                {activeTab === 'users' && 'Administrative Access Control & Audit Log'}
-                {activeTab === 'settings' && 'System Health, Tested Backups & Settings'}
-              </h2>
-              <span className="topbar-live-tag adm-topbar-live-tag">
-                <span className="tag-dot adm-tag-dot" />
-                <span>SQLite Realtime: {systemHealth?.database?.path ? 'backend/hti.db' : 'Live Connected'}</span>
-              </span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <h2 className="admin-topbar-title adm-topbar-title" style={{ margin: 0, fontSize: '1.22rem', fontWeight: 800 }}>
+                  {activeTab === 'dashboard' && 'Executive Dashboard & Live System Telemetry'}
+                  {activeTab === 'products' && 'Product Catalogue & Specifications Manager'}
+                  {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
+                  {activeTab === 'clients_partners' && 'Enterprise Clients & Technology Partners Roster'}
+                  {activeTab === 'inquiries' && 'Commercial Enquiries & Lead Pipeline Management'}
+                  {activeTab === 'projects' && 'Completed Turnkey Projects & Case Studies'}
+                  {activeTab === 'content' && 'Live Website Content & Copy CMS'}
+                  {activeTab === 'users' && 'Administrative Access Control & Audit Log'}
+                  {activeTab === 'settings' && 'System Health, Tested Backups & Settings'}
+                </h2>
+                {activeTab === 'products' ? (
+                  <span style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 2 }}>
+                    Manage your products, solutions and detailed specifications
+                  </span>
+                ) : (
+                  <span style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 2 }}>
+                    HTI Control Enterprise BMS Administrative Console
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="admin-topbar-actions adm-topbar-actions">
+              <span className="topbar-live-tag adm-topbar-live-tag" style={{ background: '#ecfdf5', color: '#059669', borderColor: '#a7f3d0' }}>
+                <span className="tag-dot adm-tag-dot" style={{ background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
+                <span>SQL DB: hti_backend (Live)</span>
+              </span>
+
               <button
                 className="topbar-btn adm-topbar-btn theme-toggle-btn"
                 onClick={toggleAdminTheme}
@@ -1720,6 +1733,15 @@ export default function AdminPanel({
               >
                 <RefreshCw size={15} className={loading ? 'adm-spin' : ''} />
                 <span className="adm-btn-text">{loading ? 'Syncing...' : 'Sync'}</span>
+              </button>
+
+              <button
+                className="topbar-btn adm-topbar-btn"
+                style={{ padding: '7px 9px' }}
+                title="Notifications"
+                aria-label="Notifications"
+              >
+                <AlertCircle size={15} />
               </button>
 
               <button
@@ -2120,260 +2142,19 @@ export default function AdminPanel({
               ========================================================================= */}
           {activeTab === 'products' && (
             <div className="admin-body-content">
-              {/* Product Toolbar */}
-              <div className="catalog-toolbar">
-                <div className="catalog-search-wrap">
-                  <Search size={16} className="search-icon" />
-                  <input
-                    type="text"
-                    placeholder="Search by product name, description, application..."
-                    value={productSearch}
-                    onChange={e => setProductSearch(e.target.value)}
-                  />
-                  {productSearch && (
-                    <button className="search-clear-btn" onClick={() => setProductSearch('')}>
-                      <X size={14} />
-                    </button>
-                  )}
-                </div>
-
-                <div className="catalog-filter-group">
-                  <select
-                    className="catalog-select"
-                    value={productCategoryFilter}
-                    onChange={e => setProductCategoryFilter(e.target.value)}
-                  >
-                    <option value="All">All Categories ({products.length})</option>
-                    <option value="Automation">Automation</option>
-                    <option value="Security">Security Systems</option>
-                    <option value="Hygiene">Hygiene & Washroom</option>
-                  </select>
-
-                  <button
-                    className={`catalog-pill-btn ${productFilterType === 'featured' ? 'active' : ''}`}
-                    onClick={() => setProductFilterType(productFilterType === 'featured' ? 'all' : 'featured')}
-                  >
-                    <Star size={14} />
-                    <span>Featured ({products.filter(p => p.is_featured).length})</span>
-                  </button>
-
-                  <div className="view-mode-toggle">
-                    <button
-                      className={`view-mode-btn ${productViewMode === 'table' ? 'active' : ''}`}
-                      onClick={() => setProductViewMode('table')}
-                      title="Table View"
-                    >
-                      <List size={16} />
-                    </button>
-                    <button
-                      className={`view-mode-btn ${productViewMode === 'cards' ? 'active' : ''}`}
-                      onClick={() => setProductViewMode('cards')}
-                      title="Visual Card Grid View"
-                    >
-                      <Grid size={16} />
-                    </button>
-                  </div>
-
-                  <button className="dash-action-btn primary" onClick={handleOpenAddProduct}>
-                    <Plus size={16} />
-                    <span>Add Product</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Product Table View */}
-              {productViewMode === 'table' ? (
-                <div className="admin-table-container">
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th style={{ width: '45px' }}>#</th>
-                        <th>Product / Solution</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Badge</th>
-                        <th>Status</th>
-                        <th>Order</th>
-                        <th style={{ textAlign: 'right' }}>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredProducts.map((p, idx) => (
-                        <tr key={p.id}>
-                          <td style={{ color: '#64748b', fontSize: '0.8rem' }}>{idx + 1}</td>
-                          <td>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                              <div style={{
-                                width: '38px',
-                                height: '38px',
-                                borderRadius: '8px',
-                                background: '#1e293b',
-                                overflow: 'hidden',
-                                flexShrink: 0,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}>
-                                {p.image_url ? (
-                                  <img src={p.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                ) : (
-                                  <Package size={18} style={{ color: '#64748b' }} />
-                                )}
-                              </div>
-                              <div>
-                                <div style={{ fontWeight: '700', color: '#ffffff', fontSize: '0.9rem' }}>
-                                  {p.name}
-                                </div>
-                                <div style={{ fontSize: '0.75rem', color: '#94a3b8', maxWidth: '320px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                  {p.tagline || p.description}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <span className={`pill-category ${p.category.toLowerCase().includes('auto') ? 'cat-auto' : p.category.toLowerCase().includes('sec') ? 'cat-sec' : 'cat-hygiene'}`}>
-                              {p.category}
-                            </span>
-                          </td>
-                          <td style={{ color: '#cbd5e1', fontSize: '0.82rem' }}>{p.subcategory}</td>
-                          <td>
-                            {p.badge && (
-                              <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', fontWeight: '600' }}>
-                                {p.badge}
-                              </span>
-                            )}
-                          </td>
-                          <td>
-                            <button
-                              onClick={() => handleToggleProductPublish(p)}
-                              style={{
-                                border: 'none',
-                                cursor: 'pointer',
-                                padding: '3px 9px',
-                                borderRadius: '12px',
-                                fontSize: '0.74rem',
-                                fontWeight: '700',
-                                background: p.is_published ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                                color: p.is_published ? '#10b981' : '#f87171'
-                              }}
-                              title="Click to toggle Published / Draft"
-                            >
-                              {p.is_published ? 'Published' : 'Draft'}
-                            </button>
-                          </td>
-                          <td style={{ color: '#94a3b8', fontSize: '0.82rem' }}>{p.display_order || idx + 1}</td>
-                          <td style={{ textAlign: 'right' }}>
-                            <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
-                              <button
-                                className="table-action-btn"
-                                onClick={() => setPreviewProduct(p)}
-                                title="Customer Preview"
-                              >
-                                <Eye size={15} />
-                              </button>
-                              <button
-                                className="table-action-btn"
-                                onClick={() => handleOpenEditProduct(p)}
-                                title="Edit Product"
-                              >
-                                <Edit3 size={15} />
-                              </button>
-                              <button
-                                className="table-action-btn delete"
-                                onClick={() => handleDeleteProduct(p)}
-                                title="Delete Product"
-                              >
-                                <Trash2 size={15} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                /* Product Cards Grid View */
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
-                  {filteredProducts.map(p => (
-                    <div key={p.id} className="admin-product-card" style={{
-                      background: '#0d1527',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: '12px',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      flexDirection: 'column'
-                    }}>
-                      <div style={{ height: '140px', background: '#1e293b', position: 'relative', overflow: 'hidden' }}>
-                        {p.image_url ? (
-                          <img src={p.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        ) : (
-                          <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Package size={36} style={{ color: '#475569' }} />
-                          </div>
-                        )}
-                        <span style={{
-                          position: 'absolute',
-                          top: '10px',
-                          left: '10px',
-                          background: 'rgba(0,0,0,0.7)',
-                          backdropFilter: 'blur(4px)',
-                          padding: '3px 8px',
-                          borderRadius: '6px',
-                          fontSize: '0.7rem',
-                          fontWeight: '700',
-                          color: '#38bdf8'
-                        }}>
-                          {p.category}
-                        </span>
-                        {p.is_featured && (
-                          <span style={{
-                            position: 'absolute',
-                            top: '10px',
-                            right: '10px',
-                            background: 'rgba(245, 158, 11, 0.9)',
-                            padding: '3px 7px',
-                            borderRadius: '6px',
-                            fontSize: '0.7rem',
-                            fontWeight: '700',
-                            color: '#000000',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '3px'
-                          }}>
-                            <Star size={11} fill="#000" /> Featured
-                          </span>
-                        )}
-                      </div>
-
-                      <div style={{ padding: '16px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                        <h4 style={{ margin: '0 0 6px 0', fontSize: '0.96rem', fontWeight: '700', color: '#ffffff' }}>
-                          {p.name}
-                        </h4>
-                        <p style={{ margin: '0 0 12px 0', fontSize: '0.8rem', color: '#94a3b8', lineHeight: '1.4', flexGrow: 1 }}>
-                          {p.tagline || (p.description ? p.description.slice(0, 85) + '...' : '')}
-                        </p>
-
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                          <span style={{
-                            fontSize: '0.72rem',
-                            fontWeight: '700',
-                            color: p.is_published ? '#10b981' : '#f87171'
-                          }}>
-                            {p.is_published ? '● Published' : '○ Draft'}
-                          </span>
-
-                          <div style={{ display: 'flex', gap: '6px' }}>
-                            <button className="table-action-btn" onClick={() => setPreviewProduct(p)} title="Preview"><Eye size={14} /></button>
-                            <button className="table-action-btn" onClick={() => handleOpenEditProduct(p)} title="Edit"><Edit3 size={14} /></button>
-                            <button className="table-action-btn delete" onClick={() => handleDeleteProduct(p)} title="Delete"><Trash2 size={14} /></button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <AdminProductsManager
+                products={products}
+                currentUser={currentUser}
+                onRefresh={async () => {
+                  await fetchProducts();
+                  await fetchSystemHealth();
+                  if (onProductsChanged) onProductsChanged();
+                }}
+                onFeedback={showFeedback}
+                onNavigateToPublicProduct={(slug) => {
+                  if (onClose) onClose();
+                }}
+              />
             </div>
           )}
 
@@ -3503,319 +3284,6 @@ export default function AdminPanel({
           )}
         </div>
       </div>
-
-      {/* =========================================================================
-          MODAL 1: PRODUCT ADD / EDIT MODAL
-          ========================================================================= */}
-      {editingProduct && (
-        <div className="admin-modal-overlay" onClick={() => setEditingProduct(null)}>
-          <div className="admin-modal-container" onClick={e => e.stopPropagation()}>
-            <div className="admin-modal-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Package size={20} className="text-cyan" />
-                <h3 className="admin-modal-title">
-                  {editingProduct === 'new' ? 'Add New Product or System' : `Edit Product: ${editingProduct.name}`}
-                </h3>
-              </div>
-              <button className="topbar-close-btn" onClick={() => setEditingProduct(null)}>
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Modal Tabs */}
-            <div style={{ display: 'flex', gap: '8px', padding: '12px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-              <button
-                className={`dash-action-btn ${productModalTab === 'basic' ? 'primary' : 'secondary'}`}
-                onClick={() => setProductModalTab('basic')}
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
-              >
-                1. Basic Info
-              </button>
-              <button
-                className={`dash-action-btn ${productModalTab === 'specs' ? 'primary' : 'secondary'}`}
-                onClick={() => setProductModalTab('specs')}
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
-              >
-                2. Specs & Features
-              </button>
-              <button
-                className={`dash-action-btn ${productModalTab === 'media' ? 'primary' : 'secondary'}`}
-                onClick={() => setProductModalTab('media')}
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
-              >
-                3. Media & Downloads
-              </button>
-              <button
-                className={`dash-action-btn ${productModalTab === 'preview' ? 'primary' : 'secondary'}`}
-                onClick={() => setProductModalTab('preview')}
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
-              >
-                <Eye size={14} />
-                <span>Customer Preview</span>
-              </button>
-            </div>
-
-            <div className="admin-modal-body" style={{ maxHeight: '68vh', overflowY: 'auto', padding: '24px' }}>
-              {productModalTab === 'basic' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-                    <div className="admin-form-group">
-                      <label className="admin-label">Product Name *</label>
-                      <input
-                        className="admin-input"
-                        required
-                        value={productForm.name}
-                        onChange={e => setProductForm({ ...productForm, name: e.target.value })}
-                        placeholder="e.g. Door Interlock System"
-                      />
-                    </div>
-
-                    <div className="admin-form-group">
-                      <label className="admin-label">Category *</label>
-                      <select
-                        className="admin-input"
-                        value={productForm.category}
-                        onChange={e => setProductForm({ ...productForm, category: e.target.value })}
-                      >
-                        <option value="Automation">Automation</option>
-                        <option value="Security">Security Systems</option>
-                        <option value="Hygiene">Hygiene</option>
-                      </select>
-                    </div>
-
-                    <div className="admin-form-group">
-                      <label className="admin-label">Subcategory</label>
-                      <input
-                        className="admin-input"
-                        value={productForm.subcategory}
-                        onChange={e => setProductForm({ ...productForm, subcategory: e.target.value })}
-                        placeholder="e.g. Cleanroom Interlocking"
-                      />
-                    </div>
-
-                    <div className="admin-form-group">
-                      <label className="admin-label">Badge Label</label>
-                      <input
-                        className="admin-input"
-                        value={productForm.badge}
-                        onChange={e => setProductForm({ ...productForm, badge: e.target.value })}
-                        placeholder="e.g. Flagship / ISO 9001"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label className="admin-label">Short Tagline</label>
-                    <input
-                      className="admin-input"
-                      value={productForm.tagline}
-                      onChange={e => setProductForm({ ...productForm, tagline: e.target.value })}
-                      placeholder="One-line value proposition"
-                    />
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label className="admin-label">Detailed Engineering Description *</label>
-                    <textarea
-                      className="admin-textarea"
-                      rows={5}
-                      required
-                      value={productForm.description}
-                      onChange={e => setProductForm({ ...productForm, description: e.target.value })}
-                      placeholder="Comprehensive technical overview and engineering advantages..."
-                    />
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#cbd5e1' }}>
-                      <input
-                        type="checkbox"
-                        checked={productForm.is_featured}
-                        onChange={e => setProductForm({ ...productForm, is_featured: e.target.checked })}
-                      />
-                      <span>Mark as Featured Product (Showcase)</span>
-                    </label>
-
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#cbd5e1' }}>
-                      <input
-                        type="checkbox"
-                        checked={productForm.is_published}
-                        onChange={e => setProductForm({ ...productForm, is_published: e.target.checked })}
-                      />
-                      <span>Publish on Website (Active)</span>
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {productModalTab === 'specs' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  {/* Dynamic Specs Builder */}
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <label className="admin-label" style={{ margin: 0 }}>Technical Specifications (Key - Value Pairs)</label>
-                      <button
-                        type="button"
-                        className="dash-action-btn secondary"
-                        style={{ padding: '4px 10px', fontSize: '0.75rem' }}
-                        onClick={() => setProductForm({
-                          ...productForm,
-                          specsList: [...productForm.specsList, { key: '', value: '' }]
-                        })}
-                      >
-                        <Plus size={13} /> Add Specification
-                      </button>
-                    </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {productForm.specsList.map((spec, i) => (
-                        <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                          <input
-                            className="admin-input"
-                            style={{ flex: 1 }}
-                            placeholder="Specification Parameter (e.g. Air Velocity)"
-                            value={spec.key}
-                            onChange={e => {
-                              const updated = [...productForm.specsList];
-                              updated[i].key = e.target.value;
-                              setProductForm({ ...productForm, specsList: updated });
-                            }}
-                          />
-                          <input
-                            className="admin-input"
-                            style={{ flex: 2 }}
-                            placeholder="Value / Rating (e.g. Up to 90 m/sec dual blade)"
-                            value={spec.value}
-                            onChange={e => {
-                              const updated = [...productForm.specsList];
-                              updated[i].value = e.target.value;
-                              setProductForm({ ...productForm, specsList: updated });
-                            }}
-                          />
-                          {productForm.specsList.length > 1 && (
-                            <button
-                              type="button"
-                              className="table-action-btn delete"
-                              onClick={() => {
-                                setProductForm({
-                                  ...productForm,
-                                  specsList: productForm.specsList.filter((_, idx) => idx !== i)
-                                });
-                              }}
-                            >
-                              <X size={15} />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Features Editor */}
-                  <div className="admin-form-group">
-                    <label className="admin-label">Engineering Features (One per line)</label>
-                    <textarea
-                      className="admin-textarea"
-                      rows={4}
-                      value={productForm.featuresText}
-                      onChange={e => setProductForm({ ...productForm, featuresText: e.target.value })}
-                      placeholder="Bullet points: feature 1&#10;feature 2..."
-                    />
-                  </div>
-
-                  {/* Applications */}
-                  <div className="admin-form-group">
-                    <label className="admin-label">Industrial Applications (comma-separated)</label>
-                    <input
-                      className="admin-input"
-                      value={productForm.applicationsText}
-                      onChange={e => setProductForm({ ...productForm, applicationsText: e.target.value })}
-                      placeholder="Pharma Cleanrooms, Hospital OTs, Data Centers"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {productModalTab === 'media' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div className="admin-form-group">
-                    <label className="admin-label">Product Cover Image URL</label>
-                    <input
-                      className="admin-input"
-                      value={productForm.image_url}
-                      onChange={e => setProductForm({ ...productForm, image_url: e.target.value })}
-                      placeholder="https://images.unsplash.com/..."
-                    />
-                  </div>
-
-                  {productForm.image_url && (
-                    <div style={{ width: '100%', height: '160px', borderRadius: '8px', overflow: 'hidden', background: '#1e293b' }}>
-                      <img src={productForm.image_url} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                  )}
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <div className="admin-form-group">
-                      <label className="admin-label">Technical Brochure PDF URL</label>
-                      <input
-                        className="admin-input"
-                        value={productForm.brochure_url}
-                        onChange={e => setProductForm({ ...productForm, brochure_url: e.target.value })}
-                        placeholder="/brochures/product-brochure.pdf"
-                      />
-                    </div>
-                    <div className="admin-form-group">
-                      <label className="admin-label">Datasheet PDF URL</label>
-                      <input
-                        className="admin-input"
-                        value={productForm.datasheet_url}
-                        onChange={e => setProductForm({ ...productForm, datasheet_url: e.target.value })}
-                        placeholder="/datasheets/technical-specs.pdf"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label className="admin-label">Display Priority Order (Integer, lower is higher)</label>
-                    <input
-                      type="number"
-                      className="admin-input"
-                      value={productForm.display_order}
-                      onChange={e => setProductForm({ ...productForm, display_order: e.target.value })}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {productModalTab === 'preview' && (
-                <div style={{ background: '#090e1a', padding: '24px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                    <div style={{ width: '220px', height: '180px', borderRadius: '10px', overflow: 'hidden', background: '#1e293b' }}>
-                      <img src={productForm.image_url || '/placeholder.png'} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <span className="pill-category cat-auto">{productForm.category}</span>
-                      <h3 style={{ margin: '8px 0 4px 0', color: '#ffffff' }}>{productForm.name || 'Product Title'}</h3>
-                      <p style={{ margin: '0 0 12px 0', color: '#38bdf8', fontSize: '0.88rem' }}>{productForm.tagline}</p>
-                      <p style={{ margin: '0 0 12px 0', color: '#94a3b8', fontSize: '0.84rem', lineHeight: '1.5' }}>{productForm.description}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="admin-modal-footer">
-              <button type="button" className="dash-action-btn secondary" onClick={() => setEditingProduct(null)}>
-                Cancel
-              </button>
-              <button type="button" className="dash-action-btn primary" onClick={handleSaveProduct}>
-                <CheckCircle size={16} />
-                <span>{editingProduct === 'new' ? 'Save & Publish Product' : 'Save Changes'}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* =========================================================================
           MODAL 2: BLOG ADD / EDIT MODAL

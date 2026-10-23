@@ -14,8 +14,10 @@ def migrate_columns(cursor):
     tables = {
         "products": [
             ("image_url", "TEXT"),
+            ("gallery", "TEXT DEFAULT '[]'"),
             ("brochure_url", "TEXT"),
             ("datasheet_url", "TEXT"),
+            ("video_url", "TEXT DEFAULT ''"),
             ("is_published", "INTEGER DEFAULT 1"),
             ("display_order", "INTEGER DEFAULT 0"),
         ],

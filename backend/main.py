@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException, Query, status, Header, Response
+from fastapi import FastAPI, HTTPException, Query, status, Header, Response, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 import json
@@ -18,6 +19,12 @@ from contextlib import asynccontextmanager
 from database import init_db, seed_db, get_connection, add_audit_log, DB_PATH
 
 SERVER_START_TIME = time.time()
+
+# Media and uploads directories
+FRONTEND_UPLOAD_DIR = Path(__file__).resolve().parent.parent / "frontend" / "public" / "uploads"
+FRONTEND_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+BACKEND_UPLOAD_DIR = Path(__file__).resolve().parent / "uploads"
+BACKEND_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -39,6 +46,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve uploaded static media
+app.mount("/uploads", StaticFiles(directory=str(FRONTEND_UPLOAD_DIR)), name="uploads")
 
 def slugify(text: str) -> str:
     text = text.lower().strip()
@@ -71,7 +81,7 @@ class InquiryNotesUpdate(BaseModel):
 class ProductCreateUpdate(BaseModel):
     name: str = Field(..., min_length=2, max_length=200)
     category: str = Field(..., min_length=2, max_length=100)
-    subcategory: str = Field(..., min_length=2, max_length=150)
+    subcategory: str = Field(..., min_length=1, max_length=150)
     tagline: Optional[str] = ""
     description: str = Field(..., min_length=5)
     features: List[str] = Field(default_factory=list)
@@ -80,8 +90,10 @@ class ProductCreateUpdate(BaseModel):
     badge: Optional[str] = None
     is_featured: Optional[bool] = False
     image_url: Optional[str] = None
+    gallery: Optional[List[str]] = Field(default_factory=list)
     brochure_url: Optional[str] = None
     datasheet_url: Optional[str] = None
+    video_url: Optional[str] = None
     is_published: Optional[bool] = True
     display_order: Optional[int] = 0
     slug: Optional[str] = None
@@ -165,6 +177,13 @@ class SystemSettingsUpdate(BaseModel):
 
 def format_product_row(row: sqlite3.Row) -> Dict[str, Any]:
     keys = row.keys()
+    gallery_val = []
+    if "gallery" in keys and row["gallery"]:
+        try:
+            gallery_val = json.loads(row["gallery"])
+        except Exception:
+            gallery_val = []
+
     return {
         "id": row["id"],
         "slug": row["slug"],
@@ -179,8 +198,10 @@ def format_product_row(row: sqlite3.Row) -> Dict[str, Any]:
         "badge": row["badge"] or "",
         "is_featured": bool(row["is_featured"]),
         "image_url": row["image_url"] if "image_url" in keys else "",
+        "gallery": gallery_val,
         "brochure_url": row["brochure_url"] if "brochure_url" in keys else "",
         "datasheet_url": row["datasheet_url"] if "datasheet_url" in keys else "",
+        "video_url": row["video_url"] if ("video_url" in keys and row["video_url"]) else "",
         "is_published": bool(row["is_published"]) if "is_published" in keys else True,
         "display_order": row["display_order"] if "display_order" in keys else 0
     }
@@ -508,10 +529,72 @@ def get_stats():
 # PRODUCT MANAGEMENT (Module 2)
 # =========================================================================
 
+@app.get("/api/products/summary")
+def get_products_summary():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) as total FROM products")
+    total = cursor.fetchone()["total"]
+    cursor.execute("SELECT COUNT(*) as published FROM products WHERE is_published = 1")
+    published = cursor.fetchone()["published"]
+    cursor.execute("SELECT COUNT(*) as drafts FROM products WHERE is_published = 0")
+    drafts = cursor.fetchone()["drafts"]
+    cursor.execute("SELECT COUNT(*) as featured FROM products WHERE is_featured = 1")
+    featured = cursor.fetchone()["featured"]
+    cursor.execute("SELECT category, COUNT(*) as count FROM products GROUP BY category ORDER BY count DESC")
+    cat_rows = cursor.fetchall()
+    categories = [{"name": r["category"], "count": r["count"]} for r in cat_rows]
+    conn.close()
+    return {
+        "total": total,
+        "published": published,
+        "drafts": drafts,
+        "featured": featured,
+        "categories": categories
+    }
+
+@app.get("/api/categories")
+def get_categories():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT category, COUNT(*) as total_count, SUM(CASE WHEN is_published = 1 THEN 1 ELSE 0 END) as published_count FROM products GROUP BY category ORDER BY category ASC")
+    rows = cursor.fetchall()
+    conn.close()
+    return [{"category": r["category"], "total": r["total_count"], "published": r["published_count"] or 0} for r in rows]
+
+@app.post("/api/upload")
+async def upload_media(file: UploadFile = File(...), admin_user: Optional[str] = Query("admin")):
+    safe_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', file.filename or "upload.jpg")
+    timestamp = int(time.time())
+    unique_filename = f"{timestamp}_{safe_name}"
+    
+    frontend_target = FRONTEND_UPLOAD_DIR / unique_filename
+    backend_target = BACKEND_UPLOAD_DIR / unique_filename
+    
+    content = await file.read()
+    with open(frontend_target, "wb") as f:
+        f.write(content)
+    try:
+        with open(backend_target, "wb") as f:
+            f.write(content)
+    except Exception:
+        pass
+        
+    add_audit_log(admin_user, "UPLOAD_MEDIA", "Products", f"Uploaded media asset '{unique_filename}' ({len(content)} bytes)")
+    
+    return {
+        "success": True,
+        "url": f"/uploads/{unique_filename}",
+        "filename": unique_filename,
+        "size": len(content),
+        "content_type": file.content_type
+    }
+
 @app.get("/api/products")
 def get_products(
     category: Optional[str] = Query(None),
     search: Optional[str] = Query(None),
+    status: Optional[str] = Query(None),
     featured_only: bool = Query(False),
     include_unpublished: bool = Query(False)
 ):
@@ -521,7 +604,11 @@ def get_products(
     query = "SELECT * FROM products WHERE 1=1"
     params = []
 
-    if not include_unpublished:
+    if status == "published":
+        query += " AND is_published = 1"
+    elif status == "draft":
+        query += " AND is_published = 0"
+    elif not include_unpublished:
         query += " AND (is_published IS NULL OR is_published = 1)"
 
     if category and category.lower() != "all":
@@ -576,9 +663,9 @@ def create_product(payload: ProductCreateUpdate, admin_user: Optional[str] = Que
     INSERT INTO products (
         slug, name, category, subcategory, tagline, description,
         features, specs, applications, badge, is_featured,
-        image_url, brochure_url, datasheet_url, is_published, display_order
+        image_url, gallery, brochure_url, datasheet_url, video_url, is_published, display_order
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         slug,
         payload.name,
@@ -592,8 +679,10 @@ def create_product(payload: ProductCreateUpdate, admin_user: Optional[str] = Que
         payload.badge or "",
         1 if payload.is_featured else 0,
         payload.image_url or "",
+        json.dumps(payload.gallery or []),
         payload.brochure_url or "",
         payload.datasheet_url or "",
+        payload.video_url or "",
         1 if payload.is_published else 0,
         payload.display_order or 0
     ))
@@ -605,11 +694,12 @@ def create_product(payload: ProductCreateUpdate, admin_user: Optional[str] = Que
     row = cursor.fetchone()
     conn.close()
 
-    add_audit_log(admin_user, "CREATE_PRODUCT", "Products", f"Created product '{payload.name}' in category '{payload.category}'")
+    status_str = "Published" if payload.is_published else "Draft"
+    add_audit_log(admin_user, "CREATE_PRODUCT", "Products", f"Created product '{payload.name}' ({status_str}) in category '{payload.category}'")
 
     return {
         "success": True,
-        "message": f"Product '{payload.name}' created successfully",
+        "message": f"Product '{payload.name}' created successfully ({status_str})",
         "product": format_product_row(row)
     }
 
@@ -630,8 +720,8 @@ def update_product(product_id: int, payload: ProductCreateUpdate, admin_user: Op
     UPDATE products
     SET slug = ?, name = ?, category = ?, subcategory = ?, tagline = ?,
         description = ?, features = ?, specs = ?, applications = ?,
-        badge = ?, is_featured = ?, image_url = ?, brochure_url = ?,
-        datasheet_url = ?, is_published = ?, display_order = ?
+        badge = ?, is_featured = ?, image_url = ?, gallery = ?, brochure_url = ?,
+        datasheet_url = ?, video_url = ?, is_published = ?, display_order = ?
     WHERE id = ?
     """, (
         slug,
@@ -646,8 +736,10 @@ def update_product(product_id: int, payload: ProductCreateUpdate, admin_user: Op
         payload.badge or "",
         1 if payload.is_featured else 0,
         payload.image_url or "",
+        json.dumps(payload.gallery or []),
         payload.brochure_url or "",
         payload.datasheet_url or "",
+        payload.video_url or "",
         1 if payload.is_published else 0,
         payload.display_order or 0,
         product_id
@@ -658,7 +750,8 @@ def update_product(product_id: int, payload: ProductCreateUpdate, admin_user: Op
     row = cursor.fetchone()
     conn.close()
 
-    add_audit_log(admin_user, "UPDATE_PRODUCT", "Products", f"Updated product #{product_id} '{payload.name}'")
+    status_str = "Published" if payload.is_published else "Draft"
+    add_audit_log(admin_user, "UPDATE_PRODUCT", "Products", f"Updated product #{product_id} '{payload.name}' ({status_str})")
 
     return {
         "success": True,

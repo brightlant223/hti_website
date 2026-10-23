@@ -417,9 +417,9 @@ export default function App() {
     fetchStats();
   };
 
-  // Find active product for product detail route
+  // Find active product for product detail route (prioritize live database product)
   const activeProduct = routeState.page === 'product'
-    ? (getProductBySlug(routeState.param) || products.find(p => p.slug === routeState.param) || productsData[0])
+    ? (products.find(p => p.slug === routeState.param) || getProductBySlug(routeState.param) || productsData[0])
     : null;
 
   return (
@@ -464,6 +464,7 @@ export default function App() {
               onSelectProduct={(p) => navigateTo('product', typeof p === 'string' ? p : (p?.slug || 'automatic-sliding-swing-doors'))}
               onNavigate={navigateTo}
               onQuickQuote={handleQuickQuote}
+              dbProducts={products}
             />
           </div>
         )}

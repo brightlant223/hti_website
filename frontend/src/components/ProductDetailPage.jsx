@@ -85,7 +85,30 @@ export default function ProductDetailPage({
     : (productProp?.slug || 'automatic-sliding-swing-doors');
 
   const product = useMemo(() => {
-    return getProductBySlug(rawSlug) || productProp;
+    const staticProd = getProductBySlug(rawSlug);
+    if (productProp && typeof productProp === 'object' && productProp.name) {
+      const dbFeatures = Array.isArray(productProp.features) && productProp.features.length > 0 ? productProp.features : null;
+      const dbSpecs = productProp.specs && Object.keys(productProp.specs).length > 0 ? productProp.specs : null;
+      return {
+        ...(staticProd || {}),
+        ...productProp,
+        name: productProp.name || staticProd?.name,
+        category: productProp.category || staticProd?.category,
+        tagline: productProp.tagline || staticProd?.tagline,
+        heroDescription: productProp.description || staticProd?.heroDescription,
+        description: productProp.description || staticProd?.description,
+        badge: productProp.badge || staticProd?.badge,
+        image: productProp.image_url || productProp.image || staticProd?.image,
+        image_url: productProp.image_url || productProp.image || staticProd?.image,
+        keyFeatures: dbFeatures || staticProd?.keyFeatures || [],
+        specHighlights: dbFeatures || staticProd?.specHighlights || [],
+        technicalSpecifications: dbSpecs || staticProd?.technicalSpecifications || {},
+        brochure_url: productProp.brochure_url || staticProd?.brochure_url,
+        datasheet_url: productProp.datasheet_url || staticProd?.datasheet_url,
+        video_url: productProp.video_url || staticProd?.video_url
+      };
+    }
+    return staticProd;
   }, [rawSlug, productProp]);
 
   // Form state for quotation modal
