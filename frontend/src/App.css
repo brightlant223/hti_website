@@ -610,7 +610,7 @@
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
   flex-shrink: 0;
   background: #0f172a;
 }
@@ -620,6 +620,12 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.mega-feature-hero-media:hover .mega-hero-img {
+  transform: scale(1.04);
 }
 
 /* 6 Sub-Service Cards Grid (3 Columns x 2 Rows) */
@@ -668,8 +674,9 @@
 .subservice-card-media {
   position: relative;
   width: 100%;
-  height: 108px;
-  background: #f1f5f9;
+  height: 114px;
+  background: #0f172a;
+  overflow: hidden;
 }
 
 .subservice-card-img {
@@ -677,6 +684,12 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.mega-subservice-card:hover .subservice-card-img {
+  transform: scale(1.05);
 }
 
 /* Overlapping Icon Badge (White rounded square with blue border & blue icon) */

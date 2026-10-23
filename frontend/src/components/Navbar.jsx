@@ -34,7 +34,14 @@ import {
   DoorClosed,
   SlidersHorizontal,
   Layers,
-  Truck
+  Truck,
+  Droplets,
+  Volume2,
+  Camera,
+  Fingerprint,
+  Server,
+  Bell,
+  Radio
 } from 'lucide-react';
 import { TOTAL_PRODUCT_COUNT } from '../data/productCatalogueData';
 
@@ -862,42 +869,42 @@ export default function Navbar({
       badge: 'TURNKEY LIFE SAFETY & DETECTION',
       headingPrimary: 'Addressable Fire Detection &',
       headingAccent: 'Life-Safety Suppression.',
-      heroImage: '/products/fire-alarm.jpg',
+      heroImage: '/products/fire-life-safety-hero.jpg',
       overviewDesc: 'Certified multi-loop addressable fire alarms, industrial hydrant networks, 120/240-minute certified fire-rated doors, and gas suppression.',
       products: [
         {
           title: 'Addressable Fire Alarm Systems',
           description: 'Multi-loop microprocessor addressable fire panels with smoke sensors.',
-          image: '/cctv-featured-fire-panel.jpg',
+          image: '/products/fire-alarm-system.jpg',
           icon: Flame,
           slug: 'addressable-fire-alarm-system'
         },
         {
           title: 'Industrial Fire Hydrant & Sprinklers',
           description: 'Turnkey diesel hydrant booster pumps, deluge valves & sprinkler piping.',
-          image: '/case-studies/case-fire-hydrant.jpg',
-          icon: Activity,
+          image: '/products/fire-hydrant-sprinklers.jpg',
+          icon: Droplets,
           slug: 'fire-hydrant-sprinkler-systems'
         },
         {
           title: 'Fire Rated Steel Doors (120/240 Min)',
           description: 'CBRI/UL certified galvanised steel fire exit doors with panic hardware.',
-          image: '/services/service-fire-doors.jpg',
+          image: '/products/fire-rated-steel-doors.jpg',
           icon: DoorClosed,
           slug: 'fire-rated-steel-doors'
         },
         {
           title: 'Clean Agent Gas Suppression',
           description: 'Novec 1230 & FM-200 waterless fire extinguishing for server rooms.',
-          image: '/products/gas-suppression-systems.jpg',
+          image: '/products/clean-agent-gas-suppression.jpg',
           icon: Sparkles,
           slug: 'gas-suppression-systems'
         },
         {
           title: 'Public Address & Voice Evacuation',
           description: 'Zoned emergency acoustic voice alarm and paging audio networks.',
-          image: '/products/voice-evacuation-system.jpg',
-          icon: PhoneCall,
+          image: '/products/public-address-evac.jpg',
+          icon: Volume2,
           slug: 'public-address-system'
         },
       ]
@@ -913,42 +920,42 @@ export default function Navbar({
       badge: '4K AI TELEMETRY & SECURITY',
       headingPrimary: 'Enterprise 4K AI Surveillance &',
       headingAccent: 'Biometric Access Control.',
-      heroImage: '/hero-security-command-center.jpg',
+      heroImage: '/products/surveillance-alerts-hero.jpg',
       overviewDesc: 'High-resolution AI-powered IP surveillance cameras, facial recognition biometric terminals, and 24/7 server room environment telemetry.',
       products: [
         {
           title: 'CCTV Surveillance (Analogue & IP 4K)',
           description: 'Ultra-HD 4K AI analytics cameras, perimeter intrusion & central VMS.',
-          image: '/cctv-featured-dome.jpg',
-          icon: Activity,
+          image: '/products/cctv-ip-4k-surveillance.jpg',
+          icon: Camera,
           slug: 'cctv-surveillance-system'
         },
         {
           title: 'Biometric Attendance & Access Terminals',
           description: 'Multi-modal touchless face recognition, fingerprint & RFID access.',
-          image: '/cctv-featured-biometric.jpg',
-          icon: Users,
+          image: '/products/biometric-access-terminal.jpg',
+          icon: Fingerprint,
           slug: 'biometric-access-attendance'
         },
         {
           title: 'Server Room Environment Telemetry',
           description: '24/7 temperature, humidity, water leak, and smoke SNMP sensors.',
-          image: '/cctv-featured-telemetry.jpg',
-          icon: Cpu,
+          image: '/products/server-room-telemetry.jpg',
+          icon: Server,
           slug: 'server-room-monitoring'
         },
         {
           title: 'Microprocessor Alarm Annunciators',
           description: 'Industrial multi-window visual annunciators with audio buzzer alerts.',
-          image: '/products/alarm-annunciators.jpg',
-          icon: ShieldCheck,
+          image: '/products/alarm-annunciators-panel.jpg',
+          icon: Bell,
           slug: 'alarm-annunciators'
         },
         {
           title: 'Wireless Intrusion Detection Systems',
           description: 'Grade-2 perimeter vibration, magnetic reed, and microwave beam barriers.',
           image: '/products/wireless-intrusion-detection.jpg',
-          icon: Lock,
+          icon: Radio,
           slug: 'wireless-intrusion-detection'
         },
       ]
@@ -1469,8 +1476,8 @@ export default function Navbar({
                   )}
                 </div>
 
-                {/* 5 Product Cards Grid (3 Columns on Top, 2 Columns Below) */}
-                <div className="mega-subservice-cards-grid mega-products-cards-grid">
+                {/* Product Cards Grid */}
+                <div className={`mega-subservice-cards-grid ${currentProductGroup.products.length === 5 ? 'mega-products-cards-grid' : ''}`}>
                   {currentProductGroup.products.map((prod, pIdx) => {
                     const CardIcon = prod.icon || Cpu;
                     return (

@@ -52,7 +52,7 @@ export const PRODUCT_CATEGORIES = [
     page: 'fire-protection',
     tagline: 'Multi-loop addressable fire alarms, turnkey sprinkler networks & 240-min certified fire doors',
     shortDescription: 'Multi-loop addressable fire alarms, industrial hydrant networks, certified fire doors & gas detection.',
-    image: '/products/fire-alarm.jpg',
+    image: '/products/fire-life-safety-hero.jpg',
     iconName: 'Flame',
     colorClass: 'text-orange',
     badge: 'TURNKEY LIFE SAFETY',
@@ -66,7 +66,7 @@ export const PRODUCT_CATEGORIES = [
     page: 'security-systems',
     tagline: '4K AI IP surveillance, biometric face recognition, server room sensors & annunciators',
     shortDescription: '4K AI IP surveillance, facial recognition biometrics, server room monitoring & fault annunciators.',
-    image: '/products/cctv-biometrics.jpg',
+    image: '/products/surveillance-alerts-hero.jpg',
     iconName: 'Activity',
     colorClass: 'text-emerald',
     badge: '4K AI TELEMETRY',
@@ -111,7 +111,7 @@ export const FEATURED_FLAGSHIP_PRODUCTS = [
     name: 'CCTV Surveillance (Analogue & IP 4K)',
     category: 'Surveillance & Alerts',
     categoryId: 'surveillance-alerts',
-    image: '/products/cctv-biometrics.jpg',
+    image: '/products/cctv-ip-4k-surveillance.jpg',
     tagline: 'Ultra-HD 4K AI analytics cameras, perimeter intrusion detection & central VMS',
     specs: ['4K AI Analytics & ANPR', 'Flameproof Camera Options', '24/7 Central VMS Command'],
     badge: '4K AI Telemetry'
@@ -964,7 +964,7 @@ export const PRODUCTS_CATALOGUE = {
       description: 'Optical speed gate and flap barrier installations across corporate lobbies.',
       images: [
         { id: 1, src: '/hero-glass-atrium.jpg', caption: 'Corporate Lobby Multi-Lane Optical Speed Gates' },
-        { id: 2, src: '/products/cctv-biometrics.jpg', caption: 'Integrated Biometric Facial Recognition on Speed Gate' },
+        { id: 2, src: '/products/biometric-access-terminal.jpg', caption: 'Integrated Biometric Facial Recognition on Speed Gate' },
         { id: 3, src: '/products/automatic-doors.jpg', caption: 'Speed Gate and Automatic Glass Door Entry Cascade' }
       ]
     },
@@ -1729,7 +1729,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: 'Multi-loop smoke, heat & flame sensor networks with automated relay control',
     badge: 'EN 54 / NFPA 72 Life Safety',
     heroDescription: 'Microprocessor-based addressable and conventional fire alarm detection networks featuring multi-loop panels, intelligent optical smoke sensors, rate-of-rise heat probes, and auto-trip emergency integration.',
-    heroImage: '/products/fire-alarm.jpg',
+    heroImage: '/products/fire-alarm-system.jpg',
     trustIndicators: [
       { text: 'EN 54 & NFPA 72 Certified Detectors', icon: 'Flame' },
       { text: 'Multi-Loop Network Panels (Up to 8 Loops)', icon: 'Cpu' },
@@ -1737,7 +1737,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/services/service-fire-alarm.jpg',
+      poster: '/products/fire-alarm-system.jpg',
       badge: 'LIFE SAFETY SYSTEM',
       heading: 'Addressable Fire Detection & Relay Automation',
       description: 'Demonstrating sub-second addressable smoke detection, central panel pinpointing, electronic sounder-strobe activation, and automatic relay commands to access doors and ventilation dampers.',
@@ -1833,7 +1833,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: 'Turnkey industrial firefighting water distribution networks, pump skids & sprinkler grids',
     badge: 'Turnkey Water Suppression',
     heroDescription: 'Turnkey industrial fire hydrant rings, automatic wet sprinkler pipe networks, diesel and electrical main fire pump skids, landing valves, and hose reels engineered to NBC and NFPA firefighting standards.',
-    heroImage: '/case-studies/case-fire-hydrant.jpg',
+    heroImage: '/products/fire-hydrant-sprinklers.jpg',
     trustIndicators: [
       { text: 'ISI Marked Hydrant Valves & Equipment', icon: 'ShieldCheck' },
       { text: 'Turnkey Electrical & Diesel Pump Skids', icon: 'Settings' },
@@ -1841,7 +1841,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/case-studies/case-fire-hydrant.jpg',
+      poster: '/products/fire-hydrant-sprinklers.jpg',
       badge: 'WATER SUPPRESSION',
       heading: 'Industrial Fire Hydrant & Sprinkler Engineering',
       description: 'See automatic jockey and main diesel pump skids maintain 7 bar network pressure, triggering instantaneous water deluge when heat activates sprinkler glass bulbs.',
@@ -1937,7 +1937,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: 'Certified 120 / 240 minute fire containment barriers with intumescent smoke seals',
     badge: '120 / 240 Min Fire Integrity',
     heroDescription: 'Certified 120-minute and 240-minute fire-resistant hollow metal doors and motorized rolling fire shutters engineered with mineral wool insulation cores, intumescent seals, and automatic gravity drop release.',
-    heroImage: '/services/service-fire-doors.jpg',
+    heroImage: '/products/fire-rated-steel-doors.jpg',
     trustIndicators: [
       { text: '120 / 240 Minutes Certified Fire Integrity', icon: 'Flame' },
       { text: 'CBRI / Warringtonfire Certified', icon: 'ShieldCheck' },
@@ -1945,7 +1945,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/services/service-fire-doors.jpg',
+      poster: '/products/fire-rated-steel-doors.jpg',
       badge: 'FIRE BARRIER',
       heading: 'Fire Rated Door & Shutter Containment Demo',
       description: 'See the heat-expanding intumescent perimeter seals block toxic smoke and automatic fusible link / FACP gravity descent contain infernos within fire compartments.',
@@ -2041,7 +2041,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: 'Zoned emergency voice evacuation broadcast & IP network industrial intercom',
     badge: 'EN 54-16 Voice Evacuation',
     heroDescription: 'IP network and multi-zone commercial Public Address and Emergency Voice Evacuation Systems (EVAC) featuring crystal-clear speech intelligibility, automated pre-recorded emergency messages, and zoned plant audio distribution.',
-    heroImage: '/hero-security-command-center.jpg',
+    heroImage: '/products/public-address-evac.jpg',
     trustIndicators: [
       { text: 'EN 54-16 Certified Voice Alarm Controller', icon: 'Flame' },
       { text: 'Multi-Zone IP Network Paging', icon: 'Radio' },
@@ -2049,7 +2049,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/hero-security-command-center.jpg',
+      poster: '/products/public-address-evac.jpg',
       badge: 'AUDIO EVACUATION',
       heading: 'Voice Evacuation & Multi-Zone Paging Demo',
       description: 'Experience crystal-clear zoned voice evacuation instructions, background music muting, and automated multi-lingual emergency announcements during fire drills.',
@@ -2253,7 +2253,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: 'Ultra-HD AI analytics, Starlight color night vision & flameproof camera arrays',
     badge: '4K AI Analytics & ATEX',
     heroDescription: 'Enterprise 4K Ultra-HD IP camera arrays and AI-driven video analytics platforms featuring facial recognition, perimeter tripwire intrusion, Starlight low-light optics, and certified Flameproof ATEX housings for high-risk zones.',
-    heroImage: '/products/cctv-biometrics.jpg',
+    heroImage: '/products/cctv-ip-4k-surveillance.jpg',
     trustIndicators: [
       { text: 'Ultra-HD 4K (8MP / 12MP) Clarity', icon: 'Eye' },
       { text: 'AI Perimeter Intrusion & Face Recognition', icon: 'Cpu' },
@@ -2261,7 +2261,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/products/cctv-biometrics.jpg',
+      poster: '/products/cctv-ip-4k-surveillance.jpg',
       badge: 'SURVEILLANCE AI',
       heading: 'AI-Powered 4K Surveillance & Perimeter Analytics',
       description: 'Watch deep learning AI analytics classify humans vs. vehicles, trigger automated PTZ tracking on virtual tripwire breaches, and provide vivid color footage in total darkness.',
@@ -2337,9 +2337,9 @@ export const PRODUCTS_CATALOGUE = {
       heading: 'Installation Gallery & System Views',
       description: '4K CCTV cameras and central security command center video walls.',
       images: [
-        { id: 1, src: '/products/cctv-biometrics.jpg', caption: 'High-Definition Dome & Bullet Surveillance Array' },
+        { id: 1, src: '/products/cctv-ip-4k-surveillance.jpg', caption: 'High-Definition Dome & Bullet Surveillance Array' },
         { id: 2, src: '/about-security-camera.jpg', caption: 'Starlight Outdoor Weatherproof CCTV Camera' },
-        { id: 3, src: '/hero-security-command-center.jpg', caption: 'Central Security Operations Center 4K Video Wall' }
+        { id: 3, src: '/products/surveillance-alerts-hero.jpg', caption: 'Central Security Operations Center 4K Video Wall' }
       ]
     },
     relatedSlugs: ['biometric-access-attendance', 'server-room-monitoring', 'fault-alarm-systems']
@@ -2357,7 +2357,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: 'Facial recognition, anti-spoof fingerprint & contactless shift attendance logging',
     badge: '0.2s Facial Recognition',
     heroDescription: 'Enterprise contactless visible light facial recognition terminals, multi-spectral fingerprint scanners, and time-attendance software platforms with automated HRMS payroll synchronization and turnstile integration.',
-    heroImage: '/products/cctv-biometrics.jpg',
+    heroImage: '/products/biometric-access-terminal.jpg',
     trustIndicators: [
       { text: '<0.2s Rapid Facial Recognition', icon: 'Zap' },
       { text: 'Dual-Lens Anti-Spoof Live Detection', icon: 'ShieldCheck' },
@@ -2365,7 +2365,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/products/cctv-biometrics.jpg',
+      poster: '/products/biometric-access-terminal.jpg',
       badge: 'BIOMETRIC ACCESS',
       heading: 'Contactless Facial Recognition in Action',
       description: 'Observe sub-second employee authentication as workers walk through turnstiles at normal speed, while dual-camera AI prevents fake photos or phone spoofing.',
@@ -2441,9 +2441,9 @@ export const PRODUCTS_CATALOGUE = {
       heading: 'Installation Gallery & System Views',
       description: 'Biometric access terminal installations on turnstiles and cleanroom walls.',
       images: [
-        { id: 1, src: '/products/cctv-biometrics.jpg', caption: 'Visible Light Facial Recognition Terminal Mounted on Turnstile' },
+        { id: 1, src: '/products/biometric-access-terminal.jpg', caption: 'Visible Light Facial Recognition Terminal Mounted on Turnstile' },
         { id: 2, src: '/hero-glass-atrium.jpg', caption: 'Corporate Lobby Speed Gate Biometric Access Lane' },
-        { id: 3, src: '/hero-security-command-center.jpg', caption: 'Real-Time Attendance Monitoring on Security Command Screen' }
+        { id: 3, src: '/products/surveillance-alerts-hero.jpg', caption: 'Real-Time Attendance Monitoring on Security Command Screen' }
       ]
     },
     relatedSlugs: ['turnstiles-flap-barriers-speed-gates', 'cctv-surveillance-system', 'visitor-management-system']
@@ -2547,7 +2547,7 @@ export const PRODUCTS_CATALOGUE = {
       images: [
         { id: 1, src: '/services/services-hero-access.jpg', caption: 'Weatherproof Outdoor Video Calling Station with RFID' },
         { id: 2, src: '/hero-glass-atrium.jpg', caption: 'Reception Desk Intercom and Door Release Integration' },
-        { id: 3, src: '/products/cctv-biometrics.jpg', caption: 'Indoor Touchscreen Monitor and Smart Door Access' }
+        { id: 3, src: '/products/biometric-access-terminal.jpg', caption: 'Indoor Touchscreen Monitor and Smart Door Access' }
       ]
     },
     relatedSlugs: ['cctv-surveillance-system', 'biometric-access-attendance', 'automatic-sliding-swing-doors']
@@ -2565,7 +2565,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: '24/7 temperature, humidity, water leak & power trip SMS/email alert dialers',
     badge: 'Critical Infrastructure Telemetry',
     heroDescription: 'Continuous 24/7 environmental monitoring for server rooms and data centers featuring precision temperature and relative humidity sensors, rope-type water leak detection, power failure alerts, and instant GSM SMS dialers.',
-    heroImage: '/hero-security-command-center.jpg',
+    heroImage: '/products/server-room-telemetry.jpg',
     trustIndicators: [
       { text: 'Precision Temp & RH Telemetry (±0.3°C)', icon: 'Activity' },
       { text: 'Rope Water Leak Sensing Cable', icon: 'Droplets' },
@@ -2573,7 +2573,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/hero-security-command-center.jpg',
+      poster: '/products/server-room-telemetry.jpg',
       badge: 'DATA CENTER TELEMETRY',
       heading: 'Critical Server Room Environmental Telemetry Demo',
       description: 'See live thermal spike detection in server rack aisles, water leak detection along raised flooring, and automated multi-channel alert dispatch.',
@@ -2649,8 +2649,8 @@ export const PRODUCTS_CATALOGUE = {
       heading: 'Installation Gallery & System Views',
       description: 'Server room environmental monitoring controllers and sensor installations.',
       images: [
-        { id: 1, src: '/hero-security-command-center.jpg', caption: 'Data Center Central Environmental Monitoring Dashboard' },
-        { id: 2, src: '/products/fire-alarm.jpg', caption: 'Server Rack Temperature Probe and Water Leak Sensing Controller' },
+        { id: 1, src: '/products/server-room-telemetry.jpg', caption: '1U Rack-Mount SNMP Server Room Telemetry System with Temp & Water Leak Probes' },
+        { id: 2, src: '/products/surveillance-alerts-hero.jpg', caption: 'Data Center Central Environmental Monitoring Dashboard' },
         { id: 3, src: '/case-studies/case-cleanroom.jpg', caption: 'Precision Server Room False-Floor Water Sensing Rope' }
       ]
     },
@@ -2669,7 +2669,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: 'Central pump trip, perimeter fence breach & industrial process annunciators',
     badge: 'Industrial Annunciator & Defense',
     heroDescription: 'Microprocessor-based industrial fault annunciator panels and perimeter intrusion alarm networks featuring 8 to 64 window LED displays, dual PIR motion sensors, outdoor fence beams, and high-decibel audible sirens.',
-    heroImage: '/services/services-heavy-security.jpg',
+    heroImage: '/products/alarm-annunciators-panel.jpg',
     trustIndicators: [
       { text: '8 to 64 Window Microprocessor Annunciator', icon: 'Activity' },
       { text: 'Active Infrared Perimeter Fence Beams', icon: 'ShieldCheck' },
@@ -2677,7 +2677,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/services/services-heavy-security.jpg',
+      poster: '/products/alarm-annunciators-panel.jpg',
       badge: 'ALARM ANNUNCIATION',
       heading: 'Fault Alarm Annunciator & Perimeter Defense Demo',
       description: 'See the window LED flash sequence on industrial pump trips, dual optical perimeter fence breach detection, and automated security paging.',
@@ -2753,8 +2753,8 @@ export const PRODUCTS_CATALOGUE = {
       heading: 'Installation Gallery & System Views',
       description: 'Industrial annunciator panels and perimeter intrusion sensor installations.',
       images: [
-        { id: 1, src: '/services/services-heavy-security.jpg', caption: 'Industrial Annunciator Panel & Process Trip Controller' },
-        { id: 2, src: '/hero-security-command-center.jpg', caption: 'Central Security Control Console Intrusion Alarm Screen' },
+        { id: 1, src: '/products/alarm-annunciators-panel.jpg', caption: 'Industrial Microprocessor Multi-Window Annunciator Panel with Buzzer Grill' },
+        { id: 2, src: '/products/surveillance-alerts-hero.jpg', caption: 'Central Security Control Console Intrusion Alarm Screen' },
         { id: 3, src: '/case-studies/case-boom-barrier.jpg', caption: 'Perimeter Infrared Beam Sensor on Industrial Boundary Wall' }
       ]
     },
@@ -3094,7 +3094,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: 'Waterless clean agent gas fire extinguishing (Novec 1230 & FM-200) for sensitive electrical assets',
     badge: 'Waterless Fire Suppression',
     heroDescription: 'Clean agent gaseous fire extinguishing systems utilizing Novec 1230 and FM-200 fluids. Extinguishes electrical and server room fires in under 10 seconds without water damage, residue, or electrical conductivity.',
-    heroImage: '/case-studies/case-fire-hydrant.jpg',
+    heroImage: '/products/clean-agent-gas-suppression.jpg',
     trustIndicators: [
       { text: 'UL Listed & FM Approved Cylinders', icon: 'ShieldCheck' },
       { text: 'Extinguishes in Under 10 Seconds', icon: 'Zap' },
@@ -3102,7 +3102,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/case-studies/case-fire-hydrant.jpg',
+      poster: '/products/clean-agent-gas-suppression.jpg',
       badge: 'LIFE SAFETY SHOWCASE',
       heading: 'Clean Agent Gas Discharge & Control',
       description: 'See the multi-zone gas release panel sequence, abort switches, and high-pressure 360° dispersion nozzles extinguishing fires cleanly.',
@@ -3201,7 +3201,7 @@ export const PRODUCTS_CATALOGUE = {
     tagline: 'Grade-2 multi-zone perimeter intrusion sensors, microwave beams & wireless control panels',
     badge: 'Grade-2 Intrusion Security',
     heroDescription: 'Enterprise-grade wireless and hybrid perimeter intrusion detection systems. Features multi-frequency anti-jamming RF communication, active dual-tech PIR sensors, and long-range perimeter infrared beams for commercial campuses and industrial perimeters.',
-    heroImage: '/hero-security-command-center.jpg',
+    heroImage: '/products/wireless-intrusion-detection.jpg',
     trustIndicators: [
       { text: 'EN 50131 Grade 2 Certified', icon: 'ShieldCheck' },
       { text: '2,000m Secure RF Range', icon: 'Zap' },
@@ -3209,7 +3209,7 @@ export const PRODUCTS_CATALOGUE = {
     ],
     video: {
       hasVideoFile: false,
-      poster: '/about-security-camera.jpg',
+      poster: '/products/wireless-intrusion-detection.jpg',
       badge: 'PERIMETER SECURITY',
       heading: 'Wireless Intrusion System Operation',
       description: 'See the dual-technology PIR motion detection, instant tamper alarm transmission, and centralized security control room dispatch in real time.',
@@ -3286,9 +3286,9 @@ export const PRODUCTS_CATALOGUE = {
       heading: 'Installation Gallery & System Views',
       description: 'Wireless intrusion detectors and control hub deployments across facilities.',
       images: [
-        { id: 1, src: '/hero-security-command-center.jpg', caption: 'Centralized Security Operations Console Intrusion Map' },
-        { id: 2, src: '/about-security-camera.jpg', caption: 'Outdoor Perimeter Wireless Microwave Sensor Beam' },
-        { id: 3, src: '/products/cctv-biometrics.jpg', caption: 'Security Hub with Dual-SIM Cellular & IP Connectivity' },
+        { id: 1, src: '/products/wireless-intrusion-detection.jpg', caption: 'Wireless Alarm Control Keypad and Perimeter Motion Sensors' },
+        { id: 2, src: '/products/surveillance-alerts-hero.jpg', caption: 'Centralized Security Operations Console Intrusion Map' },
+        { id: 3, src: '/about-security-camera.jpg', caption: 'Outdoor Perimeter Wireless Microwave Sensor Beam' },
         { id: 4, src: '/services/services-heavy-security.jpg', caption: 'Perimeter Wall Active Infrared Multi-Beam Array' },
         { id: 5, src: '/case-studies/case-boom-barrier.jpg', caption: 'Vehicle Barrier Interlinked Perimeter Siren & Strobe' }
       ]
@@ -3331,9 +3331,9 @@ export const getProductBySlug = (slug) => {
   if (PRODUCTS_CATALOGUE[clean]) return PRODUCTS_CATALOGUE[clean];
 
   // Try finding by slug substring or name match
-  const found = Object.values(PRODUCTS_CATALOGUE).find(p => 
-    p.slug === clean || 
-    p.slug.includes(clean) || 
+  const found = Object.values(PRODUCTS_CATALOGUE).find(p =>
+    p.slug === clean ||
+    p.slug.includes(clean) ||
     clean.includes(p.slug) ||
     p.name.toLowerCase().includes(clean.replace(/-/g, ' '))
   );
@@ -3341,7 +3341,7 @@ export const getProductBySlug = (slug) => {
 };
 
 export const getProductsByCategory = (categorySlug) => {
-  const all = Object.values(PRODUCTS_CATALOGUE).filter((p, idx, self) => 
+  const all = Object.values(PRODUCTS_CATALOGUE).filter((p, idx, self) =>
     self.findIndex(t => t.id === p.id) === idx
   );
   if (!categorySlug || categorySlug === 'all') return all;
@@ -3349,7 +3349,7 @@ export const getProductsByCategory = (categorySlug) => {
 };
 
 export const getAllProducts = () => {
-  return Object.values(PRODUCTS_CATALOGUE).filter((p, idx, self) => 
+  return Object.values(PRODUCTS_CATALOGUE).filter((p, idx, self) =>
     self.findIndex(t => t.id === p.id) === idx
   );
 };

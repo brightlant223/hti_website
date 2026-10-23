@@ -1393,24 +1393,107 @@ export const getProductMedia = (productOrSlug) => {
     });
   }
 
-  // 7. CCTV / Biometrics / Video Door Phones / Server Monitoring / Fault Alarms
-  if (slug.includes('cctv') || slug.includes('biometric') || slug.includes('video-door') || slug.includes('server-room') || slug.includes('fault') || slug.includes('intrusion')) {
+  // 7a. CCTV Surveillance (Analogue & IP 4K)
+  if (slug.includes('cctv')) {
     return withDirectImage({
-      primaryImage: '/products/cctv-biometrics.jpg',
-      badge: 'AI 4K Analytics',
-      caption: 'Deep-Learning Facial Biometrics & Ultra-HD Command Center CCTV',
+      primaryImage: '/products/cctv-ip-4k-surveillance.jpg',
+      badge: '4K AI Analytics',
+      caption: 'Enterprise 4K Ultra-HD AI IP Surveillance & Starlight Optics',
       gallery: [
-        { url: '/products/cctv-biometrics.jpg', title: 'Dual-Lens AI Biometric Terminal', subtitle: '0.2s Touchless Face & Fingerprint Shift Verification' },
-        { url: '/about-security-camera.jpg', title: '4K Ultra-HD Network Dome Camera', subtitle: 'Starlight Night Vision & Flameproof Explosion Enclosure' },
-        { url: '/hero-security-command-center.jpg', title: 'Integrated Security Monitoring Hub', subtitle: 'Video Wall Matrix with Multi-Site NVR Centralization' },
-        { url: '/products/automatic-doors.jpg', title: 'Direct Access Barrier Integration', subtitle: 'Automated Relay Trigger for Turnstiles & Interlocks' },
+        { url: '/products/cctv-ip-4k-surveillance.jpg', title: '4K AI PTZ & Bullet Camera Array', subtitle: 'Tripwire Intrusion & Forensic Clarity' },
+        { url: '/products/surveillance-alerts-hero.jpg', title: 'Enterprise Command Center Video Wall', subtitle: 'Central NVR Matrix with Multi-Site Centralization' },
+        { url: '/about-security-camera.jpg', title: 'Starlight Outdoor Weatherproof Camera', subtitle: 'Full-Color Low-Light 0.001 Lux Night Vision' },
       ],
       video: {
-        title: 'AI Facial Verification & 4K CCTV Starlight Night Analytics Live Demo',
+        title: '4K CCTV Starlight Night Vision & AI Deep-Learning Perimeter Analytics Demo',
         duration: '01:40',
         resolution: '4K UHD 60fps',
         type: 'AI Vision Simulation',
         simType: 'surveillance_ai'
+      }
+    });
+  }
+
+  // 7b. Biometrics & Attendance
+  if (slug.includes('biometric') || slug.includes('video-door')) {
+    return withDirectImage({
+      primaryImage: '/products/biometric-access-terminal.jpg',
+      badge: '0.2s Face Auth',
+      caption: 'Touchless Visible-Light Biometric Attendance & Access Control',
+      gallery: [
+        { url: '/products/biometric-access-terminal.jpg', title: 'Dual-Lens AI Biometric Terminal', subtitle: '0.2s Touchless Face & Fingerprint Shift Verification' },
+        { url: '/products/surveillance-alerts-hero.jpg', title: 'Integrated Security Monitoring Hub', subtitle: 'Real-Time Access Event Logging on Central Console' },
+        { url: '/hero-glass-atrium.jpg', title: 'Corporate Turnstile Speed Gate Lane', subtitle: 'Direct Interlocking with Walk-Through Speed Gates' },
+      ],
+      video: {
+        title: 'AI Facial Verification & Contactless Turnstile Access Live Demo',
+        duration: '01:30',
+        resolution: '4K UHD 60fps',
+        type: 'Biometric Access Simulation',
+        simType: 'biometric_access'
+      }
+    });
+  }
+
+  // 7c. Server Room Telemetry
+  if (slug.includes('server-room')) {
+    return withDirectImage({
+      primaryImage: '/products/server-room-telemetry.jpg',
+      badge: 'Critical Telemetry',
+      caption: '24/7 Server Room Temperature, Humidity & Water Leak Telemetry',
+      gallery: [
+        { url: '/products/server-room-telemetry.jpg', title: '1U Rack-Mount SNMP Telemetry Monitor', subtitle: 'High-Precision Temp & RH Probes with False-Floor Leak Rope' },
+        { url: '/products/surveillance-alerts-hero.jpg', title: 'Central NOC Environmental Console', subtitle: 'Real-Time SNMP Trap Dashboard & GSM SMS Dialer' },
+        { url: '/case-studies/case-cleanroom.jpg', title: 'Precision Server Room False-Floor Rope', subtitle: 'Under-Floor Water Intrusion Protection' },
+      ],
+      video: {
+        title: 'Server Room Thermal Spike & Water Leak Sensor Telemetry Demo',
+        duration: '01:25',
+        resolution: '4K UHD 60fps',
+        type: 'Telemetry Simulation',
+        simType: 'server_telemetry'
+      }
+    });
+  }
+
+  // 7d. Fault Alarm Annunciators
+  if (slug.includes('fault') || slug.includes('annunciator')) {
+    return withDirectImage({
+      primaryImage: '/products/alarm-annunciators-panel.jpg',
+      badge: 'ISA-18.1 Certified',
+      caption: 'Microprocessor Multi-Window Fault Alarm Annunciator Panel',
+      gallery: [
+        { url: '/products/alarm-annunciators-panel.jpg', title: 'Industrial Multi-Window Annunciator', subtitle: 'Flush-Mount Panel with Test/Ack/Reset Buttons & Buzzer' },
+        { url: '/products/surveillance-alerts-hero.jpg', title: 'Central SCADA Plant Security Console', subtitle: 'Supervisory Control Screen with Trip Sequence Annunciation' },
+        { url: '/case-studies/case-boom-barrier.jpg', title: 'Industrial Perimeter Boundary Wall', subtitle: 'Interlinked Alarm Strobe & Audio Horn' },
+      ],
+      video: {
+        title: 'Microprocessor Alarm Annunciator Sequence & Fault Acknowledge Demo',
+        duration: '01:35',
+        resolution: '4K UHD 60fps',
+        type: 'Process Alarm Simulation',
+        simType: 'fault_alarm'
+      }
+    });
+  }
+
+  // 7e. Wireless Intrusion Detection
+  if (slug.includes('intrusion')) {
+    return withDirectImage({
+      primaryImage: '/products/wireless-intrusion-detection.jpg',
+      badge: 'Grade-2 Wireless',
+      caption: 'Encrypted Wireless Perimeter Intrusion Detection & Alarm System',
+      gallery: [
+        { url: '/products/wireless-intrusion-detection.jpg', title: 'Wireless Security Hub & Sensors', subtitle: 'Touch Keypad, Magnetic Reed Contacts & Corner PIR Detectors' },
+        { url: '/products/surveillance-alerts-hero.jpg', title: 'Central Monitoring Operations Map', subtitle: 'Perimeter Boundary Sensor Zone Mapping' },
+        { url: '/about-security-camera.jpg', title: 'Perimeter Wireless Microwave Beam Barrier', subtitle: 'Anti-Jamming Long-Range Perimeter Detection' },
+      ],
+      video: {
+        title: 'Wireless Perimeter Intrusion Detection & Instant Tamper Alarm Demo',
+        duration: '01:45',
+        resolution: '4K UHD 60fps',
+        type: 'Intrusion Security Simulation',
+        simType: 'intrusion_detection'
       }
     });
   }
