@@ -40,7 +40,14 @@ import {
   Flame,
   Droplets,
   Bell,
-  AlertTriangle
+  AlertTriangle,
+  Building2,
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+
+
 } from 'lucide-react';
 import { INDUSTRIAL_ACCESS_PAGES } from '../data/industrialAccessPagesData';
 import { CLEANROOM_PAGES } from '../data/cleanroomPagesData';
@@ -133,6 +140,9 @@ export default function ServiceDetailPage({
     message: `Hello HTI Engineering, please share technical datasheet, structural drawing, and turnkey quotation for ${pageData.titleLine1} Solutions.`
   });
 
+  // In-page contact form state
+  const [inlineSuccess, setInlineSuccess] = useState(false);
+
   // Scroll to top and set page title on slug change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -200,8 +210,8 @@ export default function ServiceDetailPage({
     setIsQuoteModalOpen(true);
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+  // Shared inquiry submission helper to eliminate duplicate logic
+  const submitInquiryData = async (productName) => {
     try {
       await fetch('/api/inquiries', {
         method: 'POST',
@@ -211,8 +221,8 @@ export default function ServiceDetailPage({
           email: formData.email,
           phone: formData.phone,
           company: formData.company,
-          product_name: selectedProductForQuote,
-          category: pageData.categoryName || 'Fire Protection & Life Safety',
+          product_name: productName,
+          category: pageData.categoryName || 'Service Enquiry',
           message: `Application: ${formData.application} | Qty: ${formData.quantity} | ${formData.message}`
         })
       });
@@ -220,18 +230,42 @@ export default function ServiceDetailPage({
       console.warn('API submission fallback to local:', err);
     }
 
-    setQuoteSuccess(true);
     if (onQuoteSubmit) {
       onQuoteSubmit({
         ...formData,
-        product: selectedProductForQuote,
+        product: productName,
         source: `${pageData.titleLine1} Page`
       });
     }
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    await submitInquiryData(selectedProductForQuote);
+    setQuoteSuccess(true);
     setTimeout(() => {
       setIsQuoteModalOpen(false);
       setQuoteSuccess(false);
     }, 2400);
+  };
+
+  const handleInlineSubmit = async (e) => {
+    e.preventDefault();
+    await submitInquiryData(pageData.titleLine1);
+    setInlineSuccess(true);
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
+      application: 'Industrial Facilities',
+      productType: pageData.titleLine1,
+      quantity: '1-3 Units',
+      message: `Hello HTI Engineering, please share technical datasheet, structural drawing, and turnkey quotation for ${pageData.titleLine1} Solutions.`
+    });
+    setTimeout(() => {
+      setInlineSuccess(false);
+    }, 4000);
   };
 
   const openLightbox = (index) => {
@@ -849,7 +883,7 @@ export default function ServiceDetailPage({
             <h2 className="section-title">Frequently Asked Questions</h2>
             <div className="section-title-underline center-underline"></div>
             <p className="section-subtitle-desc">
-              Key engineering, installation, compliance, and safety questions answered by our industrial entrance automation engineering team.
+              Key technical, installation, compliance, and maintenance questions answered by our engineering specialists.
             </p>
           </div>
 
@@ -888,7 +922,7 @@ export default function ServiceDetailPage({
             <h2 className="section-title">Technical Consultation &amp; Turnkey Quotation</h2>
             <div className="section-title-underline center-underline"></div>
             <p className="section-subtitle-desc">
-              Speak directly with HTI's industrial automation engineers to receive custom technical drawings, specification sheets, and competitive factory-direct quotations.
+              Speak directly with HTI's engineering team to receive custom technical drawings, specification sheets, and competitive turnkey quotations.
             </p>
           </div>
 
@@ -901,7 +935,7 @@ export default function ServiceDetailPage({
 
               <h3 className="contact-panel-title">HTI Automation &amp; Security Systems Pvt. Ltd.</h3>
               <p className="contact-panel-desc">
-                Pioneering automated industrial entrances, perimeter gates, cleanroom airlocks, and life-safety systems with full turnkey commissioning across India.
+                Providing turnkey engineering solutions, automated access, cleanroom systems, and life-safety infrastructure with full commissioning across India.
               </p>
 
               <div className="contact-details-stack">
@@ -911,7 +945,7 @@ export default function ServiceDetailPage({
                   </div>
                   <div className="contact-detail-content">
                     <span className="contact-detail-label">Direct Engineering Helpline</span>
-                    <a href="tel:+919820000000" className="contact-detail-val">+91 98200 00000 / 022-28000000</a>
+                    <a href="tel:+919992756077" className="contact-detail-val">+91 9992756077</a>
                   </div>
                 </div>
 
@@ -920,8 +954,8 @@ export default function ServiceDetailPage({
                     <Mail size={18} />
                   </div>
                   <div className="contact-detail-content">
-                    <span className="contact-detail-label">Technical Proposals &amp; CAD</span>
-                    <a href="mailto:sales@htiautomation.com" className="contact-detail-val">sales@htiautomation.com</a>
+                    <span className="contact-detail-label">Technical Proposals &amp; Inquiries</span>
+                    <a href="mailto:info@htisystems.in" className="contact-detail-val">info@htisystems.in</a>
                   </div>
                 </div>
 
@@ -931,7 +965,7 @@ export default function ServiceDetailPage({
                   </div>
                   <div className="contact-detail-content">
                     <span className="contact-detail-label">Head Office &amp; Works</span>
-                    <span className="contact-detail-val">Mumbai / Pune Industrial Corridor, Maharashtra, India</span>
+                    <span className="contact-detail-val">Turbhe, Navi Mumbai - 400703, Maharashtra, India</span>
                   </div>
                 </div>
 
@@ -941,7 +975,7 @@ export default function ServiceDetailPage({
                   </div>
                   <div className="contact-detail-content">
                     <span className="contact-detail-label">Working Hours</span>
-                    <span className="contact-detail-val">Mon – Sat: 9:00 AM – 7:00 PM IST (24h Proposal SLA)</span>
+                    <span className="contact-detail-val">Monday – Saturday: 9:00 AM – 6:30 PM IST</span>
                   </div>
                 </div>
               </div>
@@ -949,7 +983,7 @@ export default function ServiceDetailPage({
               <div className="contact-compliance-badge-box">
                 <ShieldCheck size={28} style={{ color: '#38bdf8', minWidth: '28px' }} />
                 <span>
-                  <strong>Turnkey Warranty:</strong> 24-Month Comprehensive Warranty, genuine European drive motors, and scheduled preventive maintenance AMC nationwide.
+                  <strong>Turnkey Assurance:</strong> Certified engineering solutions, standard manufacturer warranty, and scheduled preventive maintenance AMC nationwide.
                 </span>
               </div>
             </div>
@@ -996,7 +1030,7 @@ export default function ServiceDetailPage({
                     <input
                       type="tel"
                       required
-                      placeholder="e.g. +91 98200 00000"
+                      placeholder="e.g. +91 9992756077"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="contact-text-input"
