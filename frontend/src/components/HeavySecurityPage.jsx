@@ -1,9 +1,9 @@
 import React from 'react';
-import IndustrialAccessProductPage from './IndustrialAccessProductPage';
+import ServiceDetailPage from './ServiceDetailPage';
 
 export default function HeavySecurityPage({ onNavigate, onQuoteSubmit }) {
   return (
-    <IndustrialAccessProductPage
+    <ServiceDetailPage
       slug="heavy-security"
       onNavigate={onNavigate}
       onQuoteSubmit={onQuoteSubmit}

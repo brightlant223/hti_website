@@ -1,9 +1,9 @@
 import React from 'react';
-import IndustrialAccessProductPage from './IndustrialAccessProductPage';
+import ServiceDetailPage from './ServiceDetailPage';
 
 export default function PerimeterGatePage({ onNavigate, onQuoteSubmit }) {
   return (
-    <IndustrialAccessProductPage
+    <ServiceDetailPage
       slug="perimeter-gate"
       onNavigate={onNavigate}
       onQuoteSubmit={onQuoteSubmit}

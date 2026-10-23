@@ -1,9 +1,9 @@
 import React from 'react';
-import IndustrialAccessProductPage from './IndustrialAccessProductPage';
+import ServiceDetailPage from './ServiceDetailPage';
 
 export default function LogisticsBridgePage({ onNavigate, onQuoteSubmit }) {
   return (
-    <IndustrialAccessProductPage
+    <ServiceDetailPage
       slug="logistics-bridge"
       onNavigate={onNavigate}
       onQuoteSubmit={onQuoteSubmit}

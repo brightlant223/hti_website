@@ -1,3 +1,8 @@
+/**
+ * ServiceDetailPage.jsx
+ * This view renders any service detail page from a data object passed in the
+ * pagesData prop (industrial access, fire safety, future categories); default is INDUSTRIAL_ACCESS_PAGES.
+ */
 import React, { useState, useRef, useEffect } from 'react';
 import {
   ShieldCheck,
@@ -31,7 +36,11 @@ import {
   Truck,
   User,
   Check,
-  HelpCircle
+  HelpCircle,
+  Flame,
+  Droplets,
+  Bell,
+  AlertTriangle
 } from 'lucide-react';
 import { INDUSTRIAL_ACCESS_PAGES } from '../data/industrialAccessPagesData';
 import './TouchlessEntryPage.css';
@@ -55,7 +64,12 @@ const ICON_MAP = {
   User,
   Check,
   HelpCircle,
-  Eye
+  Eye,
+  Flame,
+  Droplets,
+  Volume2,
+  Bell,
+  AlertTriangle
 };
 
 const resolveIcon = (iconInput, defaultIcon = ShieldCheck) => {
@@ -66,12 +80,13 @@ const resolveIcon = (iconInput, defaultIcon = ShieldCheck) => {
   return iconInput;
 };
 
-export default function IndustrialAccessProductPage({
+export default function ServiceDetailPage({
   slug = 'perimeter-gate',
+  pagesData = INDUSTRIAL_ACCESS_PAGES,
   onNavigate,
   onQuoteSubmit
 }) {
-  const pageData = INDUSTRIAL_ACCESS_PAGES[slug] || INDUSTRIAL_ACCESS_PAGES['perimeter-gate'];
+  const pageData = (pagesData && pagesData[slug]) || (pagesData && pagesData[Object.keys(pagesData)[0]]) || INDUSTRIAL_ACCESS_PAGES['perimeter-gate'];
 
   // Video player state
   const videoRef = useRef(null);
@@ -179,8 +194,26 @@ export default function IndustrialAccessProductPage({
     setIsQuoteModalOpen(true);
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+    try {
+      await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          product_name: selectedProductForQuote,
+          category: pageData.categoryName || 'Fire Protection & Life Safety',
+          message: `Application: ${formData.application} | Qty: ${formData.quantity} | ${formData.message}`
+        })
+      });
+    } catch (err) {
+      console.warn('API submission fallback to local:', err);
+    }
+
     setQuoteSuccess(true);
     if (onQuoteSubmit) {
       onQuoteSubmit({
@@ -192,7 +225,7 @@ export default function IndustrialAccessProductPage({
     setTimeout(() => {
       setIsQuoteModalOpen(false);
       setQuoteSuccess(false);
-    }, 2500);
+    }, 2400);
   };
 
   const openLightbox = (index) => {

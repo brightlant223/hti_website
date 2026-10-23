@@ -33,6 +33,18 @@ import TracklessGatePage from './components/TracklessGatePage';
 import RapidAirlockPage from './components/RapidAirlockPage';
 import LogisticsBridgePage from './components/LogisticsBridgePage';
 import HeavySecurityPage from './components/HeavySecurityPage';
+import ServiceDetailPage from './components/ServiceDetailPage';
+import { FIRE_SAFETY_PAGES } from './data/fireSafetyPagesData';
+
+// Slug list for Fire Protection & Life Safety detail pages
+const FIRE_SAFETY_SLUGS = [
+  'addressable-fire-alarms',
+  'hydrant-sprinkler-arrays',
+  'fire-rated-doors-shutters',
+  'public-address-system',
+  'gas-leak-detection',
+  'emergency-auto-trip'
+];
 
 // Complete static seed data fallback for resilient offline loading
 import { productsData } from './data/productsData';
@@ -54,6 +66,12 @@ const parseUrlRoute = () => {
     if (rawSlug === 'rapid-airlock' || rawSlug === 'pvc-rapid-roll-up-doors' || rawSlug === 'high-speed-roll-up-doors') return { page: 'rapid-airlock', param: null };
     if (rawSlug === 'logistics-bridge' || rawSlug === 'dock-levellers-dock-shelters') return { page: 'logistics-bridge', param: null };
     if (rawSlug === 'heavy-security' || rawSlug === 'motorized-rolling-shutters' || rawSlug === 'motorized-industrial-rolling-shutters') return { page: 'heavy-security', param: null };
+    if (rawSlug === 'addressable-fire-alarms' || rawSlug === 'fire-alarm-system' || rawSlug === 'fire-alarm') return { page: 'addressable-fire-alarms', param: null };
+    if (rawSlug === 'hydrant-sprinkler-arrays' || rawSlug === 'hydrant-sprinkler-system' || rawSlug === 'fire-hydrant-sprinklers' || rawSlug === 'fire-hydrant-sprinkler-systems') return { page: 'hydrant-sprinkler-arrays', param: null };
+    if (rawSlug === 'fire-rated-doors-shutters' || rawSlug === 'fire-doors-shutters' || rawSlug === 'fire-rated-doors') return { page: 'fire-rated-doors-shutters', param: null };
+    if (rawSlug === 'public-address-system' || rawSlug === 'public-address' || rawSlug === 'pa-voice-evacuation') return { page: 'public-address-system', param: null };
+    if (rawSlug === 'gas-leak-detection' || rawSlug === 'gas-leak-detector' || rawSlug === 'gas-detection' || rawSlug === 'gas-detection-systems') return { page: 'gas-leak-detection', param: null };
+    if (rawSlug === 'emergency-auto-trip' || rawSlug === 'emergency-trip-system' || rawSlug === 'auto-trip-integration') return { page: 'emergency-auto-trip', param: null };
     return { page: 'product', param: rawSlug };
   }
 
@@ -124,6 +142,26 @@ const parseUrlRoute = () => {
   }
   if (path === '/heavy-security' || path === '/heavy-security/' || path === '/motorized-rolling-shutters' || path === '/motorized-industrial-rolling-shutters' || path === '/services/heavy-security' || hash === '#/heavy-security') {
     return { page: 'heavy-security', param: null };
+  }
+
+  // Check Fire Protection & Life Safety detail pages
+  if (path === '/addressable-fire-alarms' || path === '/addressable-fire-alarms/' || path === '/services/addressable-fire-alarms' || path === '/fire-alarm-system' || hash === '#/addressable-fire-alarms') {
+    return { page: 'addressable-fire-alarms', param: null };
+  }
+  if (path === '/hydrant-sprinkler-arrays' || path === '/hydrant-sprinkler-arrays/' || path === '/services/hydrant-sprinkler-arrays' || path === '/fire-hydrant-sprinklers' || path === '/fire-hydrant-sprinkler-systems' || hash === '#/hydrant-sprinkler-arrays') {
+    return { page: 'hydrant-sprinkler-arrays', param: null };
+  }
+  if (path === '/fire-rated-doors-shutters' || path === '/fire-rated-doors-shutters/' || path === '/services/fire-rated-doors-shutters' || path === '/fire-rated-doors' || hash === '#/fire-rated-doors-shutters') {
+    return { page: 'fire-rated-doors-shutters', param: null };
+  }
+  if (path === '/public-address-system' || path === '/public-address-system/' || path === '/services/public-address-system' || path === '/public-address' || hash === '#/public-address-system') {
+    return { page: 'public-address-system', param: null };
+  }
+  if (path === '/gas-leak-detection' || path === '/gas-leak-detection/' || path === '/services/gas-leak-detection' || path === '/gas-detection' || path === '/gas-detection-systems' || hash === '#/gas-leak-detection') {
+    return { page: 'gas-leak-detection', param: null };
+  }
+  if (path === '/emergency-auto-trip' || path === '/emergency-auto-trip/' || path === '/services/emergency-auto-trip' || path === '/auto-trip-integration' || hash === '#/emergency-auto-trip') {
+    return { page: 'emergency-auto-trip', param: null };
   }
 
   return { page: 'home', param: null };
@@ -360,7 +398,7 @@ export default function App() {
       targetParam = 'all';
     } else if (page === 'touchless-entry') {
       targetUrl = '/touchless-entry';
-    } else if (['perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security'].includes(page)) {
+    } else if (['perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security', ...FIRE_SAFETY_SLUGS].includes(page)) {
       targetUrl = `/${page}`;
     } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
       targetUrl = `/${page}`;
@@ -504,9 +542,19 @@ export default function App() {
           />
         )}
 
+        {/* ROUTE: Dynamic Fire Protection & Life Safety Detail Pages */}
+        {(FIRE_SAFETY_SLUGS.includes(routeState.page) || (routeState.page === 'product' && FIRE_SAFETY_SLUGS.includes(routeState.param))) && (
+          <ServiceDetailPage
+            slug={routeState.page === 'product' ? routeState.param : routeState.page}
+            pagesData={FIRE_SAFETY_PAGES}
+            onNavigate={navigateTo}
+            onQuoteSubmit={handleInquirySubmitted}
+          />
+        )}
+
         {/* ROUTE 1: Product Detail Page (/product/:slug) */}
         {routeState.page === 'product' && 
-          !['touchless-entry', 'touchless-entry-solutions', 'perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security', 'automatic-sliding-swing-gates', 'telescopic-cantilever-gates', 'pvc-rapid-roll-up-doors', 'high-speed-roll-up-doors', 'dock-levellers-dock-shelters', 'motorized-rolling-shutters', 'motorized-industrial-rolling-shutters'].includes(routeState.param) && (
+          !['touchless-entry', 'touchless-entry-solutions', 'perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security', 'automatic-sliding-swing-gates', 'telescopic-cantilever-gates', 'pvc-rapid-roll-up-doors', 'high-speed-roll-up-doors', 'dock-levellers-dock-shelters', 'motorized-rolling-shutters', 'motorized-industrial-rolling-shutters', ...FIRE_SAFETY_SLUGS].includes(routeState.param) && (
           (routeState.param === 'door-interlock-system' || routeState.param === 'door-interlock-systems') ? (
             <PharmaCleanroomDetailView
               product={activeProduct || { slug: 'door-interlock-system' }}

@@ -1,9 +1,9 @@
 import React from 'react';
-import IndustrialAccessProductPage from './IndustrialAccessProductPage';
+import ServiceDetailPage from './ServiceDetailPage';
 
 export default function RapidAirlockPage({ onNavigate, onQuoteSubmit }) {
   return (
-    <IndustrialAccessProductPage
+    <ServiceDetailPage
       slug="rapid-airlock"
       onNavigate={onNavigate}
       onQuoteSubmit={onQuoteSubmit}

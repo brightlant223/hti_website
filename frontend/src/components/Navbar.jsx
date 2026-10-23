@@ -363,9 +363,15 @@ export default function Navbar({
       }
       return;
     }
-    if (slug === 'heavy-security' || slug === 'motorized-rolling-shutters' || slug === 'motorized-industrial-rolling-shutters') {
+    if (['heavy-security', 'motorized-rolling-shutters', 'motorized-industrial-rolling-shutters'].includes(slug)) {
       if (onNavigate) {
         onNavigate('heavy-security');
+      }
+      return;
+    }
+    if (['addressable-fire-alarms', 'hydrant-sprinkler-arrays', 'fire-rated-doors-shutters', 'public-address-system', 'gas-leak-detection', 'emergency-auto-trip'].includes(slug)) {
+      if (onNavigate) {
+        onNavigate(slug);
       }
       return;
     }
@@ -580,14 +586,14 @@ export default function Navbar({
           description: 'Multi-zone detection panels, optical smoke sensors & heat probes.',
           image: '/services/service-fire-alarm.jpg',
           icon: Flame,
-          slug: 'fire-alarm-system'
+          slug: 'addressable-fire-alarms'
         },
         {
           title: 'Hydrant & Sprinkler Arrays',
           description: 'Water deluge networks, certified landing valves & pump skids.',
           image: '/case-studies/case-fire-hydrant.jpg',
           icon: Activity,
-          slug: 'fire-hydrant-sprinkler-systems'
+          slug: 'hydrant-sprinkler-arrays'
         },
         {
           title: 'Fire Rated Doors & Shutters',
@@ -608,14 +614,14 @@ export default function Navbar({
           description: 'Toxic, combustible, VOC & ammonia gas monitoring sensors.',
           image: '/case-studies/case-ss304-mist.jpg',
           icon: ShieldCheck,
-          slug: 'gas-detection-systems'
+          slug: 'gas-leak-detection'
         },
         {
           title: 'Emergency Auto Trip',
           description: 'Relay integration with access doors, AHU shut-off & fire pumps.',
           image: '/services/service-emergency-trip.jpg',
           icon: Settings,
-          slug: 'door-interlock-systems'
+          slug: 'emergency-auto-trip'
         }
       ]
     },

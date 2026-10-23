@@ -1,9 +1,9 @@
 import React from 'react';
-import IndustrialAccessProductPage from './IndustrialAccessProductPage';
+import ServiceDetailPage from './ServiceDetailPage';
 
 export default function TracklessGatePage({ onNavigate, onQuoteSubmit }) {
   return (
-    <IndustrialAccessProductPage
+    <ServiceDetailPage
       slug="trackless-gate"
       onNavigate={onNavigate}
       onQuoteSubmit={onQuoteSubmit}
