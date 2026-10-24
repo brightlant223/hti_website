@@ -4,7 +4,7 @@ import {
   X, MapPin, Clock, Building2, CheckCircle2, Mail, Send, TrendingUp,
   Sparkles, Phone, FileText, UploadCloud, AlertCircle, Loader2,
   Plus, Minus, Heart, Zap, Globe, Target, ChevronLeft, ChevronRight, Check,
-  Truck
+  Truck, Home
 } from 'lucide-react';
 import './Careers.css';
 import CareersHero from './CareersHero';
@@ -712,16 +712,43 @@ export default function CareersPage({ onNavigate }) {
   return (
     <div className="careers-dedicated-page">
 
-      {/* Breadcrumb */}
-      <div className="detail-breadcrumb-bar">
-        <div className="container">
-          <div className="breadcrumb-nav">
-            <button className="breadcrumb-link" onClick={() => onNavigate && onNavigate('home')}>Home</button>
-            <span className="breadcrumb-separator">/</span>
-            <span className="breadcrumb-current">Careers</span>
-          </div>
-          <button className="back-btn" onClick={() => onNavigate && onNavigate('home')} aria-label="Back to Home">
-            <ArrowLeft size={15} /><span>Back to Home</span>
+      {/* ── BREADCRUMB BAR ───────────────────────────── */}
+      <div className="careers-breadcrumb-bar">
+        <div className="careers-breadcrumb-container">
+          <nav className="careers-breadcrumb-nav" aria-label="Breadcrumb">
+            <button
+              type="button"
+              className="careers-breadcrumb-link"
+              onClick={() => onNavigate && onNavigate('home')}
+            >
+              <Home size={14} className="careers-breadcrumb-home-icon" />
+              <span>Home</span>
+            </button>
+
+            <ChevronRight size={13} className="careers-breadcrumb-divider" aria-hidden="true" />
+
+            <div className="careers-breadcrumb-active-badge" aria-current="page">
+              <Briefcase size={13} className="careers-badge-icon" />
+              <span>Careers</span>
+            </div>
+
+            <div className="careers-hiring-badge" aria-label="Status: We're Hiring">
+              <span className="careers-hiring-pulse" aria-hidden="true">
+                <span className="careers-pulse-dot" />
+                <span className="careers-pulse-ring" />
+              </span>
+              <span>We're Hiring · 6 Roles</span>
+            </div>
+          </nav>
+
+          <button
+            type="button"
+            className="careers-back-btn"
+            onClick={() => onNavigate && onNavigate('home')}
+            aria-label="Back to Home"
+          >
+            <ArrowLeft size={14} className="careers-back-arrow" />
+            <span>Back to Home</span>
           </button>
         </div>
       </div>

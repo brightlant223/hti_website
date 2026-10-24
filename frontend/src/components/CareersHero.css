@@ -31,7 +31,8 @@ html.dark .hero-careers-section {
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 10px;
+  padding: 0 24px;
+  box-sizing: border-box;
 }
 
 /* Mouse-follow soft radial glow (Effect 5) */
@@ -1245,6 +1246,7 @@ html.dark .hero-axis-dash {
   .hero-container {
     grid-template-columns: 1fr;
     gap: 40px;
+    padding: 0 20px;
   }
 
   .hero-content {
@@ -1283,6 +1285,10 @@ html.dark .hero-axis-dash {
     padding: 28px 0 36px;
   }
 
+  .hero-container {
+    padding: 0 16px;
+  }
+
   .hero-eyebrow-badge {
     font-size: 0.68rem;
     padding: 5px 11px;
@@ -1313,13 +1319,17 @@ html.dark .hero-axis-dash {
   }
 
   .hero-chips-wrap {
-
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px;
+    width: 100%;
   }
 
   .hero-chip {
+    flex: 1 1 auto;
     font-size: 0.74rem;
-    padding: 6px 11px;
+    padding: 7px 11px;
+    justify-content: center;
   }
 
   .hero-float-team {
@@ -1333,6 +1343,9 @@ html.dark .hero-axis-dash {
 
   .hero-float-metric {
     padding: 10px 14px;
+    max-width: calc(100% - 24px);
+    right: 10px;
+    bottom: 10px;
   }
 
   .hero-metric-num {

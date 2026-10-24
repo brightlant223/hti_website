@@ -21,6 +21,269 @@
 }
 
 /* ==========================================================================
+   DEDICATED CAREERS BREADCRUMB BAR (Clean Enterprise Design)
+   ========================================================================== */
+.careers-breadcrumb-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 10px 0;
+  position: relative;
+  z-index: 30;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+[data-theme="dark"] .careers-breadcrumb-bar {
+  background: #090e1a;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.careers-breadcrumb-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.careers-breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.careers-breadcrumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px 8px;
+  border-radius: 6px;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.careers-breadcrumb-link:hover {
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.06);
+}
+
+[data-theme="dark"] .careers-breadcrumb-link {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .careers-breadcrumb-link:hover {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.careers-breadcrumb-home-icon {
+  color: #94a3b8;
+  transition: color 0.18s ease;
+}
+
+.careers-breadcrumb-link:hover .careers-breadcrumb-home-icon {
+  color: #0284c7;
+}
+
+[data-theme="dark"] .careers-breadcrumb-link:hover .careers-breadcrumb-home-icon {
+  color: #38bdf8;
+}
+
+.careers-breadcrumb-divider {
+  color: #cbd5e1;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .careers-breadcrumb-divider {
+  color: #334155;
+}
+
+.careers-breadcrumb-active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f9ff;
+  border: 1px solid #bfdbfe;
+  color: #0284c7;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: 9999px;
+  letter-spacing: 0.01em;
+}
+
+[data-theme="dark"] .careers-breadcrumb-active-badge {
+  background: rgba(2, 132, 199, 0.15);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+}
+
+.careers-badge-icon {
+  color: #0284c7;
+}
+
+[data-theme="dark"] .careers-badge-icon {
+  color: #38bdf8;
+}
+
+/* "We're Hiring" animated pill */
+.careers-hiring-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 3.5px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .careers-hiring-badge {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.28);
+  color: #34d399;
+}
+
+.careers-hiring-pulse {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.careers-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.careers-pulse-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: #10b981;
+  opacity: 0.5;
+  animation: careersHiringPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes careersHiringPing {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Back to Home Button */
+.careers-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 650;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.careers-back-btn:hover {
+  background: #e0f2fe;
+  border-color: #0284c7;
+  color: #0284c7;
+  transform: translateX(-2px);
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+}
+
+[data-theme="dark"] .careers-back-btn {
+  background: #111a2e;
+  border-color: #1e293b;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .careers-back-btn:hover {
+  background: rgba(2, 132, 199, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.careers-back-arrow {
+  transition: transform 0.2s ease;
+}
+
+.careers-back-btn:hover .careers-back-arrow {
+  transform: translateX(-2px);
+}
+
+/* Responsive adjustments for Breadcrumb Bar */
+@media (max-width: 768px) {
+  .careers-breadcrumb-container {
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .careers-breadcrumb-link {
+    font-size: 0.80rem;
+    padding: 4px 6px;
+  }
+
+  .careers-breadcrumb-active-badge {
+    font-size: 0.78rem;
+    padding: 3px 9px;
+  }
+
+  .careers-hiring-badge {
+    display: none;
+  }
+
+  .careers-back-btn {
+    font-size: 0.78rem;
+    padding: 5px 11px;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .careers-breadcrumb-bar {
+    padding: 8px 0;
+  }
+
+  .careers-breadcrumb-container {
+    padding: 0 12px;
+  }
+
+  .careers-back-btn span {
+    display: none;
+  }
+
+  .careers-back-btn {
+    padding: 6px 9px;
+    border-radius: 8px;
+  }
+}
+
+/* ==========================================================================
    SECTION 1: CAREERS HERO SECTION (Redesigned & Precision Engineered)
    ========================================================================== */
 .careers-hero-section {
@@ -1356,6 +1619,7 @@
 
 /* Horizontal Job Opportunity Cards - Responsive dimensions for all viewport heights */
 .why-benefit-card {
+  box-sizing: border-box;
   flex: 0 0 clamp(285px, 22vw, 340px);
   width: clamp(285px, 22vw, 340px);
   height: clamp(300px, 48vh, 380px);
@@ -4366,12 +4630,13 @@
   }
 
   .why-benefit-card {
+    box-sizing: border-box;
     flex: 0 0 85vw;
     width: 85vw;
-    max-width: 320px;
+    max-width: min(320px, calc(100vw - 32px));
     height: auto;
-    min-height: 310px;
-    padding: 26px 22px;
+    min-height: 300px;
+    padding: 24px 20px;
     border-radius: 20px;
   }
 
