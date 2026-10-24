@@ -26,5 +26,4 @@ echo   - Backend API Docs:    http://127.0.0.1:8000/docs
 echo   - SQLite Database:     backend/hti.db
 echo ========================================================
 echo.
-pause
-
+pause 

@@ -2696,9 +2696,12 @@
 }
 
 @keyframes scrollBounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(4px);
   }
@@ -3067,4 +3070,4 @@
   .contact-info-panel {
     padding: 28px 20px;
   }
-}
+}

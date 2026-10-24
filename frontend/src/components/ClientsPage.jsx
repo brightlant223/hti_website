@@ -292,7 +292,7 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
           <div className="trust-cards-grid">
             <div className="trust-card">
               <div className="trust-icon-box trust-icon-blue">
-                <Award size={22} />
+                <Award size={20} />
               </div>
               <h3>USFDA 21 CFR Part 11</h3>
               <p>Airlock interlocking controllers engineered with electronic audit trail compliance for sterile pharma cleanrooms.</p>
@@ -300,7 +300,7 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
 
             <div className="trust-card">
               <div className="trust-icon-box trust-icon-cyan">
-                <Layers size={22} />
+                <Layers size={20} />
               </div>
               <h3>Turnkey Responsibility</h3>
               <p>Complete single-source execution from Mumbai site survey and GA fabrication to electrical cabling and statutory sign-offs.</p>
@@ -308,18 +308,10 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
 
             <div className="trust-card">
               <div className="trust-icon-box trust-icon-indigo">
-                <Clock size={22} />
+                <Clock size={20} />
               </div>
               <h3>24/7 SLA Continuity</h3>
               <p>Dedicated resident engineers and guaranteed spare parts availability ensure continuous zero-downtime operation.</p>
-            </div>
-
-            <div className="trust-card">
-              <div className="trust-icon-box trust-icon-emerald">
-                <ShieldCheck size={22} />
-              </div>
-              <h3>Statutory Fire & Safety</h3>
-              <p>Compliant with NBC 2016 Part 4, PESO/ATEX flameproof directives, and IS 3614 certified fire barrier ratings.</p>
             </div>
           </div>
         </div>
