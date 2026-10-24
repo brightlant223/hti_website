@@ -51,63 +51,113 @@ const ALL_SERVICE_SLUGS = [
   ...FIRE_SAFETY_SLUGS,
   'fire-alarm-system',
   'fire-alarm-systems',
+  'fire-alarm',
+  'addressable-fire-alarm-system',
   'fire-hydrant-sprinkler-systems',
   'fire-hydrant-sprinklers',
+  'hydrant-sprinkler-systems',
+  'fire-rated-doors-shutters',
+  'fire-rated-steel-doors',
+  'fire-doors-shutters',
+  'fire-rated-doors',
   'public-address-systems',
+  'public-address',
+  'pa-voice-evacuation',
   'gas-detection-systems',
+  'gas-suppression-systems',
+  'clean-agent-gas-suppression',
   'auto-trip-integration',
+  'emergency-trip-system',
 
   // Cleanroom Interlocks & Pass Boxes
   'door-interlock-system',
   'door-interlock-systems',
+  'door-interlock-2-8-door',
+  'cleanroom-door-interlocks',
   'pass-box-systems',
   'pass-box-system',
   'digital-clocks',
   'digital-gps-clocks',
+  'digital-clock',
   'chiller-cleanroom-doors',
   'chiller-clean-room-doors',
   'acoustic-sound-doors',
+  'sound-proof-doors',
   'safety-override-buzzers',
 
   // Perimeter Defense & Traffic Control
   'boom-barriers',
+  'boom-barrier',
+  'automatic-boom-barriers',
+  'electro-hydraulic-boom-barriers',
   'turnstiles-flap-barriers-speed-gates',
+  'optical-turnstiles',
+  'optical-speed-turnstiles',
+  'speed-gates',
+  'flap-barriers',
+  'turnstiles',
+  'turnstiles-flap-barriers',
   'crash-bollards-tyre-killers',
+  'crash-bollards',
+  'tyre-killers-bollards',
+  'tyre-killers',
   'bollards-tyre-killers-car-lifts',
   'bollards-tyre-killers',
   'car-lift-systems',
+  'car-lift',
+  'car-lifts',
+  'hydraulic-car-lifts',
   'parking-management-systems',
   'parking-management-system',
+  'parking-management',
   'parking-intrusion-alarms',
   'visitor-management-system',
   'visitor-management-systems',
+  'visitor-management',
 
   // CCTV Surveillance & Biometrics
   'cctv-surveillance-systems',
+  'cctv-surveillance-system',
   'cctv-surveillance',
+  '4k-ai-cctv-systems',
   'biometric-access-control',
   'biometric-access',
+  'biometric-access-attendance',
+  'biometric-attendance-access-terminals',
   'video-door-phones',
   'video-door-phone',
   'central-vms-command',
   'central-vms-command-systems',
+  'central-vms',
   'thermal-perimeter-beams',
+  'thermal-perimeter-beam',
   'intrusion-detection-alarms',
+  'intrusion-detection',
+  'wireless-intrusion-detection',
 
   // Server Room & Critical Monitoring
   'server-room-environment-monitoring',
   'server-room-monitoring',
+  'server-room-ems',
+  'server-room-telemetry',
+  'server-room-alert-monitor',
   'water-leak-detection-systems',
   'water-leak-detection',
+  'water-leak-detector',
+  'underfloor-water-leak-detection',
   'hazardous-gas-detection-arrays',
-  'gas-leak-detector',
   'hazardous-gas-detection',
+  'gas-leak-detector',
+  'battery-room-gas-detector',
   'alarm-annunciators',
+  'alarm-annunciators-panel',
   'alarm-annunciator-panels',
+  'microprocessor-annunciators',
   'differential-pressure-monitors',
   'differential-pressure-monitor',
   'rodent-repellent-systems',
-  'rodent-repellent'
+  'rodent-repellent',
+  'ultrasonic-rodent-repellent'
 ];
 
 // Complete static seed data fallback for resilient offline loading
@@ -130,6 +180,9 @@ const parseUrlRoute = () => {
       hash.replace('#/products/', '')
     ).replace(/\/$/, '');
 
+    if (ALL_SERVICE_SLUGS.includes(rawSlug)) {
+      return { page: rawSlug, param: null };
+    }
     return { page: 'product', param: rawSlug };
   }
 
@@ -467,9 +520,15 @@ export default function App() {
     let targetParam = null;
 
     if (page === 'product') {
-      targetUrl = `/product/${paramOrSection}`;
-      targetPage = 'product';
-      targetParam = paramOrSection;
+      if (paramOrSection && ALL_SERVICE_SLUGS.includes(paramOrSection)) {
+        targetUrl = `/${paramOrSection}`;
+        targetPage = paramOrSection;
+        targetParam = null;
+      } else {
+        targetUrl = `/product/${paramOrSection}`;
+        targetPage = 'product';
+        targetParam = paramOrSection;
+      }
     } else if (page === 'catalog') {
       targetUrl = '/catalog';
       targetParam = paramOrSection;
@@ -580,7 +639,7 @@ export default function App() {
 
       <main>
         {/* ROUTE 1: Dedicated Product Detail Page (/product/:slug) */}
-        {routeState.page === 'product' && (
+        {routeState.page === 'product' && !ALL_SERVICE_SLUGS.includes(routeState.param) && (
           <ProductDetailPage
             product={activeProduct}
             onNavigate={navigateTo}
@@ -633,9 +692,9 @@ export default function App() {
         )}
 
         {/* ROUTE: Dynamic Service Detail Pages across all categories */}
-        {ALL_SERVICE_SLUGS.includes(routeState.page) && (
+        {(ALL_SERVICE_SLUGS.includes(routeState.page) || (routeState.page === 'product' && ALL_SERVICE_SLUGS.includes(routeState.param))) && (
           <ServiceDetailPage
-            slug={routeState.page}
+            slug={routeState.page === 'product' ? routeState.param : routeState.page}
             onNavigate={navigateTo}
             onQuoteSubmit={handleInquirySubmitted}
           />

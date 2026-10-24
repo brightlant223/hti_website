@@ -66,34 +66,131 @@ const ALL_PAGES = {
   ...SERVER_MONITORING_PAGES,
 
   // Universal Cross-Compatibility Aliases
-  'automatic-sliding-swing-doors': INDUSTRIAL_ACCESS_PAGES['sliding-swing-doors'],
-  'automatic-sliding-swing-gates': INDUSTRIAL_ACCESS_PAGES['sliding-swing-gates'],
+  // Category 1: Industrial Access
+  'automatic-sliding-swing-doors': INDUSTRIAL_ACCESS_PAGES['perimeter-gate'],
+  'automatic-sliding-swing-gates': INDUSTRIAL_ACCESS_PAGES['perimeter-gate'],
+  'touchless-entry-solutions': INDUSTRIAL_ACCESS_PAGES['perimeter-gate'],
+  'touchless-entry': INDUSTRIAL_ACCESS_PAGES['perimeter-gate'],
+  'telescopic-cantilever-gates': INDUSTRIAL_ACCESS_PAGES['trackless-gate'],
+  'high-speed-roll-up-doors': INDUSTRIAL_ACCESS_PAGES['rapid-airlock'],
+  'pvc-rapid-roll-up-doors': INDUSTRIAL_ACCESS_PAGES['rapid-airlock'],
+  'dock-levellers-dock-shelters': INDUSTRIAL_ACCESS_PAGES['logistics-bridge'],
+  'dock-levellers': INDUSTRIAL_ACCESS_PAGES['logistics-bridge'],
+  'motorized-rolling-shutters': INDUSTRIAL_ACCESS_PAGES['heavy-security'],
+  'motorized-industrial-rolling-shutters': INDUSTRIAL_ACCESS_PAGES['heavy-security'],
+
+  // Category 2: Cleanroom Interlocks
+  'door-interlock-system': CLEANROOM_PAGES['door-interlock-system'],
   'door-interlock-systems': CLEANROOM_PAGES['door-interlock-system'],
+  'door-interlock-2-8-door': CLEANROOM_PAGES['door-interlock-system'],
+  'cleanroom-door-interlocks': CLEANROOM_PAGES['door-interlock-system'],
+  'pass-box-systems': CLEANROOM_PAGES['pass-box-systems'],
   'pass-box-system': CLEANROOM_PAGES['pass-box-systems'],
+  'digital-clocks': CLEANROOM_PAGES['digital-clocks'],
   'digital-gps-clocks': CLEANROOM_PAGES['digital-clocks'],
+  'digital-clock': CLEANROOM_PAGES['digital-clocks'],
+  'chiller-cleanroom-doors': CLEANROOM_PAGES['chiller-cleanroom-doors'],
   'chiller-clean-room-doors': CLEANROOM_PAGES['chiller-cleanroom-doors'],
+  'acoustic-sound-doors': CLEANROOM_PAGES['acoustic-sound-doors'],
+  'sound-proof-doors': CLEANROOM_PAGES['acoustic-sound-doors'],
+  'safety-override-buzzers': CLEANROOM_PAGES['safety-override-buzzers'],
+
+  // Category 3: Perimeter Defense & Traffic Control
+  'boom-barriers': PERIMETER_DEFENSE_PAGES['boom-barriers'],
+  'boom-barrier': PERIMETER_DEFENSE_PAGES['boom-barriers'],
+  'automatic-boom-barriers': PERIMETER_DEFENSE_PAGES['boom-barriers'],
+  'electro-hydraulic-boom-barriers': PERIMETER_DEFENSE_PAGES['boom-barriers'],
+  'turnstiles-flap-barriers-speed-gates': PERIMETER_DEFENSE_PAGES['turnstiles-flap-barriers-speed-gates'],
+  'optical-turnstiles': PERIMETER_DEFENSE_PAGES['turnstiles-flap-barriers-speed-gates'],
+  'optical-speed-turnstiles': PERIMETER_DEFENSE_PAGES['turnstiles-flap-barriers-speed-gates'],
+  'speed-gates': PERIMETER_DEFENSE_PAGES['turnstiles-flap-barriers-speed-gates'],
+  'flap-barriers': PERIMETER_DEFENSE_PAGES['turnstiles-flap-barriers-speed-gates'],
+  'turnstiles-flap-barriers': PERIMETER_DEFENSE_PAGES['turnstiles-flap-barriers-speed-gates'],
+  'crash-bollards-tyre-killers': PERIMETER_DEFENSE_PAGES['crash-bollards-tyre-killers'],
+  'crash-bollards': PERIMETER_DEFENSE_PAGES['crash-bollards-tyre-killers'],
+  'tyre-killers-bollards': PERIMETER_DEFENSE_PAGES['crash-bollards-tyre-killers'],
+  'tyre-killers': PERIMETER_DEFENSE_PAGES['crash-bollards-tyre-killers'],
   'bollards-tyre-killers-car-lifts': PERIMETER_DEFENSE_PAGES['crash-bollards-tyre-killers'],
   'bollards-tyre-killers': PERIMETER_DEFENSE_PAGES['crash-bollards-tyre-killers'],
-  'parking-intrusion-alarms': PERIMETER_DEFENSE_PAGES['parking-management-systems'],
+  'car-lift-systems': PERIMETER_DEFENSE_PAGES['car-lift-systems'],
+  'car-lift': PERIMETER_DEFENSE_PAGES['car-lift-systems'],
+  'car-lifts': PERIMETER_DEFENSE_PAGES['car-lift-systems'],
+  'hydraulic-car-lifts': PERIMETER_DEFENSE_PAGES['car-lift-systems'],
+  'parking-management-systems': PERIMETER_DEFENSE_PAGES['parking-management-systems'],
   'parking-management-system': PERIMETER_DEFENSE_PAGES['parking-management-systems'],
+  'parking-management': PERIMETER_DEFENSE_PAGES['parking-management-systems'],
+  'parking-intrusion-alarms': PERIMETER_DEFENSE_PAGES['parking-management-systems'],
+  'visitor-management-system': PERIMETER_DEFENSE_PAGES['visitor-management-system'],
   'visitor-management-systems': PERIMETER_DEFENSE_PAGES['visitor-management-system'],
+  'visitor-management': PERIMETER_DEFENSE_PAGES['visitor-management-system'],
+
+  // Category 4: Fire Protection & Life Safety
+  'addressable-fire-alarms': FIRE_SAFETY_PAGES['addressable-fire-alarms'],
   'fire-alarm-system': FIRE_SAFETY_PAGES['addressable-fire-alarms'],
   'fire-alarm-systems': FIRE_SAFETY_PAGES['addressable-fire-alarms'],
+  'fire-alarm': FIRE_SAFETY_PAGES['addressable-fire-alarms'],
+  'addressable-fire-alarm-system': FIRE_SAFETY_PAGES['addressable-fire-alarms'],
+  'hydrant-sprinkler-arrays': FIRE_SAFETY_PAGES['hydrant-sprinkler-arrays'],
   'fire-hydrant-sprinkler-systems': FIRE_SAFETY_PAGES['hydrant-sprinkler-arrays'],
+  'fire-hydrant-sprinklers': FIRE_SAFETY_PAGES['hydrant-sprinkler-arrays'],
   'hydrant-sprinkler-systems': FIRE_SAFETY_PAGES['hydrant-sprinkler-arrays'],
+  'fire-rated-doors-shutters': FIRE_SAFETY_PAGES['fire-rated-doors-shutters'],
+  'fire-rated-steel-doors': FIRE_SAFETY_PAGES['fire-rated-doors-shutters'],
+  'fire-doors-shutters': FIRE_SAFETY_PAGES['fire-rated-doors-shutters'],
+  'fire-rated-doors': FIRE_SAFETY_PAGES['fire-rated-doors-shutters'],
+  'public-address-system': FIRE_SAFETY_PAGES['public-address-system'],
   'public-address-systems': FIRE_SAFETY_PAGES['public-address-system'],
+  'public-address': FIRE_SAFETY_PAGES['public-address-system'],
+  'gas-leak-detection': FIRE_SAFETY_PAGES['gas-leak-detection'],
   'gas-detection-systems': FIRE_SAFETY_PAGES['gas-leak-detection'],
+  'gas-suppression-systems': FIRE_SAFETY_PAGES['gas-leak-detection'],
+  'clean-agent-gas-suppression': FIRE_SAFETY_PAGES['gas-leak-detection'],
+  'emergency-auto-trip': FIRE_SAFETY_PAGES['emergency-auto-trip'],
+  'auto-trip-integration': FIRE_SAFETY_PAGES['emergency-auto-trip'],
+  'emergency-trip-system': FIRE_SAFETY_PAGES['emergency-auto-trip'],
+
+  // Category 5: CCTV Surveillance & Biometrics
+  'cctv-surveillance-systems': CCTV_BIOMETRICS_PAGES['cctv-surveillance-systems'],
+  'cctv-surveillance-system': CCTV_BIOMETRICS_PAGES['cctv-surveillance-systems'],
   'cctv-surveillance': CCTV_BIOMETRICS_PAGES['cctv-surveillance-systems'],
+  '4k-ai-cctv-systems': CCTV_BIOMETRICS_PAGES['cctv-surveillance-systems'],
+  'biometric-access-control': CCTV_BIOMETRICS_PAGES['biometric-access-control'],
   'biometric-access': CCTV_BIOMETRICS_PAGES['biometric-access-control'],
+  'biometric-access-attendance': CCTV_BIOMETRICS_PAGES['biometric-access-control'],
+  'biometric-attendance-access-terminals': CCTV_BIOMETRICS_PAGES['biometric-access-control'],
+  'video-door-phones': CCTV_BIOMETRICS_PAGES['video-door-phones'],
   'video-door-phone': CCTV_BIOMETRICS_PAGES['video-door-phones'],
+  'central-vms-command': CCTV_BIOMETRICS_PAGES['central-vms-command'],
   'central-vms-command-systems': CCTV_BIOMETRICS_PAGES['central-vms-command'],
+  'central-vms': CCTV_BIOMETRICS_PAGES['central-vms-command'],
+  'thermal-perimeter-beams': CCTV_BIOMETRICS_PAGES['thermal-perimeter-beams'],
+  'thermal-perimeter-beam': CCTV_BIOMETRICS_PAGES['thermal-perimeter-beams'],
+  'intrusion-detection-alarms': CCTV_BIOMETRICS_PAGES['intrusion-detection-alarms'],
+  'intrusion-detection': CCTV_BIOMETRICS_PAGES['intrusion-detection-alarms'],
+  'wireless-intrusion-detection': CCTV_BIOMETRICS_PAGES['intrusion-detection-alarms'],
+
+  // Category 6: Server Room & Critical Monitoring
+  'server-room-environment-monitoring': SERVER_MONITORING_PAGES['server-room-environment-monitoring'],
   'server-room-monitoring': SERVER_MONITORING_PAGES['server-room-environment-monitoring'],
+  'server-room-ems': SERVER_MONITORING_PAGES['server-room-environment-monitoring'],
+  'server-room-telemetry': SERVER_MONITORING_PAGES['server-room-environment-monitoring'],
+  'server-room-alert-monitor': SERVER_MONITORING_PAGES['server-room-environment-monitoring'],
+  'water-leak-detection-systems': SERVER_MONITORING_PAGES['water-leak-detection-systems'],
   'water-leak-detection': SERVER_MONITORING_PAGES['water-leak-detection-systems'],
-  'gas-leak-detector': SERVER_MONITORING_PAGES['hazardous-gas-detection-arrays'],
+  'underfloor-water-leak-detection': SERVER_MONITORING_PAGES['water-leak-detection-systems'],
+  'hazardous-gas-detection-arrays': SERVER_MONITORING_PAGES['hazardous-gas-detection-arrays'],
   'hazardous-gas-detection': SERVER_MONITORING_PAGES['hazardous-gas-detection-arrays'],
+  'gas-leak-detector': SERVER_MONITORING_PAGES['hazardous-gas-detection-arrays'],
+  'battery-room-gas-detector': SERVER_MONITORING_PAGES['hazardous-gas-detection-arrays'],
+  'alarm-annunciators': SERVER_MONITORING_PAGES['alarm-annunciators'],
+  'alarm-annunciators-panel': SERVER_MONITORING_PAGES['alarm-annunciators'],
   'alarm-annunciator-panels': SERVER_MONITORING_PAGES['alarm-annunciators'],
+  'microprocessor-annunciators': SERVER_MONITORING_PAGES['alarm-annunciators'],
+  'differential-pressure-monitors': SERVER_MONITORING_PAGES['differential-pressure-monitors'],
   'differential-pressure-monitor': SERVER_MONITORING_PAGES['differential-pressure-monitors'],
+  'rodent-repellent-systems': SERVER_MONITORING_PAGES['rodent-repellent-systems'],
   'rodent-repellent': SERVER_MONITORING_PAGES['rodent-repellent-systems'],
+  'ultrasonic-rodent-repellent': SERVER_MONITORING_PAGES['rodent-repellent-systems'],
 };
 
 // Icon resolver mapping string names to Lucide components
@@ -137,7 +234,8 @@ export default function ServiceDetailPage({
   onNavigate,
   onQuoteSubmit
 }) {
-  const pageData = (pagesData && pagesData[slug]) || ALL_PAGES[slug] || (pagesData && pagesData[Object.keys(pagesData)[0]]) || INDUSTRIAL_ACCESS_PAGES['perimeter-gate'];
+  const cleanSlug = (slug || '').trim().replace(/^\/|\/$/g, '');
+  const pageData = (pagesData && pagesData[cleanSlug]) || ALL_PAGES[cleanSlug] || (pagesData && pagesData[slug]) || ALL_PAGES[slug] || (pagesData && pagesData[Object.keys(pagesData)[0]]) || INDUSTRIAL_ACCESS_PAGES['perimeter-gate'];
 
   // Video player state
   const videoRef = useRef(null);
@@ -307,21 +405,31 @@ export default function ServiceDetailPage({
   };
 
   const openLightbox = (index) => {
-    setLightboxIndex(index);
-    setLightboxImage(pageData.gallery[index]);
+    if (!pageData.gallery || !pageData.gallery.length) return;
+    const safeIdx = Math.max(0, Math.min(index, pageData.gallery.length - 1));
+    setLightboxIndex(safeIdx);
+    setLightboxImage(pageData.gallery[safeIdx]);
   };
 
-  const nextLightbox = () => {
+  const nextLightbox = (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (!pageData.gallery || !pageData.gallery.length) return;
     const nextIdx = (lightboxIndex + 1) % pageData.gallery.length;
     setLightboxIndex(nextIdx);
     setLightboxImage(pageData.gallery[nextIdx]);
   };
 
-  const prevLightbox = () => {
+  const prevLightbox = (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (!pageData.gallery || !pageData.gallery.length) return;
     const prevIdx = (lightboxIndex - 1 + pageData.gallery.length) % pageData.gallery.length;
     setLightboxIndex(prevIdx);
     setLightboxImage(pageData.gallery[prevIdx]);
   };
+
+  const howItWorksSteps = Array.isArray(pageData.howItWorks)
+    ? pageData.howItWorks
+    : (pageData.howItWorks && Array.isArray(pageData.howItWorks.steps) ? pageData.howItWorks.steps : []);
 
   return (
     <div className="touchless-page-root">
@@ -334,7 +442,7 @@ export default function ServiceDetailPage({
         <div className="touchless-container">
           {/* Breadcrumbs */}
           <nav className="touchless-breadcrumbs" aria-label="Breadcrumb">
-            {pageData.breadcrumbs.map((crumb, cIdx) => (
+            {(pageData.breadcrumbs || []).map((crumb, cIdx) => (
               <React.Fragment key={cIdx}>
                 {cIdx > 0 && <span className="breadcrumb-sep">&gt;</span>}
                 {crumb.isCurrent ? (
@@ -373,7 +481,7 @@ export default function ServiceDetailPage({
               </p>
 
               <div className="touchless-hero-metrics-pills">
-                {pageData.metrics.map((metric, mIdx) => {
+                {(pageData.metrics || []).map((metric, mIdx) => {
                   const MetricIcon = resolveIcon(metric.icon, Zap);
                   return (
                     <div key={mIdx} className="metric-pill">
@@ -437,7 +545,7 @@ export default function ServiceDetailPage({
             {/* Right Column: 5 Key Benefits Cards */}
             <div className="touchless-hero-right">
               <div className="touchless-benefits-stack">
-                {pageData.benefits.map((benefit, bIdx) => {
+                {(pageData.benefits || []).map((benefit, bIdx) => {
                   const BenefitIcon = resolveIcon(benefit.icon, ShieldCheck);
                   return (
                     <div key={bIdx} className="benefit-card">
@@ -473,107 +581,109 @@ export default function ServiceDetailPage({
       </section>
 
       {/* 2. OPERATIONAL SHOWCASE (Video Showcase) */}
-      <section className="touchless-showcase-section">
-        <div className="touchless-container">
-          <div className="showcase-content-grid">
-            {/* Left: Custom Video Showcase Player */}
-            <div className="showcase-video-card">
-              <div className="video-player-wrapper">
-                <video
-                  ref={videoRef}
-                  src={pageData.showcase.videoSrc}
-                  poster={pageData.showcase.poster}
-                  className="showcase-video-element"
-                  onTimeUpdate={handleTimeUpdate}
-                  onEnded={() => setIsPlaying(false)}
-                  muted={isMuted}
-                  playsInline
-                />
+      {pageData.showcase && (
+        <section className="touchless-showcase-section">
+          <div className="touchless-container">
+            <div className="showcase-content-grid">
+              {/* Left: Custom Video Showcase Player */}
+              <div className="showcase-video-card">
+                <div className="video-player-wrapper">
+                  <video
+                    ref={videoRef}
+                    src={pageData.showcase.videoSrc}
+                    poster={pageData.showcase.poster}
+                    className="showcase-video-element"
+                    onTimeUpdate={handleTimeUpdate}
+                    onEnded={() => setIsPlaying(false)}
+                    muted={isMuted}
+                    playsInline
+                  />
 
-                {/* Big Center Play Button when paused */}
-                {!isPlaying && (
+                  {/* Big Center Play Button when paused */}
+                  {!isPlaying && (
+                    <button
+                      className="video-center-play-btn"
+                      onClick={togglePlay}
+                      aria-label="Play video"
+                    >
+                      <div className="play-triangle"></div>
+                    </button>
+                  )}
+
+                  {/* Scrubber and Video Controls Bar */}
+                  <div className="video-controls-bar">
+                    <button className="control-btn" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"}>
+                      {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                    </button>
+
+                    <div className="video-time-display">
+                      {currentTime} / {duration}
+                    </div>
+
+                    <div
+                      className="video-progress-track"
+                      onClick={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const pos = (e.clientX - rect.left) / rect.width;
+                        if (videoRef.current && videoRef.current.duration) {
+                          videoRef.current.currentTime = pos * videoRef.current.duration;
+                        }
+                      }}
+                    >
+                      <div className="video-progress-filled" style={{ width: `${progress}%` }}></div>
+                    </div>
+
+                    <button className="control-btn" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
+                      {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                    </button>
+
+                    <button className="control-btn" onClick={handleFullscreen} aria-label="Fullscreen">
+                      <Maximize2 size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Operational Details & Features */}
+              <div className="showcase-info-col">
+                <div className="showcase-matrix-dots" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                </div>
+
+                <div className="showcase-eyebrow">{pageData.showcase.eyebrow}</div>
+                <h2 className="showcase-heading">{pageData.showcase.heading}</h2>
+
+                <p className="showcase-description">
+                  {pageData.showcase.description}
+                </p>
+
+                <div className="showcase-features-list">
+                  {(pageData.showcase.features || []).map((featureText, fIdx) => (
+                    <div key={fIdx} className="showcase-feature-item">
+                      <div className="check-circle-icon">
+                        <Check size={16} />
+                      </div>
+                      <span>{featureText}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="showcase-action-row">
                   <button
-                    className="video-center-play-btn"
-                    onClick={togglePlay}
-                    aria-label="Play video"
+                    className="showcase-watch-btn"
+                    onClick={() => setIsVideoModalOpen(true)}
                   >
-                    <div className="play-triangle"></div>
-                  </button>
-                )}
-
-                {/* Scrubber and Video Controls Bar */}
-                <div className="video-controls-bar">
-                  <button className="control-btn" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"}>
-                    {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                  </button>
-
-                  <div className="video-time-display">
-                    {currentTime} / {duration}
-                  </div>
-
-                  <div
-                    className="video-progress-track"
-                    onClick={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const pos = (e.clientX - rect.left) / rect.width;
-                      if (videoRef.current && videoRef.current.duration) {
-                        videoRef.current.currentTime = pos * videoRef.current.duration;
-                      }
-                    }}
-                  >
-                    <div className="video-progress-filled" style={{ width: `${progress}%` }}></div>
-                  </div>
-
-                  <button className="control-btn" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
-                    {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                  </button>
-
-                  <button className="control-btn" onClick={handleFullscreen} aria-label="Fullscreen">
-                    <Maximize2 size={16} />
+                    <span>Watch Full Video</span>
+                    <ArrowRight size={16} />
                   </button>
                 </div>
               </div>
             </div>
-
-            {/* Right: Operational Details & Features */}
-            <div className="showcase-info-col">
-              <div className="showcase-matrix-dots" aria-hidden="true">
-                <span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span>
-              </div>
-
-              <div className="showcase-eyebrow">{pageData.showcase.eyebrow}</div>
-              <h2 className="showcase-heading">{pageData.showcase.heading}</h2>
-
-              <p className="showcase-description">
-                {pageData.showcase.description}
-              </p>
-
-              <div className="showcase-features-list">
-                {pageData.showcase.features.map((featureText, fIdx) => (
-                  <div key={fIdx} className="showcase-feature-item">
-                    <div className="check-circle-icon">
-                      <Check size={16} />
-                    </div>
-                    <span>{featureText}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="showcase-action-row">
-                <button
-                  className="showcase-watch-btn"
-                  onClick={() => setIsVideoModalOpen(true)}
-                >
-                  <span>Watch Full Video</span>
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 3. PRODUCT CARDS SECTION (4 CARDS IN ONE ROW ON DESKTOP) */}
       <section className="touchless-products-section" id="product-cards-section">
@@ -594,7 +704,7 @@ export default function ServiceDetailPage({
           </div>
 
           <div className="touchless-products-grid">
-            {pageData.products.map((prod, pIdx) => (
+            {(pageData.products || []).map((prod, pIdx) => (
               <div key={pIdx} className="touchless-product-card">
                 <div className="product-card-media">
                   <img
@@ -606,7 +716,7 @@ export default function ServiceDetailPage({
                 </div>
                 <div className="product-card-body">
                   <div className="product-mini-chips">
-                    {prod.chips.map((chip, cIdx) => (
+                    {(prod.chips || []).map((chip, cIdx) => (
                       <span key={cIdx} className="mini-chip">{chip}</span>
                     ))}
                   </div>
@@ -615,7 +725,7 @@ export default function ServiceDetailPage({
                     {prod.desc}
                   </p>
                   <ul className="product-card-bullets">
-                    {prod.bullets.map((bullet, bIdx) => (
+                    {(prod.bullets || []).map((bullet, bIdx) => (
                       <li key={bIdx}>
                         <Check size={13} className="bullet-check" /> {bullet}
                       </li>
@@ -638,7 +748,7 @@ export default function ServiceDetailPage({
       </section>
 
       {/* 4. ADVANCED TECHNOLOGY DEEP DIVE TABS */}
-      {pageData.technologies && (
+      {pageData.technologies && pageData.technologies.tabs && (
         <section className="touchless-sensors-deepdive-section">
           <div className="touchless-container">
             <div className="section-header-centered">
@@ -651,7 +761,7 @@ export default function ServiceDetailPage({
             </div>
 
             <div className="sensor-tabs-nav">
-              {pageData.technologies.tabs.map((tab, idx) => {
+              {(pageData.technologies.tabs || []).map((tab, idx) => {
                 const TabIcon = resolveIcon(tab.icon, Settings);
                 return (
                   <button
@@ -660,7 +770,7 @@ export default function ServiceDetailPage({
                     onClick={() => setSelectedTechTab(idx)}
                   >
                     <TabIcon size={16} />
-                    <span>{tab.name.split('(')[0].trim()}</span>
+                    <span>{(tab.name || '').split('(')[0].trim()}</span>
                   </button>
                 );
               })}
@@ -680,7 +790,7 @@ export default function ServiceDetailPage({
                   </p>
 
                   <div className="sensor-highlights-list">
-                    {pageData.technologies.tabs[selectedTechTab].highlights.map((hl, hIdx) => (
+                    {(pageData.technologies.tabs[selectedTechTab].highlights || []).map((hl, hIdx) => (
                       <div key={hIdx} className="sensor-hl-item">
                         <CheckCircle2 size={16} className="hl-check-icon" />
                         <span>{hl}</span>
@@ -732,91 +842,103 @@ export default function ServiceDetailPage({
       )}
 
       {/* 5. HOW IT WORKS & IDEAL FOR MULTIPLE APPLICATIONS */}
-      <section className="touchless-workflow-app-section">
-        <div className="touchless-container">
-          <div className="workflow-and-app-grid">
-            {/* Left: How It Works */}
-            <div className="workflow-block">
-              <div className="section-subheading-wrap">
-                <h2 className="section-title">How It Works ?</h2>
-                <div className="section-title-underline"></div>
-              </div>
-
-              <div className="workflow-steps-horizontal">
-                {pageData.howItWorks.map((st, sIdx) => (
-                  <div
-                    key={sIdx}
-                    className={`workflow-step-card ${activeStep === sIdx ? 'is-active-step' : ''}`}
-                    onClick={() => setActiveStep(sIdx)}
-                  >
-                    <div className="step-num-badge">{st.step}</div>
-
-                    <div className="step-icon-wrap">
-                      {sIdx === 0 && (
-                        <div className="step-icon-svg radar-step">
-                          <Activity size={26} />
-                        </div>
-                      )}
-                      {sIdx === 1 && (
-                        <div className="step-icon-svg controller-step">
-                          <Settings size={26} />
-                        </div>
-                      )}
-                      {sIdx === 2 && (
-                        <div className="step-icon-svg door-open-step">
-                          <DoorClosed size={26} />
-                        </div>
-                      )}
-                      {sIdx === 3 && (
-                        <div className="step-icon-svg door-close-step">
-                          <Lock size={26} />
-                        </div>
-                      )}
-                    </div>
-
-                    <h4 className="step-name">{st.title}</h4>
-                    <p className="step-desc">{st.desc}</p>
-
-                    {sIdx < pageData.howItWorks.length - 1 && (
-                      <div className="step-arrow-connector" aria-hidden="true">
-                        <ArrowRight size={18} />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Step Detail Explanation Box */}
-              <div className="step-active-callout">
-                <div className="callout-indicator">
-                  <Info size={18} />
-                  <strong>Step {pageData.howItWorks[activeStep].step} Engineering Insight:</strong>
+      {howItWorksSteps.length > 0 && (
+        <section className="touchless-workflow-app-section">
+          <div className="touchless-container">
+            <div className="workflow-and-app-grid">
+              {/* Left: How It Works */}
+              <div className="workflow-block">
+                <div className="section-subheading-wrap">
+                  <h2 className="section-title">{pageData.howItWorks?.title || 'How It Works ?'}</h2>
+                  <div className="section-title-underline"></div>
                 </div>
-                <p>{pageData.howItWorks[activeStep].detail}</p>
-              </div>
-            </div>
 
-            {/* Right: Ideal For Multiple Applications */}
-            <div className="applications-block">
-              <div className="section-subheading-wrap">
-                <h2 className="section-title">Ideal For Multiple Applications</h2>
-                <div className="section-title-underline"></div>
-              </div>
+                <div className="workflow-steps-horizontal">
+                  {howItWorksSteps.map((st, sIdx) => {
+                    const stepNum = st.step || st.num || (sIdx + 1);
+                    return (
+                      <div
+                        key={sIdx}
+                        className={`workflow-step-card ${activeStep === sIdx ? 'is-active-step' : ''}`}
+                        onClick={() => setActiveStep(sIdx)}
+                      >
+                        <div className="step-num-badge">{stepNum}</div>
 
-              <div className="application-tiles-grid">
-                {pageData.applications.map((app, aIdx) => (
-                  <div key={aIdx} className="app-tile">
-                    <div className="app-tile-media">
-                      <img src={app.image} alt={app.title} className="app-tile-img" />
+                        <div className="step-icon-wrap">
+                          {sIdx === 0 && (
+                            <div className="step-icon-svg radar-step">
+                              <Activity size={26} />
+                            </div>
+                          )}
+                          {sIdx === 1 && (
+                            <div className="step-icon-svg controller-step">
+                              <Settings size={26} />
+                            </div>
+                          )}
+                          {sIdx === 2 && (
+                            <div className="step-icon-svg door-open-step">
+                              <DoorClosed size={26} />
+                            </div>
+                          )}
+                          {sIdx === 3 && (
+                            <div className="step-icon-svg door-close-step">
+                              <Lock size={26} />
+                            </div>
+                          )}
+                        </div>
+
+                        <h4 className="step-name">{st.title}</h4>
+                        <p className="step-desc">{st.desc || st.description}</p>
+
+                        {sIdx < howItWorksSteps.length - 1 && (
+                          <div className="step-arrow-connector" aria-hidden="true">
+                            <ArrowRight size={18} />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Step Detail Explanation Box */}
+                {howItWorksSteps[activeStep] && (
+                  <div className="step-active-callout">
+                    <div className="callout-indicator">
+                      <Info size={18} />
+                      <strong>Step {howItWorksSteps[activeStep].step || howItWorksSteps[activeStep].num || (activeStep + 1)} Engineering Insight:</strong>
                     </div>
-                    <div className="app-tile-label">{app.title}</div>
+                    <p>
+                      {howItWorksSteps[activeStep].detail ||
+                       (Array.isArray(howItWorksSteps[activeStep].details) ? howItWorksSteps[activeStep].details.join(' • ') : '') ||
+                       howItWorksSteps[activeStep].desc ||
+                       howItWorksSteps[activeStep].description || ''}
+                    </p>
                   </div>
-                ))}
+                )}
+              </div>
+
+              {/* Right: Ideal For Multiple Applications */}
+              <div className="applications-block">
+                <div className="section-subheading-wrap">
+                  <h2 className="section-title">Ideal For Multiple Applications</h2>
+                  <div className="section-title-underline"></div>
+                </div>
+
+                <div className="application-tiles-grid">
+                  {(pageData.applications || []).map((app, aIdx) => (
+                    <div key={aIdx} className="app-tile">
+                      <div className="app-tile-media">
+                        <img src={app.image} alt={app.title} className="app-tile-img" />
+                      </div>
+                      <div className="app-tile-label">{app.title}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 6. TECHNICAL SPECIFICATIONS & STANDARDS */}
       <section className="touchless-specs-section">
@@ -828,12 +950,29 @@ export default function ServiceDetailPage({
               <div className="specs-table-container">
                 <table className="tech-specs-table">
                   <tbody>
-                    {pageData.specs.map((row, rIdx) => (
-                      <tr key={rIdx}>
-                        <td className="spec-label">{row.label}</td>
-                        <td className="spec-value">{row.value}</td>
-                      </tr>
-                    ))}
+                    {Array.isArray(pageData.specs) && pageData.specs.map((row, rIdx) => {
+                      if (row.category && Array.isArray(row.items)) {
+                        return (
+                          <React.Fragment key={rIdx}>
+                            <tr className="spec-category-header">
+                              <th colSpan="2">{row.category}</th>
+                            </tr>
+                            {row.items.map((it, iIdx) => (
+                              <tr key={`${rIdx}-${iIdx}`}>
+                                <td className="spec-label">{it.label}</td>
+                                <td className="spec-value">{it.value}</td>
+                              </tr>
+                            ))}
+                          </React.Fragment>
+                        );
+                      }
+                      return (
+                        <tr key={rIdx}>
+                          <td className="spec-label">{row.label}</td>
+                          <td className="spec-value">{row.value}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -854,7 +993,7 @@ export default function ServiceDetailPage({
               <h2 className="section-title">Standards &amp; Statutory Certifications</h2>
 
               <div className="certs-list">
-                {pageData.certs.map((cert, cIdx) => (
+                {(pageData.certs || pageData.standards || []).map((cert, cIdx) => (
                   <div key={cIdx} className="cert-item-card">
                     <div className="cert-icon-circle">
                       {cIdx % 2 === 0 ? <Award size={20} /> : <ShieldCheck size={20} />}
@@ -872,46 +1011,48 @@ export default function ServiceDetailPage({
       </section>
 
       {/* 7. RELATED GALLERY */}
-      <section className="touchless-gallery-section">
-        <div className="touchless-container">
-          <div className="section-header-row">
-            <div>
-              <h2 className="section-title">Related Gallery</h2>
-              <div className="section-title-underline"></div>
+      {Array.isArray(pageData.gallery) && pageData.gallery.length > 0 && (
+        <section className="touchless-gallery-section">
+          <div className="touchless-container">
+            <div className="section-header-row">
+              <div>
+                <h2 className="section-title">Related Gallery</h2>
+                <div className="section-title-underline"></div>
+              </div>
+
+              <button
+                className="view-all-link"
+                onClick={() => openLightbox(0)}
+              >
+                <span>View All Images</span>
+                <ArrowRight size={15} />
+              </button>
             </div>
 
-            <button
-              className="view-all-link"
-              onClick={() => openLightbox(0)}
-            >
-              <span>View All Images</span>
-              <ArrowRight size={15} />
-            </button>
-          </div>
-
-          <div className="gallery-grid">
-            {pageData.gallery.map((item, gIdx) => (
-              <div
-                key={gIdx}
-                className="gallery-item-card"
-                onClick={() => openLightbox(gIdx)}
-              >
-                <div className="gallery-media">
-                  <img src={item.image} alt={item.title} className="gallery-img" />
-                  <div className="gallery-hover-overlay">
-                    <Eye size={24} className="gallery-zoom-icon" />
-                    <span>View Photo</span>
+            <div className="gallery-grid">
+              {pageData.gallery.map((item, gIdx) => (
+                <div
+                  key={gIdx}
+                  className="gallery-item-card"
+                  onClick={() => openLightbox(gIdx)}
+                >
+                  <div className="gallery-media">
+                    <img src={item.image} alt={item.title} className="gallery-img" />
+                    <div className="gallery-hover-overlay">
+                      <Eye size={24} className="gallery-zoom-icon" />
+                      <span>View Photo</span>
+                    </div>
+                  </div>
+                  <div className="gallery-caption">
+                    <h4 className="gallery-title">{item.title}</h4>
+                    <span className="gallery-category">{item.category}</span>
                   </div>
                 </div>
-                <div className="gallery-caption">
-                  <h4 className="gallery-title">{item.title}</h4>
-                  <span className="gallery-category">{item.category}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 8. FREQUENTLY ASKED QUESTIONS (FAQ) */}
       <section className="touchless-faq-section">
@@ -926,7 +1067,7 @@ export default function ServiceDetailPage({
           </div>
 
           <div className="touchless-faq-accordion">
-            {pageData.faqs.map((faq, fIdx) => {
+            {(pageData.faqs || []).map((faq, fIdx) => {
               const isOpen = openFaqIndex === fIdx;
               return (
                 <div key={fIdx} className={`faq-item ${isOpen ? 'faq-item-open' : ''}`}>
