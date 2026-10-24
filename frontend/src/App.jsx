@@ -240,7 +240,7 @@ const parseUrlRoute = () => {
   if (path === '/clients' || path === '/clients/' || hash === '#/clients') {
     return { page: 'clients', param: null };
   }
-  if (path === '/about' || path === '/about/' || hash === '#/about') {
+  if (path === '/about' || path === '/about/' || hash === '#/about' || path === '/company' || path === '/company/' || hash === '#/company' || hash === '#company') {
     return { page: 'about', param: null };
   }
   if (path === '/contact' || path === '/contact/' || hash === '#/contact') {
@@ -732,8 +732,8 @@ export default function App() {
           />
         )}
 
-        {/* ROUTE 4: Dedicated About Us Page (/about) */}
-        {routeState.page === 'about' && (
+        {/* ROUTE 4: Dedicated About Us / Company Page (/about, /company) */}
+        {(routeState.page === 'about' || routeState.page === 'company') && (
           <AboutPage onNavigate={navigateTo} />
         )}
 

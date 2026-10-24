@@ -1825,45 +1825,80 @@ export default function Navbar({
               </button>
 
               {mobileAccordion === 'company' && (
-                <div className="mobile-accordion-body">
+                <div className="mobile-accordion-body mobile-company-cards-body">
                   <button
-                    className="mobile-clean-sublink"
+                    type="button"
+                    className={`mobile-company-card ${currentPage === 'about' ? 'is-active' : ''}`}
                     onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}
                   >
-                    <span className="mobile-clean-title">About Us</span>
-                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                    <div className="mobile-company-card-icon">
+                      <Building2 size={18} />
+                    </div>
+                    <div className="mobile-company-card-content">
+                      <div className="mobile-company-card-title">About Us</div>
+                      <div className="mobile-company-card-desc">Our story, values &amp; engineering ethos since 2014</div>
+                    </div>
+                    <ChevronRight size={16} className="mobile-company-card-arrow" />
                   </button>
 
                   <button
-                    className="mobile-clean-sublink"
+                    type="button"
+                    className={`mobile-company-card ${currentPage === 'clients' ? 'is-active' : ''}`}
                     onClick={() => { setMobileMenuOpen(false); handleNavClick('clients'); }}
                   >
-                    <span className="mobile-clean-title">Our Clients</span>
-                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                    <div className="mobile-company-card-icon">
+                      <Users size={18} />
+                    </div>
+                    <div className="mobile-company-card-content">
+                      <div className="mobile-company-card-title">Our Clients</div>
+                      <div className="mobile-company-card-desc">100+ prestigious pharma &amp; commercial installations</div>
+                    </div>
+                    <ChevronRight size={16} className="mobile-company-card-arrow" />
                   </button>
 
                   <button
-                    className="mobile-clean-sublink"
+                    type="button"
+                    className={`mobile-company-card ${currentPage === 'careers' ? 'is-active' : ''}`}
                     onClick={() => { setMobileMenuOpen(false); handleNavClick('careers'); }}
                   >
-                    <span className="mobile-clean-title">Careers</span>
-                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                    <div className="mobile-company-card-icon">
+                      <Briefcase size={18} />
+                    </div>
+                    <div className="mobile-company-card-content">
+                      <div className="mobile-company-card-title">Careers</div>
+                      <div className="mobile-company-card-desc">Explore engineering careers &amp; join our growing team</div>
+                    </div>
+                    <ChevronRight size={16} className="mobile-company-card-arrow" />
                   </button>
 
                   <button
-                    className="mobile-clean-sublink"
+                    type="button"
+                    className={`mobile-company-card ${currentPage === 'blogs' ? 'is-active' : ''}`}
                     onClick={() => { setMobileMenuOpen(false); handleNavClick('blogs'); }}
                   >
-                    <span className="mobile-clean-title">Blogs</span>
-                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                    <div className="mobile-company-card-icon">
+                      <BookOpen size={18} />
+                    </div>
+                    <div className="mobile-company-card-content">
+                      <div className="mobile-company-card-title">Blogs</div>
+                      <div className="mobile-company-card-desc">Cleanroom standards, USFDA compliance &amp; notes</div>
+                    </div>
+                    <ChevronRight size={16} className="mobile-company-card-arrow" />
                   </button>
 
                   <button
-                    className="mobile-clean-sublink"
+                    type="button"
+                    className={`mobile-company-card mobile-company-card-contact ${currentPage === 'contact' ? 'is-active' : ''}`}
                     onClick={() => { setMobileMenuOpen(false); handleNavClick('contact'); }}
                   >
-                    <span className="mobile-clean-title">Contact Us</span>
-                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                    <div className="mobile-company-card-icon contact-icon-box">
+                      <PhoneCall size={18} />
+                    </div>
+                    <div className="mobile-company-card-content">
+                      <div className="mobile-company-card-title">Contact Us</div>
+                      <div className="mobile-company-card-desc">Talk to our engineering team in Navi Mumbai</div>
+                    </div>
+                    <ArrowRight size={16} className="mobile-company-card-arrow" />
                   </button>
                 </div>
               )}
