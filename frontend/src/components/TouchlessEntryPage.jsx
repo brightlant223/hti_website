@@ -29,7 +29,6 @@ import {
   Eye,
   SlidersHorizontal,
   Lock,
-  Download,
   Info,
   ChevronDown,
   ChevronUp,
@@ -1058,15 +1057,6 @@ export default function TouchlessEntryPage({
                 </table>
               </div>
 
-              <div className="specs-table-actions">
-                <button
-                  className="download-spec-btn"
-                  onClick={() => handleOpenQuote('Technical Data Sheet & CAD')}
-                >
-                  <Download size={16} />
-                  <span>Download Spec Sheet &amp; CAD</span>
-                </button>
-              </div>
             </div>
 
             {/* Right: Standards & Statutory Certifications */}
@@ -1210,29 +1200,7 @@ export default function TouchlessEntryPage({
         </div>
       </section>
 
-      {/* 7. BOTTOM TURNKEY CTA BANNER */}
-      <section className="touchless-cta-banner-section">
-        <div className="touchless-container">
-          <div className="touchless-cta-box">
-            <div className="cta-left-content">
-              <span className="cta-tag">TURNKEY ENGINEERING SOLUTIONS</span>
-              <h3 className="cta-title">Upgrade Your Facility with Touchless Smart Entry</h3>
-              <p className="cta-desc">
-                From architectural glass doors to pharma cleanroom interlocks and biometric speed gates, HTI provides end-to-end site consultation, supply, and installation across India.
-              </p>
-            </div>
-            <div className="cta-right-action">
-              <button
-                className="touchless-btn-primary cta-btn-lg"
-                onClick={() => handleOpenQuote('Turnkey Touchless Entry Solution')}
-              >
-                <span>Request a Quote Now</span>
-                <ArrowRight size={18} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* LIGHTBOX MODAL FOR GALLERY */}
       {lightboxImage && (

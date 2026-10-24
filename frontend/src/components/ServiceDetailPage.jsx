@@ -27,7 +27,6 @@ import {
   Eye,
   SlidersHorizontal,
   Lock,
-  Download,
   Info,
   ChevronDown,
   ChevronUp,
@@ -40,14 +39,7 @@ import {
   Flame,
   Droplets,
   Bell,
-  AlertTriangle,
-  Building2,
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-
-
+  AlertTriangle
 } from 'lucide-react';
 import { INDUSTRIAL_ACCESS_PAGES } from '../data/industrialAccessPagesData';
 import { CLEANROOM_PAGES } from '../data/cleanroomPagesData';
@@ -276,8 +268,6 @@ export default function ServiceDetailPage({
     message: `Hello HTI Engineering, please share technical datasheet, structural drawing, and turnkey quotation for ${pageData.titleLine1} Solutions.`
   });
 
-  // In-page contact form state
-  const [inlineSuccess, setInlineSuccess] = useState(false);
 
   // Scroll to top and set page title on slug change
   useEffect(() => {
@@ -385,24 +375,6 @@ export default function ServiceDetailPage({
     }, 2400);
   };
 
-  const handleInlineSubmit = async (e) => {
-    e.preventDefault();
-    await submitInquiryData(pageData.titleLine1);
-    setInlineSuccess(true);
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      application: 'Industrial Facilities',
-      productType: pageData.titleLine1,
-      quantity: '1-3 Units',
-      message: `Hello HTI Engineering, please share technical datasheet, structural drawing, and turnkey quotation for ${pageData.titleLine1} Solutions.`
-    });
-    setTimeout(() => {
-      setInlineSuccess(false);
-    }, 4000);
-  };
 
   const openLightbox = (index) => {
     if (!pageData.gallery || !pageData.gallery.length) return;
@@ -985,15 +957,6 @@ export default function ServiceDetailPage({
                 </table>
               </div>
 
-              <div className="specs-table-actions">
-                <button
-                  className="download-spec-btn"
-                  onClick={() => handleOpenQuote(`${pageData.titleLine1} Data Sheet & CAD`)}
-                >
-                  <Download size={16} />
-                  <span>Download Spec Sheet &amp; CAD</span>
-                </button>
-              </div>
             </div>
 
             {/* Right: Standards & Statutory Certifications */}
@@ -1101,208 +1064,7 @@ export default function ServiceDetailPage({
         </div>
       </section>
 
-      {/* 8B. DEDICATED CONTACT & PROPOSAL SECTION */}
-      <section className="touchless-contact-section" id="contact-section">
-        <div className="touchless-container">
-          <div className="section-header-centered">
-            <span className="section-eyebrow">GET IN TOUCH</span>
-            <h2 className="section-title">Technical Consultation &amp; Turnkey Quotation</h2>
-            <div className="section-title-underline center-underline"></div>
-            <p className="section-subtitle-desc">
-              Speak directly with HTI's engineering team to receive custom technical drawings, specification sheets, and competitive turnkey quotations.
-            </p>
-          </div>
 
-          <div className="contact-section-grid">
-            <div className="contact-info-panel">
-              <span className="contact-panel-badge">
-                <Building2 size={13} />
-                <span>HTI ENGINEERING DIVISION</span>
-              </span>
-
-              <h3 className="contact-panel-title">HTI Automation &amp; Security Systems Pvt. Ltd.</h3>
-              <p className="contact-panel-desc">
-                Providing turnkey engineering solutions, automated access, cleanroom systems, and life-safety infrastructure with full commissioning across India.
-              </p>
-
-              <div className="contact-details-stack">
-                <div className="contact-detail-row">
-                  <div className="contact-icon-bubble">
-                    <Phone size={18} />
-                  </div>
-                  <div className="contact-detail-content">
-                    <span className="contact-detail-label">Direct Engineering Helpline</span>
-                    <a href="tel:+919992756077" className="contact-detail-val">+91 9992756077</a>
-                  </div>
-                </div>
-
-                <div className="contact-detail-row">
-                  <div className="contact-icon-bubble">
-                    <Mail size={18} />
-                  </div>
-                  <div className="contact-detail-content">
-                    <span className="contact-detail-label">Technical Proposals &amp; Inquiries</span>
-                    <a href="mailto:info@htisystems.in" className="contact-detail-val">info@htisystems.in</a>
-                  </div>
-                </div>
-
-                <div className="contact-detail-row">
-                  <div className="contact-icon-bubble">
-                    <MapPin size={18} />
-                  </div>
-                  <div className="contact-detail-content">
-                    <span className="contact-detail-label">Head Office &amp; Works</span>
-                    <span className="contact-detail-val">Turbhe, Navi Mumbai - 400703, Maharashtra, India</span>
-                  </div>
-                </div>
-
-                <div className="contact-detail-row">
-                  <div className="contact-icon-bubble">
-                    <Clock size={18} />
-                  </div>
-                  <div className="contact-detail-content">
-                    <span className="contact-detail-label">Working Hours</span>
-                    <span className="contact-detail-val">Monday – Saturday: 9:00 AM – 6:30 PM IST</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="contact-compliance-badge-box">
-                <ShieldCheck size={28} style={{ color: '#38bdf8', minWidth: '28px' }} />
-                <span>
-                  <strong>Turnkey Assurance:</strong> Certified engineering solutions, standard manufacturer warranty, and scheduled preventive maintenance AMC nationwide.
-                </span>
-              </div>
-            </div>
-
-            <div className="contact-form-card">
-              <h3 className="contact-form-title">Request Specifications &amp; Commercial Proposal</h3>
-              <p className="contact-form-subtitle">Fill in your requirements below and our technical team will respond promptly.</p>
-
-              {inlineSuccess && (
-                <div className="contact-form-success-banner">
-                  <CheckCircle2 size={20} />
-                  <span>Thank you! Your inquiry has been registered. Our engineering specialist will contact you shortly.</span>
-                </div>
-              )}
-
-              <form onSubmit={handleInlineSubmit}>
-                <div className="contact-form-grid">
-                  <div>
-                    <label className="contact-input-label">Full Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Ramesh Patel"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="contact-text-input"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Work Email *</label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="e.g. ramesh@organization.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="contact-text-input"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Phone Number *</label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="e.g. +91 9992756077"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="contact-text-input"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Company / Plant Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Bharat Logistics Hub"
-                      value={formData.company}
-                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="contact-text-input"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Target System / Product</label>
-                    <input
-                      type="text"
-                      value={formData.productType}
-                      readOnly
-                      className="contact-text-input"
-                      style={{ backgroundColor: '#f1f5f9', cursor: 'not-allowed' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Estimated Quantity</label>
-                    <select
-                      value={formData.quantity}
-                      onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                      className="contact-select-input"
-                    >
-                      <option value="1 Unit (Pilot Project)">1 Unit (Pilot Project)</option>
-                      <option value="2-4 Units (Standard Facility)">2-4 Units (Standard Facility)</option>
-                      <option value="5-10 Units (Full Plant Upgrade)">5-10 Units (Full Plant Upgrade)</option>
-                      <option value="10+ Units (Enterprise Turnkey)">10+ Units (Enterprise Turnkey)</option>
-                    </select>
-                  </div>
-
-                  <div className="form-group-full">
-                    <label className="contact-input-label">Project Scope / Technical Notes</label>
-                    <textarea
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="contact-textarea-input"
-                      rows={3}
-                    ></textarea>
-                  </div>
-                </div>
-
-                <button type="submit" className="contact-form-submit-btn">
-                  <span>Submit Inquiry for Technical Proposal</span>
-                  <ArrowRight size={18} />
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. BOTTOM TURNKEY CTA BANNER */}
-      <section className="touchless-cta-banner-section">
-        <div className="touchless-container">
-          <div className="touchless-cta-box">
-            <div className="cta-left-content">
-              <span className="cta-tag">{pageData.cta.tag}</span>
-              <h3 className="cta-title">{pageData.cta.title}</h3>
-              <p className="cta-desc">{pageData.cta.desc}</p>
-            </div>
-            <div className="cta-right-action">
-              <button
-                className="touchless-btn-primary cta-btn-lg"
-                onClick={() => handleOpenQuote(`Turnkey ${pageData.titleLine1} Solution`)}
-              >
-                <span>Request a Quote Now</span>
-                <ArrowRight size={18} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* LIGHTBOX MODAL FOR GALLERY */}
       {lightboxImage && (

@@ -23,18 +23,11 @@ import {
   Settings,
   Eye,
   Lock,
-  Download,
   Info,
   Radio,
   Cpu,
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  FileText,
   Check,
   HelpCircle,
-  Building2,
   SlidersHorizontal
 } from 'lucide-react';
 import { CLEANROOM_PAGES } from '../data/cleanroomPagesData';
@@ -97,17 +90,6 @@ export default function DoorInterlockPage({ onNavigate, onQuoteSubmit }) {
   const [lightboxImage, setLightboxImage] = useState(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  // Direct Inline Contact Form State
-  const [inlineContactSuccess, setInlineContactSuccess] = useState(false);
-  const [inlineFormData, setInlineFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    doorsCount: '2-Door PAL/MAL Interlock',
-    facilityType: 'Sterile Pharma Formulation Suite',
-    message: 'Hello HTI Engineering, please share cleanroom door interlock wiring diagram, technical datasheet, and turnkey proposal.'
-  });
 
   // Modal quote form data
   const [modalFormData, setModalFormData] = useState({
@@ -195,24 +177,6 @@ export default function DoorInterlockPage({ onNavigate, onQuoteSubmit }) {
     }, 2400);
   };
 
-  const handleInlineContactSubmit = (e) => {
-    e.preventDefault();
-    setInlineContactSuccess(true);
-    if (onQuoteSubmit) {
-      onQuoteSubmit({
-        name: inlineFormData.name,
-        email: inlineFormData.email,
-        phone: inlineFormData.phone,
-        company: inlineFormData.company,
-        product: `${inlineFormData.doorsCount} (${inlineFormData.facilityType})`,
-        message: inlineFormData.message,
-        source: 'Door Interlock Page Inline Contact Form'
-      });
-    }
-    setTimeout(() => {
-      setInlineContactSuccess(false);
-    }, 4000);
-  };
 
   const openLightbox = (index) => {
     setLightboxIndex(index);
@@ -406,7 +370,7 @@ export default function DoorInterlockPage({ onNavigate, onQuoteSubmit }) {
 
             <button
               className="view-all-link"
-              onClick={() => scrollToSection('contact-section')}
+              onClick={() => handleOpenQuote('All Cleanroom Systems')}
             >
               <span>Inquire All Systems</span>
               <ArrowRight size={15} />
@@ -622,15 +586,6 @@ export default function DoorInterlockPage({ onNavigate, onQuoteSubmit }) {
                 </table>
               </div>
 
-              <div className="specs-table-actions">
-                <button
-                  className="download-spec-btn"
-                  onClick={() => handleOpenQuote('Door Interlock Technical Data Sheet & Wiring CAD')}
-                >
-                  <Download size={16} />
-                  <span>Download Spec Sheet &amp; CAD</span>
-                </button>
-              </div>
             </div>
 
             {/* Right Column: Standards & Statutory Certifications */}
@@ -878,221 +833,6 @@ export default function DoorInterlockPage({ onNavigate, onQuoteSubmit }) {
         </div>
       </section>
 
-      {/* ====================================================================
-          9. CONTACT SECTION (ENGINEERING CONSULTATION & TURNKEY PROPOSAL)
-          ==================================================================== */}
-      <section className="touchless-contact-section" id="contact-section">
-        <div className="touchless-container">
-          <div className="section-header-centered">
-            <span className="section-eyebrow">GET IN TOUCH WITH OUR SPECIALISTS</span>
-            <h2 className="section-title">Engineering Consultation &amp; Turnkey Quotation</h2>
-            <div className="section-title-underline center-underline"></div>
-            <p className="section-subtitle-desc">
-              Connect directly with HTI's Cleanroom Automation division to receive custom airlock wiring schematics, USFDA compliance documentation, and turnkey factory supply-and-installation quotes.
-            </p>
-          </div>
-
-          <div className="contact-section-grid">
-            {/* Left: Contact Info Panel */}
-            <div className="contact-info-panel">
-              <span className="contact-panel-badge">
-                <Building2 size={13} />
-                <span>CLEANROOM AUTOMATION DIVISION</span>
-              </span>
-
-              <h3 className="contact-panel-title">HTI Automation &amp; Security Systems Pvt. Ltd.</h3>
-              <p className="contact-panel-desc">
-                Specialized in USFDA 21 CFR Part 11 compliant door interlocks, dynamic pass boxes, digital GPS master clocks, and hermetic cleanroom door engineering across India.
-              </p>
-
-              <div className="contact-details-stack">
-                <div className="contact-detail-row">
-                  <div className="contact-icon-bubble">
-                    <Phone size={18} />
-                  </div>
-                  <div className="contact-detail-content">
-                    <span className="contact-detail-label">Direct Engineering Helpline</span>
-                    <a href="tel:+919820000000" className="contact-detail-val">+91 98200 00000 / 022-28000000</a>
-                  </div>
-                </div>
-
-                <div className="contact-detail-row">
-                  <div className="contact-icon-bubble">
-                    <Mail size={18} />
-                  </div>
-                  <div className="contact-detail-content">
-                    <span className="contact-detail-label">Technical Proposals &amp; Schematics</span>
-                    <a href="mailto:sales@htiautomation.com" className="contact-detail-val">sales@htiautomation.com</a>
-                  </div>
-                </div>
-
-                <div className="contact-detail-row">
-                  <div className="contact-icon-bubble">
-                    <MapPin size={18} />
-                  </div>
-                  <div className="contact-detail-content">
-                    <span className="contact-detail-label">Head Office &amp; Engineering Center</span>
-                    <span className="contact-detail-val">Mumbai / Pune Industrial Corridor, Maharashtra, India</span>
-                  </div>
-                </div>
-
-                <div className="contact-detail-row">
-                  <div className="contact-icon-bubble">
-                    <Clock size={18} />
-                  </div>
-                  <div className="contact-detail-content">
-                    <span className="contact-detail-label">Operational Hours &amp; Response SLA</span>
-                    <span className="contact-detail-val">Mon – Sat: 9:00 AM – 7:00 PM IST (24h Proposal SLA)</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="contact-compliance-badge-box">
-                <ShieldCheck size={28} style={{ color: '#38bdf8', minWidth: '28px' }} />
-                <span>
-                  <strong>Full Regulatory Support:</strong> Every system includes IQ/OQ/DQ qualification protocols, FAT/SAT testing checklists, and compliance certificates for USFDA &amp; cGMP audits.
-                </span>
-              </div>
-            </div>
-
-            {/* Right: Direct On-Page Contact & Proposal Form */}
-            <div className="contact-form-card">
-              <h3 className="contact-form-title">Request Turnkey Proposal &amp; CAD Layout</h3>
-              <p className="contact-form-subtitle">Fill in your facility parameters to receive custom schematics and itemized pricing.</p>
-
-              {inlineContactSuccess && (
-                <div className="contact-form-success-banner">
-                  <CheckCircle2 size={20} />
-                  <span>Thank you! Your cleanroom inquiry has been submitted. Our engineering team will contact you within 24 hours.</span>
-                </div>
-              )}
-
-              <form onSubmit={handleInlineContactSubmit}>
-                <div className="contact-form-grid">
-                  <div>
-                    <label className="contact-input-label">Full Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Dr. Rajesh Sharma"
-                      value={inlineFormData.name}
-                      onChange={(e) => setInlineFormData({ ...inlineFormData, name: e.target.value })}
-                      className="contact-text-input"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Work Email *</label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="e.g. rsharma@pharmalab.com"
-                      value={inlineFormData.email}
-                      onChange={(e) => setInlineFormData({ ...inlineFormData, email: e.target.value })}
-                      className="contact-text-input"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Phone Number *</label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="e.g. +91 98201 23456"
-                      value={inlineFormData.phone}
-                      onChange={(e) => setInlineFormData({ ...inlineFormData, phone: e.target.value })}
-                      className="contact-text-input"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Company / Facility Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Apex Biotech Laboratories"
-                      value={inlineFormData.company}
-                      onChange={(e) => setInlineFormData({ ...inlineFormData, company: e.target.value })}
-                      className="contact-text-input"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Door Count Configuration *</label>
-                    <select
-                      value={inlineFormData.doorsCount}
-                      onChange={(e) => setInlineFormData({ ...inlineFormData, doorsCount: e.target.value })}
-                      className="contact-select-input"
-                    >
-                      <option value="2-Door PAL/MAL Interlock">2-Door PAL/MAL Interlock</option>
-                      <option value="3-Door Cascading Airlock">3-Door Cascading Airlock</option>
-                      <option value="4-Door Multi-Zone Controller">4-Door Multi-Zone Controller</option>
-                      <option value="6-Door Custom Air Shower Suite">6-Door Custom Air Shower Suite</option>
-                      <option value="8-Door Enterprise PLC Panel">8-Door Enterprise PLC Panel</option>
-                      <option value="Flameproof (Ex-d) Zone 1/2 System">Flameproof (Ex-d) Zone 1/2 System</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="contact-input-label">Cleanroom Facility Type *</label>
-                    <select
-                      value={inlineFormData.facilityType}
-                      onChange={(e) => setInlineFormData({ ...inlineFormData, facilityType: e.target.value })}
-                      className="contact-select-input"
-                    >
-                      <option value="Sterile Pharma Formulation Suite">Sterile Pharma Formulation Suite</option>
-                      <option value="BSL-2/3/4 Research Laboratory">BSL-2/3/4 Research Laboratory</option>
-                      <option value="API / Solvent Chemical Synthesis">API / Solvent Chemical Synthesis</option>
-                      <option value="Hospital Modular Operation Theatre">Hospital Modular Operation Theatre</option>
-                      <option value="Semiconductor / Electronic Cleanroom">Semiconductor / Electronic Cleanroom</option>
-                      <option value="Food & Beverage Hygiene Airlock">Food &amp; Beverage Hygiene Airlock</option>
-                    </select>
-                  </div>
-
-                  <div className="form-group-full">
-                    <label className="contact-input-label">Project Details / Custom Logic Requirements</label>
-                    <textarea
-                      value={inlineFormData.message}
-                      onChange={(e) => setInlineFormData({ ...inlineFormData, message: e.target.value })}
-                      className="contact-textarea-input"
-                      placeholder="Describe airlock dimensions, pressure differential, BMS integration, or fire alarm release requirements..."
-                    ></textarea>
-                  </div>
-                </div>
-
-                <button type="submit" className="contact-form-submit-btn">
-                  <span>Submit Request for Turnkey Proposal &amp; CAD</span>
-                  <ArrowRight size={18} />
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ====================================================================
-          TURNKEY CTA BANNER (PROTECT YOUR CLEANROOM CASCADES)
-          ==================================================================== */}
-      <section className="touchless-cta-banner-section">
-        <div className="touchless-container">
-          <div className="touchless-cta-box">
-            <div className="cta-left-content">
-              <span className="cta-tag">{pageData.cta.tag}</span>
-              <h3 className="cta-title">{pageData.cta.title}</h3>
-              <p className="cta-desc">{pageData.cta.desc}</p>
-            </div>
-            <div className="cta-right-action">
-              <button
-                className="touchless-btn-primary cta-btn-lg"
-                onClick={() => handleOpenQuote('Turnkey Cleanroom Door Interlock Project')}
-              >
-                <span>Request a Quote Now</span>
-                <ArrowRight size={18} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ====================================================================
           MODALS: LIGHTBOX, VIDEO & QUOTE MODAL
