@@ -329,52 +329,45 @@ export default function Navbar({
     }
   };
 
+  const handleServiceClick = (slug) => {
+    setActiveDropdown(null);
+    setOpenedByClick(false);
+    setMobileMenuOpen(false);
+    if (!slug) return;
+    if (slug === 'touchless-entry' || slug === 'touchless-entry-solutions') {
+      if (onNavigate) onNavigate('touchless-entry');
+      return;
+    }
+    if (slug === 'perimeter-gate') {
+      if (onNavigate) onNavigate('perimeter-gate');
+      return;
+    }
+    if (slug === 'trackless-gate') {
+      if (onNavigate) onNavigate('trackless-gate');
+      return;
+    }
+    if (slug === 'rapid-airlock') {
+      if (onNavigate) onNavigate('rapid-airlock');
+      return;
+    }
+    if (slug === 'logistics-bridge') {
+      if (onNavigate) onNavigate('logistics-bridge');
+      return;
+    }
+    if (slug === 'heavy-security') {
+      if (onNavigate) onNavigate('heavy-security');
+      return;
+    }
+    if (onNavigate) {
+      onNavigate(slug);
+    }
+  };
+
   const handleProductClick = (slug) => {
     setActiveDropdown(null);
     setOpenedByClick(false);
     setMobileMenuOpen(false);
-    if (slug === 'touchless-entry' || slug === 'touchless-entry-solutions' || slug === 'automatic-sliding-swing-doors') {
-      if (onNavigate) {
-        onNavigate('touchless-entry');
-      }
-      return;
-    }
-    if (slug === 'perimeter-gate' || slug === 'automatic-sliding-swing-gates') {
-      if (onNavigate) {
-        onNavigate('perimeter-gate');
-      }
-      return;
-    }
-    if (slug === 'trackless-gate' || slug === 'telescopic-cantilever-gates') {
-      if (onNavigate) {
-        onNavigate('trackless-gate');
-      }
-      return;
-    }
-    if (slug === 'rapid-airlock' || slug === 'pvc-rapid-roll-up-doors' || slug === 'high-speed-roll-up-doors') {
-      if (onNavigate) {
-        onNavigate('rapid-airlock');
-      }
-      return;
-    }
-    if (slug === 'logistics-bridge' || slug === 'dock-levellers-dock-shelters') {
-      if (onNavigate) {
-        onNavigate('logistics-bridge');
-      }
-      return;
-    }
-    if (['heavy-security', 'motorized-rolling-shutters', 'motorized-industrial-rolling-shutters'].includes(slug)) {
-      if (onNavigate) {
-        onNavigate('heavy-security');
-      }
-      return;
-    }
-    if (['addressable-fire-alarms', 'hydrant-sprinkler-arrays', 'fire-rated-doors-shutters', 'public-address-system', 'gas-leak-detection', 'emergency-auto-trip'].includes(slug)) {
-      if (onNavigate) {
-        onNavigate(slug);
-      }
-      return;
-    }
+    if (!slug) return;
     if (onNavigate) {
       onNavigate('product', slug);
     }
@@ -498,14 +491,14 @@ export default function Navbar({
         {
           title: 'Acoustic Sound Doors',
           description: 'Heavy noise-dampening acoustic barrier doors for plant rooms.',
-          image: '/case-studies/case-air-curtain.jpg',
+          image: '/services/service-acoustic-sound-doors.jpg',
           icon: Settings,
           slug: 'acoustic-sound-doors'
         },
         {
           title: 'Safety Override Buzzers',
           description: 'Emergency release logic and integrated audio buzzer alerts.',
-          image: '/case-studies/case-ss304-mist.jpg',
+          image: '/services/service-safety-override-buzzers.jpg',
           icon: ShieldCheck,
           slug: 'safety-override-buzzers'
         }
@@ -521,7 +514,7 @@ export default function Navbar({
       badge: 'TRAFFIC & PERIMETER DEFENSE',
       headingPrimary: 'Vehicle Access, Tyre Killers &',
       headingAccent: 'Pedestrian Speed Gates.',
-      heroImage: '/case-studies/case-boom-barrier.jpg',
+      heroImage: '/services/service-boom-barrier.jpg',
       overviewDesc: 'High-frequency electromechanical boom barriers, optical turnstiles, anti-ram tyre killers, and multi-level car lifts for secure facilities.',
       features: [
         {
@@ -543,26 +536,26 @@ export default function Navbar({
           description: 'Heavy hydraulic tyre spikes & crash-rated anti-ram bollards.',
           image: '/services/service-bollards-blockers.jpg',
           icon: ShieldCheck,
-          slug: 'bollards-tyre-killers-car-lifts'
+          slug: 'crash-bollards-tyre-killers'
         },
         {
           title: 'Car Lift Systems',
           description: 'Hydraulic multi-tier car parking lifts & heavy goods vehicle lifts.',
-          image: '/services/services-trackless-gate.jpg',
+          image: '/services/service-car-lift-systems.jpg',
           icon: Truck,
-          slug: 'bollards-tyre-killers-car-lifts'
+          slug: 'car-lift-systems'
         },
         {
           title: 'Parking Management',
           description: 'FASTag RFID tolling, ticket dispensers & bay occupancy sensors.',
-          image: '/services/services-hero-access.jpg',
+          image: '/services/service-parking-management.jpg',
           icon: Cpu,
-          slug: 'parking-intrusion-alarms'
+          slug: 'parking-management-systems'
         },
         {
           title: 'Visitor Management',
           description: 'QR digital gate passes, facial recognition & badge printing.',
-          image: '/hero-security-command-center.jpg',
+          image: '/services/service-visitor-management.jpg',
           icon: CheckCircle2,
           slug: 'visitor-management-system'
         }
@@ -605,14 +598,14 @@ export default function Navbar({
         {
           title: 'Public Address (PA)',
           description: 'Voice evacuation systems, emergency sirens & plant horns.',
-          image: '/hero-security-command-center.jpg',
+          image: '/products/public-address-evac.jpg',
           icon: MessageSquare,
           slug: 'public-address-system'
         },
         {
           title: 'Gas Leak Detection',
           description: 'Toxic, combustible, VOC & ammonia gas monitoring sensors.',
-          image: '/case-studies/case-ss304-mist.jpg',
+          image: '/services/service-gas-leak-detector.jpg',
           icon: ShieldCheck,
           slug: 'gas-leak-detection'
         },
@@ -636,57 +629,57 @@ export default function Navbar({
       badge: 'INTELLIGENT SURVEILLANCE',
       headingPrimary: '4K AI Surveillance, Biometrics &',
       headingAccent: 'Video Intercom.',
-      heroImage: '/hero-security-command-center.jpg',
+      heroImage: '/products/cctv-ip-4k-surveillance.jpg',
       overviewDesc: 'High-definition IP surveillance, biometric time attendance, multi-zone video door phones, and central security control room infrastructure.',
       features: [
         {
           title: '4K AI CCTV Systems',
-          description: 'Network IP dome/bullet cameras, ANPR & thermal perimeter beams.',
-          image: '/hero-security-command-center.jpg',
+          description: 'Network IP dome/bullet cameras, ANPR & Sony Starvis ultra-low-light sensors.',
+          image: '/products/cctv-ip-4k-surveillance.jpg',
           icon: Cpu,
-          category: 'Security System'
+          slug: 'cctv-surveillance-systems'
         },
         {
           title: 'Biometric Access',
-          description: 'Contactless face verification, fingerprint & RFID attendance.',
-          image: '/hero-glass-atrium.jpg',
+          description: 'Contactless face verification, live fingerprint & RFID time attendance.',
+          image: '/cctv-featured-biometric.jpg',
           icon: User,
-          category: 'Security System'
+          slug: 'biometric-access-control'
         },
         {
           title: 'Video Door Phones',
-          description: 'IP multi-channel video intercom & electronic door release.',
-          image: '/services/services-touchless-entry.jpg',
+          description: 'IP multi-channel video intercom, touchscreens & remote lock release.',
+          image: '/services/service-video-door-phones.jpg',
           icon: PhoneCall,
-          category: 'Security System'
+          slug: 'video-door-phones'
         },
         {
           title: 'Central VMS Command',
-          description: 'Multi-screen enterprise video management & surveillance hardware.',
+          description: 'Multi-screen enterprise video management & surveillance hardware walls.',
           image: '/hero-security-command-center.jpg',
           icon: Monitor,
-          category: 'Security System'
+          slug: 'central-vms-command'
         },
         {
-          title: 'Fault Annunciators',
-          description: 'Visual window annunciator systems for critical machine alerts.',
-          image: '/case-studies/case-fire-hydrant.jpg',
+          title: 'Thermal & Perimeter Beams',
+          description: 'Dual-spectrum thermal radiometry & active photoelectric infrared fences.',
+          image: '/cctv-featured-barrier.jpg',
           icon: Activity,
-          category: 'Security System'
+          slug: 'thermal-perimeter-beams'
         },
         {
-          title: 'Remote Gate Release',
-          description: 'Smartphone relay triggers & cloud perimeter entrance controls.',
-          image: '/services/services-perimeter-gate.jpg',
+          title: 'Intrusion Detection Alarms',
+          description: 'Multi-zone burglar alarm panels, seismic vault sensors & strobes.',
+          image: '/cctv-featured-telemetry.jpg',
           icon: SlidersHorizontal,
-          category: 'Security System'
+          slug: 'intrusion-detection-alarms'
         }
       ]
     },
     {
       id: 'monitoring',
       title: 'Server Room & Critical Monitoring',
-      tagline: 'Server room alert monitoring, gas detection & hygiene systems.',
+      tagline: 'Server room alert monitoring, underfloor leak detection & critical telemetry.',
       icon: Activity,
       color: '#0284c7',
       page: 'server-room-monitoring',
@@ -694,50 +687,50 @@ export default function Navbar({
       badge: 'CRITICAL FACILITY MONITORING',
       headingPrimary: 'Data Center Environment &',
       headingAccent: 'Facility Protection.',
-      heroImage: '/case-studies/case-air-curtain.jpg',
-      overviewDesc: '24/7 environmental monitoring for server rooms, toxic & combustible gas detection arrays, and touchless washroom sanitary engineering.',
+      heroImage: '/services/service-server-env-monitoring.jpg',
+      overviewDesc: '24/7 environmental monitoring for server rooms, water leak detection, toxic gas arrays, and differential pressure cascade telemetry.',
       features: [
         {
-          title: 'Server Room Alert Monitor',
-          description: 'Temperature, humidity, water leak & power trip SMS/email alerts.',
-          image: '/hero-security-command-center.jpg',
+          title: 'Server Room EMS',
+          description: 'Temperature, humidity, airflow, SNMP v3 & PAC chiller failover relays.',
+          image: '/services/service-server-env-monitoring.jpg',
           icon: Activity,
-          category: 'Security System'
+          slug: 'server-room-environment-monitoring'
         },
         {
-          title: 'Toxic Gas Detection',
-          description: 'Catalytic & electrochemical sensors for hazardous plant rooms.',
-          image: '/case-studies/case-cleanroom.jpg',
+          title: 'Underfloor Water Leak Detection',
+          description: 'Conductive polymer sensing cables with meter-accurate leak location.',
+          image: '/services/service-water-leak-detection.jpg',
+          icon: Droplets,
+          slug: 'water-leak-detection-systems'
+        },
+        {
+          title: 'Hazardous Gas Arrays',
+          description: 'Flameproof Ex-d transmitters for battery room H2 and refrigerant leaks.',
+          image: '/services/service-battery-room-gas-detector.jpg',
           icon: Flame,
-          category: 'Security System'
+          slug: 'hazardous-gas-detection-arrays'
         },
         {
-          title: 'Industrial Air Curtains',
-          description: 'Thermal & insect air barriers for warehouse entry thresholds.',
-          image: '/case-studies/case-air-curtain.jpg',
-          icon: Layers,
-          category: 'Hygiene'
-        },
-        {
-          title: 'Touchless Sensor Taps',
-          description: 'Commercial brass infrared automatic faucets & urinal flushes.',
-          image: '/case-studies/case-ss304-mist.jpg',
-          icon: Sparkles,
-          category: 'Hygiene'
-        },
-        {
-          title: 'Dual Hand Dryers',
-          description: 'High-speed HEPA filtered hygienic touchless hand dryers.',
-          image: '/case-studies/case-ss304-mist.jpg',
-          icon: ShieldCheck,
-          category: 'Hygiene'
-        },
-        {
-          title: 'Trip Alarm Annunciators',
-          description: 'Real-time telemetry for pump failure & chiller room exceptions.',
-          image: '/services/services-heavy-security.jpg',
+          title: 'Microprocessor Annunciators',
+          description: 'Multi-window LED fault annunciators following ISA-18.1 sequence logic.',
+          image: '/services/service-alarm-annunciators.jpg',
           icon: Settings,
-          category: 'Security System'
+          slug: 'alarm-annunciators'
+        },
+        {
+          title: 'Differential Pressure Monitors',
+          description: 'Digital cleanroom Pascal indicators & transmitters for pressure cascades.',
+          image: '/services/service-diff-pressure-monitor.jpg',
+          icon: Layers,
+          slug: 'differential-pressure-monitors'
+        },
+        {
+          title: 'Ultrasonic Rodent Repellent',
+          description: 'Sweeping 20-65 kHz ultrasound protecting server racks & false ceilings.',
+          image: '/services/service-rodent-repellent.jpg',
+          icon: ShieldCheck,
+          slug: 'rodent-repellent-systems'
         }
       ]
     }
@@ -1365,7 +1358,7 @@ export default function Navbar({
                         className="mega-subservice-card"
                         onClick={() => {
                           if (feat.slug) {
-                            handleProductClick(feat.slug);
+                            handleServiceClick(feat.slug);
                           } else if (feat.section) {
                             handleNavClick('home', feat.section);
                           } else if (feat.category) {
@@ -1376,7 +1369,7 @@ export default function Navbar({
                         }}
                         onKeyDown={(e) => handleKeyActivate(e, () => {
                           if (feat.slug) {
-                            handleProductClick(feat.slug);
+                            handleServiceClick(feat.slug);
                           } else if (feat.section) {
                             handleNavClick('home', feat.section);
                           } else if (feat.category) {

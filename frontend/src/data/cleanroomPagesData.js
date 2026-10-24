@@ -1134,7 +1134,7 @@ export const CLEANROOM_PAGES = {
       { label: 'Magnetic Perimeter Compression Seal', icon: 'Lock' },
       { label: 'Heavy Stainless Steel Cam Hinges', icon: 'Settings' }
     ],
-    heroImage: '/case-studies/case-air-curtain.jpg',
+    heroImage: '/services/service-acoustic-sound-doors.jpg',
     heroStatusBadge: 'Acoustic Compression Seal Active',
     benefits: [
       {
@@ -1409,7 +1409,7 @@ export const CLEANROOM_PAGES = {
       { label: 'IP65 Stainless Steel Fascia', icon: 'Shield' },
       { label: 'BMS & Fire Panel Integration', icon: 'Cpu' }
     ],
-    heroImage: '/case-studies/case-ss304-mist.jpg',
+    heroImage: '/services/service-safety-override-buzzers.jpg',
     heroStatusBadge: 'Safety Alarm Monitoring Armed',
     benefits: [
       {

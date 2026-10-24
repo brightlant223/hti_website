@@ -4,7 +4,8 @@ import {
   Send, Sparkles, Cpu, Layers, Flame, Lock, CheckCircle2,
   PhoneCall, Check, ChevronDown, ChevronUp, Wrench,
   Award, HelpCircle, Factory, Building2,
-  SlidersHorizontal, Play, Truck, Plane, Download, X, Activity
+  SlidersHorizontal, Play, Truck, Plane, Download, X, Activity,
+  Camera, Server
 } from 'lucide-react';
 import { getProductsByCategory } from '../data/productsData';
 import CategoryControls from './CategoryControls';
@@ -323,7 +324,7 @@ const CLEANROOM_SERVICES = [
   {
     num: '05',
     id: 5,
-    slug: 'door-interlock-systems',
+    slug: 'acoustic-sound-doors',
     title: 'Acoustic Sound Doors',
     categoryBadge: 'Pressure Containment',
     categoryFilters: ['All', 'Pressure Containment', 'Emergency Safety'],
@@ -333,13 +334,13 @@ const CLEANROOM_SERVICES = [
       'Heavy-gauge perimeter compression seals',
       'Flush finish compatible with clean environments'
     ],
-    image: '/services/service-fire-doors.jpg',
+    image: '/services/service-acoustic-sound-doors.jpg',
     brochure: true
   },
   {
     num: '06',
     id: 6,
-    slug: 'door-interlock-systems',
+    slug: 'safety-override-buzzers',
     title: 'Safety Override Buzzers',
     categoryBadge: 'Emergency Safety',
     categoryFilters: ['All', 'Emergency Safety', 'Airlock Control', 'Flameproof Ex-d'],
@@ -349,7 +350,7 @@ const CLEANROOM_SERVICES = [
       'Illuminated emergency mushroom push buttons',
       'Integrated high-visibility LED and audio buzzers'
     ],
-    image: '/case-studies/case-ss304-mist.jpg',
+    image: '/services/service-safety-override-buzzers.jpg',
     brochure: true
   }
 ];
@@ -385,7 +386,7 @@ const PERIMETER_SERVICES = [
   {
     num: '02',
     id: 2,
-    slug: 'bollards-tyre-killers-car-lifts',
+    slug: 'crash-bollards-tyre-killers',
     title: 'Tyre Killers & Crash Bollards',
     categoryBadge: 'Perimeter Defense',
     categoryFilters: ['All', 'Perimeter Defense', 'Crash Rated', 'Heavy Duty'],
@@ -417,7 +418,7 @@ const PERIMETER_SERVICES = [
   {
     num: '04',
     id: 4,
-    slug: 'parking-intrusion-alarms',
+    slug: 'parking-management-systems',
     title: 'Parking Management Systems',
     categoryBadge: 'Traffic Management',
     categoryFilters: ['All', 'Traffic Management', 'Vehicle Access', 'Smart Controls'],
@@ -427,13 +428,13 @@ const PERIMETER_SERVICES = [
       'Ultrasonic bay occupancy LED indicators',
       'Central revenue tracking & ticket billing'
     ],
-    image: '/services/services-hero-access.jpg',
+    image: '/services/service-parking-management.jpg',
     brochure: true
   },
   {
     num: '05',
     id: 5,
-    slug: 'bollards-tyre-killers-car-lifts',
+    slug: 'car-lift-systems',
     title: 'Car Lift Systems',
     categoryBadge: 'Vehicle Stacking',
     categoryFilters: ['All', 'Vehicle Stacking', 'Heavy Duty', 'Custom Solutions'],
@@ -443,7 +444,7 @@ const PERIMETER_SERVICES = [
       'Dual hydraulic lock valves & anti-drop safety',
       'Smooth micro-leveling & compact footprint'
     ],
-    image: '/services/services-trackless-gate.jpg',
+    image: '/services/service-car-lift-systems.jpg',
     brochure: true
   },
   {
@@ -459,7 +460,7 @@ const PERIMETER_SERVICES = [
       'Instant SMS / WhatsApp host notifications',
       'Single-trip QR integration with turnstiles'
     ],
-    image: '/hero-security-command-center.jpg',
+    image: '/services/service-visitor-management.jpg',
     brochure: true
   }
 ];
@@ -542,13 +543,13 @@ const FIRE_SERVICES = [
       'High-clarity paging microphones & chime generators',
       'Constant-voltage 70V/100V distributed horn arrays'
     ],
-    image: '/hero-security-command-center.jpg',
+    image: '/products/public-address-evac.jpg',
     brochure: true
   },
   {
     num: '05',
     id: 5,
-    slug: 'gas-detection-systems',
+    slug: 'gas-leak-detection',
     title: 'Gas Leak Detection Systems',
     categoryBadge: 'Hazard Prevention',
     categoryFilters: ['All', 'Hazard Prevention', 'Industrial Protection', 'Flameproof Ex-d'],
@@ -558,13 +559,13 @@ const FIRE_SERVICES = [
       'Pellistor, electrochemical & NDIR infrared sensors',
       'Direct relay interlocks for emergency exhaust blowers'
     ],
-    image: '/case-studies/case-ss304-mist.jpg',
+    image: '/services/service-gas-leak-detector.jpg',
     brochure: true
   },
   {
     num: '06',
     id: 6,
-    slug: 'door-interlock-systems',
+    slug: 'emergency-auto-trip',
     title: 'Emergency Auto Trip & Safety Interlocks',
     categoryBadge: 'Life Safety Interlock',
     categoryFilters: ['All', 'Life Safety Interlock', 'Life Safety', 'Smart Controls'],
@@ -610,7 +611,7 @@ const SECURITY_SERVICES = [
       'AI tripwire, perimeter intrusion & vehicle plate recognition',
       'High-throughput NVR storage with RAID failover redundancy'
     ],
-    image: '/cctv-featured-dome.jpg',
+    image: '/products/cctv-ip-4k-surveillance.jpg',
     brochure: true
   },
   {
@@ -642,7 +643,7 @@ const SECURITY_SERVICES = [
       'Full-duplex handsfree audio with acoustic echo suppression',
       'PoE network powered with remote EM lock release relay'
     ],
-    image: '/services/services-touchless-entry.jpg',
+    image: '/services/service-video-door-phones.jpg',
     brochure: true
   },
   {
@@ -680,7 +681,7 @@ const SECURITY_SERVICES = [
   {
     num: '06',
     id: 6,
-    slug: 'parking-intrusion-alarms',
+    slug: 'intrusion-detection-alarms',
     title: 'Intrusion Detection & Fault Annunciators',
     categoryBadge: 'Intrusion Detection',
     categoryFilters: ['All', 'Intrusion Detection', 'Command & Control', 'Smart Controls'],
@@ -724,7 +725,7 @@ const MONITORING_SERVICES = [
       'Automated SMS, email, SNMP trap & voice call escalation',
       'Direct dry contact relay triggers for backup PAC chiller units'
     ],
-    image: '/cctv-featured-telemetry.jpg',
+    image: '/services/service-server-env-monitoring.jpg',
     brochure: true
   },
   {
@@ -740,13 +741,13 @@ const MONITORING_SERVICES = [
       'Fast-drying non-conductive polymer cable with fast reset',
       'Dual relay output for BMS integration & motorized valve cutoff'
     ],
-    image: '/case-studies/case-cleanroom.jpg',
+    image: '/services/service-water-leak-detection.jpg',
     brochure: true
   },
   {
     num: '03',
     id: 3,
-    slug: 'gas-detection-systems',
+    slug: 'hazardous-gas-detection-arrays',
     title: 'Toxic & Combustible Gas Detection Arrays',
     categoryBadge: 'Gas Monitoring',
     categoryFilters: ['All', 'Gas Monitoring', 'Life Safety', 'Flameproof Ex-d'],
@@ -756,7 +757,7 @@ const MONITORING_SERVICES = [
       'Electrochemical, catalytic pellistor & NDIR optical sensor modules',
       'Dual setpoint relays for automated emergency exhaust blower trip'
     ],
-    image: '/case-studies/case-ss304-mist.jpg',
+    image: '/services/service-battery-room-gas-detector.jpg',
     brochure: true
   },
   {
@@ -772,7 +773,7 @@ const MONITORING_SERVICES = [
       'Standard ISA-18.1 sequence logic (Manual/Auto Reset, First-Out)',
       'Built-in dual audio buzzer, test, mute, and acknowledge buttons'
     ],
-    image: '/services/services-heavy-security.jpg',
+    image: '/services/service-alarm-annunciators.jpg',
     brochure: true
   },
   {
@@ -788,7 +789,7 @@ const MONITORING_SERVICES = [
       'Bright 7-segment digital display with green/red status indicator',
       'Isolated 4-20mA & RS-485 Modbus RTU telemetry to building BMS'
     ],
-    image: '/hero-cleanroom-interlock-chamber.jpg',
+    image: '/services/service-diff-pressure-monitor.jpg',
     brochure: true
   },
   {
@@ -804,7 +805,7 @@ const MONITORING_SERVICES = [
       'Non-toxic, safe for IT equipment, human hearing & sensitive servers',
       'UL listed Novec 1230 / FM-200 total flooding clean suppression'
     ],
-    image: '/case-studies/case-fire-hydrant.jpg',
+    image: '/services/service-rodent-repellent.jpg',
     brochure: true
   }
 ];
@@ -1385,6 +1386,51 @@ export default function CategoryPage({
     );
   };
 
+  // Reusable Category Division Switcher for instant category hopping
+  const CATEGORY_TABS = [
+    { key: 'automation', label: 'Industrial Access', icon: Cpu, count: 14 },
+    { key: 'cleanroom-interlocks', label: 'Cleanroom Interlocks', icon: Lock, count: 6 },
+    { key: 'perimeter-defense', label: 'Perimeter Defense', icon: ShieldCheck, count: 6 },
+    { key: 'fire-protection', label: 'Fire & Life Safety', icon: Flame, count: 6 },
+    { key: 'security-systems', label: 'CCTV & Biometrics', icon: Camera, count: 6 },
+    { key: 'server-room-monitoring', label: 'Critical Monitoring', icon: Activity, count: 6 }
+  ];
+
+  const renderCategorySwitcher = (activeKey) => (
+    <nav className="category-division-nav auto-scroll-reveal in-view" aria-label="Service Divisions Navigation">
+      <div className="category-division-label">
+        <span className="category-division-dot"></span>
+        <span>SERVICE CATEGORIES</span>
+      </div>
+      <div className="category-division-track">
+        {CATEGORY_TABS.map((cat) => {
+          const isActive = cat.key === activeKey;
+          const CatIcon = cat.icon;
+          return (
+            <button
+              key={cat.key}
+              type="button"
+              className={`category-division-btn ${isActive ? 'active' : ''}`}
+              onClick={() => {
+                if (onNavigate) {
+                  onNavigate(cat.key);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              <div className="category-division-btn-icon">
+                <CatIcon size={14} />
+              </div>
+              <span className="category-division-btn-text">{cat.label}</span>
+              <span className="category-division-btn-count">{cat.count}</span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+
   // =========================================================================
   // DEDICATED REFERENCE-ACCURATE INDUSTRIAL ACCESS AUTOMATION SERVICE PAGE
   // =========================================================================
@@ -1440,6 +1486,9 @@ export default function CategoryPage({
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Industrial Access Automation</span>
           </div>
+
+          {/* SERVICE CATEGORIES SWITCHER */}
+          {renderCategorySwitcher('automation')}
 
           {/* 2. HERO SECTION */}
           <section className="auto-hero-section auto-scroll-reveal in-view">
@@ -1772,6 +1821,9 @@ export default function CategoryPage({
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Cleanroom Interlocks &amp; Pass Boxes</span>
           </div>
+
+          {/* SERVICE CATEGORIES SWITCHER */}
+          {renderCategorySwitcher('cleanroom-interlocks')}
 
 
           {/* 2. HERO SECTION */}
@@ -2112,6 +2164,9 @@ export default function CategoryPage({
             <span className="auto-breadcrumb-current">Perimeter Defense &amp; Traffic Control</span>
           </div>
 
+          {/* SERVICE CATEGORIES SWITCHER */}
+          {renderCategorySwitcher('perimeter-defense')}
+
           {/* 2. HERO SECTION */}
           <section className="auto-hero-section auto-scroll-reveal in-view">
             <div className="auto-hero-grid">
@@ -2449,6 +2504,9 @@ export default function CategoryPage({
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Fire Protection &amp; Life Safety</span>
           </div>
+
+          {/* SERVICE CATEGORIES SWITCHER */}
+          {renderCategorySwitcher('fire-protection')}
 
           {/* 2. HERO SECTION */}
           <section className="auto-hero-section auto-scroll-reveal in-view">
@@ -2788,6 +2846,9 @@ export default function CategoryPage({
             <span className="auto-breadcrumb-current">CCTV Surveillance &amp; Biometrics</span>
           </div>
 
+          {/* SERVICE CATEGORIES SWITCHER */}
+          {renderCategorySwitcher('security-systems')}
+
           {/* 2. HERO SECTION */}
           <section className="auto-hero-section auto-scroll-reveal in-view">
             <div className="auto-hero-grid">
@@ -3125,6 +3186,9 @@ export default function CategoryPage({
             <span className="auto-breadcrumb-sep">&gt;</span>
             <span className="auto-breadcrumb-current">Server Room &amp; Critical Monitoring</span>
           </div>
+
+          {/* SERVICE CATEGORIES SWITCHER */}
+          {renderCategorySwitcher('server-room-monitoring')}
 
           {/* 2. HERO SECTION */}
           <section className="auto-hero-section auto-scroll-reveal in-view">

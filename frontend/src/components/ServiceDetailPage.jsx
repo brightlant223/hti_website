@@ -51,11 +51,49 @@ import {
 } from 'lucide-react';
 import { INDUSTRIAL_ACCESS_PAGES } from '../data/industrialAccessPagesData';
 import { CLEANROOM_PAGES } from '../data/cleanroomPagesData';
+import { FIRE_SAFETY_PAGES } from '../data/fireSafetyPagesData';
+import { PERIMETER_DEFENSE_PAGES } from '../data/perimeterDefensePagesData';
+import { CCTV_BIOMETRICS_PAGES } from '../data/cctvBiometricsPagesData';
+import { SERVER_MONITORING_PAGES } from '../data/serverMonitoringPagesData';
 import './TouchlessEntryPage.css';
 
 const ALL_PAGES = {
   ...INDUSTRIAL_ACCESS_PAGES,
-  ...CLEANROOM_PAGES
+  ...CLEANROOM_PAGES,
+  ...FIRE_SAFETY_PAGES,
+  ...PERIMETER_DEFENSE_PAGES,
+  ...CCTV_BIOMETRICS_PAGES,
+  ...SERVER_MONITORING_PAGES,
+
+  // Universal Cross-Compatibility Aliases
+  'automatic-sliding-swing-doors': INDUSTRIAL_ACCESS_PAGES['sliding-swing-doors'],
+  'automatic-sliding-swing-gates': INDUSTRIAL_ACCESS_PAGES['sliding-swing-gates'],
+  'door-interlock-systems': CLEANROOM_PAGES['door-interlock-system'],
+  'pass-box-system': CLEANROOM_PAGES['pass-box-systems'],
+  'digital-gps-clocks': CLEANROOM_PAGES['digital-clocks'],
+  'chiller-clean-room-doors': CLEANROOM_PAGES['chiller-cleanroom-doors'],
+  'bollards-tyre-killers-car-lifts': PERIMETER_DEFENSE_PAGES['crash-bollards-tyre-killers'],
+  'bollards-tyre-killers': PERIMETER_DEFENSE_PAGES['crash-bollards-tyre-killers'],
+  'parking-intrusion-alarms': PERIMETER_DEFENSE_PAGES['parking-management-systems'],
+  'parking-management-system': PERIMETER_DEFENSE_PAGES['parking-management-systems'],
+  'visitor-management-systems': PERIMETER_DEFENSE_PAGES['visitor-management-system'],
+  'fire-alarm-system': FIRE_SAFETY_PAGES['addressable-fire-alarms'],
+  'fire-alarm-systems': FIRE_SAFETY_PAGES['addressable-fire-alarms'],
+  'fire-hydrant-sprinkler-systems': FIRE_SAFETY_PAGES['hydrant-sprinkler-arrays'],
+  'hydrant-sprinkler-systems': FIRE_SAFETY_PAGES['hydrant-sprinkler-arrays'],
+  'public-address-systems': FIRE_SAFETY_PAGES['public-address-system'],
+  'gas-detection-systems': FIRE_SAFETY_PAGES['gas-leak-detection'],
+  'cctv-surveillance': CCTV_BIOMETRICS_PAGES['cctv-surveillance-systems'],
+  'biometric-access': CCTV_BIOMETRICS_PAGES['biometric-access-control'],
+  'video-door-phone': CCTV_BIOMETRICS_PAGES['video-door-phones'],
+  'central-vms-command-systems': CCTV_BIOMETRICS_PAGES['central-vms-command'],
+  'server-room-monitoring': SERVER_MONITORING_PAGES['server-room-environment-monitoring'],
+  'water-leak-detection': SERVER_MONITORING_PAGES['water-leak-detection-systems'],
+  'gas-leak-detector': SERVER_MONITORING_PAGES['hazardous-gas-detection-arrays'],
+  'hazardous-gas-detection': SERVER_MONITORING_PAGES['hazardous-gas-detection-arrays'],
+  'alarm-annunciator-panels': SERVER_MONITORING_PAGES['alarm-annunciators'],
+  'differential-pressure-monitor': SERVER_MONITORING_PAGES['differential-pressure-monitors'],
+  'rodent-repellent': SERVER_MONITORING_PAGES['rodent-repellent-systems'],
 };
 
 // Icon resolver mapping string names to Lucide components
@@ -95,11 +133,11 @@ const resolveIcon = (iconInput, defaultIcon = ShieldCheck) => {
 
 export default function ServiceDetailPage({
   slug = 'perimeter-gate',
-  pagesData = INDUSTRIAL_ACCESS_PAGES,
+  pagesData = ALL_PAGES,
   onNavigate,
   onQuoteSubmit
 }) {
-  const pageData = (pagesData && pagesData[slug]) || (pagesData && pagesData[Object.keys(pagesData)[0]]) || INDUSTRIAL_ACCESS_PAGES['perimeter-gate'];
+  const pageData = (pagesData && pagesData[slug]) || ALL_PAGES[slug] || (pagesData && pagesData[Object.keys(pagesData)[0]]) || INDUSTRIAL_ACCESS_PAGES['perimeter-gate'];
 
   // Video player state
   const videoRef = useRef(null);

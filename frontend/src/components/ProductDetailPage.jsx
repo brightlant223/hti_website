@@ -92,14 +92,18 @@ export default function ProductDetailPage({
       return {
         ...(staticProd || {}),
         ...productProp,
-        name: productProp.name || staticProd?.name,
-        category: productProp.category || staticProd?.category,
+        name: staticProd?.name || productProp.name,
+        category: staticProd?.category || productProp.category,
+        categorySlug: staticProd?.categorySlug || productProp.categorySlug,
         tagline: productProp.tagline || staticProd?.tagline,
         heroDescription: productProp.description || staticProd?.heroDescription,
         description: productProp.description || staticProd?.description,
         badge: productProp.badge || staticProd?.badge,
-        image: productProp.image_url || productProp.image || staticProd?.image,
-        image_url: productProp.image_url || productProp.image || staticProd?.image,
+        image: productProp.image_url || productProp.image || staticProd?.heroImage || staticProd?.image,
+        image_url: productProp.image_url || productProp.image || staticProd?.heroImage || staticProd?.image,
+        specs: (staticProd?.specs && staticProd.specs.tableRows) ? staticProd.specs : (productProp.specs || staticProd?.specs),
+        overview: (staticProd?.overview && staticProd.overview.paragraphs) ? staticProd.overview : (productProp.overview || staticProd?.overview),
+        benefits: (staticProd?.benefits && staticProd.benefits.length > 0) ? staticProd.benefits : (productProp.benefits || staticProd?.benefits),
         keyFeatures: dbFeatures || staticProd?.keyFeatures || [],
         specHighlights: dbFeatures || staticProd?.specHighlights || [],
         technicalSpecifications: dbSpecs || staticProd?.technicalSpecifications || {},
@@ -710,6 +714,42 @@ export default function ProductDetailPage({
         </div>
 
       </section>
+
+      {/* Interactive Operational Demonstrations */}
+      {isInterlockDemo && (
+        <section className="auto-doors-interactive-demo-section" style={{ margin: '36px 0' }}>
+          <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 20px' }}>
+            <DoorInterlockSimulator onInquireInterlock={(name) => {
+              setFormData(prev => ({ ...prev, message: `Hello HTI Engineering, please share CAD GA drawings, wiring schematic and quotation for ${name}.` }));
+              setIsQuoteModalOpen(true);
+            }} />
+          </div>
+        </section>
+      )}
+
+      {isPassBoxDemo && (
+        <section className="auto-doors-interactive-demo-section" style={{ margin: '36px 0' }}>
+          <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 20px' }}>
+            <PassBoxDemo />
+          </div>
+        </section>
+      )}
+
+      {isDigitalClockDemo && (
+        <section className="auto-doors-interactive-demo-section" style={{ margin: '36px 0' }}>
+          <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 20px' }}>
+            <DigitalClockDemo />
+          </div>
+        </section>
+      )}
+
+      {isChillerDoorDemo && (
+        <section className="auto-doors-interactive-demo-section" style={{ margin: '36px 0' }}>
+          <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 20px' }}>
+            <ChillerCleanroomDoorDemo />
+          </div>
+        </section>
+      )}
 
       {/* =========================================================================
           SECTION F: RELATED IMAGES

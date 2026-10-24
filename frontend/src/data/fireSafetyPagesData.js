@@ -862,7 +862,7 @@ export const FIRE_SAFETY_PAGES = {
       { label: 'Continuous Speaker Line Check', icon: 'Activity' },
       { label: 'EN 54-16 / IS Standards', icon: 'ShieldCheck' }
     ],
-    heroImage: '/hero-security-command-center.jpg',
+    heroImage: '/products/public-address-evac.jpg',
     heroStatusBadge: 'PA Matrix Online | Voice Evacuation Standby',
     benefits: [
       {
@@ -1138,7 +1138,7 @@ export const FIRE_SAFETY_PAGES = {
       { label: 'Auto Solenoid Shut-Off', icon: 'ShieldCheck' },
       { label: 'ATEX / PESO Hazardous Rated', icon: 'Flame' }
     ],
-    heroImage: '/case-studies/case-ss304-mist.jpg',
+    heroImage: '/services/service-gas-leak-detector.jpg',
     heroStatusBadge: 'Gas Sensors Calibrated | Atmosphere Normal',
     benefits: [
       {

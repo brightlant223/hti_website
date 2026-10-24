@@ -220,3 +220,152 @@
 .category-dedicated-page .auto-faq-chevron-closed {
   color: #94a3b8;
 }
+
+/* ==========================================================================
+   7. CATEGORY DIVISION NAVIGATION SWITCHER
+   ========================================================================== */
+
+.category-division-nav {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 12px 18px;
+  margin: 16px 0 28px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.category-division-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.category-division-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0284c7;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.65);
+}
+
+.category-division-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  justify-content: flex-end;
+  padding: 2px 0;
+}
+
+.category-division-track::-webkit-scrollbar {
+  display: none;
+}
+
+.category-division-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.category-division-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0284c7;
+  transform: translateY(-1px);
+}
+
+.category-division-btn.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border-color: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  transform: translateY(-1px);
+}
+
+.category-division-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-division-btn.active .category-division-btn-icon {
+  color: #ffffff;
+}
+
+.category-division-btn-text {
+  line-height: 1;
+}
+
+.category-division-btn-count {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  color: #475569;
+  line-height: 1.1;
+  transition: all 0.2s ease;
+}
+
+.category-division-btn.active .category-division-btn-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .category-division-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .category-division-track {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .category-division-nav {
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin: 12px 0 20px;
+  }
+
+  .category-division-label {
+    font-size: 0.68rem;
+  }
+
+  .category-division-btn {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+  }
+}
+
