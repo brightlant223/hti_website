@@ -71,7 +71,7 @@ export default function Footer({ onNavigate }) {
                 <img
                   src="/hti-logo.png"
                   alt="HTI Automation and Security Systems"
-                  className="footer-hti-white-logo"
+                  className="footer-hti-logo footer-hti-white-logo"
                 />
               </div>
               <h2 className="brand-head-company">
