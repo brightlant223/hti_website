@@ -1,7 +1,4 @@
-/**
- * Comprehensive Product & Solution Page Data for Perimeter Defense & Traffic Control
- */
-
+// Perimeter Defense & Traffic Control Page Data
 export const PERIMETER_DEFENSE_PAGES = {
   "boom-barriers": {
     "slug": "boom-barriers",
@@ -394,37 +391,43 @@ export const PERIMETER_DEFENSE_PAGES = {
         "icon": "Building2",
         "title": "Corporate IT Parks & Campuses",
         "desc": "High-speed automated entry lanes with employee RFID windshield tags and visitor ticket tracking.",
-        "tag": "Corporate Access"
+        "tag": "Corporate Access",
+        "image": "/hero-glass-atrium.jpg"
       },
       {
         "icon": "Factory",
         "title": "Industrial Manufacturing Plants",
         "desc": "Heavy-duty 6m boom arms controlling continuous freight, raw material trucks, and worker transport.",
-        "tag": "Industrial Site"
+        "tag": "Industrial Site",
+        "image": "/services/services-perimeter-gate.jpg"
       },
       {
         "icon": "Truck",
         "title": "Logistics Warehouses & Freight Hubs",
         "desc": "Automated weighbridge barriers and container terminal checkpoints with FASTag integration.",
-        "tag": "Logistics Hub"
+        "tag": "Logistics Hub",
+        "image": "/hero-industrial-doors-dock.jpg"
       },
       {
         "icon": "ShieldCheck",
         "title": "High-Security Government Sites",
         "desc": "Heavy electro-hydraulic barriers interlocked with rising crash bollards and anti-ram tyre killers.",
-        "tag": "Defense Grade"
+        "tag": "Defense Grade",
+        "image": "/services/service-bollards-blockers.jpg"
       },
       {
         "icon": "Layers",
         "title": "Commercial Malls & Hospitals",
         "desc": "Automated parking management integration with ticket dispensers, payment booths, and occupancy LEDs.",
-        "tag": "Commercial Parking"
+        "tag": "Commercial Parking",
+        "image": "/products/automatic-doors-hospital.jpg"
       },
       {
         "icon": "Activity",
         "title": "Toll Plazas & Expressway Lanes",
         "desc": "1.5-second ultra-high-speed barriers engineered for non-stop electronic toll collection (ETC).",
-        "tag": "Highway Toll"
+        "tag": "Highway Toll",
+        "image": "/services/service-parking-management.jpg"
       }
     ],
     "faqs": [
@@ -906,37 +909,43 @@ export const PERIMETER_DEFENSE_PAGES = {
         "icon": "Building2",
         "title": "Corporate Real Estate & IT HQs",
         "desc": "Sleek architectural speed gates matching modern marble lobbies with touchless employee face recognition.",
-        "tag": "Corporate Lobby"
+        "tag": "Corporate Lobby",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "Cpu",
         "title": "Enterprise Data Centers & NOCs",
         "desc": "High-security anti-tailgating optical speed gates controlling multi-factor biometric server floor access.",
-        "tag": "Data Center"
+        "tag": "Data Center",
+        "image": "/hero-security-command-center.jpg"
       },
       {
         "icon": "Layers",
         "title": "Pharma & Biotech Research Hubs",
         "desc": "Cleanroom gowning room airlock turnstiles validating employee cleanroom training certifications before entry.",
-        "tag": "Pharma Airlock"
+        "tag": "Pharma Airlock",
+        "image": "/hero-cleanroom-automation.jpg"
       },
       {
         "icon": "ShieldCheck",
         "title": "Government & Defense Buildings",
         "desc": "Rigid anti-climb full-height turnstiles and security speed gates linked with centralized visitor databases.",
-        "tag": "Government Grade"
+        "tag": "Government Grade",
+        "image": "/services/service-bollards-blockers.jpg"
       },
       {
         "icon": "Activity",
         "title": "Metro & Railway Transit Stations",
         "desc": "High-speed retractable flap barrier gates validating contactless smart cards and QR transit tickets.",
-        "tag": "Public Transit"
+        "tag": "Public Transit",
+        "image": "/products/optical-speed-turnstiles.jpg"
       },
       {
         "icon": "Award",
         "title": "Universities & Educational Campuses",
         "desc": "Automated campus student RFID card validation and hostel curfew tracking turnstile gates.",
-        "tag": "Campus Access"
+        "tag": "Campus Access",
+        "image": "/hero-glass-atrium.jpg"
       }
     ],
     "faqs": [
@@ -1418,37 +1427,43 @@ export const PERIMETER_DEFENSE_PAGES = {
         "icon": "ShieldCheck",
         "title": "Military Bases & Defense Checkpoints",
         "desc": "Certified K12 crash bollards and spike tyre killers halting hostile truck bomb intrusions.",
-        "tag": "Defense Base"
+        "tag": "Defense Base",
+        "image": "/services/service-bollards-blockers.jpg"
       },
       {
         "icon": "Building2",
         "title": "Government & Embassy Compounds",
         "desc": "Architectural stainless steel rising bollards safeguarding diplomatic missions and VIP gates.",
-        "tag": "Diplomatic Mission"
+        "tag": "Diplomatic Mission",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "Factory",
         "title": "Oil Refineries & Chemical Terminals",
         "desc": "Heavy hydraulic tyre killers and road blockers regulating heavy fuel tanker truck access.",
-        "tag": "Petrochemical Site"
+        "tag": "Petrochemical Site",
+        "image": "/services/services-heavy-security.jpg"
       },
       {
         "icon": "Layers",
         "title": "Airports & Sea Ports",
         "desc": "Perimeter perimeter crash barriers and runway perimeter access gate vehicle mitigations.",
-        "tag": "Aviation Perimeter"
+        "tag": "Aviation Perimeter",
+        "image": "/hero-industrial-doors-dock.jpg"
       },
       {
         "icon": "Cpu",
         "title": "Enterprise Data Center Perimeters",
         "desc": "High-security crash bollards interlocked with dual-gate airlocks preventing unauthorized vehicle entry.",
-        "tag": "Data Center"
+        "tag": "Data Center",
+        "image": "/services/service-server-env-monitoring.jpg"
       },
       {
         "icon": "Award",
         "title": "Financial HQs & Gold Vaults",
         "desc": "Anti-ram vehicle blockers and heavy cash van checkpoint rising bollards.",
-        "tag": "BFSI Security"
+        "tag": "BFSI Security",
+        "image": "/products/hydraulic-crash-bollards.jpg"
       }
     ],
     "faqs": [
@@ -1930,37 +1945,43 @@ export const PERIMETER_DEFENSE_PAGES = {
         "icon": "Building2",
         "title": "Luxury Residential Towers & Condos",
         "desc": "Replaces bulky spiral drive ramps, transporting luxury cars to subterranean private resident garages.",
-        "tag": "Residential Tower"
+        "tag": "Residential Tower",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "Layers",
         "title": "Commercial Office Complexes & HQs",
         "desc": "High-density multi-basement vehicle elevators maximizing visitor and executive parking slots.",
-        "tag": "Corporate Park"
+        "tag": "Corporate Park",
+        "image": "/hero-glass-atrium.jpg"
       },
       {
         "icon": "Truck",
         "title": "Automotive Dealerships & Service Hubs",
         "desc": "Transfers display cars between multi-floor glass showrooms and roof service workshops.",
-        "tag": "Auto Dealership"
+        "tag": "Auto Dealership",
+        "image": "/services/service-car-lift-systems.jpg"
       },
       {
         "icon": "ShieldCheck",
         "title": "Private Luxury Villa Basements",
         "desc": "Concealed subterranean car elevators hiding multi-vehicle collectors garages beneath lawns.",
-        "tag": "Private Luxury"
+        "tag": "Private Luxury",
+        "image": "/services/services-touchless-entry.jpg"
       },
       {
         "icon": "Factory",
         "title": "Industrial Facilities & Cargo Transfer",
         "desc": "Heavy cargo van and forklift elevator transfer between factory floor and basement storage.",
-        "tag": "Industrial Cargo"
+        "tag": "Industrial Cargo",
+        "image": "/services/services-logistics-bridge.jpg"
       },
       {
         "icon": "Award",
         "title": "Boutique Hotels & Valet Hubs",
         "desc": "Rapid valet car storage elevator serving multi-tier underground parking chambers.",
-        "tag": "Hospitality Valet"
+        "tag": "Hospitality Valet",
+        "image": "/services/service-parking-management.jpg"
       }
     ],
     "faqs": [
@@ -2442,37 +2463,43 @@ export const PERIMETER_DEFENSE_PAGES = {
         "icon": "Building2",
         "title": "Commercial Shopping Malls & Retail Hubs",
         "desc": "FASTag and QR ticket automated payment kiosks handling weekend peak shopping crowds.",
-        "tag": "Commercial Mall"
+        "tag": "Commercial Mall",
+        "image": "/hero-glass-atrium.jpg"
       },
       {
         "icon": "Layers",
         "title": "Corporate IT Parks & SEZs",
         "desc": "Hands-free employee FASTag lanes and pre-registered guest visitor parking bay allocations.",
-        "tag": "Corporate IT Park"
+        "tag": "Corporate IT Park",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "Activity",
         "title": "Airports & Multi-Level Car Parks (MLCP)",
         "desc": "Multi-level ultrasonic bay guidance directing air travelers to empty spaces in minutes.",
-        "tag": "Airport MLCP"
+        "tag": "Airport MLCP",
+        "image": "/services/service-parking-management.jpg"
       },
       {
         "icon": "ShieldCheck",
         "title": "Hospitals & Medical Centers",
         "desc": "Dedicated emergency priority lanes and contactless parking fee collection.",
-        "tag": "Healthcare Hub"
+        "tag": "Healthcare Hub",
+        "image": "/products/automatic-doors-hospital.jpg"
       },
       {
         "icon": "Truck",
         "title": "Logistics Yards & Truck Terminals",
         "desc": "Automated container truck queueing, weighbridge integration, and exit gate validation.",
-        "tag": "Logistics Terminal"
+        "tag": "Logistics Terminal",
+        "image": "/hero-industrial-doors-dock.jpg"
       },
       {
         "icon": "Award",
         "title": "Hotels & Exhibition Centers",
         "desc": "Dynamic tariff management supporting valet parking, exhibition passes, and VIP reservations.",
-        "tag": "Convention Center"
+        "tag": "Convention Center",
+        "image": "/services/service-boom-barrier.jpg"
       }
     ],
     "faqs": [
@@ -2954,37 +2981,43 @@ export const PERIMETER_DEFENSE_PAGES = {
         "icon": "Building2",
         "title": "Corporate IT HQs & Tech Campuses",
         "desc": "Replaces crowded receptionist visitor paper registers with sleek automated self-service check-in kiosks.",
-        "tag": "Corporate HQ"
+        "tag": "Corporate HQ",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "Cpu",
         "title": "Enterprise Data Centers & Colocation",
         "desc": "Rigorous identity verification, government ID capture, and customer engineer escort authorization.",
-        "tag": "Data Center"
+        "tag": "Data Center",
+        "image": "/hero-security-command-center.jpg"
       },
       {
         "icon": "Factory",
         "title": "Pharmaceutical & Chemical Plants",
         "desc": "Contractor safety induction videos, PPE compliance declarations, and GMP audit trail logs.",
-        "tag": "Pharma Plant"
+        "tag": "Pharma Plant",
+        "image": "/hero-cleanroom-automation.jpg"
       },
       {
         "icon": "ShieldCheck",
         "title": "Government Offices & Defense Establishments",
         "desc": "High-security visitor screening with photo badge printing and turnstile access control.",
-        "tag": "Government Site"
+        "tag": "Government Site",
+        "image": "/services/service-bollards-blockers.jpg"
       },
       {
         "icon": "Layers",
         "title": "Coworking Spaces & Business Centers",
         "desc": "Unattended visitor check-in sending instant host alerts to hot-desk members via mobile app.",
-        "tag": "Coworking Hub"
+        "tag": "Coworking Hub",
+        "image": "/hero-glass-atrium.jpg"
       },
       {
         "icon": "Award",
         "title": "Hospitals & Healthcare Facilities",
         "desc": "Patient visitor pass control limiting visitor counts per patient ward during visiting hours.",
-        "tag": "Healthcare Hub"
+        "tag": "Healthcare Hub",
+        "image": "/products/automatic-doors-hospital.jpg"
       }
     ],
     "faqs": [

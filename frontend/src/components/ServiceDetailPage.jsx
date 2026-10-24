@@ -928,7 +928,15 @@ export default function ServiceDetailPage({
                   {(pageData.applications || []).map((app, aIdx) => (
                     <div key={aIdx} className="app-tile">
                       <div className="app-tile-media">
-                        <img src={app.image} alt={app.title} className="app-tile-img" />
+                        <img
+                          src={app.image || pageData.heroImage || '/head-office-building.jpg'}
+                          alt={app.title}
+                          className="app-tile-img"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = pageData.heroImage || '/head-office-building.jpg';
+                          }}
+                        />
                       </div>
                       <div className="app-tile-label">{app.title}</div>
                     </div>

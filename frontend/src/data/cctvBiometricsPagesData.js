@@ -1,7 +1,4 @@
-/**
- * Comprehensive Product & Solution Page Data for CCTV Surveillance & Biometrics
- */
-
+// CCTV Surveillance & Biometrics Page Data
 export const CCTV_BIOMETRICS_PAGES = {
   "cctv-surveillance-systems": {
     "slug": "cctv-surveillance-systems",
@@ -394,37 +391,43 @@ export const CCTV_BIOMETRICS_PAGES = {
         "icon": "Building2",
         "title": "Corporate IT Campuses & Commercial Real Estate",
         "desc": "Comprehensive 4K coverage of entrance atriums, elevator lobbies, and open-plan floors.",
-        "tag": "Corporate Campus"
+        "tag": "Corporate Campus",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "Factory",
         "title": "Pharmaceutical & Chemical Plants",
         "desc": "Explosion-proof ATEX camera housings monitoring solvent storage and formulation suites.",
-        "tag": "Pharma Plant"
+        "tag": "Pharma Plant",
+        "image": "/hero-cleanroom-automation.jpg"
       },
       {
         "icon": "Truck",
         "title": "Logistics Warehouses & Cargo Hubs",
         "desc": "High-speed ANPR cameras logging freight truck registrations at loading bay checkpoints.",
-        "tag": "Logistics Hub"
+        "tag": "Logistics Hub",
+        "image": "/hero-industrial-doors-dock.jpg"
       },
       {
         "icon": "ShieldCheck",
         "title": "High-Security Defense & Infrastructure",
         "desc": "Long-range optical thermal and 36x PTZ camera arrays patrolling perimeter boundary walls.",
-        "tag": "Perimeter Wall"
+        "tag": "Perimeter Wall",
+        "image": "/services/service-bollards-blockers.jpg"
       },
       {
         "icon": "Layers",
         "title": "Commercial Shopping Malls & Retail Banks",
         "desc": "Vandal-proof IK10 dome cameras monitoring teller counters, cash vaults, and customer queues.",
-        "tag": "Banking & Retail"
+        "tag": "Banking & Retail",
+        "image": "/hero-glass-atrium.jpg"
       },
       {
         "icon": "Activity",
         "title": "Airports & Railway Terminals",
         "desc": "AI facial detection and crowd congestion analytics tracking terminal concourse movement.",
-        "tag": "Public Transit"
+        "tag": "Public Transit",
+        "image": "/products/cctv-ip-4k-surveillance.jpg"
       }
     ],
     "faqs": [
@@ -906,37 +909,43 @@ export const CCTV_BIOMETRICS_PAGES = {
         "icon": "Building2",
         "title": "Corporate IT HQs & BFSI Towers",
         "desc": "Touchless facial recognition attendance eliminating proxy punching and badge sharing.",
-        "tag": "Corporate HQ"
+        "tag": "Corporate HQ",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "Layers",
         "title": "Pharma API & Sterile Formulation Blocks",
         "desc": "USFDA 21 CFR Part 11 compliant door interlock access controlling gowning room airlocks.",
-        "tag": "Pharma Cleanroom"
+        "tag": "Pharma Cleanroom",
+        "image": "/hero-cleanroom-automation.jpg"
       },
       {
         "icon": "Factory",
         "title": "Automotive & Heavy Industrial Plants",
         "desc": "Multi-spectral live tissue fingerprint terminals managing thousands of shift factory workers.",
-        "tag": "Manufacturing Plant"
+        "tag": "Manufacturing Plant",
+        "image": "/services/services-perimeter-gate.jpg"
       },
       {
         "icon": "Cpu",
         "title": "Mission-Critical Server Rooms & NOCs",
         "desc": "Multi-factor authentication requiring face + encrypted smart card for server rack row access.",
-        "tag": "Data Center"
+        "tag": "Data Center",
+        "image": "/hero-security-command-center.jpg"
       },
       {
         "icon": "ShieldCheck",
         "title": "Chemical & Hazardous Solvent Stores",
         "desc": "Flameproof (Ex-d) biometric terminals certified for explosive Zone 1 solvent dispensing bays.",
-        "tag": "Flameproof Ex-d"
+        "tag": "Flameproof Ex-d",
+        "image": "/services/service-battery-room-gas-detector.jpg"
       },
       {
         "icon": "Award",
         "title": "Hospitals & Healthcare Facilities",
         "desc": "Hygienic hands-free facial recognition access for doctors entering surgical operating theatres.",
-        "tag": "Healthcare Suite"
+        "tag": "Healthcare Suite",
+        "image": "/products/automatic-doors-hospital.jpg"
       }
     ],
     "faqs": [
@@ -1418,37 +1427,43 @@ export const CCTV_BIOMETRICS_PAGES = {
         "icon": "Building2",
         "title": "Corporate HQs & Executive Suites",
         "desc": "Restricted executive floor entry with video verification and receptionist door release.",
-        "tag": "Corporate Suite"
+        "tag": "Corporate Suite",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "ShieldCheck",
         "title": "Perimeter Gate Security Guardhouses",
         "desc": "Intercom connection between outer security gates, reception desks, and facility management.",
-        "tag": "Gatehouse Intercom"
+        "tag": "Gatehouse Intercom",
+        "image": "/services/services-perimeter-gate.jpg"
       },
       {
         "icon": "Cpu",
         "title": "Mission-Critical Server Rooms & Labs",
         "desc": "Access authorization intercom ensuring foreign technician clearance before entering data halls.",
-        "tag": "Server Room"
+        "tag": "Server Room",
+        "image": "/hero-security-command-center.jpg"
       },
       {
         "icon": "Layers",
         "title": "Multi-Tenant Commercial Complexes",
         "desc": "Multi-apartment door stations with digital company directories routing calls to individual offices.",
-        "tag": "Commercial Complex"
+        "tag": "Commercial Complex",
+        "image": "/hero-glass-atrium.jpg"
       },
       {
         "icon": "Factory",
         "title": "Pharmaceutical Cleanroom Gowning Rooms",
         "desc": "Hands-free intercom communication between sterile cleanrooms and unclassified utility zones.",
-        "tag": "Cleanroom Intercom"
+        "tag": "Cleanroom Intercom",
+        "image": "/hero-cleanroom-automation.jpg"
       },
       {
         "icon": "Award",
         "title": "Luxury Villas & Residential Estates",
         "desc": "Smartphone app integration enabling homeowners to answer gate video calls while away.",
-        "tag": "Luxury Estate"
+        "tag": "Luxury Estate",
+        "image": "/services/service-video-door-phones.jpg"
       }
     ],
     "faqs": [
@@ -1930,37 +1945,43 @@ export const CCTV_BIOMETRICS_PAGES = {
         "icon": "Building2",
         "title": "Enterprise Corporate Command Centers (SOC)",
         "desc": "Central security operations rooms overseeing multi-building campuses and global branch offices.",
-        "tag": "Corporate SOC"
+        "tag": "Corporate SOC",
+        "image": "/hero-security-command-center.jpg"
       },
       {
         "icon": "Factory",
         "title": "Industrial Manufacturing Plants & Refineries",
         "desc": "Monitoring production lines, perimeter gates, hazardous chemical storage, and fire alarms.",
-        "tag": "Industrial Command"
+        "tag": "Industrial Command",
+        "image": "/services/services-heavy-security.jpg"
       },
       {
         "icon": "Activity",
         "title": "Smart Cities & Municipal Traffic Control",
         "desc": "Municipal traffic command walls tracking public safety, ANPR cameras, and emergency services.",
-        "tag": "Smart City"
+        "tag": "Smart City",
+        "image": "/services/service-parking-management.jpg"
       },
       {
         "icon": "Cpu",
         "title": "Enterprise Data Center Network Operations (NOC)",
         "desc": "24/7 monitoring of server hall access, power status, chiller loops, and environmental telemetry.",
-        "tag": "Data Center NOC"
+        "tag": "Data Center NOC",
+        "image": "/products/server-room-telemetry.jpg"
       },
       {
         "icon": "ShieldCheck",
         "title": "Airports & Maritime Sea Ports",
         "desc": "High-density video wall installations monitoring passenger gates, baggage areas, and perimeters.",
-        "tag": "Aviation & Port"
+        "tag": "Aviation & Port",
+        "image": "/hero-industrial-doors-dock.jpg"
       },
       {
         "icon": "Layers",
         "title": "Commercial Malls & Retail Developments",
         "desc": "Centralized security monitoring crowd movement, fire alarm zones, and parking garages.",
-        "tag": "Commercial Mall"
+        "tag": "Commercial Mall",
+        "image": "/hero-glass-atrium.jpg"
       }
     ],
     "faqs": [
@@ -2442,37 +2463,43 @@ export const CCTV_BIOMETRICS_PAGES = {
         "icon": "ShieldCheck",
         "title": "Military Bases & Perimeter Defense Boundaries",
         "desc": "Zero-light intrusion detection along miles of remote desert and forest perimeter fencing.",
-        "tag": "Military Perimeter"
+        "tag": "Military Perimeter",
+        "image": "/services/service-bollards-blockers.jpg"
       },
       {
         "icon": "Factory",
         "title": "Oil Refineries & Chemical Tank Farms",
         "desc": "Thermal perimeter detection combined with early warning flammable tank surface temperature monitoring.",
-        "tag": "Petrochemical Site"
+        "tag": "Petrochemical Site",
+        "image": "/services/services-heavy-security.jpg"
       },
       {
         "icon": "Layers",
         "title": "Airports & Flight Runway Perimeters",
         "desc": "Quad-beam infrared fencing and long-range thermal cameras guarding aircraft taxiway borders.",
-        "tag": "Aviation Boundary"
+        "tag": "Aviation Boundary",
+        "image": "/hero-industrial-doors-dock.jpg"
       },
       {
         "icon": "Building2",
         "title": "Enterprise Corporate Tech Campuses",
         "desc": "Architectural aluminum beam towers guarding exterior campus boundaries without ugly razor wire.",
-        "tag": "Corporate Campus"
+        "tag": "Corporate Campus",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "Cpu",
         "title": "Critical Infrastructure & Power Sub-Stations",
         "desc": "High-voltage sub-station perimeter defense immune to high electromagnetic interference (EMI).",
-        "tag": "Power Grid"
+        "tag": "Power Grid",
+        "image": "/services/service-alarm-annunciators.jpg"
       },
       {
         "icon": "Award",
         "title": "Seaports & Maritime Cargo Terminals",
         "desc": "Thermal cameras cutting through heavy marine fog, mist, and sea spray to detect approaching boats.",
-        "tag": "Maritime Port"
+        "tag": "Maritime Port",
+        "image": "/services/services-logistics-bridge.jpg"
       }
     ],
     "faqs": [
@@ -2954,37 +2981,43 @@ export const CCTV_BIOMETRICS_PAGES = {
         "icon": "Building2",
         "title": "Commercial Office HQs & Business Parks",
         "desc": "Multi-partition alarm panels securing individual tenant suites, server rooms, and executive offices.",
-        "tag": "Corporate Office"
+        "tag": "Corporate Office",
+        "image": "/head-office-building.jpg"
       },
       {
         "icon": "Award",
         "title": "Banking Branches & High-Security Vaults",
         "desc": "Seismic vibration sensors and Grade-3 anti-masking detectors protecting cash safes and locker rooms.",
-        "tag": "Bank & Vault"
+        "tag": "Bank & Vault",
+        "image": "/services/service-bollards-blockers.jpg"
       },
       {
         "icon": "Factory",
         "title": "Pharmaceutical & Chemical Warehouses",
         "desc": "Securing high-value active pharmaceutical ingredients (API) and scheduled narcotics inventory.",
-        "tag": "Pharma Store"
+        "tag": "Pharma Store",
+        "image": "/hero-cleanroom-automation.jpg"
       },
       {
         "icon": "Truck",
         "title": "Logistics Warehouses & Bonded Cargo Hubs",
         "desc": "Dual-technology microwave motion beams and high-decibel siren towers protecting freight bays.",
-        "tag": "Logistics Bay"
+        "tag": "Logistics Bay",
+        "image": "/hero-industrial-doors-dock.jpg"
       },
       {
         "icon": "Layers",
         "title": "Jewelry Showrooms & Luxury Retail",
         "desc": "Acoustic glass break detectors and silent panic duress foot switches linked to central police stations.",
-        "tag": "Retail Luxury"
+        "tag": "Retail Luxury",
+        "image": "/hero-glass-atrium.jpg"
       },
       {
         "icon": "Cpu",
         "title": "Data Centers & Critical Telecom Switching Rooms",
         "desc": "Seismic wall attack sensors and dual-path cellular communicator alerting engineers to perimeter tampering.",
-        "tag": "Telecom Room"
+        "tag": "Telecom Room",
+        "image": "/hero-security-command-center.jpg"
       }
     ],
     "faqs": [
