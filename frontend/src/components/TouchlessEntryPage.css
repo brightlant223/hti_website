@@ -1341,14 +1341,30 @@
   gap: 48px;
 }
 
-.specs-table-container {
+/* Outer card/container wrapping heading and specs table */
+.touchless-specs-section .specs-table-wrapper {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+}
+
+/* Center ONLY the Technical Specifications heading */
+.touchless-specs-section .specs-table-wrapper .section-title {
+  text-align: center;
+  margin: 0 0 20px 0;
+}
+
+/* Inner table box sitting inside the outer card with clear visible space */
+.touchless-specs-section .specs-table-container {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 0;
+  width: 100%;
 }
 
 .tech-specs-table {
@@ -2372,6 +2388,10 @@
     gap: 28px;
   }
 
+  .touchless-specs-section .specs-table-wrapper {
+    padding: 20px 16px;
+  }
+
   .showcase-content-grid {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -2617,6 +2637,15 @@
   .door-viewport {
     height: 200px;
     min-height: 200px;
+  }
+
+  .touchless-specs-section .specs-table-wrapper {
+    padding: 16px 12px;
+    border-radius: 12px;
+  }
+
+  .touchless-specs-section .specs-table-wrapper .section-title {
+    margin-bottom: 16px;
   }
 
   .tech-specs-table td {
