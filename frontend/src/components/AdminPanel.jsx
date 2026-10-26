@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './AdminDashboard.css';
 import AdminProductsManager from './AdminProductsManager';
+import AdminBlogsManager from './AdminBlogsManager';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
   FileText, Package, MessageSquare, Search, AlertCircle,
@@ -2271,105 +2272,21 @@ export default function AdminPanel({
               ========================================================================= */}
           {activeTab === 'blogs' && (
             <div className="admin-body-content">
-              <div className="catalog-toolbar">
-                <div className="catalog-search-wrap">
-                  <Search size={16} className="search-icon" />
-                  <input
-                    type="text"
-                    placeholder="Search engineering articles by title, category, excerpt..."
-                    value={blogSearch}
-                    onChange={e => setBlogSearch(e.target.value)}
-                  />
-                </div>
-
-                <div className="catalog-filter-group">
-                  <select
-                    className="catalog-select"
-                    value={blogStatusFilter}
-                    onChange={e => setBlogStatusFilter(e.target.value)}
-                  >
-                    <option value="All">All Statuses ({blogs.length})</option>
-                    <option value="Published">Published ({blogs.filter(b => b.is_published).length})</option>
-                    <option value="Draft">Drafts ({blogs.filter(b => !b.is_published).length})</option>
-                  </select>
-
-                  <button className="dash-action-btn primary" onClick={handleOpenAddBlog}>
-                    <Plus size={16} />
-                    <span>New Article</span>
-                  </button>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
-                {filteredBlogs.map(b => (
-                  <div key={b.id} style={{
-                    background: '#0d1527',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '12px',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }}>
-                    <div style={{ height: '150px', background: '#1e293b', position: 'relative', overflow: 'hidden' }}>
-                      {b.image_url ? (
-                        <img src={b.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      ) : (
-                        <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                          <FileText size={36} style={{ color: '#475569' }} />
-                        </div>
-                      )}
-                      <span style={{
-                        position: 'absolute',
-                        top: '10px',
-                        left: '10px',
-                        background: 'rgba(0,0,0,0.7)',
-                        padding: '3px 8px',
-                        borderRadius: '6px',
-                        fontSize: '0.7rem',
-                        fontWeight: '700',
-                        color: '#a855f7'
-                      }}>
-                        {b.category}
-                      </span>
-                      <button
-                        onClick={() => handleToggleBlogPublish(b)}
-                        style={{
-                          position: 'absolute',
-                          top: '10px',
-                          right: '10px',
-                          border: 'none',
-                          cursor: 'pointer',
-                          padding: '3px 8px',
-                          borderRadius: '6px',
-                          fontSize: '0.7rem',
-                          fontWeight: '700',
-                          background: b.is_published ? 'rgba(16, 185, 129, 0.9)' : 'rgba(239, 68, 68, 0.9)',
-                          color: '#ffffff'
-                        }}
-                      >
-                        {b.is_published ? 'Published' : 'Draft'}
-                      </button>
-                    </div>
-
-                    <div style={{ padding: '16px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                      <h4 style={{ margin: '0 0 8px 0', fontSize: '0.98rem', fontWeight: '700', color: '#ffffff', lineHeight: '1.3' }}>
-                        {b.title}
-                      </h4>
-                      <p style={{ margin: '0 0 12px 0', fontSize: '0.82rem', color: '#94a3b8', lineHeight: '1.4', flexGrow: 1 }}>
-                        {b.excerpt}
-                      </p>
-
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.06)', fontSize: '0.75rem', color: '#64748b' }}>
-                        <span>{b.author || 'HTI Team'} • {b.read_time || '5m read'}</span>
-                        <div style={{ display: 'flex', gap: '6px' }}>
-                          <button className="table-action-btn" onClick={() => handleOpenEditBlog(b)} title="Edit Article"><Edit3 size={14} /></button>
-                          <button className="table-action-btn delete" onClick={() => handleDeleteBlog(b)} title="Delete Article"><Trash2 size={14} /></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <AdminBlogsManager
+                blogs={blogs}
+                currentUser={currentUser}
+                externalEditingBlog={editingBlog}
+                onCloseEditingBlog={() => setEditingBlog(null)}
+                onRefresh={async () => {
+                  await fetchBlogs();
+                  await fetchSystemHealth();
+                  if (onBlogsChanged) onBlogsChanged();
+                }}
+                onFeedback={showFeedback}
+                onNavigateToPublicBlog={(slug) => {
+                  if (onClose) onClose();
+                }}
+              />
             </div>
           )}
 
@@ -3392,196 +3309,6 @@ export default function AdminPanel({
           )}
         </div>
       </div>
-
-      {/* =========================================================================
-          MODAL 2: BLOG ADD / EDIT MODAL
-          ========================================================================= */}
-      {editingBlog && (
-        <div className="admin-modal-overlay" onClick={() => setEditingBlog(null)}>
-          <div className="admin-modal-container" onClick={e => e.stopPropagation()}>
-            <div className="admin-modal-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <FileText size={20} className="text-purple" />
-                <h3 className="admin-modal-title">
-                  {editingBlog === 'new' ? 'Create Technical Publication' : `Edit Article: ${editingBlog.title}`}
-                </h3>
-              </div>
-              <button className="topbar-close-btn" onClick={() => setEditingBlog(null)}>
-                <X size={18} />
-              </button>
-            </div>
-
-            <div style={{ display: 'flex', gap: '8px', padding: '12px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-              <button
-                className={`dash-action-btn ${blogModalTab === 'content' ? 'primary' : 'secondary'}`}
-                onClick={() => setBlogModalTab('content')}
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
-              >
-                1. Article Content
-              </button>
-              <button
-                className={`dash-action-btn ${blogModalTab === 'seo' ? 'primary' : 'secondary'}`}
-                onClick={() => setBlogModalTab('seo')}
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
-              >
-                2. SEO & Scheduling
-              </button>
-            </div>
-
-            <div className="admin-modal-body" style={{ maxHeight: '68vh', overflowY: 'auto', padding: '24px' }}>
-              {blogModalTab === 'content' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div className="admin-form-group">
-                    <label className="admin-label">Article Title *</label>
-                    <input
-                      className="admin-input"
-                      required
-                      value={blogForm.title}
-                      onChange={e => setBlogForm({ ...blogForm, title: e.target.value })}
-                      placeholder="e.g. Optimizing Cleanroom Differential Pressure with Multi-Door Interlock Systems"
-                    />
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-                    <div className="admin-form-group">
-                      <label className="admin-label">Category *</label>
-                      <input
-                        className="admin-input"
-                        required
-                        value={blogForm.category}
-                        onChange={e => setBlogForm({ ...blogForm, category: e.target.value })}
-                        placeholder="e.g. Cleanroom Engineering"
-                      />
-                    </div>
-                    <div className="admin-form-group">
-                      <label className="admin-label">Author</label>
-                      <input
-                        className="admin-input"
-                        value={blogForm.author}
-                        onChange={e => setBlogForm({ ...blogForm, author: e.target.value })}
-                      />
-                    </div>
-                    <div className="admin-form-group">
-                      <label className="admin-label">Estimated Read Time</label>
-                      <input
-                        className="admin-input"
-                        value={blogForm.read_time}
-                        onChange={e => setBlogForm({ ...blogForm, read_time: e.target.value })}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label className="admin-label">Cover Image URL</label>
-                    <input
-                      className="admin-input"
-                      value={blogForm.image_url}
-                      onChange={e => setBlogForm({ ...blogForm, image_url: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label className="admin-label">Excerpt / Brief Summary *</label>
-                    <textarea
-                      className="admin-textarea"
-                      rows={2}
-                      required
-                      value={blogForm.excerpt}
-                      onChange={e => setBlogForm({ ...blogForm, excerpt: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label className="admin-label">Article Body Content *</label>
-                    <textarea
-                      className="admin-textarea"
-                      rows={8}
-                      required
-                      value={blogForm.content}
-                      onChange={e => setBlogForm({ ...blogForm, content: e.target.value })}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {blogModalTab === 'seo' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div className="admin-form-group">
-                    <label className="admin-label">SEO Meta Title</label>
-                    <input
-                      className="admin-input"
-                      value={blogForm.seo_title}
-                      onChange={e => setBlogForm({ ...blogForm, seo_title: e.target.value })}
-                      placeholder={blogForm.title || 'SEO Title'}
-                    />
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label className="admin-label">SEO Meta Description</label>
-                    <textarea
-                      className="admin-textarea"
-                      rows={2}
-                      value={blogForm.meta_description}
-                      onChange={e => setBlogForm({ ...blogForm, meta_description: e.target.value })}
-                      placeholder={blogForm.excerpt || 'Brief meta description for search engines'}
-                    />
-                  </div>
-
-                  {/* SERP Search Preview Box */}
-                  <div style={{ background: '#ffffff', padding: '16px', borderRadius: '8px', color: '#1a0dab' }}>
-                    <div style={{ fontSize: '0.78rem', color: '#202124' }}>https://htisystems.in › blogs › {blogForm.title ? blogForm.title.toLowerCase().replace(/\s+/g, '-') : 'article'}</div>
-                    <div style={{ fontSize: '1.05rem', fontWeight: '500', color: '#1a0dab', textDecoration: 'underline', marginTop: '2px' }}>
-                      {blogForm.seo_title || blogForm.title || 'Article Title'} | HTI Systems
-                    </div>
-                    <div style={{ fontSize: '0.8rem', color: '#4d5156', marginTop: '4px' }}>
-                      {blogForm.meta_description || blogForm.excerpt || 'Article summary description snippet...'}
-                    </div>
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label className="admin-label">Tags (comma-separated)</label>
-                    <input
-                      className="admin-input"
-                      value={blogForm.tags}
-                      onChange={e => setBlogForm({ ...blogForm, tags: e.target.value })}
-                      placeholder="Cleanroom, Pressure Control, USFDA, HVAC"
-                    />
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label className="admin-label">Optional Schedule Date (Future Publication)</label>
-                    <input
-                      type="date"
-                      className="admin-input"
-                      value={blogForm.scheduled_at}
-                      onChange={e => setBlogForm({ ...blogForm, scheduled_at: e.target.value })}
-                    />
-                  </div>
-
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#cbd5e1' }}>
-                    <input
-                      type="checkbox"
-                      checked={blogForm.is_published}
-                      onChange={e => setBlogForm({ ...blogForm, is_published: e.target.checked })}
-                    />
-                    <span>Publish Immediately (Make Live)</span>
-                  </label>
-                </div>
-              )}
-            </div>
-
-            <div className="admin-modal-footer">
-              <button type="button" className="dash-action-btn secondary" onClick={() => setEditingBlog(null)}>
-                Cancel
-              </button>
-              <button type="button" className="dash-action-btn primary" onClick={handleSaveBlog}>
-                <CheckCircle size={16} />
-                <span>Save Article</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* =========================================================================
           MODAL 3: CLIENT ADD / EDIT MODAL
