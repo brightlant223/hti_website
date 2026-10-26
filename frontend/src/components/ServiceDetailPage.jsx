@@ -14,11 +14,8 @@ import {
   Pause,
   Volume2,
   VolumeX,
-  Maximize2,
   CheckCircle2,
   ArrowRight,
-  ChevronRight,
-  ChevronLeft,
   X,
   Award,
   Layers,
@@ -231,12 +228,18 @@ export default function ServiceDetailPage({
 
   // Video player state
   const videoRef = useRef(null);
+  const userPausedRef = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState('0:00');
-  const [duration, setDuration] = useState('2:15');
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+
+  // prefers-reduced-motion media query hook
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    return false;
+  });
 
   // Quote modal state
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
@@ -252,10 +255,6 @@ export default function ServiceDetailPage({
   // FAQ Accordion state
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
-  // Lightbox for gallery
-  const [lightboxImage, setLightboxImage] = useState(null);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
-
   // Form data for quote
   const [formData, setFormData] = useState({
     name: '',
@@ -268,6 +267,26 @@ export default function ServiceDetailPage({
     message: `Hello HTI Engineering, please share technical datasheet, structural drawing, and turnkey quotation for ${pageData.titleLine1} Solutions.`
   });
 
+  // Listen to prefers-reduced-motion changes
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleMotionChange = (e) => {
+      setPrefersReducedMotion(e.matches);
+      if (e.matches && videoRef.current) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+        userPausedRef.current = true;
+      }
+    };
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleMotionChange);
+      return () => mediaQuery.removeEventListener('change', handleMotionChange);
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(handleMotionChange);
+      return () => mediaQuery.removeListener(handleMotionChange);
+    }
+  }, []);
 
   // Scroll to top and set page title on slug change
   useEffect(() => {
@@ -277,40 +296,81 @@ export default function ServiceDetailPage({
     setActiveStep(0);
     setOpenFaqIndex(0);
     setSelectedProductForQuote(pageData.titleLine1 + ' Solution');
+    setVideoFailed(false);
+    userPausedRef.current = prefersReducedMotion;
     setFormData(prev => ({
       ...prev,
       productType: pageData.titleLine1,
       message: `Hello HTI Engineering, please share technical datasheet, structural drawing, and turnkey quotation for ${pageData.titleLine1} Solutions.`
     }));
-  }, [slug, pageData.titleLine1]);
+  }, [cleanSlug, pageData.titleLine1, prefersReducedMotion]);
 
-  // Video progress handling
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      const current = videoRef.current.currentTime;
-      const total = videoRef.current.duration || 135;
-      setProgress((current / total) * 100);
+  // Pause video when tab is hidden or hero video scrolls out of view
+  useEffect(() => {
+    const videoEl = videoRef.current;
+    if (!videoEl) return;
 
-      const formatTime = (time) => {
-        const mins = Math.floor(time / 60);
-        const secs = Math.floor(time % 60);
-        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-      };
-      setCurrentTime(formatTime(current));
-      if (videoRef.current.duration) {
-        setDuration(formatTime(videoRef.current.duration));
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (videoRef.current && !videoRef.current.paused) {
+          videoRef.current.pause();
+        }
+      } else {
+        if (!userPausedRef.current && !prefersReducedMotion && videoRef.current) {
+          const rect = videoRef.current.getBoundingClientRect();
+          const inView = rect.top < window.innerHeight && rect.bottom > 0;
+          if (inView) {
+            videoRef.current.play().catch(() => {});
+          }
+        }
       }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    let observer;
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!videoRef.current) return;
+            if (!entry.isIntersecting) {
+              if (!videoRef.current.paused) {
+                videoRef.current.pause();
+              }
+            } else {
+              if (!userPausedRef.current && !prefersReducedMotion && !document.hidden) {
+                videoRef.current.play().catch(() => {});
+              }
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(videoEl);
     }
-  };
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+  }, [cleanSlug, prefersReducedMotion, videoFailed]);
 
   const togglePlay = () => {
     if (videoRef.current) {
-      if (isPlaying) {
+      if (videoRef.current.paused) {
+        userPausedRef.current = false;
+        videoRef.current.play().then(() => {
+          setIsPlaying(true);
+        }).catch((err) => {
+          console.warn('Playback error:', err);
+        });
+      } else {
+        userPausedRef.current = true;
         videoRef.current.pause();
         setIsPlaying(false);
-      } else {
-        videoRef.current.play();
-        setIsPlaying(true);
       }
     }
   };
@@ -319,13 +379,23 @@ export default function ServiceDetailPage({
     if (videoRef.current) {
       videoRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
+    } else {
+      setIsMuted(!isMuted);
     }
   };
 
-  const handleFullscreen = () => {
-    if (videoRef.current) {
-      if (videoRef.current.requestFullscreen) {
-        videoRef.current.requestFullscreen();
+  const scrollToNextSection = () => {
+    const targets = [
+      'service-details-section',
+      'service-workflow-section',
+      'service-specs-section',
+      'service-faq-section'
+    ];
+    for (const id of targets) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        break;
       }
     }
   };
@@ -375,33 +445,13 @@ export default function ServiceDetailPage({
     }, 2400);
   };
 
-
-  const openLightbox = (index) => {
-    if (!pageData.gallery || !pageData.gallery.length) return;
-    const safeIdx = Math.max(0, Math.min(index, pageData.gallery.length - 1));
-    setLightboxIndex(safeIdx);
-    setLightboxImage(pageData.gallery[safeIdx]);
-  };
-
-  const nextLightbox = (e) => {
-    if (e && e.stopPropagation) e.stopPropagation();
-    if (!pageData.gallery || !pageData.gallery.length) return;
-    const nextIdx = (lightboxIndex + 1) % pageData.gallery.length;
-    setLightboxIndex(nextIdx);
-    setLightboxImage(pageData.gallery[nextIdx]);
-  };
-
-  const prevLightbox = (e) => {
-    if (e && e.stopPropagation) e.stopPropagation();
-    if (!pageData.gallery || !pageData.gallery.length) return;
-    const prevIdx = (lightboxIndex - 1 + pageData.gallery.length) % pageData.gallery.length;
-    setLightboxIndex(prevIdx);
-    setLightboxImage(pageData.gallery[prevIdx]);
-  };
-
   const howItWorksSteps = Array.isArray(pageData.howItWorks)
     ? pageData.howItWorks
     : (pageData.howItWorks && Array.isArray(pageData.howItWorks.steps) ? pageData.howItWorks.steps : []);
+
+  const rawVideoSrc = pageData.showcase && pageData.showcase.videoSrc ? pageData.showcase.videoSrc.trim() : '';
+  const posterSrc = (pageData.showcase && pageData.showcase.poster) || pageData.heroImage;
+  const showHeroVideo = Boolean(rawVideoSrc) && !videoFailed;
 
   return (
     <div className="touchless-page-root">
@@ -475,35 +525,74 @@ export default function ServiceDetailPage({
 
                 <button
                   className="touchless-btn-secondary"
-                  onClick={() => {
-                    const el = document.getElementById('product-cards-section');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={scrollToNextSection}
                 >
-                  <span>Explore Products</span>
+                  <span>Explore Details</span>
                 </button>
               </div>
             </div>
 
-            {/* Center: Showcase Image with Interactive Status Badge */}
+            {/* Center: Showcase Video (or Image Fallback) with Interactive Status Badge */}
             <div className="touchless-hero-center">
               <div className="touchless-door-showcase-frame">
-                <div className="radar-sensor-assembly sensor-active">
-                  <div className="sensor-hardware-box">
-                    <div className="sensor-lens"></div>
-                    <div className="sensor-led-indicator"></div>
-                  </div>
-                  <div className="radar-wave wave-1"></div>
-                  <div className="radar-wave wave-2"></div>
-                  <div className="radar-wave wave-3"></div>
-                </div>
-
                 <div className="door-viewport">
-                  <img
-                    src={pageData.heroImage}
-                    alt={`${pageData.titleLine1} Showcase`}
-                    className="touchless-hero-door-img"
-                  />
+                  {showHeroVideo ? (
+                    <>
+                      <video
+                        ref={videoRef}
+                        key={rawVideoSrc}
+                        src={rawVideoSrc}
+                        poster={posterSrc}
+                        className="touchless-hero-door-img"
+                        autoPlay={!prefersReducedMotion}
+                        loop
+                        muted={isMuted}
+                        playsInline
+                        onPlay={() => setIsPlaying(true)}
+                        onPause={() => setIsPlaying(false)}
+                        onError={() => {
+                          console.warn('Hero video load failed, falling back to static heroImage.');
+                          setVideoFailed(true);
+                        }}
+                      />
+                      {prefersReducedMotion && !isPlaying && (
+                        <button
+                          type="button"
+                          className="hero-reduced-motion-play-btn"
+                          onClick={togglePlay}
+                          aria-label="Play video"
+                        >
+                          <Play size={22} fill="currentColor" />
+                        </button>
+                      )}
+                      <div className="door-video-controls">
+                        <button
+                          type="button"
+                          className="control-btn door-control-btn"
+                          onClick={togglePlay}
+                          aria-label={isPlaying ? "Pause video" : "Play video"}
+                          title={isPlaying ? "Pause" : "Play"}
+                        >
+                          {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                        </button>
+                        <button
+                          type="button"
+                          className="control-btn door-control-btn"
+                          onClick={toggleMute}
+                          aria-label={isMuted ? "Unmute video" : "Mute video"}
+                          title={isMuted ? "Unmute" : "Mute"}
+                        >
+                          {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <img
+                      src={pageData.heroImage}
+                      alt={`${pageData.titleLine1} Showcase`}
+                      className="touchless-hero-door-img"
+                    />
+                  )}
                   <div className="door-reflection-overlay"></div>
 
                   <div className="door-interactive-badge">
@@ -539,11 +628,8 @@ export default function ServiceDetailPage({
           <div className="hero-scroll-cue-wrapper">
             <button
               className="hero-scroll-cue"
-              onClick={() => {
-                const el = document.getElementById('product-cards-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-              aria-label="Scroll down to explore products"
+              onClick={scrollToNextSection}
+              aria-label="Scroll down to explore full system details"
             >
               <span>Scroll to explore full system details</span>
               <ChevronDown size={15} className="scroll-cue-icon" />
@@ -552,176 +638,9 @@ export default function ServiceDetailPage({
         </div>
       </section>
 
-      {/* 2. OPERATIONAL SHOWCASE (Video Showcase) */}
-      {pageData.showcase && (
-        <section className="touchless-showcase-section">
-          <div className="touchless-container">
-            <div className="showcase-content-grid">
-              {/* Left: Custom Video Showcase Player */}
-              <div className="showcase-video-card">
-                <div className="video-player-wrapper">
-                  <video
-                    ref={videoRef}
-                    src={pageData.showcase.videoSrc}
-                    poster={pageData.showcase.poster}
-                    className="showcase-video-element"
-                    onTimeUpdate={handleTimeUpdate}
-                    onEnded={() => setIsPlaying(false)}
-                    muted={isMuted}
-                    playsInline
-                  />
-
-                  {/* Big Center Play Button when paused */}
-                  {!isPlaying && (
-                    <button
-                      className="video-center-play-btn"
-                      onClick={togglePlay}
-                      aria-label="Play video"
-                    >
-                      <div className="play-triangle"></div>
-                    </button>
-                  )}
-
-                  {/* Scrubber and Video Controls Bar */}
-                  <div className="video-controls-bar">
-                    <button className="control-btn" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"}>
-                      {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                    </button>
-
-                    <div className="video-time-display">
-                      {currentTime} / {duration}
-                    </div>
-
-                    <div
-                      className="video-progress-track"
-                      onClick={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const pos = (e.clientX - rect.left) / rect.width;
-                        if (videoRef.current && videoRef.current.duration) {
-                          videoRef.current.currentTime = pos * videoRef.current.duration;
-                        }
-                      }}
-                    >
-                      <div className="video-progress-filled" style={{ width: `${progress}%` }}></div>
-                    </div>
-
-                    <button className="control-btn" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
-                      {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                    </button>
-
-                    <button className="control-btn" onClick={handleFullscreen} aria-label="Fullscreen">
-                      <Maximize2 size={16} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Operational Details & Features */}
-              <div className="showcase-info-col">
-                <div className="showcase-matrix-dots" aria-hidden="true">
-                  <span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span>
-                </div>
-
-                <div className="showcase-eyebrow">{pageData.showcase.eyebrow}</div>
-                <h2 className="showcase-heading">{pageData.showcase.heading}</h2>
-
-                <p className="showcase-description">
-                  {pageData.showcase.description}
-                </p>
-
-                <div className="showcase-features-list">
-                  {(pageData.showcase.features || []).map((featureText, fIdx) => (
-                    <div key={fIdx} className="showcase-feature-item">
-                      <div className="check-circle-icon">
-                        <Check size={16} />
-                      </div>
-                      <span>{featureText}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="showcase-action-row">
-                  <button
-                    className="showcase-watch-btn"
-                    onClick={() => setIsVideoModalOpen(true)}
-                  >
-                    <span>Watch Full Video</span>
-                    <ArrowRight size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* 3. PRODUCT CARDS SECTION (4 CARDS IN ONE ROW ON DESKTOP) */}
-      <section className="touchless-products-section" id="product-cards-section">
-        <div className="touchless-container">
-          <div className="section-header-row">
-            <div>
-              <h2 className="section-title">{pageData.productsTitle}</h2>
-              <div className="section-title-underline"></div>
-            </div>
-
-            <button
-              className="view-all-link"
-              onClick={() => onNavigate && onNavigate('catalog')}
-            >
-              <span>View All Products</span>
-              <ArrowRight size={15} />
-            </button>
-          </div>
-
-          <div className="touchless-products-grid">
-            {(pageData.products || []).map((prod, pIdx) => (
-              <div key={pIdx} className="touchless-product-card">
-                <div className="product-card-media">
-                  <img
-                    src={prod.image}
-                    alt={prod.title}
-                    className="product-card-img"
-                  />
-                  <span className="product-card-badge">{prod.badge}</span>
-                </div>
-                <div className="product-card-body">
-                  <div className="product-mini-chips">
-                    {(prod.chips || []).map((chip, cIdx) => (
-                      <span key={cIdx} className="mini-chip">{chip}</span>
-                    ))}
-                  </div>
-                  <h3 className="product-card-title">{prod.title}</h3>
-                  <p className="product-card-desc">
-                    {prod.desc}
-                  </p>
-                  <ul className="product-card-bullets">
-                    {(prod.bullets || []).map((bullet, bIdx) => (
-                      <li key={bIdx}>
-                        <Check size={13} className="bullet-check" /> {bullet}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="product-card-footer">
-                    <button
-                      className="learn-more-btn"
-                      onClick={() => handleOpenQuote(prod.title)}
-                    >
-                      <span>Learn More</span>
-                      <ArrowRight size={15} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* 4. ADVANCED TECHNOLOGY DEEP DIVE TABS */}
       {pageData.technologies && pageData.technologies.tabs && (
-        <section className="touchless-sensors-deepdive-section">
+        <section className="touchless-sensors-deepdive-section" id="service-details-section">
           <div className="touchless-container">
             <div className="section-header-centered">
               <span className="section-eyebrow">{pageData.technologies.eyebrow}</span>
@@ -815,7 +734,7 @@ export default function ServiceDetailPage({
 
       {/* 5. HOW IT WORKS & IDEAL FOR MULTIPLE APPLICATIONS */}
       {howItWorksSteps.length > 0 && (
-        <section className="touchless-workflow-app-section">
+        <section className="touchless-workflow-app-section" id="service-workflow-section">
           <div className="touchless-container">
             <div className="workflow-and-app-grid">
               {/* Left: How It Works */}
@@ -881,9 +800,9 @@ export default function ServiceDetailPage({
                     </div>
                     <p>
                       {howItWorksSteps[activeStep].detail ||
-                       (Array.isArray(howItWorksSteps[activeStep].details) ? howItWorksSteps[activeStep].details.join(' • ') : '') ||
-                       howItWorksSteps[activeStep].desc ||
-                       howItWorksSteps[activeStep].description || ''}
+                        (Array.isArray(howItWorksSteps[activeStep].details) ? howItWorksSteps[activeStep].details.join(' • ') : '') ||
+                        howItWorksSteps[activeStep].desc ||
+                        howItWorksSteps[activeStep].description || ''}
                     </p>
                   </div>
                 )}
@@ -921,7 +840,7 @@ export default function ServiceDetailPage({
       )}
 
       {/* 6. TECHNICAL SPECIFICATIONS & STANDARDS */}
-      <section className="touchless-specs-section">
+      <section className="touchless-specs-section" id="service-specs-section">
         <div className="touchless-container">
           <div className="specs-cert-grid">
             {/* Left: Technical Specifications */}
@@ -981,52 +900,8 @@ export default function ServiceDetailPage({
         </div>
       </section>
 
-      {/* 7. RELATED GALLERY */}
-      {Array.isArray(pageData.gallery) && pageData.gallery.length > 0 && (
-        <section className="touchless-gallery-section">
-          <div className="touchless-container">
-            <div className="section-header-row">
-              <div>
-                <h2 className="section-title">Related Gallery</h2>
-                <div className="section-title-underline"></div>
-              </div>
-
-              <button
-                className="view-all-link"
-                onClick={() => openLightbox(0)}
-              >
-                <span>View All Images</span>
-                <ArrowRight size={15} />
-              </button>
-            </div>
-
-            <div className="gallery-grid">
-              {pageData.gallery.map((item, gIdx) => (
-                <div
-                  key={gIdx}
-                  className="gallery-item-card"
-                  onClick={() => openLightbox(gIdx)}
-                >
-                  <div className="gallery-media">
-                    <img src={item.image} alt={item.title} className="gallery-img" />
-                    <div className="gallery-hover-overlay">
-                      <Eye size={24} className="gallery-zoom-icon" />
-                      <span>View Photo</span>
-                    </div>
-                  </div>
-                  <div className="gallery-caption">
-                    <h4 className="gallery-title">{item.title}</h4>
-                    <span className="gallery-category">{item.category}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* 8. FREQUENTLY ASKED QUESTIONS (FAQ) */}
-      <section className="touchless-faq-section">
+      <section className="touchless-faq-section" id="service-faq-section">
         <div className="touchless-container">
           <div className="section-header-centered">
             <span className="section-eyebrow">COMMON QUERIES</span>
@@ -1065,52 +940,6 @@ export default function ServiceDetailPage({
       </section>
 
 
-
-      {/* LIGHTBOX MODAL FOR GALLERY */}
-      {lightboxImage && (
-        <div className="touchless-lightbox-modal" onClick={() => setLightboxImage(null)}>
-          <div className="lightbox-content-box" onClick={(e) => e.stopPropagation()}>
-            <button className="lightbox-close-btn" onClick={() => setLightboxImage(null)} aria-label="Close image">
-              <X size={24} />
-            </button>
-
-            <button className="lightbox-nav-btn prev-btn" onClick={prevLightbox} aria-label="Previous image">
-              <ChevronLeft size={28} />
-            </button>
-            <button className="lightbox-nav-btn next-btn" onClick={nextLightbox} aria-label="Next image">
-              <ChevronRight size={28} />
-            </button>
-
-            <img src={lightboxImage.image} alt={lightboxImage.title} className="lightbox-main-img" />
-            <div className="lightbox-caption-bar">
-              <h4>{lightboxImage.title}</h4>
-              <p>{lightboxImage.desc}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* CINEMATIC VIDEO MODAL */}
-      {isVideoModalOpen && (
-        <div className="touchless-video-modal" onClick={() => setIsVideoModalOpen(false)}>
-          <div className="video-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="video-modal-header">
-              <h3>{pageData.showcase.heading} - Operational Video</h3>
-              <button className="modal-close-icon-btn" onClick={() => setIsVideoModalOpen(false)}>
-                <X size={20} />
-              </button>
-            </div>
-            <div className="video-modal-body">
-              <video
-                src={pageData.showcase.videoSrc}
-                controls
-                autoPlay
-                className="modal-fullscreen-video"
-              />
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* QUICK QUOTE MODAL */}
       {isQuoteModalOpen && (

@@ -3100,3 +3100,81 @@
     padding: 28px 20px;
   }
 }
+
+/* ==========================================================================
+   HERO VIDEO CONTROLS OVERLAY (ServiceDetailPage Hero Looping Video)
+   ========================================================================== */
+.door-video-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+  padding: 4px 8px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.door-control-btn {
+  background: transparent;
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.door-control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #38bdf8;
+  transform: scale(1.05);
+}
+
+.hero-reduced-motion-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(2, 132, 199, 0.9);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 12;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.hero-reduced-motion-play-btn:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  background: #0284c7;
+}
+
+@media (max-width: 480px) {
+  .door-video-controls {
+    bottom: 8px;
+    right: 8px;
+    padding: 3px 6px;
+  }
+  .door-control-btn {
+    width: 24px;
+    height: 24px;
+  }
+}
