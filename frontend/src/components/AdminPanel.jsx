@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './AdminDashboard.css';
+import './AdminClientsPartners.css';
 import AdminProductsManager from './AdminProductsManager';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
@@ -145,6 +146,9 @@ export default function AdminPanel({
 
   const [clientSearch, setClientSearch] = useState('');
   const [partnerSearch, setPartnerSearch] = useState('');
+  const [isSyncingClients, setIsSyncingClients] = useState(false);
+  const [clientFilterStatus, setClientFilterStatus] = useState('all'); // 'all' | 'authorized' | 'visible'
+  const [partnerFilterStatus, setPartnerFilterStatus] = useState('all'); // 'all' | 'active' | 'hidden'
   const [inquiryStatusFilter, setInquiryStatusFilter] = useState('All');
   const [inquirySearch, setInquirySearch] = useState('');
 
@@ -957,6 +961,12 @@ export default function AdminPanel({
     }
   };
 
+  const handleSyncClientsPartners = async () => {
+    setIsSyncingClients(true);
+    await fetchClientsAndPartners();
+    setTimeout(() => setIsSyncingClients(false), 600);
+  };
+
   // ===================== INQUIRIES & LEADS ACTIONS =====================
   const handleUpdateInquiryStatus = async (id, newStatus) => {
     try {
@@ -1371,16 +1381,30 @@ export default function AdminPanel({
   });
 
   const filteredClients = clients.filter(c => {
-    return clientSearch === '' ||
+    const matchesSearch = clientSearch === '' ||
       c.name.toLowerCase().includes(clientSearch.toLowerCase()) ||
-      c.sector.toLowerCase().includes(clientSearch.toLowerCase());
+      c.sector.toLowerCase().includes(clientSearch.toLowerCase()) ||
+      (c.website_url && c.website_url.toLowerCase().includes(clientSearch.toLowerCase()));
+
+    let matchesFilter = true;
+    if (clientFilterStatus === 'authorized') matchesFilter = Boolean(c.is_authorized);
+    else if (clientFilterStatus === 'visible') matchesFilter = Boolean(c.is_active);
+
+    return matchesSearch && matchesFilter;
   });
 
   const filteredPartners = partners.filter(p => {
-    return partnerSearch === '' ||
+    const matchesSearch = partnerSearch === '' ||
       p.name.toLowerCase().includes(partnerSearch.toLowerCase()) ||
       p.category.toLowerCase().includes(partnerSearch.toLowerCase()) ||
-      (p.tagline && p.tagline.toLowerCase().includes(partnerSearch.toLowerCase()));
+      (p.tagline && p.tagline.toLowerCase().includes(partnerSearch.toLowerCase())) ||
+      (p.website_url && p.website_url.toLowerCase().includes(partnerSearch.toLowerCase()));
+
+    let matchesFilter = true;
+    if (partnerFilterStatus === 'active') matchesFilter = Boolean(p.is_active);
+    else if (partnerFilterStatus === 'hidden') matchesFilter = !p.is_active;
+
+    return matchesSearch && matchesFilter;
   });
 
   const filteredInquiries = inquiries.filter(i => {
@@ -2378,163 +2402,535 @@ export default function AdminPanel({
               ========================================================================= */}
           {activeTab === 'clients_partners' && (
             <div className="admin-body-content">
-              {/* Segmented Subtab Switcher */}
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px' }}>
-                <button
-                  className={`dash-action-btn ${clientPartnerSubTab === 'clients' ? 'primary' : 'secondary'}`}
-                  onClick={() => setClientPartnerSubTab('clients')}
-                >
-                  <Building2 size={16} />
-                  <span>Enterprise Clients ({clients.length})</span>
-                </button>
-                <button
-                  className={`dash-action-btn ${clientPartnerSubTab === 'partners' ? 'primary' : 'secondary'}`}
-                  onClick={() => setClientPartnerSubTab('partners')}
-                >
-                  <HeartHandshake size={16} />
-                  <span>Technology Partners ({partners.length})</span>
-                </button>
+              <div className="adm-cp-module">
+                {/* 1. Page Header with Live Telemetry & Quick Metrics */}
+                <div className="adm-cp-header">
+                  <div className="adm-cp-header-top">
+                    <div className="adm-cp-title-wrap">
+                      <div className="adm-cp-eyebrow">
+                        <ShieldCheck size={13} />
+                        <span>Enterprise Directory &amp; Partnerships</span>
+                      </div>
+                      <h2 className="adm-cp-title">Clients &amp; Partners</h2>
+                      <p className="adm-cp-subtitle">
+                        Manage approved enterprise clients and technology partnerships.
+                      </p>
+                    </div>
+
+                    <div className="adm-cp-header-actions">
+                      <span className="adm-cp-sync-status">
+                        <span className="adm-cp-live-dot" />
+                        <span>Synced {lastSyncedTime}</span>
+                      </span>
+                      <button
+                        className="adm-cp-sync-btn"
+                        onClick={handleSyncClientsPartners}
+                        title="Sync clients and partners with live SQL database"
+                        aria-label="Sync Directory"
+                      >
+                        <RefreshCw size={13} className={isSyncingClients ? 'adm-cp-spin' : ''} />
+                        <span>{isSyncingClients ? 'Syncing...' : 'Sync Roster'}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Summary Metric Cards */}
+                  <div className="adm-cp-stats-grid">
+                    <div className="adm-cp-stat-card">
+                      <div className="adm-cp-stat-icon-box">
+                        <Building2 size={18} />
+                      </div>
+                      <div className="adm-cp-stat-content">
+                        <span className="adm-cp-stat-label">Enterprise Clients</span>
+                        <div className="adm-cp-stat-value">
+                          <AnimatedNumber value={clients.length} />
+                        </div>
+                        <span className="adm-cp-stat-sub">
+                          {clients.filter(c => c.is_authorized).length} authorized for display
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="adm-cp-stat-card">
+                      <div className="adm-cp-stat-icon-box green">
+                        <HeartHandshake size={18} />
+                      </div>
+                      <div className="adm-cp-stat-content">
+                        <span className="adm-cp-stat-label">Technology Partners</span>
+                        <div className="adm-cp-stat-value">
+                          <AnimatedNumber value={partners.length} />
+                        </div>
+                        <span className="adm-cp-stat-sub">
+                          {partners.filter(p => p.is_active).length} active on live site
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="adm-cp-stat-card">
+                      <div className="adm-cp-stat-icon-box purple">
+                        <Database size={18} />
+                      </div>
+                      <div className="adm-cp-stat-content">
+                        <span className="adm-cp-stat-label">Total Directory Records</span>
+                        <div className="adm-cp-stat-value">
+                          <AnimatedNumber value={clients.length + partners.length} />
+                        </div>
+                        <span className="adm-cp-stat-sub">Verified enterprise portfolio</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Refined Segmented Navigation Tabs */}
+                <div className="adm-cp-tabs-container">
+                  <div className="adm-cp-segmented-nav" role="tablist" aria-label="Clients and Partners Tabs">
+                    <button
+                      className={`adm-cp-tab-btn ${clientPartnerSubTab === 'clients' ? 'active' : ''}`}
+                      onClick={() => setClientPartnerSubTab('clients')}
+                      role="tab"
+                      aria-selected={clientPartnerSubTab === 'clients'}
+                      tabIndex={0}
+                    >
+                      <Building2 size={16} />
+                      <span>Enterprise Clients</span>
+                      <span className="adm-cp-tab-count">{clients.length}</span>
+                    </button>
+                    <button
+                      className={`adm-cp-tab-btn ${clientPartnerSubTab === 'partners' ? 'active' : ''}`}
+                      onClick={() => setClientPartnerSubTab('partners')}
+                      role="tab"
+                      aria-selected={clientPartnerSubTab === 'partners'}
+                      tabIndex={0}
+                    >
+                      <HeartHandshake size={16} />
+                      <span>Technology Partners</span>
+                      <span className="adm-cp-tab-count">{partners.length}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3. Search and Action Toolbar */}
+                <div className="adm-cp-toolbar">
+                  <div className="adm-cp-toolbar-left">
+                    <div className="adm-cp-search-wrap">
+                      <Search size={15} className="adm-cp-search-icon" />
+                      <input
+                        type="text"
+                        className="adm-cp-search-input"
+                        placeholder={
+                          clientPartnerSubTab === 'clients'
+                            ? 'Search clients by company name or sector...'
+                            : 'Search partners by brand name, category, or engineering scope...'
+                        }
+                        value={clientPartnerSubTab === 'clients' ? clientSearch : partnerSearch}
+                        onChange={e => {
+                          if (clientPartnerSubTab === 'clients') setClientSearch(e.target.value);
+                          else setPartnerSearch(e.target.value);
+                        }}
+                      />
+                      {(clientPartnerSubTab === 'clients' ? clientSearch : partnerSearch) && (
+                        <button
+                          type="button"
+                          className="adm-cp-search-clear"
+                          onClick={() => {
+                            if (clientPartnerSubTab === 'clients') setClientSearch('');
+                            else setPartnerSearch('');
+                          }}
+                          title="Clear search"
+                          aria-label="Clear search"
+                        >
+                          <X size={14} />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Quick Filters */}
+                    {clientPartnerSubTab === 'clients' ? (
+                      <div className="adm-cp-filter-chips">
+                        <button
+                          className={`adm-cp-filter-chip ${clientFilterStatus === 'all' ? 'active' : ''}`}
+                          onClick={() => setClientFilterStatus('all')}
+                        >
+                          All ({clients.length})
+                        </button>
+                        <button
+                          className={`adm-cp-filter-chip ${clientFilterStatus === 'authorized' ? 'active' : ''}`}
+                          onClick={() => setClientFilterStatus('authorized')}
+                        >
+                          Authorized ({clients.filter(c => c.is_authorized).length})
+                        </button>
+                        <button
+                          className={`adm-cp-filter-chip ${clientFilterStatus === 'visible' ? 'active' : ''}`}
+                          onClick={() => setClientFilterStatus('visible')}
+                        >
+                          Visible on Web ({clients.filter(c => c.is_active).length})
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="adm-cp-filter-chips">
+                        <button
+                          className={`adm-cp-filter-chip ${partnerFilterStatus === 'all' ? 'active' : ''}`}
+                          onClick={() => setPartnerFilterStatus('all')}
+                        >
+                          All ({partners.length})
+                        </button>
+                        <button
+                          className={`adm-cp-filter-chip ${partnerFilterStatus === 'active' ? 'active' : ''}`}
+                          onClick={() => setPartnerFilterStatus('active')}
+                        >
+                          Active ({partners.filter(p => p.is_active).length})
+                        </button>
+                        <button
+                          className={`adm-cp-filter-chip ${partnerFilterStatus === 'hidden' ? 'active' : ''}`}
+                          onClick={() => setPartnerFilterStatus('hidden')}
+                        >
+                          Hidden ({partners.filter(p => !p.is_active).length})
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="adm-cp-toolbar-right">
+                    {clientPartnerSubTab === 'clients' ? (
+                      <button className="adm-cp-add-btn" onClick={handleOpenAddClient}>
+                        <Plus size={16} />
+                        <span>Add Approved Client</span>
+                      </button>
+                    ) : (
+                      <button className="adm-cp-add-btn" onClick={handleOpenAddPartner}>
+                        <Plus size={16} />
+                        <span>Add Tech Partner</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* 4. Data Table: Enterprise Clients Subview */}
+                {clientPartnerSubTab === 'clients' && (
+                  <div className="adm-cp-table-card">
+                    {clients.length === 0 ? (
+                      <div className="adm-cp-empty-state">
+                        <div className="adm-cp-empty-icon-wrap">
+                          <Building2 size={28} />
+                        </div>
+                        <h3 className="adm-cp-empty-title">No Enterprise Clients Registered</h3>
+                        <p className="adm-cp-empty-desc">
+                          Add authorized corporate clients to highlight successful engineering installations on your public website.
+                        </p>
+                        <div className="adm-cp-empty-action">
+                          <button className="adm-cp-add-btn" onClick={handleOpenAddClient}>
+                            <Plus size={16} />
+                            <span>Add First Approved Client</span>
+                          </button>
+                        </div>
+                      </div>
+                    ) : filteredClients.length === 0 ? (
+                      <div className="adm-cp-empty-state">
+                        <div className="adm-cp-empty-icon-wrap">
+                          <Search size={28} />
+                        </div>
+                        <h3 className="adm-cp-empty-title">No Matching Clients Found</h3>
+                        <p className="adm-cp-empty-desc">
+                          No enterprise clients match your current search query "{clientSearch}". Try adjusting your keywords or clearing the filter.
+                        </p>
+                        <div className="adm-cp-empty-action">
+                          <button
+                            className="adm-cp-btn-secondary"
+                            onClick={() => {
+                              setClientSearch('');
+                              setClientFilterStatus('all');
+                            }}
+                          >
+                            Reset Filters &amp; Search
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="adm-cp-table-wrap">
+                          <table className="adm-cp-table">
+                            <thead>
+                              <tr>
+                                <th className="adm-cp-col-num">#</th>
+                                <th>Client / Organization</th>
+                                <th>Sector / Industry</th>
+                                <th>Authorization Status</th>
+                                <th>Public Website</th>
+                                <th className="adm-cp-col-actions">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {filteredClients.map((c, idx) => {
+                                const initial = (c.name || 'C').charAt(0).toUpperCase();
+                                return (
+                                  <tr key={c.id}>
+                                    <td className="adm-cp-col-num">{idx + 1}</td>
+                                    <td>
+                                      <div className="adm-cp-entity-cell">
+                                        <div className="adm-cp-avatar">
+                                          {c.logo_url ? (
+                                            <img
+                                              src={c.logo_url}
+                                              alt={c.name}
+                                              className="adm-cp-avatar-img"
+                                              onError={e => {
+                                                e.target.style.display = 'none';
+                                                if (e.target.nextSibling) e.target.nextSibling.style.display = 'block';
+                                              }}
+                                            />
+                                          ) : null}
+                                          <span
+                                            className="adm-cp-avatar-fallback"
+                                            style={{ display: c.logo_url ? 'none' : 'block' }}
+                                          >
+                                            {initial}
+                                          </span>
+                                        </div>
+                                        <div className="adm-cp-entity-info">
+                                          <div className="adm-cp-entity-name">{c.name}</div>
+                                          {c.website_url ? (
+                                            <a
+                                              href={c.website_url}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                              className="adm-cp-entity-url"
+                                              title={`Visit ${c.name} website`}
+                                            >
+                                              <span>{c.website_url.replace(/^https?:\/\/(www\.)?/, '')}</span>
+                                              <ExternalLink size={10} />
+                                            </a>
+                                          ) : null}
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <span className="adm-cp-sector-badge">
+                                        <Tag size={11} />
+                                        <span>{c.sector}</span>
+                                      </span>
+                                    </td>
+                                    <td>
+                                      <span
+                                        className={`adm-cp-status-pill ${
+                                          c.is_authorized ? 'authorized' : 'pending'
+                                        }`}
+                                      >
+                                        {c.is_authorized ? (
+                                          <>
+                                            <CheckCircle2 size={12} />
+                                            <span>Authorized for Display</span>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Clock size={12} />
+                                            <span>Pending Authorization</span>
+                                          </>
+                                        )}
+                                      </span>
+                                    </td>
+                                    <td>
+                                      <span
+                                        className={`adm-cp-visibility-pill ${
+                                          c.is_active ? 'visible' : 'hidden'
+                                        }`}
+                                      >
+                                        <span className="adm-cp-vis-dot" />
+                                        <span>{c.is_active ? 'Visible' : 'Hidden'}</span>
+                                      </span>
+                                    </td>
+                                    <td className="adm-cp-col-actions">
+                                      <div className="adm-cp-action-group">
+                                        <button
+                                          className="adm-cp-btn-action"
+                                          onClick={() => handleOpenEditClient(c)}
+                                          title={`Edit ${c.name}`}
+                                          aria-label={`Edit ${c.name}`}
+                                        >
+                                          <Edit3 size={15} />
+                                        </button>
+                                        <button
+                                          className="adm-cp-btn-action delete"
+                                          onClick={() => handleDeleteClient(c)}
+                                          title={`Delete ${c.name}`}
+                                          aria-label={`Delete ${c.name}`}
+                                        >
+                                          <Trash2 size={15} />
+                                        </button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="adm-cp-table-footer">
+                          <span>
+                            Showing <strong>{filteredClients.length}</strong> of{' '}
+                            <strong>{clients.length}</strong> enterprise clients
+                          </span>
+                          <span>Active compliance &amp; legal NDA registry</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* 5. Data Table: Technology Partners Subview */}
+                {clientPartnerSubTab === 'partners' && (
+                  <div className="adm-cp-table-card">
+                    {partners.length === 0 ? (
+                      <div className="adm-cp-empty-state">
+                        <div className="adm-cp-empty-icon-wrap">
+                          <HeartHandshake size={28} />
+                        </div>
+                        <h3 className="adm-cp-empty-title">No Technology Partners Registered</h3>
+                        <p className="adm-cp-empty-desc">
+                          Add certified technology brands, OEM suppliers, and integration partners that power HTI engineering solutions.
+                        </p>
+                        <div className="adm-cp-empty-action">
+                          <button className="adm-cp-add-btn" onClick={handleOpenAddPartner}>
+                            <Plus size={16} />
+                            <span>Add First Tech Partner</span>
+                          </button>
+                        </div>
+                      </div>
+                    ) : filteredPartners.length === 0 ? (
+                      <div className="adm-cp-empty-state">
+                        <div className="adm-cp-empty-icon-wrap">
+                          <Search size={28} />
+                        </div>
+                        <h3 className="adm-cp-empty-title">No Matching Partners Found</h3>
+                        <p className="adm-cp-empty-desc">
+                          No technology partners match your current query "{partnerSearch}". Try adjusting your keywords or clearing the filter.
+                        </p>
+                        <div className="adm-cp-empty-action">
+                          <button
+                            className="adm-cp-btn-secondary"
+                            onClick={() => {
+                              setPartnerSearch('');
+                              setPartnerFilterStatus('all');
+                            }}
+                          >
+                            Reset Filters &amp; Search
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="adm-cp-table-wrap">
+                          <table className="adm-cp-table">
+                            <thead>
+                              <tr>
+                                <th className="adm-cp-col-num">#</th>
+                                <th>Partner Brand</th>
+                                <th>Category</th>
+                                <th>Engineering Scope / Tagline</th>
+                                <th>Public Website</th>
+                                <th className="adm-cp-col-actions">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {filteredPartners.map((p, idx) => {
+                                const initial = (p.name || 'P').charAt(0).toUpperCase();
+                                return (
+                                  <tr key={p.id}>
+                                    <td className="adm-cp-col-num">{idx + 1}</td>
+                                    <td>
+                                      <div className="adm-cp-entity-cell">
+                                        <div className="adm-cp-avatar">
+                                          {p.logo_url ? (
+                                            <img
+                                              src={p.logo_url}
+                                              alt={p.name}
+                                              className="adm-cp-avatar-img"
+                                              onError={e => {
+                                                e.target.style.display = 'none';
+                                                if (e.target.nextSibling) e.target.nextSibling.style.display = 'block';
+                                              }}
+                                            />
+                                          ) : null}
+                                          <span
+                                            className="adm-cp-avatar-fallback"
+                                            style={{ display: p.logo_url ? 'none' : 'block' }}
+                                          >
+                                            {initial}
+                                          </span>
+                                        </div>
+                                        <div className="adm-cp-entity-info">
+                                          <div className="adm-cp-entity-name">{p.name}</div>
+                                          {p.website_url ? (
+                                            <a
+                                              href={p.website_url}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                              className="adm-cp-entity-url"
+                                              title={`Visit ${p.name} website`}
+                                            >
+                                              <span>{p.website_url.replace(/^https?:\/\/(www\.)?/, '')}</span>
+                                              <ExternalLink size={10} />
+                                            </a>
+                                          ) : null}
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <span className="adm-cp-category-badge">
+                                        <Cpu size={11} />
+                                        <span>{p.category}</span>
+                                      </span>
+                                    </td>
+                                    <td>
+                                      <div className="adm-cp-tagline-text">{p.tagline || '—'}</div>
+                                    </td>
+                                    <td>
+                                      <span
+                                        className={`adm-cp-visibility-pill ${
+                                          p.is_active ? 'visible' : 'hidden'
+                                        }`}
+                                      >
+                                        <span className="adm-cp-vis-dot" />
+                                        <span>{p.is_active ? 'Active Partner' : 'Hidden'}</span>
+                                      </span>
+                                    </td>
+                                    <td className="adm-cp-col-actions">
+                                      <div className="adm-cp-action-group">
+                                        <button
+                                          className="adm-cp-btn-action"
+                                          onClick={() => handleOpenEditPartner(p)}
+                                          title={`Edit ${p.name}`}
+                                          aria-label={`Edit ${p.name}`}
+                                        >
+                                          <Edit3 size={15} />
+                                        </button>
+                                        <button
+                                          className="adm-cp-btn-action delete"
+                                          onClick={() => handleDeletePartner(p)}
+                                          title={`Delete ${p.name}`}
+                                          aria-label={`Delete ${p.name}`}
+                                        >
+                                          <Trash2 size={15} />
+                                        </button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="adm-cp-table-footer">
+                          <span>
+                            Showing <strong>{filteredPartners.length}</strong> of{' '}
+                            <strong>{partners.length}</strong> technology partners
+                          </span>
+                          <span>Certified OEM integration directory</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
-
-              {/* Subview 1: Clients */}
-              {clientPartnerSubTab === 'clients' && (
-                <div>
-                  <div className="catalog-toolbar">
-                    <div className="catalog-search-wrap">
-                      <Search size={16} className="search-icon" />
-                      <input
-                        type="text"
-                        placeholder="Search clients by company name, pharma sector..."
-                        value={clientSearch}
-                        onChange={e => setClientSearch(e.target.value)}
-                      />
-                    </div>
-                    <button className="dash-action-btn primary" onClick={handleOpenAddClient}>
-                      <Plus size={16} />
-                      <span>Add Approved Client</span>
-                    </button>
-                  </div>
-
-                  <div className="admin-table-container">
-                    <table className="admin-table">
-                      <thead>
-                        <tr>
-                          <th style={{ width: '45px' }}>#</th>
-                          <th>Client / Organization</th>
-                          <th>Sector / Industry</th>
-                          <th>Authorization Status</th>
-                          <th>Public Website</th>
-                          <th style={{ textAlign: 'right' }}>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredClients.map((c, idx) => (
-                          <tr key={c.id}>
-                            <td style={{ color: '#64748b' }}>{idx + 1}</td>
-                            <td>
-                              <div style={{ fontWeight: '700', color: '#ffffff', fontSize: '0.92rem' }}>{c.name}</div>
-                              {c.website_url && (
-                                <a href={c.website_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.75rem', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                                  <span>{c.website_url}</span> <ExternalLink size={10} />
-                                </a>
-                              )}
-                            </td>
-                            <td>
-                              <span style={{ fontSize: '0.78rem', background: 'rgba(255,255,255,0.06)', padding: '3px 8px', borderRadius: '4px', color: '#cbd5e1' }}>
-                                {c.sector}
-                              </span>
-                            </td>
-                            <td>
-                              <span style={{
-                                fontSize: '0.72rem',
-                                padding: '2px 8px',
-                                borderRadius: '4px',
-                                background: c.is_authorized ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                                color: c.is_authorized ? '#10b981' : '#f59e0b',
-                                fontWeight: '700'
-                              }}>
-                                {c.is_authorized ? 'Authorized for Display' : 'Pending Authorization'}
-                              </span>
-                            </td>
-                            <td>
-                              <span style={{ color: c.is_active ? '#10b981' : '#64748b', fontSize: '0.8rem', fontWeight: '700' }}>
-                                {c.is_active ? '● Visible' : '○ Hidden'}
-                              </span>
-                            </td>
-                            <td style={{ textAlign: 'right' }}>
-                              <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
-                                <button className="table-action-btn" onClick={() => handleOpenEditClient(c)} title="Edit Client"><Edit3 size={15} /></button>
-                                <button className="table-action-btn delete" onClick={() => handleDeleteClient(c)} title="Delete Client"><Trash2 size={15} /></button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {/* Subview 2: Technology Partners */}
-              {clientPartnerSubTab === 'partners' && (
-                <div>
-                  <div className="catalog-toolbar">
-                    <div className="catalog-search-wrap">
-                      <Search size={16} className="search-icon" />
-                      <input
-                        type="text"
-                        placeholder="Search partners by brand, category, engineering systems..."
-                        value={partnerSearch}
-                        onChange={e => setPartnerSearch(e.target.value)}
-                      />
-                    </div>
-                    <button className="dash-action-btn primary" onClick={handleOpenAddPartner}>
-                      <Plus size={16} />
-                      <span>Add Tech Partner</span>
-                    </button>
-                  </div>
-
-                  <div className="admin-table-container">
-                    <table className="admin-table">
-                      <thead>
-                        <tr>
-                          <th style={{ width: '45px' }}>#</th>
-                          <th>Partner Brand</th>
-                          <th>Category</th>
-                          <th>Engineering Scope / Tagline</th>
-                          <th>Public Website</th>
-                          <th style={{ textAlign: 'right' }}>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredPartners.map((p, idx) => (
-                          <tr key={p.id}>
-                            <td style={{ color: '#64748b' }}>{idx + 1}</td>
-                            <td>
-                              <div style={{ fontWeight: '700', color: '#ffffff', fontSize: '0.92rem' }}>{p.name}</div>
-                            </td>
-                            <td>
-                              <span className="pill-category cat-auto">{p.category}</span>
-                            </td>
-                            <td style={{ color: '#94a3b8', fontSize: '0.82rem' }}>{p.tagline}</td>
-                            <td>
-                              <span style={{ color: p.is_active ? '#10b981' : '#64748b', fontSize: '0.8rem', fontWeight: '700' }}>
-                                {p.is_active ? '● Active Partner' : '○ Hidden'}
-                              </span>
-                            </td>
-                            <td style={{ textAlign: 'right' }}>
-                              <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
-                                <button className="table-action-btn" onClick={() => handleOpenEditPartner(p)} title="Edit Partner"><Edit3 size={15} /></button>
-                                <button className="table-action-btn delete" onClick={() => handleDeletePartner(p)} title="Delete Partner"><Trash2 size={15} /></button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
@@ -3588,76 +3984,126 @@ export default function AdminPanel({
           ========================================================================= */}
       {editingClient && (
         <div className="admin-modal-overlay" onClick={() => setEditingClient(null)}>
-          <div className="admin-modal-container" style={{ maxWidth: '520px' }} onClick={e => e.stopPropagation()}>
-            <div className="admin-modal-header">
-              <h3 className="admin-modal-title">
-                {editingClient === 'new' ? 'Add Approved Enterprise Client' : `Edit Client: ${editingClient.name}`}
-              </h3>
-              <button className="topbar-close-btn" onClick={() => setEditingClient(null)}><X size={18} /></button>
+          <div className="adm-cp-modal-dialog" onClick={e => e.stopPropagation()}>
+            <div className="adm-cp-modal-header">
+              <div className="adm-cp-modal-title-group">
+                <div className="adm-cp-modal-badge-icon">
+                  <Building2 size={20} />
+                </div>
+                <div>
+                  <h3 className="adm-cp-modal-title">
+                    {editingClient === 'new' ? 'Add Approved Enterprise Client' : `Edit Client: ${editingClient.name}`}
+                  </h3>
+                  <div className="adm-cp-modal-subtitle">
+                    Configure enterprise details, authorization credentials, and public display visibility.
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="topbar-close-btn"
+                onClick={() => setEditingClient(null)}
+                title="Close modal"
+                aria-label="Close modal"
+              >
+                <X size={18} />
+              </button>
             </div>
-            <form onSubmit={handleSaveClient} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div className="admin-form-group">
-                <label className="admin-label">Client / Organization Name *</label>
-                <input
-                  className="admin-input"
-                  required
-                  value={clientForm.name}
-                  onChange={e => setClientForm({ ...clientForm, name: e.target.value })}
-                  placeholder="e.g. Glenmark Pharmaceuticals"
-                />
-              </div>
-
-              <div className="admin-form-group">
-                <label className="admin-label">Industry / Sector *</label>
-                <input
-                  className="admin-input"
-                  required
-                  value={clientForm.sector}
-                  onChange={e => setClientForm({ ...clientForm, sector: e.target.value })}
-                  placeholder="e.g. Pharmaceuticals & Cleanroom"
-                />
-              </div>
-
-              <div className="admin-form-group">
-                <label className="admin-label">Client Logo URL</label>
-                <input
-                  className="admin-input"
-                  value={clientForm.logo_url}
-                  onChange={e => setClientForm({ ...clientForm, logo_url: e.target.value })}
-                />
-              </div>
-
-              <div className="admin-form-group">
-                <label className="admin-label">Website URL</label>
-                <input
-                  className="admin-input"
-                  value={clientForm.website_url}
-                  onChange={e => setClientForm({ ...clientForm, website_url: e.target.value })}
-                />
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#cbd5e1' }}>
+            <form onSubmit={handleSaveClient} style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="adm-cp-form-body">
+                <div className="adm-cp-form-group">
+                  <label className="adm-cp-form-label">
+                    <span>Client / Organization Name</span>
+                    <span className="adm-cp-req-star">*</span>
+                  </label>
                   <input
-                    type="checkbox"
-                    checked={clientForm.is_authorized}
-                    onChange={e => setClientForm({ ...clientForm, is_authorized: e.target.checked })}
+                    className="adm-cp-form-input"
+                    required
+                    value={clientForm.name}
+                    onChange={e => setClientForm({ ...clientForm, name: e.target.value })}
+                    placeholder="e.g. Glenmark Pharmaceuticals"
                   />
-                  <span>Authorized for Public Display (Compliance confirmed)</span>
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#cbd5e1' }}>
+                </div>
+
+                <div className="adm-cp-form-group">
+                  <label className="adm-cp-form-label">
+                    <span>Industry / Sector</span>
+                    <span className="adm-cp-req-star">*</span>
+                  </label>
                   <input
-                    type="checkbox"
-                    checked={clientForm.is_active}
-                    onChange={e => setClientForm({ ...clientForm, is_active: e.target.checked })}
+                    className="adm-cp-form-input"
+                    required
+                    value={clientForm.sector}
+                    onChange={e => setClientForm({ ...clientForm, sector: e.target.value })}
+                    placeholder="e.g. Pharmaceuticals & Cleanroom"
                   />
-                  <span>Show on Public Website</span>
-                </label>
+                </div>
+
+                <div className="adm-cp-form-group">
+                  <label className="adm-cp-form-label">Client Logo URL</label>
+                  <input
+                    className="adm-cp-form-input"
+                    value={clientForm.logo_url}
+                    onChange={e => setClientForm({ ...clientForm, logo_url: e.target.value })}
+                    placeholder="e.g. /clients/glenmark.png or https://..."
+                  />
+                </div>
+
+                <div className="adm-cp-form-group">
+                  <label className="adm-cp-form-label">Website URL</label>
+                  <input
+                    className="adm-cp-form-input"
+                    value={clientForm.website_url}
+                    onChange={e => setClientForm({ ...clientForm, website_url: e.target.value })}
+                    placeholder="e.g. https://www.glenmarkpharma.com"
+                  />
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <label className={`adm-cp-toggle-card ${clientForm.is_authorized ? 'checked' : ''}`}>
+                    <input
+                      type="checkbox"
+                      className="adm-cp-toggle-checkbox"
+                      checked={clientForm.is_authorized}
+                      onChange={e => setClientForm({ ...clientForm, is_authorized: e.target.checked })}
+                    />
+                    <div className="adm-cp-toggle-content">
+                      <span className="adm-cp-toggle-title">Authorized for Public Display</span>
+                      <span className="adm-cp-toggle-desc">
+                        Compliance confirmed — legal authorization and NDA requirements verified for public display.
+                      </span>
+                    </div>
+                  </label>
+
+                  <label className={`adm-cp-toggle-card ${clientForm.is_active ? 'checked' : ''}`}>
+                    <input
+                      type="checkbox"
+                      className="adm-cp-toggle-checkbox"
+                      checked={clientForm.is_active}
+                      onChange={e => setClientForm({ ...clientForm, is_active: e.target.checked })}
+                    />
+                    <div className="adm-cp-toggle-content">
+                      <span className="adm-cp-toggle-title">Show on Public Website</span>
+                      <span className="adm-cp-toggle-desc">
+                        Publish this client into the front-facing "Clients &amp; Partners" section.
+                      </span>
+                    </div>
+                  </label>
+                </div>
               </div>
 
-              <div className="admin-modal-footer" style={{ padding: 0, marginTop: '12px' }}>
-                <button type="button" className="dash-action-btn secondary" onClick={() => setEditingClient(null)}>Cancel</button>
-                <button type="submit" className="dash-action-btn primary">Save Client</button>
+              <div className="adm-cp-modal-footer">
+                <button
+                  type="button"
+                  className="adm-cp-btn-secondary"
+                  onClick={() => setEditingClient(null)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="adm-cp-btn-primary">
+                  <Save size={15} />
+                  <span>Save Client</span>
+                </button>
               </div>
             </form>
           </div>
@@ -3669,58 +4115,119 @@ export default function AdminPanel({
           ========================================================================= */}
       {editingPartner && (
         <div className="admin-modal-overlay" onClick={() => setEditingPartner(null)}>
-          <div className="admin-modal-container" style={{ maxWidth: '520px' }} onClick={e => e.stopPropagation()}>
-            <div className="admin-modal-header">
-              <h3 className="admin-modal-title">
-                {editingPartner === 'new' ? 'Add Technology Partner' : `Edit Partner: ${editingPartner.name}`}
-              </h3>
-              <button className="topbar-close-btn" onClick={() => setEditingPartner(null)}><X size={18} /></button>
+          <div className="adm-cp-modal-dialog" onClick={e => e.stopPropagation()}>
+            <div className="adm-cp-modal-header">
+              <div className="adm-cp-modal-title-group">
+                <div className="adm-cp-modal-badge-icon">
+                  <HeartHandshake size={20} />
+                </div>
+                <div>
+                  <h3 className="adm-cp-modal-title">
+                    {editingPartner === 'new' ? 'Add Technology Partner' : `Edit Partner: ${editingPartner.name}`}
+                  </h3>
+                  <div className="adm-cp-modal-subtitle">
+                    Configure certified brand partnerships, OEM hardware suppliers, and engineering scope.
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="topbar-close-btn"
+                onClick={() => setEditingPartner(null)}
+                title="Close modal"
+                aria-label="Close modal"
+              >
+                <X size={18} />
+              </button>
             </div>
-            <form onSubmit={handleSavePartner} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div className="admin-form-group">
-                <label className="admin-label">Partner Brand Name *</label>
-                <input
-                  className="admin-input"
-                  required
-                  value={partnerForm.name}
-                  onChange={e => setPartnerForm({ ...partnerForm, name: e.target.value })}
-                  placeholder="e.g. Honeywell / Bosch / Metaflex"
-                />
+            <form onSubmit={handleSavePartner} style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="adm-cp-form-body">
+                <div className="adm-cp-form-group">
+                  <label className="adm-cp-form-label">
+                    <span>Partner Brand Name</span>
+                    <span className="adm-cp-req-star">*</span>
+                  </label>
+                  <input
+                    className="adm-cp-form-input"
+                    required
+                    value={partnerForm.name}
+                    onChange={e => setPartnerForm({ ...partnerForm, name: e.target.value })}
+                    placeholder="e.g. Honeywell / Bosch / Metaflex"
+                  />
+                </div>
+
+                <div className="adm-cp-form-group">
+                  <label className="adm-cp-form-label">
+                    <span>Partner Category</span>
+                    <span className="adm-cp-req-star">*</span>
+                  </label>
+                  <input
+                    className="adm-cp-form-input"
+                    required
+                    value={partnerForm.category}
+                    onChange={e => setPartnerForm({ ...partnerForm, category: e.target.value })}
+                    placeholder="e.g. Fire & Automation"
+                  />
+                </div>
+
+                <div className="adm-cp-form-group">
+                  <label className="adm-cp-form-label">Engineering Scope / Tagline</label>
+                  <input
+                    className="adm-cp-form-input"
+                    value={partnerForm.tagline}
+                    onChange={e => setPartnerForm({ ...partnerForm, tagline: e.target.value })}
+                    placeholder="e.g. Global leader in commercial building automation controls"
+                  />
+                </div>
+
+                <div className="adm-cp-form-group">
+                  <label className="adm-cp-form-label">Partner Logo URL</label>
+                  <input
+                    className="adm-cp-form-input"
+                    value={partnerForm.logo_url}
+                    onChange={e => setPartnerForm({ ...partnerForm, logo_url: e.target.value })}
+                    placeholder="e.g. /partners/honeywell.png or https://..."
+                  />
+                </div>
+
+                <div className="adm-cp-form-group">
+                  <label className="adm-cp-form-label">Partner Website URL</label>
+                  <input
+                    className="adm-cp-form-input"
+                    value={partnerForm.website_url}
+                    onChange={e => setPartnerForm({ ...partnerForm, website_url: e.target.value })}
+                    placeholder="e.g. https://www.honeywell.com"
+                  />
+                </div>
+
+                <label className={`adm-cp-toggle-card ${partnerForm.is_active ? 'checked' : ''}`}>
+                  <input
+                    type="checkbox"
+                    className="adm-cp-toggle-checkbox"
+                    checked={partnerForm.is_active}
+                    onChange={e => setPartnerForm({ ...partnerForm, is_active: e.target.checked })}
+                  />
+                  <div className="adm-cp-toggle-content">
+                    <span className="adm-cp-toggle-title">Active Partner on Website</span>
+                    <span className="adm-cp-toggle-desc">
+                      Display partner brand in the technology ecosystem and client trust strips.
+                    </span>
+                  </div>
+                </label>
               </div>
 
-              <div className="admin-form-group">
-                <label className="admin-label">Partner Category *</label>
-                <input
-                  className="admin-input"
-                  required
-                  value={partnerForm.category}
-                  onChange={e => setPartnerForm({ ...partnerForm, category: e.target.value })}
-                  placeholder="e.g. Fire & Automation"
-                />
-              </div>
-
-              <div className="admin-form-group">
-                <label className="admin-label">Engineering Scope / Tagline</label>
-                <input
-                  className="admin-input"
-                  value={partnerForm.tagline}
-                  onChange={e => setPartnerForm({ ...partnerForm, tagline: e.target.value })}
-                  placeholder="e.g. Global leader in building controls"
-                />
-              </div>
-
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#cbd5e1' }}>
-                <input
-                  type="checkbox"
-                  checked={partnerForm.is_active}
-                  onChange={e => setPartnerForm({ ...partnerForm, is_active: e.target.checked })}
-                />
-                <span>Active Partner on Website</span>
-              </label>
-
-              <div className="admin-modal-footer" style={{ padding: 0, marginTop: '12px' }}>
-                <button type="button" className="dash-action-btn secondary" onClick={() => setEditingPartner(null)}>Cancel</button>
-                <button type="submit" className="dash-action-btn primary">Save Partner</button>
+              <div className="adm-cp-modal-footer">
+                <button
+                  type="button"
+                  className="adm-cp-btn-secondary"
+                  onClick={() => setEditingPartner(null)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="adm-cp-btn-primary">
+                  <Save size={15} />
+                  <span>Save Partner</span>
+                </button>
               </div>
             </form>
           </div>
