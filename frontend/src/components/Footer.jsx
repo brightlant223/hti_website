@@ -263,8 +263,8 @@ export default function Footer({ onNavigate }) {
                   <Phone size={13} />
                 </div>
                 <div className="contact-entry-body">
-                  <a href="tel:+918308165121" className="contact-link">
-                    +91 83081 *****
+                  <a href="tel:+919892756077" className="contact-link">
+                    +91 98927 56077
                   </a>
                 </div>
               </div>
