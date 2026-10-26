@@ -175,9 +175,9 @@ const parseUrlRoute = () => {
   if (path.startsWith('/product/') || path.startsWith('/products/') || hash.startsWith('#/product/') || hash.startsWith('#/products/')) {
     const rawSlug = (
       path.startsWith('/product/') ? path.replace('/product/', '') :
-      path.startsWith('/products/') ? path.replace('/products/', '') :
-      hash.startsWith('#/product/') ? hash.replace('#/product/', '') :
-      hash.replace('#/products/', '')
+        path.startsWith('/products/') ? path.replace('/products/', '') :
+          hash.startsWith('#/product/') ? hash.replace('#/product/', '') :
+            hash.replace('#/products/', '')
     ).replace(/\/$/, '');
 
     if (ALL_SERVICE_SLUGS.includes(rawSlug)) {
@@ -190,7 +190,7 @@ const parseUrlRoute = () => {
   if (path.startsWith('/services/') || hash.startsWith('#/services/')) {
     const rawSlug = (
       path.startsWith('/services/') ? path.replace('/services/', '') :
-      hash.replace('#/services/', '')
+        hash.replace('#/services/', '')
     ).replace(/\/$/, '');
 
     if (rawSlug === 'touchless-entry' || rawSlug === 'touchless-entry-solutions') return { page: 'touchless-entry', param: null };
@@ -234,6 +234,10 @@ const parseUrlRoute = () => {
   }
   if (path === '/server-room-monitoring' || path === '/server-room-monitoring/' || path === '/critical-monitoring' || path === '/critical-monitoring/' || path === '/monitoring' || hash === '#/server-room-monitoring') {
     return { page: 'server-room-monitoring', param: null };
+  }
+
+  if (path === '/admin' || path === '/admin/' || hash === '#/admin' || hash === '#admin') {
+    return { page: 'home', param: null, openAdmin: true };
   }
 
   // Check dedicated company and client pages
@@ -397,6 +401,13 @@ export default function App() {
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  // Open admin login modal if requested by URL route
+  useEffect(() => {
+    if (routeState.openAdmin) {
+      setIsAdminOpen(true);
+    }
+  }, [routeState]);
 
   // Fetch product list from SQLite backend if available
   const fetchProducts = async () => {

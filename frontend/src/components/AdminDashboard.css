@@ -1685,3 +1685,470 @@
     min-height: 44px;
   }
 }
+
+/* ==========================================================================
+   HTI ADMIN LOGIN MODAL POPUP — EXACT REFERENCE MATCH
+   Centered white card (approx 495px), blurred dark backdrop, navy/blue typography,
+   red CTA button, dashed demo panel, and 3 security status indicators.
+   ========================================================================== */
+
+.hti-admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: htiModalFadeIn 0.22s ease-out;
+  overflow-y: auto;
+}
+
+@keyframes htiModalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hti-admin-login-modal {
+  width: 100%;
+  max-width: 495px;
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 25px 60px -15px rgba(11, 27, 58, 0.25), 0 0 0 1px rgba(11, 27, 58, 0.04);
+  padding: 30px 34px 26px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: htiModalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+@keyframes htiModalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Circular Close Button (Top Right) */
+.hti-login-close-circle {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+}
+
+.hti-login-close-circle:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  transform: rotate(90deg);
+}
+
+/* Brand Header */
+.hti-login-brand-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.hti-login-brand-logo-row {
+  margin-bottom: 4px;
+}
+
+.hti-login-logo-img {
+  height: 44px;
+  width: auto;
+  max-width: 130px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.hti-login-brand-text {
+  text-align: center;
+  line-height: 1.2;
+}
+
+.hti-login-brand-title {
+  font-size: 0.95rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  color: #0b1b3a;
+}
+
+.hti-login-brand-sub {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 1px;
+}
+
+.hti-login-brand-pill {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #e5232a;
+  border: 1px solid #e5232a;
+  border-radius: 3px;
+  padding: 0 4px;
+  line-height: 1.1;
+}
+
+.hti-login-title {
+  font-size: 1.95rem;
+  font-weight: 850;
+  color: #0b1b3a;
+  margin: 14px 0 6px 0;
+  letter-spacing: -0.025em;
+}
+
+.hti-login-title-blue {
+  color: #075be8;
+}
+
+.hti-login-subtitle {
+  font-size: 0.86rem;
+  color: #475569;
+  line-height: 1.45;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+/* Error Alert */
+.hti-login-error-alert {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  animation: shake 0.3s ease;
+}
+
+/* Form */
+.hti-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hti-login-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hti-login-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hti-login-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #0b1b3a;
+}
+
+.hti-login-role-tag,
+.hti-login-crypto-tag {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.hti-login-input-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 0 14px;
+  height: 46px;
+  transition: all 0.18s ease;
+  box-sizing: border-box;
+}
+
+.hti-login-input-box:focus-within {
+  border-color: #075be8;
+  box-shadow: 0 0 0 3px rgba(7, 91, 232, 0.14);
+}
+
+.hti-login-input-icon {
+  flex-shrink: 0;
+  transition: color 0.18s ease;
+}
+
+.hti-login-input-icon.text-blue {
+  color: #075be8;
+}
+
+.hti-login-input-icon.text-muted {
+  color: #64748b;
+}
+
+.hti-login-input-box input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.92rem;
+  color: #0b1b3a;
+  font-weight: 500;
+  width: 100%;
+}
+
+.hti-login-input-box input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.hti-login-eye-toggle {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+
+.hti-login-eye-toggle:hover {
+  color: #0b1b3a;
+}
+
+/* Quick Demo Fill Panel */
+.hti-login-demo-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #f0f7ff;
+  border: 1.5px dashed #93c5fd;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 2px;
+}
+
+.hti-login-demo-panel:hover {
+  background: #e0efff;
+  border-color: #3b82f6;
+  transform: translateY(-1px);
+}
+
+.hti-demo-panel-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hti-demo-bolt {
+  flex-shrink: 0;
+}
+
+.hti-demo-panel-text {
+  text-align: left;
+}
+
+.hti-demo-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0b1b3a;
+  line-height: 1.2;
+}
+
+.hti-demo-sub {
+  font-size: 0.74rem;
+  color: #64748b;
+  line-height: 1.2;
+}
+
+.hti-demo-badge {
+  background: #dbeafe;
+  border-radius: 8px;
+  padding: 5px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #075be8;
+  transition: background 0.15s ease;
+}
+
+.hti-demo-badge:hover {
+  background: #bfdbfe;
+}
+
+.hti-demo-copy-icon {
+  flex-shrink: 0;
+}
+
+/* Auto Login Checkbox Row */
+.hti-login-auto-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 2px;
+}
+
+.hti-login-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #075be8;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.hti-login-auto-label {
+  font-size: 0.84rem;
+  color: #1e293b;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Red Submit Button */
+.hti-login-submit-btn {
+  width: 100%;
+  height: 48px;
+  background: #e5232a;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(229, 35, 42, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 4px;
+}
+
+.hti-login-submit-btn:hover:not(:disabled) {
+  background: #c81820;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(229, 35, 42, 0.45);
+}
+
+.hti-login-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.hti-login-submit-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+/* Security Indicators Footer */
+.hti-login-security-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #eef2f6;
+}
+
+.hti-security-col {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hti-sec-icon-blue {
+  color: #075be8;
+  flex-shrink: 0;
+}
+
+.hti-sec-icon-green {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.hti-sec-info {
+  text-align: left;
+  line-height: 1.2;
+}
+
+.hti-sec-title {
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: #0b1b3a;
+}
+
+.hti-sec-desc {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+@media (max-width: 580px) {
+  .hti-admin-login-modal {
+    padding: 26px 20px 22px;
+    border-radius: 20px;
+  }
+
+  .hti-login-title {
+    font-size: 1.6rem;
+  }
+
+  .hti-login-demo-panel {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .hti-demo-badge {
+    align-self: flex-start;
+  }
+
+  .hti-login-security-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
