@@ -5,8 +5,10 @@ import {
   Star, List, Grid, Upload, FileText, ChevronLeft, ChevronRight,
   Check, AlertCircle, Sparkles, ExternalLink, RefreshCw, Layers,
   Cpu, ShieldCheck, Flame, Lock, Activity, Video, Download,
-  CheckCircle2, ArrowRight, Image as ImageIcon, HelpCircle
+  CheckCircle2, ArrowRight, Image as ImageIcon, HelpCircle,
+  MoreVertical, Globe
 } from 'lucide-react';
+import { ProductIconBox, getProductCategoryTheme } from './ProductIconMapping';
 
 // Preset standard badges
 const BADGE_PRESETS = [
@@ -68,6 +70,18 @@ export default function AdminProductsManager({
   const [uploadingField, setUploadingField] = useState(null); // null | 'image_url' | 'brochure_url' | 'datasheet_url' | 'gallery'
   const [formErrors, setFormErrors] = useState({});
   const [isFormDirty, setIsFormDirty] = useState(false);
+  const [openActionMenuId, setOpenActionMenuId] = useState(null);
+
+  // Close more actions popover on click outside
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest('.adm-more-actions-wrap')) {
+        setOpenActionMenuId(null);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
 
   // Add/Edit Product Form Data
   const initialFormState = {
@@ -186,9 +200,17 @@ export default function AdminProductsManager({
   };
 
   const getBadgeClass = (badge) => {
-    const b = (badge || '').toLowerCase().replace(/\s+/g, '');
+    const b = (badge || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (b.includes('flagship')) return 'flagship';
+    if (b.includes('highdemand') || b.includes('demand')) return 'highdemand';
+    if (b.includes('engineered')) return 'engineered';
+    if (b.includes('energy') || b.includes('saving')) return 'energysaving';
+    if (b.includes('highspeed') || b.includes('speed')) return 'highspeed';
+    if (b.includes('smartaccess') || b.includes('smart')) return 'smartaccess';
+    if (b.includes('aipowered') || b.includes('ai')) return 'aipowered';
+    if (b.includes('safetycritical') || b.includes('safety') || b.includes('critical')) return 'safetycritical';
+    if (b.includes('cgmp') || b.includes('gmp')) return 'cgmp';
     if (b.includes('popular')) return 'popular';
-    if (b.includes('demand')) return 'highdemand';
     if (b.includes('featured')) return 'featured';
     if (b.includes('launch') || b.includes('new')) return 'newlaunch';
     if (b.includes('seller') || b.includes('best')) return 'bestseller';
@@ -423,6 +445,42 @@ export default function AdminProductsManager({
     }
   };
 
+  // Quick Toggle Featured Status
+  const handleToggleFeatured = async (prod) => {
+    try {
+      const res = await fetch(`/api/products/${prod.id}?admin_user=${encodeURIComponent(currentUser)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: prod.name,
+          slug: prod.slug,
+          category: prod.category,
+          subcategory: prod.subcategory,
+          badge: prod.badge,
+          tagline: prod.tagline,
+          description: prod.description,
+          features: prod.features,
+          specs: prod.specs,
+          applications: prod.applications,
+          is_featured: !prod.is_featured,
+          is_published: prod.is_published,
+          image_url: prod.image_url,
+          gallery: prod.gallery,
+          brochure_url: prod.brochure_url,
+          datasheet_url: prod.datasheet_url,
+          video_url: prod.video_url,
+          display_order: prod.display_order
+        })
+      });
+      if (res.ok) {
+        if (onFeedback) onFeedback('success', `Product "${prod.name}" ${!prod.is_featured ? 'marked as featured' : 'removed from featured'}!`);
+        if (onRefresh) onRefresh();
+      }
+    } catch (err) {
+      if (onFeedback) onFeedback('error', 'Failed to update featured status.');
+    }
+  };
+
   // Delete Product
   const handleConfirmDelete = async () => {
     if (!productToDelete) return;
@@ -446,50 +504,73 @@ export default function AdminProductsManager({
   return (
     <div className="adm-products-container">
       {/* -----------------------------------------------------------------------
-          1. PRODUCT SUMMARY KPI CARDS (Requirement 1)
+          1. PRODUCT SUMMARY KPI CARDS (Matching Reference Screenshot)
           ----------------------------------------------------------------------- */}
       <div className="adm-products-summary-grid">
+        {/* Card 1: Total Products */}
         <div className="adm-prod-stat-card">
-          <div className="adm-prod-stat-info">
-            <span className="adm-prod-stat-label">Total Products</span>
-            <span className="adm-prod-stat-val">{summaryCounts.total}</span>
-            <span className="adm-prod-stat-sub">Across {Object.keys(categoryCounts).length} categories</span>
-          </div>
           <div className="adm-prod-stat-icon-wrap blue">
             <Layers size={22} />
           </div>
+          <div className="adm-prod-stat-info">
+            <span className="adm-prod-stat-label">TOTAL PRODUCTS</span>
+            <span className="adm-prod-stat-val">{summaryCounts.total}</span>
+            <span className="adm-prod-stat-sub">Across {Object.keys(categoryCounts).length} categories</span>
+          </div>
+          <div className="adm-kpi-minichart blue">
+            <span className="adm-kpi-bar" style={{ height: '14px' }} />
+            <span className="adm-kpi-bar" style={{ height: '22px' }} />
+          </div>
         </div>
 
+        {/* Card 2: Published Products */}
         <div className="adm-prod-stat-card">
+          <div className="adm-prod-stat-icon-wrap green">
+            <Globe size={22} />
+          </div>
           <div className="adm-prod-stat-info">
-            <span className="adm-prod-stat-label">Published Products</span>
+            <span className="adm-prod-stat-label">PUBLISHED PRODUCTS</span>
             <span className="adm-prod-stat-val" style={{ color: '#059669' }}>{summaryCounts.published}</span>
             <span className="adm-prod-stat-sub">Live on public website</span>
           </div>
-          <div className="adm-prod-stat-icon-wrap green">
-            <CheckCircle2 size={22} />
+          <div className="adm-kpi-minichart green">
+            <span className="adm-kpi-bar" style={{ height: '12px' }} />
+            <span className="adm-kpi-bar" style={{ height: '20px' }} />
+            <span className="adm-kpi-bar" style={{ height: '26px' }} />
           </div>
         </div>
 
+        {/* Card 3: Draft Products */}
         <div className="adm-prod-stat-card">
-          <div className="adm-prod-stat-info">
-            <span className="adm-prod-stat-label">Draft Products</span>
-            <span className="adm-prod-stat-val" style={{ color: '#64748b' }}>{summaryCounts.drafts}</span>
-            <span className="adm-prod-stat-sub">Hidden from public view</span>
-          </div>
           <div className="adm-prod-stat-icon-wrap slate">
             <EyeOff size={22} />
           </div>
+          <div className="adm-prod-stat-info">
+            <span className="adm-prod-stat-label">DRAFT PRODUCTS</span>
+            <span className="adm-prod-stat-val" style={{ color: '#64748b' }}>{summaryCounts.drafts}</span>
+            <span className="adm-prod-stat-sub">Hidden from public view</span>
+          </div>
+          <div className="adm-kpi-minichart slate">
+            <span className="adm-kpi-bar" style={{ height: '10px' }} />
+            <span className="adm-kpi-bar" style={{ height: '18px' }} />
+          </div>
         </div>
 
+        {/* Card 4: Featured Products */}
         <div className="adm-prod-stat-card">
+          <div className="adm-prod-stat-icon-wrap amber">
+            <Star size={22} fill="#d97706" />
+          </div>
           <div className="adm-prod-stat-info">
-            <span className="adm-prod-stat-label">Featured Products</span>
+            <span className="adm-prod-stat-label">FEATURED PRODUCTS</span>
             <span className="adm-prod-stat-val" style={{ color: '#d97706' }}>{summaryCounts.featured}</span>
             <span className="adm-prod-stat-sub">Highlighted in showcase</span>
           </div>
-          <div className="adm-prod-stat-icon-wrap amber">
-            <Star size={22} fill="#d97706" />
+          <div className="adm-kpi-minichart amber">
+            <span className="adm-kpi-bar" style={{ height: '10px' }} />
+            <span className="adm-kpi-bar" style={{ height: '16px' }} />
+            <span className="adm-kpi-bar" style={{ height: '22px' }} />
+            <span className="adm-kpi-bar" style={{ height: '28px' }} />
           </div>
         </div>
       </div>
@@ -614,54 +695,54 @@ export default function AdminProductsManager({
               <thead>
                 <tr>
                   <th style={{ width: '45px', textAlign: 'center' }}>#</th>
-                  <th>Product / Solution</th>
-                  <th>Category</th>
-                  <th>Subcategory</th>
-                  <th>Badge</th>
-                  <th>Status</th>
-                  <th style={{ textAlign: 'center', width: '70px' }}>Order</th>
-                  <th style={{ textAlign: 'right', paddingRight: '20px' }}>Actions</th>
+                  <th>PRODUCT / SOLUTION</th>
+                  <th>CATEGORY</th>
+                  <th>SUBCATEGORY</th>
+                  <th>BADGE</th>
+                  <th>STATUS</th>
+                  <th style={{ textAlign: 'right', paddingRight: '20px', width: '130px' }}>ACTIONS</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedProducts.map((p, idx) => {
                   const globalIdx = (currentPage - 1) * itemsPerPage + idx + 1;
+                  const theme = getProductCategoryTheme(p);
+                  const badgeCls = getBadgeClass(p.badge);
+                  const isMenuOpen = openActionMenuId === p.id;
+
                   return (
                     <tr key={p.id}>
                       {/* # Number */}
-                      <td style={{ textAlign: 'center', color: '#64748b', fontWeight: 600, fontSize: '0.8rem' }}>
+                      <td style={{ textAlign: 'center', color: '#64748b', fontWeight: 600, fontSize: '0.84rem' }}>
                         {globalIdx}
                       </td>
 
-                      {/* Product Thumbnail + Name + Short Description */}
+                      {/* Product Thumbnail / Icon + Name + Description */}
                       <td>
                         <div className="adm-table-product-cell">
-                          <div className="adm-table-thumb">
-                            {p.image_url ? (
-                              <img
-                                src={p.image_url}
-                                alt={p.name}
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                }}
-                              />
-                            ) : (
-                              <Layers size={20} style={{ color: '#94a3b8' }} />
-                            )}
-                          </div>
+                          <ProductIconBox product={p} size={44} iconSize={22} />
                           <div className="adm-table-product-titles">
                             <span className="adm-table-product-name">{p.name}</span>
-                            <span className="adm-table-product-desc">
+                            <span className="adm-table-product-desc" title={p.tagline || p.description}>
                               {p.tagline || p.description}
                             </span>
                           </div>
                         </div>
                       </td>
 
-                      {/* Category Badge */}
+                      {/* Category Badge (Design 3 - category pastel colors) */}
                       <td>
-                        <span className={`adm-cat-pill ${getCategoryClass(p.category)}`}>
-                          {p.category}
+                        <span
+                          className="adm-cat-pill"
+                          style={{
+                            backgroundColor: theme.badgeBg,
+                            color: theme.badgeText,
+                            borderColor: theme.badgeBorder,
+                            borderWidth: '1px',
+                            borderStyle: 'solid'
+                          }}
+                        >
+                          {theme.label || p.category}
                         </span>
                       </td>
 
@@ -673,7 +754,7 @@ export default function AdminProductsManager({
                       {/* Badge Label */}
                       <td>
                         {p.badge ? (
-                          <span className={`adm-badge-pill ${getBadgeClass(p.badge)}`}>
+                          <span className={`adm-badge-pill ${badgeCls}`}>
                             {p.badge}
                           </span>
                         ) : (
@@ -693,19 +774,14 @@ export default function AdminProductsManager({
                         </button>
                       </td>
 
-                      {/* Display Order */}
-                      <td style={{ textAlign: 'center', color: '#475569', fontWeight: 600 }}>
-                        {p.display_order ?? globalIdx}
-                      </td>
-
-                      {/* Actions */}
+                      {/* Actions: View, Edit, More */}
                       <td style={{ textAlign: 'right', paddingRight: '20px' }}>
                         <div className="adm-table-actions">
-                          {/* View Product */}
+                          {/* View Product Details */}
                           <button
                             className="adm-action-icon-btn"
                             onClick={() => setPreviewProduct(p)}
-                            title="Preview Product Details"
+                            title="Preview Product Specifications"
                           >
                             <Eye size={15} />
                           </button>
@@ -719,14 +795,71 @@ export default function AdminProductsManager({
                             <Edit3 size={15} />
                           </button>
 
-                          {/* Delete Product */}
-                          <button
-                            className="adm-action-icon-btn delete"
-                            onClick={() => setProductToDelete(p)}
-                            title="Delete Product"
-                          >
-                            <Trash2 size={15} />
-                          </button>
+                          {/* More Actions Dropdown Menu */}
+                          <div className="adm-more-actions-wrap">
+                            <button
+                              className={`adm-action-icon-btn ${isMenuOpen ? 'active' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenActionMenuId(isMenuOpen ? null : p.id);
+                              }}
+                              title="More Options"
+                            >
+                              <MoreVertical size={15} />
+                            </button>
+
+                            {isMenuOpen && (
+                              <div className="adm-more-dropdown-menu">
+                                <button
+                                  className="adm-more-menu-item"
+                                  onClick={() => {
+                                    setOpenActionMenuId(null);
+                                    handleTogglePublish(p);
+                                  }}
+                                >
+                                  {p.is_published ? <EyeOff size={14} /> : <Eye size={14} />}
+                                  <span>{p.is_published ? 'Unpublish (Draft)' : 'Publish Live'}</span>
+                                </button>
+
+                                <button
+                                  className="adm-more-menu-item"
+                                  onClick={() => {
+                                    setOpenActionMenuId(null);
+                                    handleToggleFeatured(p);
+                                  }}
+                                >
+                                  <Star size={14} fill={p.is_featured ? '#d97706' : 'none'} color="#d97706" />
+                                  <span>{p.is_featured ? 'Remove Featured' : 'Mark as Featured'}</span>
+                                </button>
+
+                                {onNavigateToPublicProduct && (
+                                  <button
+                                    className="adm-more-menu-item"
+                                    onClick={() => {
+                                      setOpenActionMenuId(null);
+                                      onNavigateToPublicProduct(p.slug);
+                                    }}
+                                  >
+                                    <ExternalLink size={14} />
+                                    <span>View on Website</span>
+                                  </button>
+                                )}
+
+                                <div className="adm-more-menu-divider" />
+
+                                <button
+                                  className="adm-more-menu-item danger"
+                                  onClick={() => {
+                                    setOpenActionMenuId(null);
+                                    setProductToDelete(p);
+                                  }}
+                                >
+                                  <Trash2 size={14} />
+                                  <span>Delete Product</span>
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -736,65 +869,122 @@ export default function AdminProductsManager({
             </table>
           </div>
         ) : (
-          /* Cards Grid View */
-          <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: '16px' }}>
-            {paginatedProducts.map((p) => (
-              <div
-                key={p.id}
-                style={{
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '12px',
-                  background: '#ffffff',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
-                }}
-              >
-                <div style={{ height: '140px', background: '#f8fafc', position: 'relative', overflow: 'hidden' }}>
-                  {p.image_url ? (
-                    <img src={p.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Layers size={36} style={{ color: '#cbd5e1' }} />
-                    </div>
-                  )}
-                  <span className={`adm-cat-pill ${getCategoryClass(p.category)}`} style={{ position: 'absolute', top: 10, left: 10 }}>
-                    {p.category}
-                  </span>
-                  {p.badge && (
-                    <span className={`adm-badge-pill ${getBadgeClass(p.badge)}`} style={{ position: 'absolute', top: 10, right: 10 }}>
-                      {p.badge}
+          /* Cards Grid View (Responsive Cards with Unique Product Icons & Theme Colors) */
+          <div className="adm-products-cards-grid">
+            {paginatedProducts.map((p) => {
+              const theme = getProductCategoryTheme(p);
+              const badgeCls = getBadgeClass(p.badge);
+              const isMenuOpen = openActionMenuId === p.id;
+
+              return (
+                <div key={p.id} className="adm-prod-grid-card">
+                  {/* Top Bar with Category & Badge */}
+                  <div className="adm-grid-card-head">
+                    <span
+                      className="adm-cat-pill"
+                      style={{
+                        backgroundColor: theme.badgeBg,
+                        color: theme.badgeText,
+                        borderColor: theme.badgeBorder,
+                        borderWidth: '1px',
+                        borderStyle: 'solid'
+                      }}
+                    >
+                      {theme.label || p.category}
                     </span>
-                  )}
-                </div>
+                    {p.badge && (
+                      <span className={`adm-badge-pill ${badgeCls}`}>
+                        {p.badge}
+                      </span>
+                    )}
+                  </div>
 
-                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                  <h4 style={{ margin: '0 0 6px 0', fontSize: '0.94rem', fontWeight: 800, color: '#0f172a' }}>
-                    {p.name}
-                  </h4>
-                  <p style={{ margin: '0 0 14px 0', fontSize: '0.8rem', color: '#64748b', lineHeight: 1.4, flexGrow: 1 }}>
-                    {p.tagline || (p.description ? p.description.slice(0, 85) + '...' : '')}
-                  </p>
+                  {/* Centered Unique Product Icon */}
+                  <div className="adm-grid-card-icon-area">
+                    <ProductIconBox product={p} size={56} iconSize={28} />
+                  </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '12px', borderTop: '1px solid #f1f5f9' }}>
+                  {/* Product Details */}
+                  <div className="adm-grid-card-body">
+                    <h4 className="adm-grid-card-title">{p.name}</h4>
+                    {p.subcategory && (
+                      <span className="adm-grid-card-subcat">{p.subcategory}</span>
+                    )}
+                    <p className="adm-grid-card-desc">
+                      {p.tagline || (p.description ? p.description.slice(0, 85) + '...' : '')}
+                    </p>
+                  </div>
+
+                  {/* Footer with Status & Actions */}
+                  <div className="adm-grid-card-foot">
                     <button
                       className={`adm-status-toggle-btn ${p.is_published ? 'published' : 'draft'}`}
                       onClick={() => handleTogglePublish(p)}
+                      title="Click to toggle Published / Draft"
                     >
                       <span className={`adm-status-dot ${p.is_published ? 'green' : 'neutral'}`} />
                       <span>{p.is_published ? 'Published' : 'Draft'}</span>
                     </button>
 
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                      <button className="adm-action-icon-btn" onClick={() => setPreviewProduct(p)} title="Preview"><Eye size={14} /></button>
-                      <button className="adm-action-icon-btn" onClick={() => handleOpenEditModal(p)} title="Edit"><Edit3 size={14} /></button>
-                      <button className="adm-action-icon-btn delete" onClick={() => setProductToDelete(p)} title="Delete"><Trash2 size={14} /></button>
+                    <div className="adm-table-actions">
+                      <button className="adm-action-icon-btn" onClick={() => setPreviewProduct(p)} title="Preview">
+                        <Eye size={14} />
+                      </button>
+                      <button className="adm-action-icon-btn" onClick={() => handleOpenEditModal(p)} title="Edit">
+                        <Edit3 size={14} />
+                      </button>
+                      <div className="adm-more-actions-wrap">
+                        <button
+                          className={`adm-action-icon-btn ${isMenuOpen ? 'active' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenActionMenuId(isMenuOpen ? null : p.id);
+                          }}
+                          title="More Options"
+                        >
+                          <MoreVertical size={14} />
+                        </button>
+                        {isMenuOpen && (
+                          <div className="adm-more-dropdown-menu">
+                            <button
+                              className="adm-more-menu-item"
+                              onClick={() => {
+                                setOpenActionMenuId(null);
+                                handleTogglePublish(p);
+                              }}
+                            >
+                              {p.is_published ? <EyeOff size={14} /> : <Eye size={14} />}
+                              <span>{p.is_published ? 'Unpublish' : 'Publish Live'}</span>
+                            </button>
+                            <button
+                              className="adm-more-menu-item"
+                              onClick={() => {
+                                setOpenActionMenuId(null);
+                                handleToggleFeatured(p);
+                              }}
+                            >
+                              <Star size={14} fill={p.is_featured ? '#d97706' : 'none'} color="#d97706" />
+                              <span>{p.is_featured ? 'Unmark Featured' : 'Featured'}</span>
+                            </button>
+                            <div className="adm-more-menu-divider" />
+                            <button
+                              className="adm-more-menu-item danger"
+                              onClick={() => {
+                                setOpenActionMenuId(null);
+                                setProductToDelete(p);
+                              }}
+                            >
+                              <Trash2 size={14} />
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

@@ -13,7 +13,7 @@ import {
   Send, AlertTriangle, ShieldCheck, UserCheck, Key, FileSpreadsheet,
   ArrowRight, CheckSquare, MessageCircle, HeartHandshake,
   Server, Link, Image, Hash, Info, Sun, Moon, Save,
-  Zap, User
+  Zap, User, HelpCircle
 } from 'lucide-react';
 
 // Custom animated number count-up hook with cleanup and prefers-reduced-motion support
@@ -1654,7 +1654,7 @@ export default function AdminPanel({
               className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'products' ? 'active' : ''}`}
               onClick={() => setActiveTab('products')}
             >
-              <Eye size={17} />
+              <Layers size={17} />
               <span>Products</span>
               <span className="sidebar-counter adm-sidebar-counter">{products.length}</span>
             </button>
@@ -1846,10 +1846,10 @@ export default function AdminPanel({
               <button
                 className="topbar-btn adm-topbar-btn"
                 style={{ padding: '7px 9px' }}
-                title="Notifications"
-                aria-label="Notifications"
+                title="Help & System Info"
+                aria-label="Help & System Info"
               >
-                <AlertCircle size={15} />
+                <HelpCircle size={15} />
               </button>
 
               <button
