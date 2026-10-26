@@ -9,32 +9,19 @@ import {
   Pause,
   Volume2,
   VolumeX,
-  Maximize2,
   CheckCircle2,
   ArrowRight,
-  ExternalLink,
-  ChevronRight,
-  ChevronLeft,
   X,
-  FileText,
-  Phone,
-  Mail,
-  Building2,
   User,
-  Check,
   Award,
-  Layers,
   DoorClosed,
   Settings,
-  Eye,
-  SlidersHorizontal,
   Lock,
   Info,
   ChevronDown,
   ChevronUp,
   Radio,
-  Cpu,
-  HelpCircle
+  Cpu
 } from 'lucide-react';
 import './TouchlessEntryPage.css';
 
@@ -44,21 +31,23 @@ export default function TouchlessEntryPage({
 }) {
   // Video player state
   const videoRef = useRef(null);
+  const userPausedRef = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState('0:00');
-  const [duration, setDuration] = useState('2:16');
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+
+  // prefers-reduced-motion media query hook
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    return false;
+  });
 
   // Quote modal state
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [quoteSuccess, setQuoteSuccess] = useState(false);
   const [selectedProductForQuote, setSelectedProductForQuote] = useState('Touchless Entry Solution');
-
-  // Interactive door simulator state in Hero
-  const [isDoorOpen, setIsDoorOpen] = useState(false);
-  const [sensorActive, setSensorActive] = useState(true);
 
   // Active step in "How It Works"
   const [activeStep, setActiveStep] = useState(0);
@@ -68,10 +57,6 @@ export default function TouchlessEntryPage({
 
   // FAQ Accordion state
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
-
-  // Lightbox for gallery
-  const [lightboxImage, setLightboxImage] = useState(null);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // Form data for quote
   const [formData, setFormData] = useState({
@@ -89,35 +74,97 @@ export default function TouchlessEntryPage({
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     document.title = 'Touchless Entry Solutions | HTI Automation & Security Systems';
+    setVideoFailed(false);
+    userPausedRef.current = prefersReducedMotion;
+  }, [prefersReducedMotion]);
+
+  // Listen to prefers-reduced-motion changes
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleMotionChange = (e) => {
+      setPrefersReducedMotion(e.matches);
+      if (e.matches && videoRef.current) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+        userPausedRef.current = true;
+      }
+    };
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleMotionChange);
+      return () => mediaQuery.removeEventListener('change', handleMotionChange);
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(handleMotionChange);
+      return () => mediaQuery.removeListener(handleMotionChange);
+    }
   }, []);
 
-  // Video progress handling
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      const current = videoRef.current.currentTime;
-      const total = videoRef.current.duration || 136;
-      setProgress((current / total) * 100);
-      
-      const formatTime = (time) => {
-        const mins = Math.floor(time / 60);
-        const secs = Math.floor(time % 60);
-        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-      };
-      setCurrentTime(formatTime(current));
-      if (videoRef.current.duration) {
-        setDuration(formatTime(videoRef.current.duration));
+  // Pause video when tab is hidden or hero video scrolls out of view
+  useEffect(() => {
+    const videoEl = videoRef.current;
+    if (!videoEl) return;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (videoRef.current && !videoRef.current.paused) {
+          videoRef.current.pause();
+        }
+      } else {
+        if (!userPausedRef.current && !prefersReducedMotion && videoRef.current) {
+          const rect = videoRef.current.getBoundingClientRect();
+          const inView = rect.top < window.innerHeight && rect.bottom > 0;
+          if (inView) {
+            videoRef.current.play().catch(() => {});
+          }
+        }
       }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    let observer;
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!videoRef.current) return;
+            if (!entry.isIntersecting) {
+              if (!videoRef.current.paused) {
+                videoRef.current.pause();
+              }
+            } else {
+              if (!userPausedRef.current && !prefersReducedMotion && !document.hidden) {
+                videoRef.current.play().catch(() => {});
+              }
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(videoEl);
     }
-  };
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+  }, [prefersReducedMotion, videoFailed]);
 
   const togglePlay = () => {
     if (videoRef.current) {
-      if (isPlaying) {
+      if (videoRef.current.paused) {
+        userPausedRef.current = false;
+        videoRef.current.play().then(() => {
+          setIsPlaying(true);
+        }).catch((err) => {
+          console.warn('Playback error:', err);
+        });
+      } else {
+        userPausedRef.current = true;
         videoRef.current.pause();
         setIsPlaying(false);
-      } else {
-        videoRef.current.play();
-        setIsPlaying(true);
       }
     }
   };
@@ -126,13 +173,23 @@ export default function TouchlessEntryPage({
     if (videoRef.current) {
       videoRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
+    } else {
+      setIsMuted(!isMuted);
     }
   };
 
-  const handleFullscreen = () => {
-    if (videoRef.current) {
-      if (videoRef.current.requestFullscreen) {
-        videoRef.current.requestFullscreen();
+  const scrollToNextSection = () => {
+    const targets = [
+      'service-details-section',
+      'service-workflow-section',
+      'service-specs-section',
+      'service-faq-section'
+    ];
+    for (const id of targets) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        break;
       }
     }
   };
@@ -178,62 +235,9 @@ export default function TouchlessEntryPage({
     }, 2400);
   };
 
-  // Gallery items matching reference design
-  const galleryItems = [
-    {
-      title: 'Corporate Office Entrance',
-      image: '/hero-glass-atrium.jpg',
-      category: 'Commercial & Corporate',
-      desc: 'Frameless glass automatic bi-parting sliding doors with microwave radar'
-    },
-    {
-      title: 'Hospital Entrance Solution',
-      image: '/products/automatic-doors-hospital.jpg',
-      category: 'Healthcare & Cleanroom',
-      desc: 'Hermetically sealed hygienic touchless doors with anti-collision safety'
-    },
-    {
-      title: 'Retail Store Automatic Doors',
-      image: '/services/services-touchless-entry.jpg',
-      category: 'Retail & Hospitality',
-      desc: 'High-throughput sensor sliding doors with emergency panic breakout'
-    },
-    {
-      title: 'Clean Room Entry',
-      image: '/products/cleanroom-door-pharma.jpg',
-      category: 'Pharmaceutical',
-      desc: 'Flush cleanroom door with touchless wave sensors and airlock interlock'
-    },
-    {
-      title: 'Access Control Integration',
-      image: '/products/biometric-access-terminal.jpg',
-      category: 'Security Integration',
-      desc: 'AI face recognition terminal paired with automated swing barrier'
-    },
-    {
-      title: 'Door Interlock Installation',
-      image: '/products/cleanroom-interlocks.jpg',
-      category: 'Pharma Cascades',
-      desc: 'Multi-door programmable airlock system maintaining sterile room pressure'
-    }
-  ];
-
-  const openLightbox = (index) => {
-    setLightboxIndex(index);
-    setLightboxImage(galleryItems[index]);
-  };
-
-  const nextLightbox = () => {
-    const nextIdx = (lightboxIndex + 1) % galleryItems.length;
-    setLightboxIndex(nextIdx);
-    setLightboxImage(galleryItems[nextIdx]);
-  };
-
-  const prevLightbox = () => {
-    const prevIdx = (lightboxIndex - 1 + galleryItems.length) % galleryItems.length;
-    setLightboxIndex(prevIdx);
-    setLightboxImage(galleryItems[prevIdx]);
-  };
+  const rawVideoSrc = '/automatic_sliding.mp4';
+  const posterSrc = '/services/services-touchless-entry.jpg';
+  const showHeroVideo = Boolean(rawVideoSrc) && !videoFailed;
 
   // Step information
   const steps = [
@@ -431,39 +435,76 @@ export default function TouchlessEntryPage({
 
                 <button
                   className="touchless-btn-secondary"
-                  onClick={() => {
-                    const el = document.getElementById('touchless-products-section');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={scrollToNextSection}
                 >
-                  <span>Explore Products</span>
+                  <span>Explore Details</span>
                 </button>
               </div>
             </div>
 
-            {/* Center: Showcase Image of Automatic Sliding Doors with Sensor */}
+            {/* Center: Showcase Video (or Image Fallback) with Interactive Status Badge */}
             <div className="touchless-hero-center">
               <div className="touchless-door-showcase-frame">
-                {/* Microwave radar wave animation */}
-                <div className={`radar-sensor-assembly ${sensorActive ? 'sensor-active' : ''}`}>
-                  <div className="sensor-hardware-box">
-                    <div className="sensor-lens"></div>
-                    <div className="sensor-led-indicator"></div>
-                  </div>
-                  <div className="radar-wave wave-1"></div>
-                  <div className="radar-wave wave-2"></div>
-                  <div className="radar-wave wave-3"></div>
-                </div>
-
                 <div className="door-viewport">
-                  <img
-                    src="/services/services-touchless-entry.jpg"
-                    alt="Automatic Sliding Door in Modern Atrium Lobby"
-                    className="touchless-hero-door-img"
-                  />
+                  {showHeroVideo ? (
+                    <>
+                      <video
+                        ref={videoRef}
+                        key={rawVideoSrc}
+                        src={rawVideoSrc}
+                        poster={posterSrc}
+                        className="touchless-hero-door-img"
+                        autoPlay={!prefersReducedMotion}
+                        loop
+                        muted={isMuted}
+                        playsInline
+                        onPlay={() => setIsPlaying(true)}
+                        onPause={() => setIsPlaying(false)}
+                        onError={() => {
+                          console.warn('Hero video load failed, falling back to static hero image.');
+                          setVideoFailed(true);
+                        }}
+                      />
+                      {prefersReducedMotion && !isPlaying && (
+                        <button
+                          type="button"
+                          className="hero-reduced-motion-play-btn"
+                          onClick={togglePlay}
+                          aria-label="Play video"
+                        >
+                          <Play size={22} fill="currentColor" />
+                        </button>
+                      )}
+                      <div className="door-video-controls">
+                        <button
+                          type="button"
+                          className="control-btn door-control-btn"
+                          onClick={togglePlay}
+                          aria-label={isPlaying ? "Pause video" : "Play video"}
+                          title={isPlaying ? "Pause" : "Play"}
+                        >
+                          {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                        </button>
+                        <button
+                          type="button"
+                          className="control-btn door-control-btn"
+                          onClick={toggleMute}
+                          aria-label={isMuted ? "Unmute video" : "Mute video"}
+                          title={isMuted ? "Unmute" : "Mute"}
+                        >
+                          {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <img
+                      src="/services/services-touchless-entry.jpg"
+                      alt="Touchless Entry Showcase"
+                      className="touchless-hero-door-img"
+                    />
+                  )}
                   <div className="door-reflection-overlay"></div>
-                  
-                  {/* Subtle Interactive Trigger overlay */}
+
                   <div className="door-interactive-badge">
                     <span className="door-pulse-live"></span>
                     <span>Radar Sensor Active</span>
@@ -527,300 +568,23 @@ export default function TouchlessEntryPage({
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* 2. OPERATIONAL SHOWCASE ("Touchless Entry in Action") */}
-      <section className="touchless-showcase-section">
-        <div className="touchless-container">
-          <div className="showcase-content-grid">
-            {/* Left: Custom Video Showcase Player */}
-            <div className="showcase-video-card">
-              <div className="video-player-wrapper">
-                <video
-                  ref={videoRef}
-                  src="/automatic_sliding.mp4"
-                  poster="/services/services-touchless-entry.jpg"
-                  className="showcase-video-element"
-                  onTimeUpdate={handleTimeUpdate}
-                  onEnded={() => setIsPlaying(false)}
-                  muted={isMuted}
-                  playsInline
-                />
-
-                {/* Big Center Play Button when paused */}
-                {!isPlaying && (
-                  <button 
-                    className="video-center-play-btn"
-                    onClick={togglePlay}
-                    aria-label="Play video"
-                  >
-                    <div className="play-triangle"></div>
-                  </button>
-                )}
-
-                {/* Scrubber and Video Controls Bar */}
-                <div className="video-controls-bar">
-                  <button className="control-btn" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"}>
-                    {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                  </button>
-                  
-                  <div className="video-time-display">
-                    {currentTime} / {duration}
-                  </div>
-
-                  <div className="video-progress-track" onClick={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const pos = (e.clientX - rect.left) / rect.width;
-                    if (videoRef.current && videoRef.current.duration) {
-                      videoRef.current.currentTime = pos * videoRef.current.duration;
-                    }
-                  }}>
-                    <div className="video-progress-filled" style={{ width: `${progress}%` }}></div>
-                  </div>
-
-                  <button className="control-btn" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
-                    {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                  </button>
-
-                  <button className="control-btn" onClick={handleFullscreen} aria-label="Fullscreen">
-                    <Maximize2 size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Operational Details & Features */}
-            <div className="showcase-info-col">
-              <div className="showcase-matrix-dots" aria-hidden="true">
-                <span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span>
-              </div>
-
-              <div className="showcase-eyebrow">OPERATIONAL SHOWCASE</div>
-              <h2 className="showcase-heading">Touchless Entry in Action</h2>
-              
-              <p className="showcase-description">
-                Watch how our automatic doors and access control systems create a safer, cleaner and smarter entry experience for your facility.
-              </p>
-
-              <div className="showcase-features-list">
-                <div className="showcase-feature-item">
-                  <div className="check-circle-icon">
-                    <Check size={16} />
-                  </div>
-                  <span>Smooth and silent operation</span>
-                </div>
-
-                <div className="showcase-feature-item">
-                  <div className="check-circle-icon">
-                    <Check size={16} />
-                  </div>
-                  <span>Advanced sensor technology</span>
-                </div>
-
-                <div className="showcase-feature-item">
-                  <div className="check-circle-icon">
-                    <Check size={16} />
-                  </div>
-                  <span>Reliable and durable</span>
-                </div>
-
-                <div className="showcase-feature-item">
-                  <div className="check-circle-icon">
-                    <Check size={16} />
-                  </div>
-                  <span>Ideal for high-traffic areas</span>
-                </div>
-              </div>
-
-              <div className="showcase-action-row">
-                <button 
-                  className="showcase-watch-btn"
-                  onClick={() => setIsVideoModalOpen(true)}
-                >
-                  <span>Watch Full Video</span>
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. OUR TOUCHLESS ENTRY PRODUCTS */}
-      <section className="touchless-products-section" id="touchless-products-section">
-        <div className="touchless-container">
-          <div className="section-header-row">
-            <div>
-              <h2 className="section-title">Our Touchless Entry Products</h2>
-              <div className="section-title-underline"></div>
-            </div>
-
+          {/* Smooth Scroll Cue to Transition to Next Section */}
+          <div className="hero-scroll-cue-wrapper">
             <button
-              className="view-all-link"
-              onClick={() => onNavigate && onNavigate('catalog')}
+              className="hero-scroll-cue"
+              onClick={scrollToNextSection}
+              aria-label="Scroll down to explore full system details"
             >
-              <span>View All Products</span>
-              <ArrowRight size={15} />
+              <span>Scroll to explore full system details</span>
+              <ChevronDown size={15} className="scroll-cue-icon" />
             </button>
-          </div>
-
-          <div className="touchless-products-grid">
-            {/* Card 1: Automatic Sliding Door */}
-            <div className="touchless-product-card">
-              <div className="product-card-media">
-                <img
-                  src="/products/automatic-doors.jpg"
-                  alt="Automatic Sliding Door"
-                  className="product-card-img"
-                />
-                <span className="product-card-badge">Sliding</span>
-              </div>
-              <div className="product-card-body">
-                <div className="product-mini-chips">
-                  <span className="mini-chip">24GHz Radar</span>
-                  <span className="mini-chip">Anti-Pinch IR</span>
-                  <span className="mini-chip">Brushless DC</span>
-                </div>
-                <h3 className="product-card-title">Automatic Sliding Door</h3>
-                <p className="product-card-desc">
-                  Motion sensor based operation with sleek and modern design. Ideal for commercial, hospital, clean room and retail spaces.
-                </p>
-                <ul className="product-card-bullets">
-                  <li><Check size={13} className="bullet-check" /> 100–500 mm/s high-speed bi-parting glide</li>
-                  <li><Check size={13} className="bullet-check" /> 150 kg leaf weight capacity with reinforced track</li>
-                  <li><Check size={13} className="bullet-check" /> Fail-safe emergency panic breakout &amp; UPS backup</li>
-                </ul>
-                <div className="product-card-footer">
-                  <button
-                    className="learn-more-btn"
-                    onClick={() => handleOpenQuote('Automatic Sliding Door')}
-                  >
-                    <span>Learn More</span>
-                    <ArrowRight size={15} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2: Automatic Swing Door */}
-            <div className="touchless-product-card">
-              <div className="product-card-media">
-                <img
-                  src="/products/automatic-doors-swing.jpg"
-                  alt="Automatic Swing Door"
-                  className="product-card-img"
-                />
-                <span className="product-card-badge">Swing</span>
-              </div>
-              <div className="product-card-body">
-                <div className="product-mini-chips">
-                  <span className="mini-chip">Wave Sensor</span>
-                  <span className="mini-chip">Push &amp; Go</span>
-                  <span className="mini-chip">Low Energy</span>
-                </div>
-                <h3 className="product-card-title">Automatic Swing Door</h3>
-                <p className="product-card-desc">
-                  Touchless sensor or switch operation. Suitable for single or double leaf doors and high-traffic areas.
-                </p>
-                <ul className="product-card-bullets">
-                  <li><Check size={13} className="bullet-check" /> Touchless wave switch (3–10 cm detection range)</li>
-                  <li><Check size={13} className="bullet-check" /> Easily retrofitted onto existing timber/glass frames</li>
-                  <li><Check size={13} className="bullet-check" /> Intelligent obstacle rebound safety protection</li>
-                </ul>
-                <div className="product-card-footer">
-                  <button
-                    className="learn-more-btn"
-                    onClick={() => handleOpenQuote('Automatic Swing Door')}
-                  >
-                    <span>Learn More</span>
-                    <ArrowRight size={15} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3: Touchless Access Control */}
-            <div className="touchless-product-card">
-              <div className="product-card-media">
-                <img
-                  src="/products/biometric-access-terminal.jpg"
-                  alt="Touchless Access Control Terminal"
-                  className="product-card-img"
-                />
-                <span className="product-card-badge">Access Control</span>
-              </div>
-              <div className="product-card-body">
-                <div className="product-mini-chips">
-                  <span className="mini-chip">0.2s AI Face</span>
-                  <span className="mini-chip">RFID / NFC</span>
-                  <span className="mini-chip">Cloud Logs</span>
-                </div>
-                <h3 className="product-card-title">Touchless Access Control</h3>
-                <p className="product-card-desc">
-                  Face recognition, RFID / Proximity card, Fingerprint (optional) and Time Attendance Integration.
-                </p>
-                <ul className="product-card-bullets">
-                  <li><Check size={13} className="bullet-check" /> 0.2s verification with anti-spoofing dual cameras</li>
-                  <li><Check size={13} className="bullet-check" /> 50,000 face capacity &amp; mask detection alerts</li>
-                  <li><Check size={13} className="bullet-check" /> Wiegand &amp; TCP/IP integration with turnstiles/doors</li>
-                </ul>
-                <div className="product-card-footer">
-                  <button
-                    className="learn-more-btn"
-                    onClick={() => handleOpenQuote('Touchless Access Control')}
-                  >
-                    <span>Learn More</span>
-                    <ArrowRight size={15} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 4: Door Interlock System */}
-            <div className="touchless-product-card">
-              <div className="product-card-media">
-                <img
-                  src="/products/cleanroom-interlocks.jpg"
-                  alt="Door Interlock System"
-                  className="product-card-img"
-                />
-                <span className="product-card-badge">Cleanroom Airlock</span>
-              </div>
-              <div className="product-card-body">
-                <div className="product-mini-chips">
-                  <span className="mini-chip">2–8 Doors</span>
-                  <span className="mini-chip">Airlock Cascade</span>
-                  <span className="mini-chip">LED Indicators</span>
-                </div>
-                <h3 className="product-card-title">Door Interlock System</h3>
-                <p className="product-card-desc">
-                  Prevents multiple doors from opening together and maintains required pressure in clean rooms, pharma and laboratories.
-                </p>
-                <ul className="product-card-bullets">
-                  <li><Check size={13} className="bullet-check" /> Compliant with USFDA &amp; cGMP cleanroom protocols</li>
-                  <li><Check size={13} className="bullet-check" /> Audio-visual Red/Green traffic status panels</li>
-                  <li><Check size={13} className="bullet-check" /> Programmable release timer with emergency override</li>
-                </ul>
-                <div className="product-card-footer">
-                  <button
-                    className="learn-more-btn"
-                    onClick={() => handleOpenQuote('Door Interlock System')}
-                  >
-                    <span>Learn More</span>
-                    <ArrowRight size={15} />
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
       {/* 3B. ADVANCED SENSOR & DETECTION TECHNOLOGIES (NEW TECHNICAL DEEP DIVE) */}
-      <section className="touchless-sensors-deepdive-section">
+      <section className="touchless-sensors-deepdive-section" id="service-details-section">
         <div className="touchless-container">
           <div className="section-header-centered">
             <span className="section-eyebrow">RADAR &amp; OPTICAL PRECISION</span>
@@ -896,7 +660,7 @@ export default function TouchlessEntryPage({
       </section>
 
       {/* 4. HOW IT WORKS & IDEAL FOR MULTIPLE APPLICATIONS */}
-      <section className="touchless-workflow-app-section">
+      <section className="touchless-workflow-app-section" id="service-workflow-section">
         <div className="touchless-container">
           <div className="workflow-and-app-grid">
             {/* Left: How It Works ? */}
@@ -1016,7 +780,7 @@ export default function TouchlessEntryPage({
       </section>
 
       {/* 5. TECHNICAL SPECIFICATIONS & STANDARDS */}
-      <section className="touchless-specs-section">
+      <section className="touchless-specs-section" id="service-specs-section">
         <div className="touchless-container">
           <div className="specs-cert-grid">
             {/* Left: Technical Specifications (Typical) */}
@@ -1119,50 +883,8 @@ export default function TouchlessEntryPage({
         </div>
       </section>
 
-      {/* 6. RELATED GALLERY */}
-      <section className="touchless-gallery-section">
-        <div className="touchless-container">
-          <div className="section-header-row">
-            <div>
-              <h2 className="section-title">Related Gallery</h2>
-              <div className="section-title-underline"></div>
-            </div>
-
-            <button
-              className="view-all-link"
-              onClick={() => openLightbox(0)}
-            >
-              <span>View All Images</span>
-              <ArrowRight size={15} />
-            </button>
-          </div>
-
-          <div className="gallery-grid">
-            {galleryItems.map((item, gIdx) => (
-              <div
-                key={gIdx}
-                className="gallery-item-card"
-                onClick={() => openLightbox(gIdx)}
-              >
-                <div className="gallery-media">
-                  <img src={item.image} alt={item.title} className="gallery-img" />
-                  <div className="gallery-hover-overlay">
-                    <Eye size={24} className="gallery-zoom-icon" />
-                    <span>View Photo</span>
-                  </div>
-                </div>
-                <div className="gallery-caption">
-                  <h4 className="gallery-title">{item.title}</h4>
-                  <span className="gallery-category">{item.category}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6B. FREQUENTLY ASKED QUESTIONS (FAQ) */}
-      <section className="touchless-faq-section">
+      {/* 6. FREQUENTLY ASKED QUESTIONS (FAQ) */}
+      <section className="touchless-faq-section" id="service-faq-section">
         <div className="touchless-container">
           <div className="section-header-centered">
             <span className="section-eyebrow">COMMON QUERIES</span>
@@ -1199,54 +921,6 @@ export default function TouchlessEntryPage({
           </div>
         </div>
       </section>
-
-
-
-      {/* LIGHTBOX MODAL FOR GALLERY */}
-      {lightboxImage && (
-        <div className="touchless-lightbox-modal" onClick={() => setLightboxImage(null)}>
-          <div className="lightbox-content-box" onClick={(e) => e.stopPropagation()}>
-            <button className="lightbox-close-btn" onClick={() => setLightboxImage(null)} aria-label="Close image">
-              <X size={24} />
-            </button>
-
-            <button className="lightbox-nav-btn prev-btn" onClick={prevLightbox} aria-label="Previous image">
-              <ChevronLeft size={28} />
-            </button>
-            <button className="lightbox-nav-btn next-btn" onClick={nextLightbox} aria-label="Next image">
-              <ChevronRight size={28} />
-            </button>
-
-            <img src={lightboxImage.image} alt={lightboxImage.title} className="lightbox-main-img" />
-            <div className="lightbox-caption-bar">
-              <h4>{lightboxImage.title}</h4>
-              <p>{lightboxImage.desc}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* CINEMATIC VIDEO MODAL */}
-      {isVideoModalOpen && (
-        <div className="touchless-video-modal" onClick={() => setIsVideoModalOpen(false)}>
-          <div className="video-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="video-modal-header">
-              <h3>Touchless Automatic Doors - Operational Showcase</h3>
-              <button className="modal-close-icon-btn" onClick={() => setIsVideoModalOpen(false)}>
-                <X size={20} />
-              </button>
-            </div>
-            <div className="video-modal-body">
-              <video
-                src="/automatic_sliding.mp4"
-                controls
-                autoPlay
-                className="modal-fullscreen-video"
-              />
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* QUICK QUOTE MODAL */}
       {isQuoteModalOpen && (
