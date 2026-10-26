@@ -11,12 +11,14 @@ import {
   Download,
   Sun,
   Moon,
+  Search,
   Monitor,
   Settings,
   Cpu,
   Lock,
   ShieldCheck,
   Flame,
+  FlaskConical,
   Sparkles,
   Activity,
   CheckCircle2,
@@ -45,6 +47,55 @@ import {
 } from 'lucide-react';
 import { TOTAL_PRODUCT_COUNT } from '../data/productCatalogueData';
 
+// Custom precision SVG for Traffic & Perimeter Barrier matching uploaded reference image
+function TrafficBarrierIcon({ size = 22, className = '' }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect x="3.5" y="10" width="3.5" height="11" rx="0.8" />
+      <line x1="2" y1="21" x2="9.5" y2="21" />
+      <circle cx="5.25" cy="11.5" r="1.5" />
+      <path d="M6.75 11.5L21.5 5.5" strokeWidth="2.4" />
+      <line x1="11.5" y1="8.5" x2="11.5" y2="11.5" strokeWidth="1.8" />
+      <line x1="16.5" y1="6.8" x2="16.5" y2="9.8" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
+// Custom precision SVG for Surveillance Camera matching uploaded reference image
+function SurveillanceCameraIcon({ size = 22, className = '' }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M2 19h4" />
+      <path d="M4 19v-5" />
+      <path d="M4 14l3.5-2" />
+      <path d="M6 8.5l11-4.5 4 6-11 4.5z" />
+      <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
 export default function Navbar({
   currentPage = 'home',
   onNavigate,
@@ -67,7 +118,9 @@ export default function Navbar({
   const [selectedServiceGroup, setSelectedServiceGroup] = useState(0);
   const [selectedProductGroup, setSelectedProductGroup] = useState(0);
   const [mobileAccordion, setMobileAccordion] = useState(null);
+  const [mobileServiceGroup, setMobileServiceGroup] = useState(null);
   const [mobileProductGroup, setMobileProductGroup] = useState(null);
+  const [dropdownPos, setDropdownPos] = useState({ left: 160, caretX: 180 });
 
   const navRef = useRef(null);
   const dropdownTimeoutRef = useRef(null);
@@ -78,6 +131,36 @@ export default function Navbar({
   const productsTriggerRef = useRef(null);
   const companyTriggerRef = useRef(null);
   const justClosedByEscRef = useRef(false);
+
+  // Dynamically position dropdown panel and its pointer caret aligned with active trigger button
+  useEffect(() => {
+    if (!activeDropdown || (activeDropdown !== 'services' && activeDropdown !== 'products')) return;
+
+    const updatePosition = () => {
+      const triggerEl = activeDropdown === 'services' ? servicesTriggerRef.current : productsTriggerRef.current;
+      const navEl = navBarRef.current;
+      if (!triggerEl || !navEl) return;
+
+      const triggerRect = triggerEl.getBoundingClientRect();
+      const navRect = navEl.getBoundingClientRect();
+      const triggerCenterX = triggerRect.left + triggerRect.width / 2;
+
+      const panelWidth = Math.min(800, window.innerWidth - 32);
+      // In reference screenshot, the dropdown starts roughly under the HTI logo's right half, so triggerCenter is ~175px from panel left
+      let left = triggerCenterX - 175;
+      if (left < 16) left = 16;
+      if (left + panelWidth > window.innerWidth - 16) {
+        left = window.innerWidth - panelWidth - 16;
+      }
+
+      const caretX = triggerCenterX - left;
+      setDropdownPos({ left: left - navRect.left, caretX });
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+  }, [activeDropdown]);
 
   // The header height changes with the logo size, the scroll state and the
   // breakpoint. Measure it so the mobile drawer/backdrop always start exactly
@@ -388,611 +471,167 @@ export default function Navbar({
     }
   };
 
-  // Mega menu services data matching reference design
+  // 6 Services categories matching reference design exactly
   const serviceGroups = [
     {
       id: 'automation',
       title: 'Industrial Access Automation',
-      tagline: 'Automatic doors, telescopic gates, high-speed roll-up & dock levellers.',
-      icon: Cpu,
-      color: '#0284c7',
+      icon: Settings,
       page: 'automation',
-      badge: 'INDUSTRIAL ACCESS AUTOMATION',
-      headingPrimary: 'High-Throughput Industrial',
-      headingAccent: 'Access & Gates.',
-      heroImage: '/services/services-hero-access.jpg',
-      overviewDesc: 'Heavy-duty motorized access automation designed for corporate entrances, logistics warehouses, and pharma bays with 24/7 reliability.',
-      features: [
-        {
-          title: 'Touchless Entry',
-          description: 'Automatic Sliding & Swing Doors for hygienic and seamless access.',
-          image: '/services/services-touchless-entry.jpg',
-          icon: DoorClosed,
-          slug: 'touchless-entry'
-        },
-        {
-          title: 'Perimeter Gate',
-          description: 'Automatic Sliding & Swing Gates for industrial and commercial sites.',
-          image: '/services/services-perimeter-gate.jpg',
-          icon: ShieldCheck,
-          slug: 'perimeter-gate'
-        },
-        {
-          title: 'Trackless Gate',
-          description: 'Telescopic & Cantilever Gates for wide and heavy-duty openings.',
-          image: '/services/services-trackless-gate.jpg',
-          icon: SlidersHorizontal,
-          slug: 'trackless-gate'
-        },
-        {
-          title: 'Rapid Airlock',
-          description: 'High Speed Roll Up & Sectional Doors for high-traffic zones.',
-          image: '/services/services-rapid-airlock.jpg',
-          icon: Layers,
-          slug: 'rapid-airlock'
-        },
-        {
-          title: 'Logistics Bridge',
-          description: 'Dock Levellers & Dock Shelters for efficient loading operations.',
-          image: '/services/services-logistics-bridge.jpg',
-          icon: Truck,
-          slug: 'logistics-bridge'
-        },
-        {
-          title: 'Heavy Security',
-          description: 'Motorized Rolling Shutters for maximum site protection.',
-          image: '/services/services-heavy-security.jpg',
-          icon: Settings,
-          slug: 'heavy-security'
-        }
-      ]
-    },
-    {
-      id: 'interlocks',
-      title: 'Cleanroom Interlocks & Pass Boxes',
-      tagline: 'Flameproof/Safe door interlocks, pass boxes & digital clocks.',
-      icon: Lock,
-      color: '#0284c7',
-      page: 'cleanroom-interlocks',
-      badge: 'PHARMA CLEANROOM ENGINEERING',
-      headingPrimary: 'USFDA Cleanroom Interlock &',
-      headingAccent: 'Contamination Control.',
-      heroImage: '/hero-cleanroom-interlock-chamber.jpg',
-      overviewDesc: 'Microcontroller and PLC cleanroom interlocking logic, dynamic pass box hatches, and GPS master-slave clocks built for sterile pharma compliance.',
-      features: [
-        {
-          title: 'Door Interlock (2-8 Door)',
-          description: 'Flameproof & safe programmable interlocking for sterile cascades.',
-          image: '/hero-cleanroom-interlock-chamber.jpg',
-          icon: Lock,
-          slug: 'door-interlock-system'
-        },
-        {
-          title: 'Pass Box Systems',
-          description: 'Static & dynamic material transfer hatches with UV disinfection.',
-          image: '/products/pass-box-system.jpg',
-          icon: Layers,
-          slug: 'pass-box-systems'
-        },
-        {
-          title: 'Digital Clocks',
-          description: 'GPS master-slave synchronized clocks with flameproof housings.',
-          image: '/products/digital-clock-hero.jpg',
-          icon: Activity,
-          slug: 'digital-clocks'
-        },
-        {
-          title: 'Chiller & Cleanroom Doors',
-          description: 'Insulated chiller doors and hermetically sealed flush cleanroom doors.',
-          image: '/products/chiller-door-hero.jpg',
-          icon: DoorClosed,
-          slug: 'chiller-cleanroom-doors'
-        },
-        {
-          title: 'Acoustic Sound Doors',
-          description: 'Heavy noise-dampening acoustic barrier doors for plant rooms.',
-          image: '/services/service-acoustic-sound-doors.jpg',
-          icon: Settings,
-          slug: 'acoustic-sound-doors'
-        },
-        {
-          title: 'Safety Override Buzzers',
-          description: 'Emergency release logic and integrated audio buzzer alerts.',
-          image: '/services/service-safety-override-buzzers.jpg',
-          icon: ShieldCheck,
-          slug: 'safety-override-buzzers'
-        }
+      subservices: [
+        { title: 'Automatic Sliding Doors', slug: 'touchless-entry' },
+        { title: 'Automatic Swing Doors', slug: 'touchless-entry' },
+        { title: 'High Speed Doors', slug: 'rapid-airlock' },
+        { title: 'Roll Up Doors', slug: 'heavy-security' },
+        { title: 'Dock Levellers', slug: 'logistics-bridge' },
+        { title: 'Turnstiles & Entrance Solutions', slug: 'perimeter-gate' },
+        { title: 'Access Control Systems', slug: 'biometric-access-control' }
       ]
     },
     {
       id: 'perimeter',
-      title: 'Perimeter Defense & Traffic Control',
-      tagline: 'Boom barriers, tyre killers, car lifts, turnstiles & flap barriers.',
-      icon: ShieldCheck,
-      color: '#0284c7',
+      title: 'Traffic & Perimeter',
+      icon: TrafficBarrierIcon,
       page: 'perimeter-defense',
-      badge: 'TRAFFIC & PERIMETER DEFENSE',
-      headingPrimary: 'Vehicle Access, Tyre Killers &',
-      headingAccent: 'Pedestrian Speed Gates.',
-      heroImage: '/services/service-boom-barrier.jpg',
-      overviewDesc: 'High-frequency electromechanical boom barriers, optical turnstiles, anti-ram tyre killers, and multi-level car lifts for secure facilities.',
-      features: [
-        {
-          title: 'Boom Barriers',
-          description: 'High-duty electromechanical & hydraulic automated barrier arms.',
-          image: '/services/service-boom-barrier.jpg',
-          icon: SlidersHorizontal,
-          slug: 'boom-barriers'
-        },
-        {
-          title: 'Optical Turnstiles',
-          description: 'Biometric speed gates & swing flap barriers for corporate lobbies.',
-          image: '/hero-glass-atrium.jpg',
-          icon: User,
-          slug: 'turnstiles-flap-barriers-speed-gates'
-        },
-        {
-          title: 'Tyre Killers & Bollards',
-          description: 'Heavy hydraulic tyre spikes & crash-rated anti-ram bollards.',
-          image: '/services/service-bollards-blockers.jpg',
-          icon: ShieldCheck,
-          slug: 'crash-bollards-tyre-killers'
-        },
-        {
-          title: 'Car Lift Systems',
-          description: 'Hydraulic multi-tier car parking lifts & heavy goods vehicle lifts.',
-          image: '/services/service-car-lift-systems.jpg',
-          icon: Truck,
-          slug: 'car-lift-systems'
-        },
-        {
-          title: 'Parking Management',
-          description: 'FASTag RFID tolling, ticket dispensers & bay occupancy sensors.',
-          image: '/services/service-parking-management.jpg',
-          icon: Cpu,
-          slug: 'parking-management-systems'
-        },
-        {
-          title: 'Visitor Management',
-          description: 'QR digital gate passes, facial recognition & badge printing.',
-          image: '/services/service-visitor-management.jpg',
-          icon: CheckCircle2,
-          slug: 'visitor-management-system'
-        }
+      subservices: [
+        { title: 'Boom Barriers', slug: 'boom-barriers' },
+        { title: 'Optical Turnstiles', slug: 'turnstiles-flap-barriers-speed-gates' },
+        { title: 'Tyre Killers & Bollards', slug: 'crash-bollards-tyre-killers' },
+        { title: 'Car Lift Systems', slug: 'car-lift-systems' },
+        { title: 'Parking Management', slug: 'parking-management-systems' },
+        { title: 'Visitor Management', slug: 'visitor-management-system' }
+      ]
+    },
+    {
+      id: 'interlocks',
+      title: 'Pharma Cleanroom',
+      icon: FlaskConical,
+      page: 'cleanroom-interlocks',
+      subservices: [
+        { title: 'Door Interlock (2-8 Door)', slug: 'door-interlock-system' },
+        { title: 'Pass Box Systems', slug: 'pass-box-systems' },
+        { title: 'Digital Clocks', slug: 'digital-clocks' },
+        { title: 'Chiller & Cleanroom Doors', slug: 'chiller-cleanroom-doors' },
+        { title: 'Acoustic Sound Doors', slug: 'acoustic-sound-doors' },
+        { title: 'Safety Override Buzzers', slug: 'safety-override-buzzers' }
       ]
     },
     {
       id: 'fire',
-      title: 'Fire Protection & Life Safety',
-      tagline: 'Fire alarms, hydrant sprinkler arrays & fire rated containment.',
+      title: 'Fire & Life Safety',
       icon: Flame,
-      color: '#0284c7',
       page: 'fire-protection',
-      badge: 'TURNKEY LIFE SAFETY',
-      headingPrimary: 'Complete Industrial Fire Fighting &',
-      headingAccent: 'Alarm Systems.',
-      heroImage: '/case-studies/case-fire-hydrant.jpg',
-      overviewDesc: 'Comprehensive life safety infrastructure covering conventional & addressable fire alarm panels, fire hydrant networks, and certified fire doors.',
-      features: [
-        {
-          title: 'Addressable Fire Alarms',
-          description: 'Multi-zone detection panels, optical smoke sensors & heat probes.',
-          image: '/services/service-fire-alarm.jpg',
-          icon: Flame,
-          slug: 'addressable-fire-alarms'
-        },
-        {
-          title: 'Hydrant & Sprinkler Arrays',
-          description: 'Water deluge networks, certified landing valves & pump skids.',
-          image: '/case-studies/case-fire-hydrant.jpg',
-          icon: Activity,
-          slug: 'hydrant-sprinkler-arrays'
-        },
-        {
-          title: 'Fire Rated Doors & Shutters',
-          description: '120-240 minute certified fire-resistant doors & auto drop shutters.',
-          image: '/services/service-fire-doors.jpg',
-          icon: Lock,
-          slug: 'fire-rated-doors-shutters'
-        },
-        {
-          title: 'Public Address (PA)',
-          description: 'Voice evacuation systems, emergency sirens & plant horns.',
-          image: '/products/public-address-evac.jpg',
-          icon: MessageSquare,
-          slug: 'public-address-system'
-        },
-        {
-          title: 'Gas Leak Detection',
-          description: 'Toxic, combustible, VOC & ammonia gas monitoring sensors.',
-          image: '/services/service-gas-leak-detector.jpg',
-          icon: ShieldCheck,
-          slug: 'gas-leak-detection'
-        },
-        {
-          title: 'Emergency Auto Trip',
-          description: 'Relay integration with access doors, AHU shut-off & fire pumps.',
-          image: '/services/service-emergency-trip.jpg',
-          icon: Settings,
-          slug: 'emergency-auto-trip'
-        }
+      subservices: [
+        { title: 'Addressable Fire Alarms', slug: 'addressable-fire-alarms' },
+        { title: 'Hydrant & Sprinkler Arrays', slug: 'hydrant-sprinkler-arrays' },
+        { title: 'Fire Rated Doors & Shutters', slug: 'fire-rated-doors-shutters' },
+        { title: 'Public Address (PA)', slug: 'public-address-system' },
+        { title: 'Gas Leak Detection', slug: 'gas-leak-detection' },
+        { title: 'Emergency Auto Trip', slug: 'emergency-auto-trip' }
       ]
     },
     {
       id: 'security',
-      title: 'CCTV Surveillance & Biometrics',
-      tagline: 'Analogue & IP 4K surveillance, biometric access & video door phones.',
-      icon: Cpu,
-      color: '#0284c7',
+      title: 'Surveillance & Alerts',
+      icon: SurveillanceCameraIcon,
       page: 'security-systems',
-      category: 'Security System',
-      badge: 'INTELLIGENT SURVEILLANCE',
-      headingPrimary: '4K AI Surveillance, Biometrics &',
-      headingAccent: 'Video Intercom.',
-      heroImage: '/products/cctv-ip-4k-surveillance.jpg',
-      overviewDesc: 'High-definition IP surveillance, biometric time attendance, multi-zone video door phones, and central security control room infrastructure.',
-      features: [
-        {
-          title: '4K AI CCTV Systems',
-          description: 'Network IP dome/bullet cameras, ANPR & Sony Starvis ultra-low-light sensors.',
-          image: '/products/cctv-ip-4k-surveillance.jpg',
-          icon: Cpu,
-          slug: 'cctv-surveillance-systems'
-        },
-        {
-          title: 'Biometric Access',
-          description: 'Contactless face verification, live fingerprint & RFID time attendance.',
-          image: '/cctv-featured-biometric.jpg',
-          icon: User,
-          slug: 'biometric-access-control'
-        },
-        {
-          title: 'Video Door Phones',
-          description: 'IP multi-channel video intercom, touchscreens & remote lock release.',
-          image: '/services/service-video-door-phones.jpg',
-          icon: PhoneCall,
-          slug: 'video-door-phones'
-        },
-        {
-          title: 'Central VMS Command',
-          description: 'Multi-screen enterprise video management & surveillance hardware walls.',
-          image: '/hero-security-command-center.jpg',
-          icon: Monitor,
-          slug: 'central-vms-command'
-        },
-        {
-          title: 'Thermal & Perimeter Beams',
-          description: 'Dual-spectrum thermal radiometry & active photoelectric infrared fences.',
-          image: '/cctv-featured-barrier.jpg',
-          icon: Activity,
-          slug: 'thermal-perimeter-beams'
-        },
-        {
-          title: 'Intrusion Detection Alarms',
-          description: 'Multi-zone burglar alarm panels, seismic vault sensors & strobes.',
-          image: '/cctv-featured-telemetry.jpg',
-          icon: SlidersHorizontal,
-          slug: 'intrusion-detection-alarms'
-        }
+      subservices: [
+        { title: '4K AI CCTV Systems', slug: 'cctv-surveillance-systems' },
+        { title: 'Biometric Access', slug: 'biometric-access-control' },
+        { title: 'Video Door Phones', slug: 'video-door-phones' },
+        { title: 'Central VMS Command', slug: 'central-vms-command' },
+        { title: 'Thermal & Perimeter Beams', slug: 'thermal-perimeter-beams' },
+        { title: 'Intrusion Detection Alarms', slug: 'intrusion-detection-alarms' }
       ]
     },
     {
       id: 'monitoring',
-      title: 'Server Room & Critical Monitoring',
-      tagline: 'Server room alert monitoring, underfloor leak detection & critical telemetry.',
-      icon: Activity,
-      color: '#0284c7',
+      title: 'Server Room & Monitoring',
+      icon: Server,
       page: 'server-room-monitoring',
-      category: 'Security System',
-      badge: 'CRITICAL FACILITY MONITORING',
-      headingPrimary: 'Data Center Environment &',
-      headingAccent: 'Facility Protection.',
-      heroImage: '/services/service-server-env-monitoring.jpg',
-      overviewDesc: '24/7 environmental monitoring for server rooms, water leak detection, toxic gas arrays, and differential pressure cascade telemetry.',
-      features: [
-        {
-          title: 'Server Room EMS',
-          description: 'Temperature, humidity, airflow, SNMP v3 & PAC chiller failover relays.',
-          image: '/services/service-server-env-monitoring.jpg',
-          icon: Activity,
-          slug: 'server-room-environment-monitoring'
-        },
-        {
-          title: 'Underfloor Water Leak Detection',
-          description: 'Conductive polymer sensing cables with meter-accurate leak location.',
-          image: '/services/service-water-leak-detection.jpg',
-          icon: Droplets,
-          slug: 'water-leak-detection-systems'
-        },
-        {
-          title: 'Hazardous Gas Arrays',
-          description: 'Flameproof Ex-d transmitters for battery room H2 and refrigerant leaks.',
-          image: '/services/service-battery-room-gas-detector.jpg',
-          icon: Flame,
-          slug: 'hazardous-gas-detection-arrays'
-        },
-        {
-          title: 'Microprocessor Annunciators',
-          description: 'Multi-window LED fault annunciators following ISA-18.1 sequence logic.',
-          image: '/services/service-alarm-annunciators.jpg',
-          icon: Settings,
-          slug: 'alarm-annunciators'
-        },
-        {
-          title: 'Differential Pressure Monitors',
-          description: 'Digital cleanroom Pascal indicators & transmitters for pressure cascades.',
-          image: '/services/service-diff-pressure-monitor.jpg',
-          icon: Layers,
-          slug: 'differential-pressure-monitors'
-        },
-        {
-          title: 'Ultrasonic Rodent Repellent',
-          description: 'Sweeping 20-65 kHz ultrasound protecting server racks & false ceilings.',
-          image: '/services/service-rodent-repellent.jpg',
-          icon: ShieldCheck,
-          slug: 'rodent-repellent-systems'
-        }
+      subservices: [
+        { title: 'Server Room EMS', slug: 'server-room-environment-monitoring' },
+        { title: 'Underfloor Water Leak Detection', slug: 'water-leak-detection-systems' },
+        { title: 'Hazardous Gas Arrays', slug: 'hazardous-gas-detection-arrays' },
+        { title: 'Microprocessor Annunciators', slug: 'alarm-annunciators' },
+        { title: 'Differential Pressure Monitors', slug: 'differential-pressure-monitors' },
+        { title: 'Ultrasonic Rodent Repellent', slug: 'rodent-repellent-systems' }
       ]
     }
   ];
 
   const currentGroup = serviceGroups[selectedServiceGroup] || serviceGroups[0];
 
-  // 5 Specialized Engineering Product Divisions (Matching Services Architecture - "see like service")
+  // 5 Specialized Engineering Product Divisions (Matching Reference Architecture)
   const productGroups = [
     {
       id: 'access-automation',
       title: 'Access Automation',
-      tagline: 'Touchless sliding glass doors, motorized perimeter gates & high-speed doors.',
-      icon: Cpu,
-      color: '#0284c7',
+      icon: Settings,
       page: 'automation',
       categoryId: 'access-automation',
-      badge: 'ARCHITECTURAL ACCESS & GATES',
-      headingPrimary: 'Touchless & Industrial',
-      headingAccent: 'Pedestrian & Gate Automation.',
-      heroImage: '/products/automatic-doors.jpg',
-      overviewDesc: 'High-throughput microprocessor automated sliding & swing doors, heavy motorized perimeter gates, and high-speed rapid airlocks for corporate and pharma facilities.',
       products: [
-        {
-          title: 'Automatic Sliding & Swing Doors',
-          description: 'Touchless microwave radar entry for corporate offices & healthcare.',
-          image: '/products/automatic-doors.jpg',
-          icon: DoorClosed,
-          slug: 'automatic-sliding-swing-doors'
-        },
-        {
-          title: 'Automatic Sliding & Swing Gates',
-          description: 'Heavy-duty motorized perimeter security gates for commercial sites.',
-          image: '/services/services-perimeter-gate.jpg',
-          icon: ShieldCheck,
-          slug: 'automatic-sliding-swing-gates'
-        },
-        {
-          title: 'Telescopic & Cantilever Gates',
-          description: 'Trackless cantilever and space-saving telescopic automated gates.',
-          image: '/services/services-trackless-gate.jpg',
-          icon: SlidersHorizontal,
-          slug: 'telescopic-cantilever-gates'
-        },
-        {
-          title: 'Motorized Rolling Shutters',
-          description: 'Heavy-gauge motorized roll-up shutters for industrial site defense.',
-          image: '/products/motorized-rolling-shutters.jpg',
-          icon: Layers,
-          slug: 'motorized-industrial-rolling-shutters'
-        },
-        {
-          title: 'PVC High Speed Roll Up Doors',
-          description: 'PVC high-speed rapid roll-up airlock doors for logistics & clean areas.',
-          image: '/products/rapid-doors.jpg',
-          icon: Truck,
-          slug: 'high-speed-roll-up-doors'
-        },
+        { title: 'Automatic Sliding & Swing Doors', slug: 'automatic-sliding-swing-doors' },
+        { title: 'Automatic Sliding & Swing Gates', slug: 'automatic-sliding-swing-gates' },
+        { title: 'Telescopic & Cantilever Gates', slug: 'telescopic-cantilever-gates' },
+        { title: 'Motorized Rolling Shutters', slug: 'motorized-industrial-rolling-shutters' },
+        { title: 'PVC High Speed Roll Up Doors', slug: 'high-speed-roll-up-doors' }
       ]
     },
     {
       id: 'traffic-perimeter',
       title: 'Traffic & Perimeter',
-      tagline: 'Boom barriers, dock levellers, optical speed turnstiles & crash bollards.',
-      icon: ShieldCheck,
-      color: '#0284c7',
+      icon: TrafficBarrierIcon,
       page: 'perimeter-defense',
       categoryId: 'traffic-perimeter',
-      badge: 'VEHICLE & PERIMETER DEFENSE',
-      headingPrimary: 'Industrial Traffic Control &',
-      headingAccent: 'Perimeter Security.',
-      heroImage: '/products/boom-barriers.jpg',
-      overviewDesc: 'Electro-hydraulic high-frequency boom barriers, logistics loading dock levellers, optical turnstiles, and anti-ram hydraulic bollards.',
       products: [
-        {
-          title: 'Electro-Hydraulic Boom Barriers',
-          description: '1.5s high-speed electromechanical & hydraulic automated barrier arms.',
-          image: '/products/boom-barriers.jpg',
-          icon: SlidersHorizontal,
-          slug: 'boom-barriers'
-        },
-        {
-          title: 'Hydraulic Dock Levellers & Shelters',
-          description: 'Heavy-capacity hydraulic dock bridges and weather-seal dock shelters.',
-          image: '/services/services-logistics-bridge.jpg',
-          icon: Truck,
-          slug: 'dock-levellers-dock-shelters'
-        },
-        {
-          title: 'Optical Speed Flap Turnstiles',
-          description: 'Biometric pedestrian speed gates & optical barriers for corporate lobbies.',
-          image: '/products/optical-speed-turnstiles.jpg',
-          icon: Users,
-          slug: 'optical-flap-turnstiles'
-        },
-        {
-          title: 'Anti-Ram Hydraulic Crash Bollards',
-          description: 'K4/K12 crash-certified retractable bollards for high-security portals.',
-          image: '/products/hydraulic-crash-bollards.jpg',
-          icon: Lock,
-          slug: 'hydraulic-crash-bollards'
-        },
-        {
-          title: 'Tyre Killers & Road Blockers',
-          description: 'Heavy-duty electro-hydraulic road blockers and steel tyre shredders.',
-          image: '/products/tyre-killers-road-blockers.jpg',
-          icon: ShieldCheck,
-          slug: 'tyre-killers-road-blockers'
-        },
+        { title: 'Electro-Hydraulic Boom Barriers', slug: 'boom-barriers' },
+        { title: 'Hydraulic Dock Levellers & Shelters', slug: 'dock-levellers-dock-shelters' },
+        { title: 'Optical Speed Flap Turnstiles', slug: 'optical-flap-turnstiles' },
+        { title: 'Anti-Ram Hydraulic Crash Bollards', slug: 'hydraulic-crash-bollards' },
+        { title: 'Tyre Killers & Road Blockers', slug: 'tyre-killers-road-blockers' }
       ]
     },
     {
       id: 'pharma-cleanroom',
       title: 'Pharma Cleanroom',
-      tagline: 'USFDA 21 CFR Part 11 door interlocks, pass boxes, GPS clocks & chiller doors.',
-      icon: Lock,
-      color: '#0284c7',
+      icon: FlaskConical,
       page: 'cleanroom-interlocks',
       categoryId: 'pharma-cleanroom',
-      badge: 'USFDA CFR PART 11 CLEANROOM',
-      headingPrimary: 'USFDA 21 CFR Part 11',
-      headingAccent: 'Cleanroom & Interlock Logic.',
-      heroImage: '/case-studies/case-cleanroom.jpg',
-      overviewDesc: 'Certified 2–8 door programmable interlocking logic, dynamic UV pass boxes, GPS synchronized clocks, and hermetic cleanroom doors.',
       products: [
-        {
-          title: 'Door Interlock System (2-8 Door)',
-          description: 'Flameproof & safe programmable airlock cascading interlock controllers.',
-          image: '/products/cleanroom-interlocks.jpg',
-          icon: Lock,
-          slug: 'door-interlock-systems'
-        },
-        {
-          title: 'Dynamic & Static Pass Boxes',
-          description: 'SS 304/316 cleanroom material transfer hatches with UV disinfection.',
-          image: '/products/pass-box-system.jpg',
-          icon: Layers,
-          slug: 'dynamic-static-pass-boxes'
-        },
-        {
-          title: 'Digital Master GPS Slave Clocks',
-          description: 'GPS synchronized cleanroom digital display clocks with pharma housing.',
-          image: '/products/digital-clock-hero.jpg',
-          icon: Activity,
-          slug: 'digital-gps-clocks'
-        },
-        {
-          title: 'Cold Storage & Chiller Doors',
-          description: 'Heavy thermal-insulated sliding cold storage & refrigeration doors.',
-          image: '/products/chiller-door-hero.jpg',
-          icon: DoorClosed,
-          slug: 'chiller-clean-room-doors'
-        },
-        {
-          title: 'Hermetically Sealed Cleanroom Doors',
-          description: 'Airtight flush-fit antimicrobial cleanroom swing and sliding doors.',
-          image: '/products/cleanroom-door-pharma.jpg',
-          icon: Sparkles,
-          slug: 'hermetic-cleanroom-doors'
-        },
+        { title: 'Door Interlock System (2-8 Door)', slug: 'door-interlock-systems' },
+        { title: 'Dynamic & Static Pass Boxes', slug: 'dynamic-static-pass-boxes' },
+        { title: 'Digital Master GPS Slave Clocks', slug: 'digital-gps-clocks' },
+        { title: 'Cold Storage & Chiller Doors', slug: 'chiller-clean-room-doors' },
+        { title: 'Hermetically Sealed Cleanroom Doors', slug: 'hermetic-cleanroom-doors' }
       ]
     },
     {
       id: 'fire-life-safety',
       title: 'Fire & Life Safety',
-      tagline: 'Multi-loop addressable fire alarms, turnkey sprinkler networks & fire doors.',
       icon: Flame,
-      color: '#0284c7',
       page: 'fire-protection',
       categoryId: 'fire-life-safety',
-      badge: 'TURNKEY LIFE SAFETY & DETECTION',
-      headingPrimary: 'Addressable Fire Detection &',
-      headingAccent: 'Life-Safety Suppression.',
-      heroImage: '/products/fire-life-safety-hero.jpg',
-      overviewDesc: 'Certified multi-loop addressable fire alarms, industrial hydrant networks, 120/240-minute certified fire-rated doors, and gas suppression.',
       products: [
-        {
-          title: 'Addressable Fire Alarm Systems',
-          description: 'Multi-loop microprocessor addressable fire panels with smoke sensors.',
-          image: '/products/fire-alarm-system.jpg',
-          icon: Flame,
-          slug: 'addressable-fire-alarm-system'
-        },
-        {
-          title: 'Industrial Fire Hydrant & Sprinklers',
-          description: 'Turnkey diesel hydrant booster pumps, deluge valves & sprinkler piping.',
-          image: '/products/fire-hydrant-sprinklers.jpg',
-          icon: Droplets,
-          slug: 'fire-hydrant-sprinkler-systems'
-        },
-        {
-          title: 'Fire Rated Steel Doors (120/240 Min)',
-          description: 'CBRI/UL certified galvanised steel fire exit doors with panic hardware.',
-          image: '/products/fire-rated-steel-doors.jpg',
-          icon: DoorClosed,
-          slug: 'fire-rated-steel-doors'
-        },
-        {
-          title: 'Clean Agent Gas Suppression',
-          description: 'Novec 1230 & FM-200 waterless fire extinguishing for server rooms.',
-          image: '/products/clean-agent-gas-suppression.jpg',
-          icon: Sparkles,
-          slug: 'gas-suppression-systems'
-        },
-        {
-          title: 'Public Address & Voice Evacuation',
-          description: 'Zoned emergency acoustic voice alarm and paging audio networks.',
-          image: '/products/public-address-evac.jpg',
-          icon: Volume2,
-          slug: 'public-address-system'
-        },
+        { title: 'Addressable Fire Alarm Systems', slug: 'addressable-fire-alarm-system' },
+        { title: 'Industrial Fire Hydrant & Sprinklers', slug: 'fire-hydrant-sprinkler-systems' },
+        { title: 'Fire Rated Steel Doors (120/240 Min)', slug: 'fire-rated-steel-doors' },
+        { title: 'Clean Agent Gas Suppression', slug: 'gas-suppression-systems' },
+        { title: 'Public Address & Voice Evacuation', slug: 'public-address-system' }
       ]
     },
     {
       id: 'surveillance-alerts',
       title: 'Surveillance & Alerts',
-      tagline: '4K AI IP surveillance, biometric face recognition, server room sensors & alerts.',
-      icon: Activity,
-      color: '#0284c7',
+      icon: SurveillanceCameraIcon,
       page: 'security-systems',
       categoryId: 'surveillance-alerts',
-      badge: '4K AI TELEMETRY & SECURITY',
-      headingPrimary: 'Enterprise 4K AI Surveillance &',
-      headingAccent: 'Biometric Access Control.',
-      heroImage: '/products/surveillance-alerts-hero.jpg',
-      overviewDesc: 'High-resolution AI-powered IP surveillance cameras, facial recognition biometric terminals, and 24/7 server room environment telemetry.',
       products: [
-        {
-          title: 'CCTV Surveillance (Analogue & IP 4K)',
-          description: 'Ultra-HD 4K AI analytics cameras, perimeter intrusion & central VMS.',
-          image: '/products/cctv-ip-4k-surveillance.jpg',
-          icon: Camera,
-          slug: 'cctv-surveillance-system'
-        },
-        {
-          title: 'Biometric Attendance & Access Terminals',
-          description: 'Multi-modal touchless face recognition, fingerprint & RFID access.',
-          image: '/products/biometric-access-terminal.jpg',
-          icon: Fingerprint,
-          slug: 'biometric-access-attendance'
-        },
-        {
-          title: 'Server Room Environment Telemetry',
-          description: '24/7 temperature, humidity, water leak, and smoke SNMP sensors.',
-          image: '/products/server-room-telemetry.jpg',
-          icon: Server,
-          slug: 'server-room-monitoring'
-        },
-        {
-          title: 'Microprocessor Alarm Annunciators',
-          description: 'Industrial multi-window visual annunciators with audio buzzer alerts.',
-          image: '/products/alarm-annunciators-panel.jpg',
-          icon: Bell,
-          slug: 'alarm-annunciators'
-        },
-        {
-          title: 'Wireless Intrusion Detection Systems',
-          description: 'Grade-2 perimeter vibration, magnetic reed, and microwave beam barriers.',
-          image: '/products/wireless-intrusion-detection.jpg',
-          icon: Radio,
-          slug: 'wireless-intrusion-detection'
-        },
+        { title: 'CCTV Surveillance (Analogue & IP 4K)', slug: 'cctv-surveillance-system' },
+        { title: 'Biometric Attendance & Access Terminals', slug: 'biometric-access-attendance' },
+        { title: 'Server Room Environment Telemetry', slug: 'server-room-monitoring' },
+        { title: 'Microprocessor Alarm Annunciators', slug: 'alarm-annunciators' },
+        { title: 'Wireless Intrusion Detection Systems', slug: 'wireless-intrusion-detection' }
       ]
     }
   ];
@@ -1093,22 +732,18 @@ export default function Navbar({
             >
               <button
                 ref={servicesTriggerRef}
-                className={`bright-nav-btn ${activeDropdown === 'services' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'services' ? 'is-active-section' : ''}`}
+                className={`bright-nav-btn ${activeDropdown === 'services' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'services' && activeDropdown !== 'products' && activeDropdown !== 'company' ? 'is-active-section' : ''}`}
                 onClick={() => toggleDropdown('services')}
                 aria-expanded={activeDropdown === 'services'}
                 aria-haspopup="true"
                 aria-current={activeSection === 'services' ? 'page' : undefined}
               >
                 <span>Services</span>
-                {activeDropdown === 'services' ? (
-                  <ChevronUp size={15} className="pill-chevron" />
-                ) : (
-                  <ChevronDown size={15} className="dropdown-arrow" />
-                )}
+                <ChevronDown size={15} className={activeDropdown === 'services' ? 'pill-chevron' : 'dropdown-arrow'} />
               </button>
             </div>
 
-            {/* Products Dropdown (Horizontal Mega Menu) */}
+            {/* Products Dropdown */}
             <div
               className="nav-item-dropdown"
               onMouseEnter={() => handleMouseEnterDropdown('products')}
@@ -1117,18 +752,14 @@ export default function Navbar({
             >
               <button
                 ref={productsTriggerRef}
-                className={`bright-nav-btn ${activeDropdown === 'products' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'products' ? 'is-active-section' : ''}`}
+                className={`bright-nav-btn ${activeDropdown === 'products' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'products' && activeDropdown !== 'services' && activeDropdown !== 'company' ? 'is-active-section' : ''}`}
                 onClick={() => toggleDropdown('products')}
                 aria-expanded={activeDropdown === 'products'}
                 aria-haspopup="true"
                 aria-current={activeSection === 'products' ? 'page' : undefined}
               >
                 <span>Products</span>
-                {activeDropdown === 'products' ? (
-                  <ChevronUp size={15} className="pill-chevron" />
-                ) : (
-                  <ChevronDown size={14} className="dropdown-arrow" />
-                )}
+                <ChevronDown size={15} className={activeDropdown === 'products' ? 'pill-chevron' : 'dropdown-arrow'} />
               </button>
             </div>
 
@@ -1148,11 +779,7 @@ export default function Navbar({
                 aria-current={activeSection === 'company' ? 'page' : undefined}
               >
                 <span>Company</span>
-                {activeDropdown === 'company' ? (
-                  <ChevronUp size={15} className="pill-chevron" />
-                ) : (
-                  <ChevronDown size={14} className="dropdown-arrow" />
-                )}
+                <ChevronDown size={14} className={activeDropdown === 'company' ? 'pill-chevron' : 'dropdown-arrow'} />
               </button>
             </div>
 
@@ -1169,9 +796,9 @@ export default function Navbar({
             </button>
           </div>
 
-          {/* Right Action Group: Get a Quote CTA + Theme Toggle + Admin Portal */}
+          {/* Right Action Group: Get a Quote CTA + Search + Theme Toggle + Admin Portal */}
           <div className="bright-nav-actions desktop-only">
-            {/* Direct Get a Quote CTA Button matching Reference Image 2 */}
+            {/* Direct Get a Quote CTA Button matching Reference Image */}
             <button
               className="bright-nav-quote-btn"
               onClick={() => handleNavClick('contact')}
@@ -1179,9 +806,19 @@ export default function Navbar({
               type="button"
               id="nav-get-a-quote-btn"
             >
-              <PhoneCall size={14} className="nav-quote-phone-icon" />
               <span>Get a Quote</span>
               <ArrowRight size={14} className="nav-quote-arrow-icon" />
+            </button>
+
+            {/* Search Icon Button matching Reference Image */}
+            <button
+              className="bright-nav-search-btn"
+              onClick={() => handleNavClick('catalog', 'all')}
+              title="Search Products & Systems"
+              aria-label="Search Products & Systems"
+              type="button"
+            >
+              <Search size={19} />
             </button>
 
             {/* Direct 1-Click Theme Toggle: Only 1 Icon, Instant Dark/Light Switch */}
@@ -1245,330 +882,213 @@ export default function Navbar({
         </div>
 
         {/* =========================================================================
-            HORIZONTAL DROPDOWNS (Brightlant full-width horizontal bar style)
+            TWO-COLUMN DROPDOWNS (Exact Match to Uploaded Reference Image)
             ========================================================================= */}
 
-        {/* 1. SERVICES MEGA DROPDOWN (Reference-Matched Premium Panel) */}
+        {/* 1. SERVICES DROPDOWN (Reference-Matched Design) */}
         {activeDropdown === 'services' && (
           <div
-            className="bright-mega-panel-wrapper"
+            className="hti-dropdown-wrapper"
+            style={{ left: `${dropdownPos.left}px` }}
             onMouseEnter={() => handleMouseEnterDropdown('services')}
             onMouseLeave={handleMouseLeaveDropdown}
           >
-            <div className="mega-body-grid">
-              {/* Left Column: 6 Services List */}
-              <div className="mega-left-col">
-                {serviceGroups.map((group, index) => {
-                  const Icon = group.icon;
-                  const isSelected = selectedServiceGroup === index;
-                  return (
-                    <div
-                      key={group.id}
-                      className={`mega-service-item ${isSelected ? 'mega-item-active' : ''}`}
-                      onMouseEnter={() => setSelectedServiceGroup(index)}
-                      onClick={() => {
-                        if (group.page) {
-                          handleNavClick(group.page);
-                        } else if (group.section) {
-                          handleNavClick('home', group.section);
-                        } else if (group.category) {
-                          handleCategoryClick(group.category);
-                        }
-                      }}
-                      onKeyDown={(e) => handleKeyActivate(e, () => {
-                        if (group.page) {
-                          handleNavClick(group.page);
-                        } else if (group.section) {
-                          handleNavClick('home', group.section);
-                        } else if (group.category) {
-                          handleCategoryClick(group.category);
-                        }
-                      })}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={group.title}
-                    >
-                      <div className="mega-item-icon-box">
-                        <Icon size={17} />
-                      </div>
-                      <div className="mega-item-text">
-                        <div className="mega-item-title">{group.title}</div>
-                        <div className="mega-item-tagline">{group.tagline}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            {/* Pointer triangle caret pointing to the Services button */}
+            <div className="hti-dropdown-caret" style={{ left: `${dropdownPos.caretX}px` }} />
 
-              {/* Right Panel: Header (Text + Feature Image) & 6 Image Cards */}
-              <div className="mega-right-panel">
-                {/* Top Section: Text Info on Left + Hero Feature Image on Right */}
-                <div className="mega-right-header-row">
-                  <div className="mega-right-header-text">
-                    <div className="mega-pill-badge-row">
-                      <div className="mega-pill-badge">
-                        <span className="mega-pulse-dot"></span>
-                        <span>{currentGroup.badge}</span>
-                      </div>
-                      <button
-                        className="mega-overview-link"
-                        onClick={() => {
-                          if (currentGroup.page) {
-                            handleNavClick(currentGroup.page);
-                          } else if (currentGroup.section) {
-                            handleNavClick('home', currentGroup.section);
-                          } else {
-                            handleCategoryClick(currentGroup.category);
-                          }
-                        }}
-                        title={`View ${currentGroup.title} Overview`}
-                      >
-                        <span>Overview</span>
-                        <ArrowRight size={13} />
-                      </button>
-                    </div>
-
-                    <h3 className="mega-panel-heading">
-                      {currentGroup.headingPrimary}{' '}
-                      <span className="heading-blue-accent">{currentGroup.headingAccent}</span>
-                    </h3>
-
-                    <p className="mega-panel-desc">{currentGroup.overviewDesc}</p>
-                  </div>
-
-                  {currentGroup.heroImage && (
-                    <div className="mega-feature-hero-media">
-                      <img
-                        src={currentGroup.heroImage}
-                        alt={currentGroup.title}
-                        className="mega-hero-img"
-                        loading="eager"
-                      />
-                    </div>
-                  )}
+            <div className="hti-dropdown-panel">
+              {/* LEFT COLUMN: EXPLORE SERVICES */}
+              <div className="hti-dropdown-left-col">
+                <div className="hti-dropdown-col-header">
+                  <span className="hti-dropdown-col-title">EXPLORE SERVICES</span>
+                  <div className="hti-dropdown-blue-line" />
                 </div>
 
-                {/* 6 Sub-Service Cards Grid (3 Columns x 2 Rows) */}
-                <div className="mega-subservice-cards-grid">
-                  {currentGroup.features.map((feat, fIdx) => {
-                    const CardIcon = feat.icon || Cpu;
+                <div className="hti-category-list">
+                  {serviceGroups.map((group, index) => {
+                    const Icon = group.icon;
+                    const isSelected = selectedServiceGroup === index;
                     return (
                       <div
-                        key={fIdx}
-                        className="mega-subservice-card"
+                        key={group.id}
+                        className={`hti-category-row ${isSelected ? 'is-active' : ''}`}
+                        onMouseEnter={() => setSelectedServiceGroup(index)}
                         onClick={() => {
-                          if (feat.slug) {
-                            handleServiceClick(feat.slug);
-                          } else if (feat.section) {
-                            handleNavClick('home', feat.section);
-                          } else if (feat.category) {
-                            handleCategoryClick(feat.category);
-                          } else {
-                            handleNavClick('automation');
+                          if (group.page) {
+                            handleNavClick(group.page);
+                          } else if (group.section) {
+                            handleNavClick('home', group.section);
+                          } else if (group.category) {
+                            handleCategoryClick(group.category);
                           }
                         }}
                         onKeyDown={(e) => handleKeyActivate(e, () => {
-                          if (feat.slug) {
-                            handleServiceClick(feat.slug);
-                          } else if (feat.section) {
-                            handleNavClick('home', feat.section);
-                          } else if (feat.category) {
-                            handleCategoryClick(feat.category);
-                          } else {
-                            handleNavClick('automation');
+                          if (group.page) {
+                            handleNavClick(group.page);
+                          } else if (group.section) {
+                            handleNavClick('home', group.section);
+                          } else if (group.category) {
+                            handleCategoryClick(group.category);
                           }
                         })}
                         role="button"
                         tabIndex={0}
-                        aria-label={feat.title}
+                        aria-label={group.title}
                       >
-                        {/* Landscape Image with Overlapping Icon Badge */}
-                        <div className="subservice-card-media">
-                          <img
-                            src={feat.image || currentGroup.heroImage}
-                            alt={feat.title}
-                            className="subservice-card-img"
-                            loading="lazy"
-                          />
-                          <div className="subservice-icon-badge">
-                            <CardIcon size={14} />
+                        <div className="hti-category-row-left">
+                          <div className="hti-category-icon-wrap">
+                            <Icon size={22} className="hti-category-icon" />
                           </div>
+                          <span className="hti-category-name">{group.title}</span>
                         </div>
-
-                        {/* Card Content & Action Button */}
-                        <div className="subservice-card-body">
-                          <div className="subservice-text-content">
-                            <h4 className="subservice-card-title">{feat.title}</h4>
-                            <p className="subservice-card-desc">{feat.description}</p>
-                          </div>
-                          <div className="subservice-arrow-btn" aria-hidden="true">
-                            <ArrowRight size={13} />
-                          </div>
-                        </div>
+                        <ChevronRight size={17} className="hti-category-chevron" />
                       </div>
                     );
                   })}
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: CATEGORY SUBSERVICES */}
+              <div className="hti-dropdown-right-col">
+                <div className="hti-dropdown-col-header">
+                  <span className="hti-dropdown-col-title">{currentGroup.title.toUpperCase()}</span>
+                  <div className="hti-dropdown-blue-line" />
+                </div>
+
+                <div className="hti-subservices-list">
+                  {currentGroup.subservices.map((sub, sIdx) => (
+                    <div
+                      key={sIdx}
+                      className="hti-subservice-row"
+                      onClick={() => {
+                        if (sub.slug) {
+                          handleServiceClick(sub.slug);
+                        } else if (sub.page) {
+                          handleNavClick(sub.page);
+                        } else if (currentGroup.page) {
+                          handleNavClick(currentGroup.page);
+                        }
+                      }}
+                      onKeyDown={(e) => handleKeyActivate(e, () => {
+                        if (sub.slug) {
+                          handleServiceClick(sub.slug);
+                        } else if (sub.page) {
+                          handleNavClick(sub.page);
+                        } else if (currentGroup.page) {
+                          handleNavClick(currentGroup.page);
+                        }
+                      })}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={sub.title}
+                    >
+                      <span className="hti-subservice-name">{sub.title}</span>
+                      <ChevronRight size={17} className="hti-subservice-chevron" />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* 2. PRODUCTS MEGA DROPDOWN (Reference-Matched Premium Panel - Exactly like Services) */}
+        {/* 2. PRODUCTS DROPDOWN (Reference-Matched Design) */}
         {activeDropdown === 'products' && (
           <div
-            className="bright-mega-panel-wrapper"
+            className="hti-dropdown-wrapper"
+            style={{ left: `${dropdownPos.left}px` }}
             onMouseEnter={() => handleMouseEnterDropdown('products')}
             onMouseLeave={handleMouseLeaveDropdown}
           >
-            <div className="mega-body-grid">
-              {/* Left Column: 5 Product Divisions List */}
-              <div className="mega-left-col">
-                {productGroups.map((group, index) => {
-                  const Icon = group.icon;
-                  const isSelected = selectedProductGroup === index;
-                  return (
-                    <div
-                      key={group.id}
-                      className={`mega-service-item ${isSelected ? 'mega-item-active' : ''}`}
-                      onMouseEnter={() => setSelectedProductGroup(index)}
-                      onClick={() => {
-                        setActiveDropdown(null);
-                        if (group.page && onNavigate) {
-                          onNavigate(group.page);
-                        } else if (onNavigate) {
-                          onNavigate('catalog', group.categoryId);
-                        }
-                      }}
-                      onKeyDown={(e) => handleKeyActivate(e, () => {
-                        setActiveDropdown(null);
-                        if (group.page && onNavigate) {
-                          onNavigate(group.page);
-                        } else if (onNavigate) {
-                          onNavigate('catalog', group.categoryId);
-                        }
-                      })}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={group.title}
-                    >
-                      <div className="mega-item-icon-box">
-                        <Icon size={17} />
-                      </div>
-                      <div className="mega-item-text">
-                        <div className="mega-item-title">{group.title}</div>
-                        <div className="mega-item-tagline">{group.tagline}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            {/* Pointer triangle caret pointing to the Products button */}
+            <div className="hti-dropdown-caret" style={{ left: `${dropdownPos.caretX}px` }} />
 
-              {/* Right Panel: Header (Text + Feature Image) & 6 Product Cards */}
-              <div className="mega-right-panel">
-                {/* Top Section: Text Info on Left + Hero Feature Image on Right */}
-                <div className="mega-right-header-row">
-                  <div className="mega-right-header-text">
-                    <div className="mega-pill-badge-row">
-                      <div className="mega-pill-badge">
-                        <span className="mega-pulse-dot"></span>
-                        <span>{currentProductGroup.badge}</span>
-                      </div>
-                      <button
-                        className="mega-overview-link"
-                        onClick={() => {
-                          setActiveDropdown(null);
-                          if (currentProductGroup.page && onNavigate) {
-                            onNavigate(currentProductGroup.page);
-                          } else if (onNavigate) {
-                            onNavigate('catalog', currentProductGroup.categoryId);
-                          }
-                        }}
-                        title={`View ${currentProductGroup.title} Overview`}
-                      >
-                        <span>Overview</span>
-                        <ArrowRight size={13} />
-                      </button>
-                    </div>
-
-                    <h3 className="mega-panel-heading">
-                      {currentProductGroup.headingPrimary}{' '}
-                      <span className="heading-blue-accent">{currentProductGroup.headingAccent}</span>
-                    </h3>
-
-                    <p className="mega-panel-desc">{currentProductGroup.overviewDesc}</p>
-                  </div>
-
-                  {currentProductGroup.heroImage && (
-                    <div className="mega-feature-hero-media">
-                      <img
-                        src={currentProductGroup.heroImage}
-                        alt={currentProductGroup.title}
-                        className="mega-hero-img"
-                        loading="eager"
-                      />
-                    </div>
-                  )}
+            <div className="hti-dropdown-panel">
+              {/* LEFT COLUMN: EXPLORE PRODUCTS */}
+              <div className="hti-dropdown-left-col">
+                <div className="hti-dropdown-col-header">
+                  <span className="hti-dropdown-col-title">EXPLORE PRODUCTS</span>
+                  <div className="hti-dropdown-blue-line" />
                 </div>
 
-                {/* Product Cards Grid */}
-                <div className={`mega-subservice-cards-grid ${currentProductGroup.products.length === 5 ? 'mega-products-cards-grid' : ''}`}>
-                  {currentProductGroup.products.map((prod, pIdx) => {
-                    const CardIcon = prod.icon || Cpu;
+                <div className="hti-category-list">
+                  {productGroups.map((group, index) => {
+                    const Icon = group.icon;
+                    const isSelected = selectedProductGroup === index;
                     return (
                       <div
-                        key={pIdx}
-                        className="mega-subservice-card"
+                        key={group.id}
+                        className={`hti-category-row ${isSelected ? 'is-active' : ''}`}
+                        onMouseEnter={() => setSelectedProductGroup(index)}
                         onClick={() => {
                           setActiveDropdown(null);
-                          if (prod.isCatalogLink) {
-                            if (onNavigate) onNavigate('catalog', currentProductGroup.categoryId);
-                          } else if (prod.slug) {
-                            handleProductClick(prod.slug);
-                          } else {
-                            if (onNavigate) onNavigate('catalog', currentProductGroup.categoryId);
+                          if (group.page && onNavigate) {
+                            handleNavClick(group.page);
+                          } else if (onNavigate) {
+                            handleNavClick('catalog', group.categoryId);
                           }
                         }}
                         onKeyDown={(e) => handleKeyActivate(e, () => {
                           setActiveDropdown(null);
-                          if (prod.isCatalogLink) {
-                            if (onNavigate) onNavigate('catalog', currentProductGroup.categoryId);
-                          } else if (prod.slug) {
-                            handleProductClick(prod.slug);
-                          } else {
-                            if (onNavigate) onNavigate('catalog', currentProductGroup.categoryId);
+                          if (group.page && onNavigate) {
+                            handleNavClick(group.page);
+                          } else if (onNavigate) {
+                            handleNavClick('catalog', group.categoryId);
                           }
                         })}
                         role="button"
                         tabIndex={0}
-                        aria-label={prod.title}
+                        aria-label={group.title}
                       >
-                        {/* Landscape Image with Overlapping Icon Badge */}
-                        <div className="subservice-card-media">
-                          <img
-                            src={prod.image || currentProductGroup.heroImage}
-                            alt={prod.title}
-                            className="subservice-card-img"
-                            loading="lazy"
-                          />
-                          <div className="subservice-icon-badge">
-                            <CardIcon size={14} />
+                        <div className="hti-category-row-left">
+                          <div className="hti-category-icon-wrap">
+                            <Icon size={22} className="hti-category-icon" />
                           </div>
+                          <span className="hti-category-name">{group.title}</span>
                         </div>
-
-                        {/* Card Content & Action Button */}
-                        <div className="subservice-card-body">
-                          <div className="subservice-text-content">
-                            <h4 className="subservice-card-title">{prod.title}</h4>
-                            <p className="subservice-card-desc">{prod.description}</p>
-                          </div>
-                          <div className="subservice-arrow-btn" aria-hidden="true">
-                            <ArrowRight size={13} />
-                          </div>
-                        </div>
+                        <ChevronRight size={17} className="hti-category-chevron" />
                       </div>
                     );
                   })}
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: CATEGORY SUBPRODUCTS */}
+              <div className="hti-dropdown-right-col">
+                <div className="hti-dropdown-col-header">
+                  <span className="hti-dropdown-col-title">{currentProductGroup.title.toUpperCase()}</span>
+                  <div className="hti-dropdown-blue-line" />
+                </div>
+
+                <div className="hti-subservices-list">
+                  {currentProductGroup.products.map((prod, pIdx) => (
+                    <div
+                      key={pIdx}
+                      className="hti-subservice-row"
+                      onClick={() => {
+                        setActiveDropdown(null);
+                        if (prod.slug) {
+                          handleProductClick(prod.slug);
+                        } else if (currentProductGroup.page) {
+                          handleNavClick(currentProductGroup.page);
+                        }
+                      }}
+                      onKeyDown={(e) => handleKeyActivate(e, () => {
+                        setActiveDropdown(null);
+                        if (prod.slug) {
+                          handleProductClick(prod.slug);
+                        } else if (currentProductGroup.page) {
+                          handleNavClick(currentProductGroup.page);
+                        }
+                      })}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={prod.title}
+                    >
+                      <span className="hti-subservice-name">{prod.title}</span>
+                      <ChevronRight size={17} className="hti-subservice-chevron" />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -1686,25 +1206,67 @@ export default function Navbar({
 
               {mobileAccordion === 'services' && (
                 <div className="mobile-accordion-body">
-                  {serviceGroups.map((g) => (
-                    <button
-                      key={g.id}
-                      className="mobile-clean-sublink"
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        if (g.page) {
-                          handleNavClick(g.page);
-                        } else if (g.section) {
-                          handleNavClick('home', g.section);
-                        } else {
-                          handleCategoryClick(g.category);
-                        }
-                      }}
-                    >
-                      <span className="mobile-clean-title">{g.title}</span>
-                      <ArrowRight size={16} className="mobile-clean-arrow" />
-                    </button>
-                  ))}
+                  {serviceGroups.map((g) => {
+                    const GroupIcon = g.icon;
+                    const isGroupExpanded = mobileServiceGroup === g.id;
+                    return (
+                      <div key={g.id} className={`mobile-product-group-block ${isGroupExpanded ? 'is-expanded' : ''}`}>
+                        <button
+                          className="mobile-product-group-header"
+                          onClick={() => setMobileServiceGroup(isGroupExpanded ? null : g.id)}
+                          aria-expanded={isGroupExpanded}
+                        >
+                          <div className="mobile-product-group-info">
+                            <div className="mobile-product-group-icon">
+                              <GroupIcon size={16} />
+                            </div>
+                            <span className="mobile-clean-title">{g.title}</span>
+                          </div>
+                          {isGroupExpanded ? <ChevronUp size={16} className="mobile-clean-arrow" /> : <ChevronDown size={16} className="mobile-clean-arrow" />}
+                        </button>
+
+                        {isGroupExpanded && (
+                          <div className="mobile-product-sublist">
+                            <button
+                              className="mobile-product-overview-btn"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                if (g.page) handleNavClick(g.page);
+                              }}
+                            >
+                              <span>Explore: {g.title}</span>
+                              <ArrowRight size={13} />
+                            </button>
+
+                            {g.subservices.map((sub, sIdx) => (
+                              <button
+                                key={sIdx}
+                                className="mobile-clean-sublink"
+                                onClick={() => {
+                                  setMobileMenuOpen(false);
+                                  if (sub.slug) handleServiceClick(sub.slug);
+                                  else if (g.page) handleNavClick(g.page);
+                                }}
+                              >
+                                <span className="mobile-clean-title">{sub.title}</span>
+                                <ChevronRight size={15} className="mobile-clean-arrow" />
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  <button
+                    className="mobile-clean-sublink mobile-clean-all"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleNavClick('automation');
+                    }}
+                  >
+                    <span className="mobile-clean-title">View All Services</span>
+                    <ArrowRight size={16} className="mobile-clean-arrow" />
+                  </button>
                 </div>
               )}
             </div>
@@ -1758,36 +1320,25 @@ export default function Navbar({
                                 }
                               }}
                             >
-                              <span>Overview: {group.title}</span>
+                              <span>Explore: {group.title}</span>
                               <ArrowRight size={13} />
                             </button>
 
                             {group.products.map((prod, pIdx) => (
                               <button
                                 key={pIdx}
-                                className="mobile-product-card-link"
+                                className="mobile-clean-sublink"
                                 onClick={() => {
                                   setMobileMenuOpen(false);
-                                  if (prod.isCatalogLink) {
-                                    if (onNavigate) onNavigate('catalog', group.categoryId);
-                                  } else if (prod.slug) {
+                                  if (prod.slug) {
                                     handleProductClick(prod.slug);
                                   } else {
                                     if (onNavigate) onNavigate('catalog', group.categoryId);
                                   }
                                 }}
                               >
-                                <img
-                                  src={prod.image || group.heroImage}
-                                  alt={prod.title}
-                                  className="mobile-product-card-thumb"
-                                  loading="lazy"
-                                />
-                                <div className="mobile-product-card-text">
-                                  <div className="mobile-product-card-name">{prod.title}</div>
-                                  <div className="mobile-product-card-sub">{prod.description}</div>
-                                </div>
-                                <ArrowRight size={14} className="mobile-clean-arrow" />
+                                <span className="mobile-clean-title">{prod.title}</span>
+                                <ChevronRight size={15} className="mobile-clean-arrow" />
                               </button>
                             ))}
                           </div>
