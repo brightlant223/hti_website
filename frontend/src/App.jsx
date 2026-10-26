@@ -214,7 +214,7 @@ const parseUrlRoute = () => {
   }
 
   // Check dedicated category pages
-  if (path === '/automation' || path === '/automation/' || hash === '#/automation') {
+  if (path === '/automation' || path === '/automation/' || path === '/access-automation' || path === '/access-automation/' || hash === '#/automation' || hash === '#/access-automation') {
     return { page: 'automation', param: null };
   }
   if (path === '/security-systems' || path === '/security-systems/' || path === '/security' || hash === '#/security-systems') {
@@ -540,8 +540,10 @@ export default function App() {
       targetUrl = '/touchless-entry';
     } else if (['perimeter-gate', 'trackless-gate', 'rapid-airlock', 'logistics-bridge', 'heavy-security', ...ALL_SERVICE_SLUGS].includes(page)) {
       targetUrl = `/${page}`;
-    } else if (['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
-      targetUrl = `/${page}`;
+    } else if (['automation', 'access-automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring', 'clients', 'about', 'contact', 'partners', 'blogs', 'careers'].includes(page)) {
+      const canonicalPage = page === 'access-automation' ? 'automation' : page;
+      targetUrl = `/${canonicalPage}`;
+      targetPage = canonicalPage;
     } else if (page === 'home') {
       targetUrl = '/';
     }
@@ -715,7 +717,7 @@ export default function App() {
         )}
 
         {/* ROUTE 2: Category Pages (/automation, /security-systems, /cleanroom-interlocks, /perimeter-defense, /fire-protection, /hygiene, /server-room-monitoring) */}
-        {['automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring'].includes(routeState.page) && (
+        {['automation', 'access-automation', 'security-systems', 'cleanroom-interlocks', 'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring'].includes(routeState.page) && (
           <CategoryPage
             categoryKey={routeState.page}
             onNavigate={navigateTo}

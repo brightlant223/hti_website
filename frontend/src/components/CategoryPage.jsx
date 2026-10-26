@@ -942,7 +942,7 @@ export default function CategoryPage({
     };
   }, [categoryKey, activeFilter, searchQuery]);
 
-  const isAutomation = categoryKey?.toLowerCase() === 'automation';
+  const isAutomation = categoryKey?.toLowerCase() === 'automation' || categoryKey?.toLowerCase() === 'access-automation';
   const isCleanroom = categoryKey?.toLowerCase() === 'cleanroom-interlocks' || categoryKey?.toLowerCase() === 'interlocks';
   const isPerimeter = categoryKey?.toLowerCase() === 'perimeter-defense' || categoryKey?.toLowerCase() === 'perimeter';
   const isFire = categoryKey?.toLowerCase() === 'fire-protection' || categoryKey?.toLowerCase() === 'fire' || categoryKey?.toLowerCase() === 'fire-safety';
@@ -988,9 +988,10 @@ export default function CategoryPage({
   const categoryMeta = useMemo(() => {
     switch (categoryKey?.toLowerCase()) {
       case 'automation':
+      case 'access-automation':
         return {
-          title: 'Industrial Access Automation & Perimeter Defense',
-          categoryName: 'Automation',
+          title: 'Industrial Access Automation',
+          categoryName: 'Industrial Access Automation',
           tagline: 'High-throughput motorized entrance doors, telescopic cantilever gates, rapid roll-up & loading bay logistics.',
           icon: Cpu,
           badgeColor: 'badge-blue',
@@ -1243,6 +1244,12 @@ export default function CategoryPage({
         };
     }
   }, [categoryKey]);
+
+  useEffect(() => {
+    if (categoryMeta?.title && typeof document !== 'undefined') {
+      document.title = `${categoryMeta.title} | HTI Automation & Security Systems`;
+    }
+  }, [categoryMeta]);
 
   // Fetch all products matching category (for other categories)
   const allCategoryProducts = useMemo(() => {
@@ -1501,8 +1508,8 @@ export default function CategoryPage({
                 </div>
 
                 <h1 className="auto-hero-title">
-                  Industrial Access Automation <br />
-                  <span className="text-blue-accent">&amp; Perimeter Defense</span>
+                  Industrial Access <br />
+                  <span className="text-blue-accent">Automation</span>
                 </h1>
 
                 <p className="auto-hero-desc">
