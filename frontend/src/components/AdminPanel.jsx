@@ -6,6 +6,7 @@ import AdminBlogsManager from './AdminBlogsManager';
 import AdminWebsiteContentManager from './AdminWebsiteContentManager';
 import AdminEnquiriesManager from './AdminEnquiriesManager';
 import AdminUsersSecurityManager from './AdminUsersSecurityManager';
+import AdminSidebar from './AdminSidebar';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
   FileText, Package, MessageSquare, Search, AlertCircle,
@@ -1722,150 +1723,22 @@ export default function AdminPanel({
   return (
     <div className="admin-overlay" onClick={onClose}>
       <div className={`admin-dashboard-container adm-dashboard-container theme-${adminTheme}`} onClick={e => e.stopPropagation()}>
-        {/* SIDEBAR NAVIGATION */}
-        <aside className="admin-sidebar adm-sidebar">
-          {/* Brand Box */}
-          <div className="sidebar-brand adm-sidebar-brand">
-            <div className="sidebar-logo-icon adm-sidebar-logo-icon">
-              <img src="/hti-logo.png" alt="HTI Logo" className="sidebar-hti-logo-img adm-sidebar-hti-logo-img" />
-            </div>
-            <div>
-              <div className="sidebar-brand-title adm-sidebar-brand-title">HTI CONTROL</div>
-              <div className="sidebar-brand-status adm-sidebar-brand-status">
-                <span className="live-dot adm-live-dot" />
-                <span>BMS OPERATIONAL</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Navigation Links (All 9 Modules from PDF) */}
-          <nav className="sidebar-nav adm-sidebar-nav">
-            <div className="sidebar-section-label adm-sidebar-section-label">EXECUTIVE NEXUS</div>
-
-            {/* 1. Dashboard Overview */}
-            <button
-              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
-              onClick={() => setActiveTab('dashboard')}
-            >
-              <LayoutDashboard size={17} />
-              <span>Dashboard</span>
-            </button>
-
-            {/* 2. Product Management */}
-            <button
-              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'products' ? 'active' : ''}`}
-              onClick={() => setActiveTab('products')}
-            >
-              <Layers size={17} />
-              <span>Products</span>
-              <span className="sidebar-counter adm-sidebar-counter">{products.length}</span>
-            </button>
-
-            {/* 3. Blogs & Technical Articles */}
-            <button
-              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'blogs' ? 'active' : ''}`}
-              onClick={() => setActiveTab('blogs')}
-            >
-              <FileText size={17} />
-              <span>Blogs & Tech</span>
-              <span className="sidebar-counter adm-sidebar-counter">{blogs.length}</span>
-            </button>
-
-            {/* 4. Clients & Technology Partners */}
-            <button
-              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'clients_partners' ? 'active' : ''}`}
-              onClick={() => setActiveTab('clients_partners')}
-            >
-              <Building2 size={17} />
-              <span>Clients & Partners</span>
-              <span className="sidebar-counter adm-sidebar-counter">{clients.length + partners.length}</span>
-            </button>
-
-            {/* 6. Projects & Installations (Case Studies) */}
-            <button
-              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'projects' ? 'active' : ''}`}
-              onClick={() => setActiveTab('projects')}
-            >
-              <Briefcase size={17} />
-              <span>Projects</span>
-              <span className="sidebar-counter adm-sidebar-counter">{projects.length}</span>
-            </button>
-
-            {/* 7. Website Content Management */}
-            <button
-              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'content' ? 'active' : ''}`}
-              onClick={() => setActiveTab('content')}
-            >
-              <Globe size={17} />
-              <span>Website Content</span>
-              <span className="sidebar-badge-new adm-sidebar-badge-new" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8' }}>CMS</span>
-            </button>
-
-            <div className="sidebar-section-label adm-sidebar-section-label mt-3">OPERATIONS & CONTROL</div>
-
-            {/* 5. Enquiries & Lead Management */}
-            <button
-              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'inquiries' ? 'active' : ''}`}
-              onClick={() => setActiveTab('inquiries')}
-            >
-              <MessageSquare size={17} />
-              <span>Enquiries & Leads</span>
-              {unansweredInquiries.length > 0 ? (
-                <span className="sidebar-badge-new adm-sidebar-badge-new">{unansweredInquiries.length} New</span>
-              ) : (
-                <span className="sidebar-counter adm-sidebar-counter">{inquiries.length}</span>
-              )}
-            </button>
-
-            {/* 8. Admin Users & Permissions */}
-            <button
-              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'users' ? 'active' : ''}`}
-              onClick={() => setActiveTab('users')}
-            >
-              <Users size={17} />
-              <span>Users & Security</span>
-              <span className="sidebar-counter adm-sidebar-counter">{adminUsers.length}</span>
-            </button>
-          </nav>
-
-          {/* Sidebar Telemetry Box (Real Measured Values) */}
-          {/* <div className="sidebar-telemetry-box adm-sidebar-telemetry-box">
-            <div className="telemetry-row adm-sidebar-telemetry-row">
-              <span className="telemetry-label adm-sidebar-telemetry-label">SQLite Database</span>
-              <span className="telemetry-val adm-sidebar-telemetry-val">
-                {dbMetrics ? `${dbMetrics.mb} MB` : (systemHealth?.database?.file_size_mb ? `${systemHealth.database.file_size_mb} MB` : 'Live Connected')}
-              </span>
-            </div>
-            <div className="telemetry-row adm-sidebar-telemetry-row">
-              <span className="telemetry-label adm-sidebar-telemetry-label">Disk Storage</span>
-              <span className="telemetry-val adm-sidebar-telemetry-val live">
-                <span className="telemetry-live-dot adm-live-dot" />
-                {diskMetrics ? `${diskMetrics.free} GB Free` : (systemHealth?.disk?.free_gb ? `${systemHealth.disk.free_gb} GB Free` : 'Live Connected')}
-              </span>
-            </div>
-            <div className="telemetry-row adm-sidebar-telemetry-row">
-              <span className="telemetry-label adm-sidebar-telemetry-label">Security Role</span>
-              <span className="telemetry-badge-active adm-sidebar-role-badge">{userRole}</span>
-            </div>
-          </div> */}
-
-          {/* Sidebar User Footer */}
-          <div className="sidebar-footer adm-sidebar-footer">
-            <div className="sidebar-user-info adm-sidebar-user-info">
-              <div className="sidebar-user-avatar adm-sidebar-user-avatar">
-                <span>{currentUser.slice(0, 2).toUpperCase()}</span>
-              </div>
-              <div className="sidebar-user-details adm-sidebar-user-details">
-                <div className="user-name adm-sidebar-user-name">{currentUser}</div>
-                <div className="user-role adm-sidebar-user-role">{userRole}</div>
-              </div>
-            </div>
-
-            <button className="sidebar-logout-btn adm-sidebar-logout-btn" onClick={handleLogout} title="Log Out Safely" aria-label="Log Out">
-              <LogOut size={16} />
-            </button>
-          </div>
-        </aside>
+        {/* SIDEBAR NAVIGATION (Concept 2 - Premium Glass Light Blue) */}
+        <AdminSidebar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          currentUser={currentUser}
+          userRole={userRole}
+          handleLogout={handleLogout}
+          products={products}
+          blogs={blogs}
+          clients={clients}
+          partners={partners}
+          projects={projects}
+          inquiries={inquiries}
+          unansweredInquiries={unansweredInquiries}
+          adminUsers={adminUsers}
+        />
 
         {/* MAIN WORKSPACE */}
         <div className="admin-main-area adm-main-area">

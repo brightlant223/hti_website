@@ -1,0 +1,662 @@
+/* ==========================================================================
+   CONCEPT 2 — PREMIUM GLASS (LIGHT BLUE) ADMIN SIDEBAR
+   ========================================================================== */
+
+.concept2-glass-sidebar {
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 35;
+  background: linear-gradient(180deg, #EDF5FE 0%, #FFFFFF 35%, #F0F6FE 100%);
+  border-right: 1.5px solid #D8E7F9;
+  height: 100%;
+  box-sizing: border-box;
+  user-select: none;
+  box-shadow: 0 10px 30px -5px rgba(8, 117, 249, 0.08);
+  transition: width 280ms cubic-bezier(0.4, 0, 0.2, 1),
+              min-width 280ms cubic-bezier(0.4, 0, 0.2, 1),
+              max-width 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: visible; /* Allows flyout tooltips in collapsed mode */
+}
+
+.concept2-glass-sidebar.collapsed {
+  width: 78px;
+  min-width: 78px;
+  max-width: 78px;
+}
+
+/* --------------------------------------------------------------------------
+   1. TOP BRANDING HEADER
+   -------------------------------------------------------------------------- */
+.concept2-header {
+  position: relative;
+  padding: 16px 14px 14px;
+  border-bottom: 1px solid #EBF3FC;
+  overflow: hidden;
+  background: linear-gradient(180deg, #EDF5FE 0%, #F5F9FE 100%);
+}
+
+.concept2-header-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.concept2-header-wave svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.concept2-header-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.concept2-logo-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: #FFFFFF;
+  border: 1.5px solid #D8E7F9;
+  box-shadow: 0 4px 14px rgba(8, 117, 249, 0.09);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  flex-shrink: 0;
+}
+
+.concept2-logo-img {
+  width: 100%;
+  height: 100%;
+  max-width: 34px;
+  max-height: 34px;
+  object-fit: contain;
+}
+
+.concept2-brand-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.concept2-brand-title {
+  font-family: inherit;
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #0E1F44;
+  margin: 0;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.concept2-bms-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+}
+
+.concept2-live-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
+  animation: c2LivePulse 2s infinite ease-in-out;
+}
+
+@keyframes c2LivePulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.concept2-bms-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: #10B981;
+  white-space: nowrap;
+}
+
+/* Circular Collapse Toggle Button */
+.concept2-collapse-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1.5px solid #D8E7F9;
+  box-shadow: 0 2px 6px rgba(14, 31, 68, 0.08);
+  color: #607695;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 200ms ease;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.concept2-collapse-btn:hover {
+  background: #EAF4FF;
+  color: #0875F9;
+  border-color: #BFDBFE;
+  transform: scale(1.05);
+}
+
+.concept2-glass-sidebar.collapsed .concept2-header-content {
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.concept2-glass-sidebar.collapsed .concept2-collapse-btn {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. SCROLLABLE NAVIGATION SECTIONS
+   -------------------------------------------------------------------------- */
+.concept2-nav-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Custom smooth scrollbar */
+.concept2-nav-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.concept2-nav-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.concept2-nav-scroll::-webkit-scrollbar-thumb {
+  background: #E1EDFA;
+  border-radius: 10px;
+}
+.concept2-nav-scroll::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
+
+.concept2-section-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.concept2-section-group.section-divider {
+  padding-top: 6px;
+  border-top: 1px solid #EBF3FC;
+}
+
+.concept2-section-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: #6A82A5;
+  text-transform: uppercase;
+  padding: 4px 8px 3px;
+}
+
+.concept2-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.concept2-item-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.concept2-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.concept2-nav-item:hover {
+  background: rgba(240, 247, 255, 0.85);
+  transform: translateX(2px);
+}
+
+.concept2-nav-item:hover .concept2-icon-box {
+  transform: translateX(2px);
+}
+
+.concept2-nav-item:active {
+  transform: scale(0.98);
+}
+
+/* ACTIVE STATE: Vibrant Blue-to-Cyan Gradient */
+.concept2-nav-item.is-active {
+  background: linear-gradient(90deg, #0468E8 0%, #0091FF 55%, #00C6FF 100%);
+  border-color: #0468E8;
+  box-shadow: 0 8px 22px -3px rgba(4, 104, 232, 0.42);
+  transform: none;
+}
+
+.concept2-nav-item.is-active:hover {
+  background: linear-gradient(90deg, #035ecc 0%, #0088f0 55%, #00bcf2 100%);
+}
+
+.concept2-active-indicator-bar {
+  position: absolute;
+  left: -12px;
+  top: 6px;
+  bottom: 6px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: #0468E8;
+}
+
+/* Pastel-Colored Rounded-Square Icon Containers */
+.concept2-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 200ms ease;
+  border: 1px solid transparent;
+}
+
+/* Individual Pastel Accent Colors */
+.concept2-icon-box.accent-blue {
+  background: #EAF4FF;
+  border-color: #D2E7FF;
+  color: #0875F9;
+}
+
+.concept2-icon-box.accent-purple {
+  background: #F3EEFF;
+  border-color: #E4D7FF;
+  color: #7C3AED;
+}
+
+.concept2-icon-box.accent-pink {
+  background: #FFF0F3;
+  border-color: #FFE0E6;
+  color: #E11D48;
+}
+
+.concept2-icon-box.accent-green {
+  background: #EDFAF2;
+  border-color: #D2F5E1;
+  color: #10B981;
+}
+
+.concept2-icon-box.accent-orange {
+  background: #FFF5EB;
+  border-color: #FFE5CF;
+  color: #EA580C;
+}
+
+.concept2-icon-box.accent-violet {
+  background: #F4EFFF;
+  border-color: #E6D8FF;
+  color: #8B5CF6;
+}
+
+.concept2-icon-box.accent-coral {
+  background: #FFF0F2;
+  border-color: #FFE0E5;
+  color: #F04455;
+}
+
+/* Active Icon Box */
+.active-icon-box {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.concept2-item-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #10264F;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.concept2-nav-item.is-active .concept2-item-label {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.concept2-active-chevron {
+  color: rgba(255, 255, 255, 0.85);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Badges Matching Reference Screenshot */
+.concept2-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: auto;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-pale-blue {
+  background: #E1F0FE;
+  color: #0284C7;
+  border: 1px solid #BAE6FD;
+}
+
+.badge-pale-pink {
+  background: #FFE8EC;
+  color: #E11D48;
+  border: 1px solid #FECDD3;
+}
+
+.badge-pale-green {
+  background: #DCFCE7;
+  color: #16A34A;
+  border: 1px solid #BBF7D0;
+}
+
+.badge-pale-orange {
+  background: #FEF3C7;
+  color: #D97706;
+  border: 1px solid #FDE68A;
+}
+
+.badge-pale-purple {
+  background: #F3E8FF;
+  color: #7C3AED;
+  border: 1px solid #E9D5FF;
+}
+
+.badge-red-solid {
+  background: #F04455;
+  color: #FFFFFF;
+  border: 1px solid #F04455;
+  box-shadow: 0 2px 8px rgba(240, 68, 85, 0.4);
+}
+
+.badge-blue-solid {
+  background: #0875F9;
+  color: #FFFFFF;
+  border: 1px solid #0875F9;
+  box-shadow: 0 2px 6px rgba(8, 117, 249, 0.3);
+}
+
+.concept2-nav-item.is-active .concept2-badge:not(.badge-red-solid):not(.badge-blue-solid) {
+  background: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Collapsed Mode Active Dot */
+.concept2-collapsed-active-dot {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #0875F9;
+}
+
+.concept2-glass-sidebar.collapsed .concept2-nav-item {
+  justify-content: center;
+  padding: 6px 0;
+}
+
+.concept2-glass-sidebar.collapsed .concept2-active-indicator-bar {
+  left: 2px;
+}
+
+/* Collapsed Mode Hover Flyout Tooltip */
+.concept2-tooltip-flyout {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid #D8E7F9;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px -5px rgba(14, 31, 68, 0.2);
+  padding: 10px 14px;
+  min-width: 200px;
+  pointer-events: none;
+  animation: c2FlyoutIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes c2FlyoutIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.concept2-tooltip-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.concept2-tooltip-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.concept2-tooltip-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #10264F;
+}
+
+.concept2-tooltip-sub {
+  font-size: 0.7rem;
+  color: #607695;
+  margin-top: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   3. ADMINISTRATOR PROFILE CARD (CONCEPT 2 GRADIENT STYLE)
+   -------------------------------------------------------------------------- */
+.concept2-profile-container {
+  padding: 8px 12px 14px;
+  flex-shrink: 0;
+}
+
+.concept2-profile-card {
+  position: relative;
+  background: linear-gradient(135deg, #0A368A 0%, #0468E8 50%, #00A6FF 100%);
+  border-radius: 18px;
+  padding: 11px 13px;
+  box-shadow: 0 8px 24px -4px rgba(4, 104, 232, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  overflow: hidden;
+  transition: all 200ms ease;
+}
+
+.concept2-profile-card:hover {
+  box-shadow: 0 10px 28px -3px rgba(4, 104, 232, 0.52);
+  transform: translateY(-1px);
+}
+
+/* Inner wave shine for premium glass look */
+.profile-inner-wave-glow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  background: radial-gradient(circle at 100% 50%, rgba(255, 255, 255, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.concept2-profile-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.concept2-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.concept2-avatar-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0052D4 0%, #4364F7 50%, #6FB1FC 100%);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.88rem;
+  font-weight: 800;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.concept2-online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 2.5px solid #FFFFFF;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
+}
+
+.concept2-user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.concept2-user-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.concept2-user-role {
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.concept2-logout-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 180ms ease;
+  flex-shrink: 0;
+}
+
+.concept2-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: scale(1.05);
+}
+
+.concept2-logout-btn:active {
+  transform: scale(0.96);
+}
+
+.concept2-glass-sidebar.collapsed .concept2-profile-card {
+  padding: 6px;
+}
+
+.concept2-glass-sidebar.collapsed .concept2-profile-inner {
+  justify-content: center;
+}
+
+.concept2-glass-sidebar.collapsed .concept2-logout-btn {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   4. REDUCED MOTION PREFERENCE
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .concept2-glass-sidebar,
+  .concept2-nav-item,
+  .concept2-icon-box,
+  .concept2-collapse-btn,
+  .concept2-live-pulse-dot,
+  .concept2-tooltip-flyout,
+  .concept2-profile-card {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
