@@ -78,6 +78,18 @@ class InquiryAssignUpdate(BaseModel):
 class InquiryNotesUpdate(BaseModel):
     notes: str = Field(..., max_length=3000)
 
+class InquiryFullUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    company: Optional[str] = None
+    category: Optional[str] = None
+    product_name: Optional[str] = None
+    message: Optional[str] = None
+    status: Optional[str] = None
+    assigned_to: Optional[str] = None
+    followup_notes: Optional[str] = None
+
 class ProductCreateUpdate(BaseModel):
     name: str = Field(..., min_length=2, max_length=200)
     category: str = Field(..., min_length=2, max_length=100)
@@ -1342,6 +1354,38 @@ def export_inquiries_csv():
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=HTI_Sales_Enquiries.csv"}
     )
+
+@app.put("/api/inquiries/{inquiry_id}")
+def update_inquiry_full(inquiry_id: int, payload: InquiryFullUpdate, admin_user: Optional[str] = Query("admin")):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, full_name FROM inquiries WHERE id = ?", (inquiry_id,))
+    row = cursor.fetchone()
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Inquiry not found")
+
+    data = payload.dict(exclude_unset=True)
+    if not data:
+        conn.close()
+        return {"success": True, "id": inquiry_id}
+
+    now_iso = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    fields = []
+    params = []
+    for k, v in data.items():
+        fields.append(f"{k} = ?")
+        params.append(v)
+    fields.append("updated_at = ?")
+    params.append(now_iso)
+    params.append(inquiry_id)
+
+    cursor.execute(f"UPDATE inquiries SET {', '.join(fields)} WHERE id = ?", params)
+    conn.commit()
+    conn.close()
+
+    add_audit_log(admin_user, "EDIT_INQUIRY", "Inquiries", f"Updated details for lead #{inquiry_id} ({row['full_name']})")
+    return {"success": True, "id": inquiry_id}
 
 @app.delete("/api/inquiries/{inquiry_id}")
 def delete_inquiry(inquiry_id: int, admin_user: Optional[str] = Query("admin")):

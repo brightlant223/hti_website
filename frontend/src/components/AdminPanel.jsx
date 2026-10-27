@@ -4,6 +4,7 @@ import './AdminClientsPartners.css';
 import AdminProductsManager from './AdminProductsManager';
 import AdminBlogsManager from './AdminBlogsManager';
 import AdminWebsiteContentManager from './AdminWebsiteContentManager';
+import AdminEnquiriesManager from './AdminEnquiriesManager';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
   FileText, Package, MessageSquare, Search, AlertCircle,
@@ -328,8 +329,7 @@ export default function AdminPanel({
 
   const fetchInquiries = async () => {
     try {
-      const url = inquiryStatusFilter === 'All' ? '/api/inquiries' : `/api/inquiries?status_filter=${encodeURIComponent(inquiryStatusFilter)}`;
-      const res = await fetch(url);
+      const res = await fetch('/api/inquiries');
       if (res.ok) {
         const data = await res.json();
         setInquiries(data);
@@ -2856,164 +2856,18 @@ export default function AdminPanel({
               MODULE 5: ENQUIRIES & LEAD MANAGEMENT
               ========================================================================= */}
           {activeTab === 'inquiries' && (
-            <div className="admin-body-content">
-              {/* Lead Status Pipeline Badges Summary */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px', marginBottom: '16px' }}>
-                {['All', 'New', 'Contacted', 'Qualified', 'Converted', 'Closed'].map(st => {
-                  const count = st === 'All' ? inquiries.length : inquiries.filter(i => (i.status || '').toLowerCase() === st.toLowerCase()).length;
-                  return (
-                    <button
-                      key={st}
-                      onClick={() => setInquiryStatusFilter(st)}
-                      style={{
-                        padding: '10px',
-                        borderRadius: '10px',
-                        border: inquiryStatusFilter === st ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.06)',
-                        background: inquiryStatusFilter === st ? 'rgba(56, 189, 248, 0.12)' : 'rgba(255,255,255,0.02)',
-                        textAlign: 'left',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '700' }}>{st}</div>
-                      <div style={{ fontSize: '1.2rem', fontWeight: '800', color: st === 'New' && count > 0 ? '#f87171' : '#ffffff' }}>{count}</div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Inquiry Toolbar */}
-              <div className="catalog-toolbar">
-                <div className="catalog-search-wrap">
-                  <Search size={16} className="search-icon" />
-                  <input
-                    type="text"
-                    placeholder="Search leads by customer name, company, email, product..."
-                    value={inquirySearch}
-                    onChange={e => setInquirySearch(e.target.value)}
-                  />
-                </div>
-
-                <div className="catalog-filter-group">
-                  <button className="dash-action-btn secondary" onClick={handleExportInquiriesCSV} title="Export as CSV for Excel">
-                    <FileSpreadsheet size={16} />
-                    <span>Export to CSV / Excel</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Inquiries Table */}
-              <div className="admin-table-container">
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th style={{ width: '45px' }}>ID</th>
-                      <th>Client Contact</th>
-                      <th>Product / Solution Requested</th>
-                      <th>Status Pipeline</th>
-                      <th>Assigned To</th>
-                      <th>Date Received</th>
-                      <th style={{ textAlign: 'right' }}>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredInquiries.map(inq => (
-                      <tr key={inq.id} style={{ background: inq.status === 'New' ? 'rgba(239, 68, 68, 0.04)' : undefined }}>
-                        <td style={{ fontWeight: '700', color: '#38bdf8' }}>#{inq.id}</td>
-                        <td>
-                          <div style={{ fontWeight: '700', color: '#ffffff', fontSize: '0.9rem' }}>
-                            {inq.full_name}
-                          </div>
-                          <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>
-                            {inq.company || 'Enterprise Customer'}
-                          </div>
-                          <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: '2px' }}>
-                            {inq.email} • {inq.phone}
-                          </div>
-                        </td>
-                        <td>
-                          <div style={{ fontWeight: '600', color: '#e2e8f0', fontSize: '0.85rem' }}>
-                            {inq.product_name}
-                          </div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{inq.category}</div>
-                        </td>
-                        <td>
-                          <select
-                            value={inq.status || 'New'}
-                            onChange={e => handleUpdateInquiryStatus(inq.id, e.target.value)}
-                            style={{
-                              background: inq.status === 'New' ? 'rgba(239, 68, 68, 0.2)' :
-                                inq.status === 'Contacted' ? 'rgba(245, 158, 11, 0.2)' :
-                                inq.status === 'Qualified' ? 'rgba(168, 85, 247, 0.2)' :
-                                inq.status === 'Converted' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(100, 116, 139, 0.2)',
-                              color: inq.status === 'New' ? '#f87171' :
-                                inq.status === 'Contacted' ? '#fbbf24' :
-                                inq.status === 'Qualified' ? '#c084fc' :
-                                inq.status === 'Converted' ? '#34d399' : '#94a3b8',
-                              border: '1px solid rgba(255,255,255,0.1)',
-                              borderRadius: '6px',
-                              padding: '4px 8px',
-                              fontSize: '0.78rem',
-                              fontWeight: '700',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            <option value="New">● New</option>
-                            <option value="Contacted">● Contacted</option>
-                            <option value="Qualified">● Qualified</option>
-                            <option value="Converted">● Converted</option>
-                            <option value="Closed">● Closed</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select
-                            value={inq.assigned_to || 'Unassigned'}
-                            onChange={e => handleAssignInquiry(inq.id, e.target.value)}
-                            style={{
-                              background: '#1e293b',
-                              color: '#cbd5e1',
-                              border: '1px solid rgba(255,255,255,0.08)',
-                              borderRadius: '6px',
-                              padding: '4px 8px',
-                              fontSize: '0.76rem',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            <option value="Unassigned">Unassigned</option>
-                            <option value="Lead Systems Engineer">Lead Systems Engineer</option>
-                            <option value="Commercial Sales Directorate">Commercial Sales Directorate</option>
-                            <option value="Cleanroom Technical Support">Cleanroom Support</option>
-                            <option value="Turnkey Projects Lead">Turnkey Projects Lead</option>
-                          </select>
-                        </td>
-                        <td style={{ fontSize: '0.76rem', color: '#94a3b8' }}>
-                          {inq.created_at?.split(' ')[0] || inq.created_at}
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                          <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
-                            <button
-                              className="table-action-btn"
-                              onClick={() => {
-                                setSelectedInquiry(inq);
-                                setInquiryNotesText(inq.followup_notes || '');
-                              }}
-                              title="Open Full Lead Dossier & Follow-up Notes"
-                            >
-                              <MessageSquare size={15} />
-                            </button>
-                            <button
-                              className="table-action-btn delete"
-                              onClick={() => handleDeleteInquiry(inq.id)}
-                              title="Delete Lead"
-                            >
-                              <Trash2 size={15} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <div className="admin-body-content" style={{ padding: 0 }}>
+              <AdminEnquiriesManager
+                inquiries={inquiries}
+                onUpdateStatus={handleUpdateInquiryStatus}
+                onAssign={handleAssignInquiry}
+                onDelete={handleDeleteInquiry}
+                onSaveNotes={handleSaveInquiryNotes}
+                onExportCSV={handleExportInquiriesCSV}
+                onRefresh={fetchInquiries}
+                showFeedback={showFeedback}
+                currentUser={currentUser}
+              />
             </div>
           )}
 
