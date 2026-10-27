@@ -3271,134 +3271,14 @@ export default function AdminPanel({
               MODULE 8: ADMIN USERS, ROLES & AUDIT LOGS
               ========================================================================= */}
           {activeTab === 'users' && (
-            <div className="admin-body-content">
-              {/* Users vs Audit Log Switcher */}
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px' }}>
-                <button
-                  className={`dash-action-btn ${userSubTab === 'users' ? 'primary' : 'secondary'}`}
-                  onClick={() => setUserSubTab('users')}
-                >
-                  <Users size={16} />
-                  <span>Administrative Accounts ({adminUsers.length || 3})</span>
-                </button>
-                <button
-                  className={`dash-action-btn ${userSubTab === 'audit_logs' ? 'primary' : 'secondary'}`}
-                  onClick={() => setUserSubTab('audit_logs')}
-                >
-                  <ShieldCheck size={16} />
-                  <span>Immutable Audit Log ({auditLogs.length})</span>
-                </button>
-              </div>
-
-              {/* Subview 1: Admin Users */}
-              {userSubTab === 'users' && (
-                <div>
-                  <div className="catalog-toolbar">
-                    <p style={{ margin: 0, fontSize: '0.84rem', color: '#94a3b8' }}>
-                      Server-side role-based authorization: Administrators have complete access; Editors manage catalogue & publications; Viewers manage leads.
-                    </p>
-                    <button className="dash-action-btn primary" onClick={handleOpenAddUser}>
-                      <Plus size={16} />
-                      <span>Create Account</span>
-                    </button>
-                  </div>
-
-                  <div className="admin-table-container">
-                    <table className="admin-table">
-                      <thead>
-                        <tr>
-                          <th>Username</th>
-                          <th>Full Name</th>
-                          <th>Email Address</th>
-                          <th>Assigned Role</th>
-                          <th>Status</th>
-                          <th style={{ textAlign: 'right' }}>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {adminUsers.map(u => (
-                          <tr key={u.id}>
-                            <td>
-                              <div style={{ fontWeight: '700', color: '#38bdf8' }}>{u.username}</div>
-                            </td>
-                            <td style={{ color: '#ffffff', fontWeight: '600' }}>{u.full_name}</td>
-                            <td style={{ color: '#94a3b8', fontSize: '0.82rem' }}>{u.email}</td>
-                            <td>
-                              <span style={{
-                                fontSize: '0.74rem',
-                                padding: '3px 9px',
-                                borderRadius: '12px',
-                                fontWeight: '700',
-                                background: u.role === 'Administrator' ? 'rgba(56, 189, 248, 0.15)' :
-                                  u.role === 'Editor' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)',
-                                color: u.role === 'Administrator' ? '#38bdf8' :
-                                  u.role === 'Editor' ? '#f59e0b' : '#10b981'
-                              }}>
-                                {u.role}
-                              </span>
-                            </td>
-                            <td>
-                              <span style={{ color: u.is_active ? '#10b981' : '#64748b', fontSize: '0.8rem', fontWeight: '700' }}>
-                                {u.is_active ? '● Active' : '○ Disabled'}
-                              </span>
-                            </td>
-                            <td style={{ textAlign: 'right' }}>
-                              <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
-                                <button className="table-action-btn" onClick={() => handleOpenEditUser(u)} title="Edit Account"><Edit3 size={15} /></button>
-                                {u.username !== 'admin' && (
-                                  <button className="table-action-btn delete" onClick={() => handleDeleteUser(u)} title="Delete Account"><Trash2 size={15} /></button>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {/* Subview 2: Audit Logs */}
-              {userSubTab === 'audit_logs' && (
-                <div>
-                  <div className="catalog-toolbar">
-                    <p style={{ margin: 0, fontSize: '0.84rem', color: '#94a3b8' }}>
-                      All administrative mutations (creates, updates, status changes, backups) are automatically audited in SQLite.
-                    </p>
-                  </div>
-
-                  <div className="admin-table-container">
-                    <table className="admin-table">
-                      <thead>
-                        <tr>
-                          <th style={{ width: '60px' }}>ID</th>
-                          <th>Timestamp</th>
-                          <th>Operator</th>
-                          <th>Module</th>
-                          <th>Action</th>
-                          <th>Details</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {auditLogs.map(log => (
-                          <tr key={log.id}>
-                            <td style={{ color: '#64748b' }}>#{log.id}</td>
-                            <td style={{ color: '#94a3b8', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{log.timestamp}</td>
-                            <td><strong style={{ color: '#38bdf8' }}>{log.username}</strong></td>
-                            <td>
-                              <span style={{ fontSize: '0.74rem', padding: '2px 7px', borderRadius: '4px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>
-                                {log.module}
-                              </span>
-                            </td>
-                            <td style={{ color: '#e2e8f0', fontWeight: '600', fontSize: '0.82rem' }}>{log.action}</td>
-                            <td style={{ color: '#94a3b8', fontSize: '0.82rem' }}>{log.details}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
+            <div className="admin-body-content" style={{ padding: 0 }}>
+              <AdminUsersSecurityManager
+                adminUsers={adminUsers}
+                auditLogs={auditLogs}
+                currentUser={currentUser}
+                onRefresh={fetchUsersAndAudit}
+                showFeedback={showFeedback}
+              />
             </div>
           )}
 

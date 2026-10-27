@@ -397,78 +397,28 @@ export default function AdminUsersSecurityManager({
             LEFT COLUMN: Security Overview Banner, 4 Summary Cards, Table
             =================================================================== */}
         <div className="adm-sec-col-main">
-          {/* 1. Security Overview Banner */}
-          <div className="adm-sec-banner">
-            <div className="adm-sec-banner-left">
-              <div className="adm-sec-banner-shield-box">
-                <ShieldCheck size={32} color="#FFFFFF" />
+          {/* 1. Compact Security Header */}
+          <div className="adm-sec-header">
+            <div className="adm-sec-header-left">
+              <div className="adm-sec-header-icon-box">
+                <ShieldCheck size={24} />
               </div>
-              <div className="adm-sec-banner-text">
-                <h3 className="adm-sec-banner-title">Security Overview</h3>
-                <p className="adm-sec-banner-desc">
-                  Manage user accounts, roles and monitor system access for HTI Control enterprise systems.
+              <div className="adm-sec-header-text">
+                <h3 className="adm-sec-header-title">Users &amp; Security</h3>
+                <p className="adm-sec-header-sub">
+                  Manage administrative access, user roles, and system activity.
                 </p>
               </div>
             </div>
 
-            <div className="adm-sec-banner-right">
-              {/* Stylized 3D Shield Graphic */}
-              <div className="adm-sec-banner-graphic" aria-hidden="true">
-                <div className="adm-sec-graphic-glow" />
-                <svg
-                  width="72"
-                  height="72"
-                  viewBox="0 0 72 72"
-                  fill="none"
-                  className="adm-sec-graphic-shield"
-                >
-                  <path
-                    d="M36 6L14 16V34C14 49 23.5 60.5 36 66C48.5 60.5 58 49 58 34V16L36 6Z"
-                    fill="url(#shield_grad)"
-                    stroke="rgba(255,255,255,0.4)"
-                    strokeWidth="1.5"
-                  />
-                  <path
-                    d="M36 12L20 20V34C20 45.5 27 54.5 36 59C45 54.5 52 45.5 52 34V20L36 12Z"
-                    fill="rgba(8, 117, 249, 0.45)"
-                  />
-                  {/* Padlock inside shield */}
-                  <rect x="29" y="32" width="14" height="11" rx="2" fill="#FFFFFF" />
-                  <path
-                    d="M32 32V28C32 25.7909 33.7909 24 36 24C38.2091 24 40 25.7909 40 28V32"
-                    stroke="#FFFFFF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="36" cy="37.5" r="1.5" fill="#0875F9" />
-                  <defs>
-                    <linearGradient id="shield_grad" x1="14" y1="6" x2="58" y2="66" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#38BDF8" />
-                      <stop offset="0.6" stopColor="#0875F9" />
-                      <stop offset="1" stopColor="#0284C7" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+            <div className="adm-sec-header-right">
+              <div className="adm-sec-status-chip">
+                <span className="adm-sec-live-dot" />
+                <span>RBAC OPERATIONAL</span>
               </div>
-
-              {/* Verified Security Capabilities */}
-              <div className="adm-sec-feature-list">
-                <div className="adm-sec-feature-item">
-                  <CheckCircle2 size={15} className="adm-sec-feature-icon" />
-                  <span>Access Control</span>
-                </div>
-                <div className="adm-sec-feature-item">
-                  <CheckCircle2 size={15} className="adm-sec-feature-icon" />
-                  <span>Role Management</span>
-                </div>
-                <div className="adm-sec-feature-item">
-                  <CheckCircle2 size={15} className="adm-sec-feature-icon" />
-                  <span>Audit Logging</span>
-                </div>
-                <div className="adm-sec-feature-item">
-                  <CheckCircle2 size={15} className="adm-sec-feature-icon" />
-                  <span>System Security</span>
-                </div>
+              <div className="adm-sec-crypto-chip">
+                <Lock size={13} />
+                <span>AES-256</span>
               </div>
             </div>
           </div>
@@ -476,7 +426,16 @@ export default function AdminUsersSecurityManager({
           {/* 2. Four Summary Cards */}
           <div className="adm-sec-summary-row">
             {/* Card 1: Total Accounts */}
-            <div className="adm-sec-summary-card card-users">
+            <div
+              className={`adm-sec-summary-card card-users ${subTab === 'users' && roleFilter === 'All' && statusFilter === 'All' ? 'selected' : ''}`}
+              onClick={() => {
+                setSubTab('users');
+                setRoleFilter('All');
+                setStatusFilter('All');
+                setUserPage(1);
+              }}
+              title="View all administrative accounts"
+            >
               <div className="adm-sec-summary-icon-box">
                 <Users size={22} />
               </div>
@@ -488,7 +447,16 @@ export default function AdminUsersSecurityManager({
             </div>
 
             {/* Card 2: Active Accounts */}
-            <div className="adm-sec-summary-card card-active">
+            <div
+              className={`adm-sec-summary-card card-active ${subTab === 'users' && statusFilter === 'active' ? 'selected' : ''}`}
+              onClick={() => {
+                setSubTab('users');
+                setStatusFilter('active');
+                setRoleFilter('All');
+                setUserPage(1);
+              }}
+              title="Filter by active accounts"
+            >
               <div className="adm-sec-summary-icon-box">
                 <ShieldCheck size={22} />
               </div>
@@ -500,7 +468,15 @@ export default function AdminUsersSecurityManager({
             </div>
 
             {/* Card 3: Administrators */}
-            <div className="adm-sec-summary-card card-admins">
+            <div
+              className={`adm-sec-summary-card card-admins ${subTab === 'users' && roleFilter === 'Administrator' ? 'selected' : ''}`}
+              onClick={() => {
+                setSubTab('users');
+                setRoleFilter('Administrator');
+                setUserPage(1);
+              }}
+              title="Filter by Administrator accounts"
+            >
               <div className="adm-sec-summary-icon-box">
                 <Crown size={22} />
               </div>
@@ -512,7 +488,14 @@ export default function AdminUsersSecurityManager({
             </div>
 
             {/* Card 4: Audit Events */}
-            <div className="adm-sec-summary-card card-audit">
+            <div
+              className={`adm-sec-summary-card card-audit ${subTab === 'audit_logs' ? 'selected' : ''}`}
+              onClick={() => {
+                setSubTab('audit_logs');
+                setAuditPage(1);
+              }}
+              title="View immutable audit log"
+            >
               <div className="adm-sec-summary-icon-box">
                 <FileText size={22} />
               </div>
@@ -533,7 +516,7 @@ export default function AdminUsersSecurityManager({
                 onClick={() => setSubTab('users')}
               >
                 <Users size={16} />
-                <span>Administrative Accounts ({adminUsers.length})</span>
+                <span>Administrative Accounts ({summaryCounts.totalUsers})</span>
               </button>
 
               <button
@@ -542,7 +525,7 @@ export default function AdminUsersSecurityManager({
                 onClick={() => setSubTab('audit_logs')}
               >
                 <ShieldCheck size={16} />
-                <span>Immutable Audit Log ({auditLogs.length})</span>
+                <span>Immutable Audit Log ({summaryCounts.totalAudit})</span>
               </button>
             </div>
 
@@ -552,6 +535,7 @@ export default function AdminUsersSecurityManager({
                 className="adm-sec-create-btn"
                 onClick={handleOpenAdd}
                 title="Create new administrative user account"
+                aria-label="Create new administrative user account"
               >
                 <Plus size={16} />
                 <span>Create Account</span>
@@ -569,12 +553,13 @@ export default function AdminUsersSecurityManager({
                   <input
                     type="text"
                     className="adm-sec-search-input"
-                    placeholder="Search users by name, email or role..."
+                    placeholder="Search by username, full name, email or role..."
                     value={userSearch}
                     onChange={e => {
                       setUserSearch(e.target.value);
                       setUserPage(1);
                     }}
+                    aria-label="Search users"
                   />
                 </div>
 
@@ -588,6 +573,7 @@ export default function AdminUsersSecurityManager({
                         setRoleFilter(e.target.value);
                         setUserPage(1);
                       }}
+                      aria-label="Filter by assigned role"
                     >
                       <option value="All">All Roles</option>
                       <option value="Administrator">Administrator</option>
@@ -606,6 +592,7 @@ export default function AdminUsersSecurityManager({
                         setStatusFilter(e.target.value);
                         setUserPage(1);
                       }}
+                      aria-label="Filter by status"
                     >
                       <option value="All">All Status</option>
                       <option value="active">Active</option>
@@ -621,8 +608,10 @@ export default function AdminUsersSecurityManager({
                       setUserSearch('');
                       setRoleFilter('All');
                       setStatusFilter('All');
+                      setUserPage(1);
                     }}
                     title="Reset user filters"
+                    aria-label="Reset user filters"
                   >
                     <SlidersHorizontal size={15} />
                   </button>

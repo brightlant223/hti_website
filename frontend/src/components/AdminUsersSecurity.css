@@ -55,114 +55,103 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. SECURITY OVERVIEW BANNER (DARK NAVY TO BLUE GRADIENT)
+   2. COMPACT SECURITY HEADER (CLEAN LIGHT ENTERPRISE)
    -------------------------------------------------------------------------- */
-.adm-sec-banner {
-  background: linear-gradient(135deg, #0d2248 0%, #0c3374 52%, #0875f9 100%);
-  border-radius: 16px;
-  padding: 24px 28px;
-  color: #FFFFFF;
+.adm-sec-header {
+  background: var(--hti-card-bg);
+  border: 1.5px solid var(--hti-border);
+  border-radius: 14px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  box-shadow: 0 4px 20px rgba(13, 34, 72, 0.12);
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(16, 38, 79, 0.03);
 }
 
-.adm-sec-banner-left {
+.adm-sec-header-left {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 14px;
 }
 
-.adm-sec-banner-shield-box {
-  width: 58px;
-  height: 58px;
-  border-radius: 14px;
-  background: rgba(8, 117, 249, 0.35);
-  border: 1.5px solid rgba(255, 255, 255, 0.28);
+.adm-sec-header-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #EFF6FF;
+  border: 1.5px solid #BFDBFE;
+  color: var(--hti-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(8, 117, 249, 0.45);
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(8, 117, 249, 0.12);
 }
 
-.adm-sec-banner-text {
+.adm-sec-header-text {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
-.adm-sec-banner-title {
+.adm-sec-header-title {
   margin: 0;
-  font-size: 1.35rem;
+  font-family: inherit;
+  font-size: 1.28rem;
   font-weight: 800;
-  color: #FFFFFF;
-  letter-spacing: -0.01em;
+  color: var(--hti-navy);
+  letter-spacing: -0.015em;
   line-height: 1.2;
 }
 
-.adm-sec-banner-desc {
-  margin: 4px 0 0 0;
-  font-size: 0.86rem;
-  color: #D0E1F9;
-  line-height: 1.45;
-  max-width: 380px;
+.adm-sec-header-sub {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--hti-muted);
+  line-height: 1.4;
 }
 
-.adm-sec-banner-right {
+.adm-sec-header-right {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 10px;
 }
 
-/* 3D Shield Vector Graphic */
-.adm-sec-banner-graphic {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  display: flex;
+.adm-sec-status-chip {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #059669;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  padding: 5px 11px;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
 }
 
-.adm-sec-graphic-glow {
-  position: absolute;
-  inset: 0;
+.adm-sec-live-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, rgba(8, 117, 249, 0) 70%);
-  filter: blur(8px);
+  background: #10B981;
+  box-shadow: 0 0 6px #10B981;
 }
 
-.adm-sec-graphic-shield {
-  position: relative;
-  z-index: 2;
-  filter: drop-shadow(0 6px 12px rgba(8, 117, 249, 0.5));
-}
-
-.adm-sec-feature-list {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  flex-shrink: 0;
-}
-
-.adm-sec-feature-item {
-  display: flex;
+.adm-sec-crypto-chip {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #FFFFFF;
-}
-
-.adm-sec-feature-icon {
-  color: #10B981;
-  flex-shrink: 0;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0284C7;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  padding: 5px 11px;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
 }
 
 /* --------------------------------------------------------------------------
@@ -177,7 +166,7 @@
 
 .adm-sec-summary-card {
   background: var(--hti-card-bg);
-  border: 1px solid var(--hti-border);
+  border: 1.5px solid var(--hti-border);
   border-radius: 14px;
   padding: 16px 16px;
   display: flex;
@@ -186,11 +175,17 @@
   box-shadow: 0 1px 4px rgba(16, 38, 79, 0.03);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
+  cursor: pointer;
 }
 
 .adm-sec-summary-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 14px rgba(16, 38, 79, 0.07);
+}
+
+.adm-sec-summary-card.selected {
+  border-color: var(--hti-blue) !important;
+  box-shadow: 0 4px 14px rgba(8, 117, 249, 0.18) !important;
 }
 
 .adm-sec-summary-card.card-users {
@@ -1185,8 +1180,34 @@
 }
 
 /* --------------------------------------------------------------------------
-   11. RESPONSIVE BREAKPOINTS
+   11. ACCESSIBILITY & RESPONSIVE BREAKPOINTS
    -------------------------------------------------------------------------- */
+.adm-sec-tab-btn:focus-visible,
+.adm-sec-create-btn:focus-visible,
+.adm-sec-search-input:focus-visible,
+.adm-sec-filter-pill select:focus-visible,
+.adm-sec-slider-btn:focus-visible,
+.adm-sec-action-btn:focus-visible,
+.adm-sec-page-btn:focus-visible,
+.adm-sec-btn-primary:focus-visible,
+.adm-sec-btn-secondary:focus-visible,
+.adm-sec-modal-close-btn:focus-visible {
+  outline: 2px solid var(--hti-blue);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-sec-summary-card,
+  .adm-sec-action-btn,
+  .adm-sec-tab-btn,
+  .adm-sec-create-btn,
+  .adm-sec-btn-primary,
+  .adm-sec-btn-secondary {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 @media (max-width: 1180px) {
   .adm-sec-grid {
     grid-template-columns: 1fr;
@@ -1204,14 +1225,14 @@
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .adm-sec-banner {
+  .adm-sec-header {
     flex-direction: column;
     align-items: flex-start;
   }
   
-  .adm-sec-banner-right {
+  .adm-sec-header-right {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
   
   .adm-sec-toolbar {
