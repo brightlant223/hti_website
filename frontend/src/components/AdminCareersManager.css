@@ -1,0 +1,955 @@
+/* =========================================================================
+   HTI ADMIN PANEL — CAREERS & TALENT ACQUISITION (Concept 2 Premium Glass)
+   ========================================================================= */
+
+.adm-careers-container {
+  padding: 18px 20px 36px;
+  max-width: 100%;
+  margin: 0 auto;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .adm-careers-container,
+html.dark .adm-careers-container {
+  color: #f1f5f9;
+}
+
+/* ── 1. HEADER & ACTIONS ─────────────────────────────────────────────────── */
+.adm-careers-header-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="dark"] .adm-careers-header-card,
+html.dark .adm-careers-header-card {
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(51, 65, 85, 0.7);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.25);
+}
+
+.adm-careers-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.adm-careers-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0284c7;
+  margin-bottom: 4px;
+}
+
+[data-theme="dark"] .adm-careers-eyebrow,
+html.dark .adm-careers-eyebrow {
+  color: #38bdf8;
+}
+
+.adm-careers-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+[data-theme="dark"] .adm-careers-title,
+html.dark .adm-careers-title {
+  color: #f8fafc;
+}
+
+.adm-careers-sub {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}
+
+[data-theme="dark"] .adm-careers-sub,
+html.dark .adm-careers-sub {
+  color: #94a3b8;
+}
+
+.adm-careers-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.adm-careers-db-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(2, 132, 199, 0.08);
+  border: 1px solid rgba(2, 132, 199, 0.2);
+  color: #0284c7;
+}
+
+[data-theme="dark"] .adm-careers-db-pill,
+html.dark .adm-careers-db-pill {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+}
+
+.adm-careers-db-pill.sqlite {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+  color: #059669;
+}
+
+[data-theme="dark"] .adm-careers-db-pill.sqlite,
+html.dark .adm-careers-db-pill.sqlite {
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.25);
+  color: #34d399;
+}
+
+.adm-careers-db-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.adm-careers-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.adm-careers-btn.secondary {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+[data-theme="dark"] .adm-careers-btn.secondary,
+html.dark .adm-careers-btn.secondary {
+  background: #1e293b;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+.adm-careers-btn.secondary:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .adm-careers-btn.secondary:hover {
+  background: #334155;
+}
+
+.adm-careers-btn.primary {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+}
+
+.adm-careers-btn.primary:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35);
+}
+
+/* ── 2. STAT / KPI CARDS ─────────────────────────────────────────────────── */
+.adm-careers-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+  .adm-careers-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .adm-careers-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.adm-careers-stat-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme="dark"] .adm-careers-stat-card,
+html.dark .adm-careers-stat-card {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(51, 65, 85, 0.65);
+}
+
+.adm-careers-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+}
+
+.adm-careers-stat-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-careers-stat-icon-wrap.blue {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+}
+
+.adm-careers-stat-icon-wrap.coral {
+  background: rgba(244, 63, 94, 0.12);
+  color: #f43f5e;
+}
+
+.adm-careers-stat-icon-wrap.emerald {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.adm-careers-stat-icon-wrap.purple {
+  background: rgba(139, 92, 246, 0.12);
+  color: #8b5cf6;
+}
+
+.adm-careers-stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-careers-stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+[data-theme="dark"] .adm-careers-stat-label,
+html.dark .adm-careers-stat-label {
+  color: #94a3b8;
+}
+
+.adm-careers-stat-val {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+[data-theme="dark"] .adm-careers-stat-val,
+html.dark .adm-careers-stat-val {
+  color: #f8fafc;
+}
+
+.adm-careers-stat-sub {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin-top: 3px;
+}
+
+/* ── 3. TOOLBAR (SEARCH & FILTERS) ───────────────────────────────────────── */
+.adm-careers-toolbar {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .adm-careers-toolbar,
+html.dark .adm-careers-toolbar {
+  background: rgba(15, 23, 42, 0.55);
+  border-color: rgba(51, 65, 85, 0.65);
+}
+
+.adm-careers-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 260px;
+}
+
+.adm-careers-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.adm-careers-search-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 14px 0 38px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.85rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .adm-careers-search-input,
+html.dark .adm-careers-search-input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+.adm-careers-search-input:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.adm-careers-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.adm-careers-select {
+  height: 40px;
+  padding: 0 32px 0 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .adm-careers-select,
+html.dark .adm-careers-select {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+.adm-careers-select:focus {
+  border-color: #0284c7;
+}
+
+/* ── 4. APPLICATIONS TABLE ───────────────────────────────────────────────── */
+.adm-careers-table-wrap {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  border-radius: 16px;
+  overflow: hidden; /* No scrollbar */
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="dark"] .adm-careers-table-wrap,
+html.dark .adm-careers-table-wrap {
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(51, 65, 85, 0.7);
+}
+
+.adm-careers-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.82rem;
+  table-layout: auto;
+}
+
+.adm-careers-table th {
+  padding: 12px 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  background: rgba(248, 250, 252, 0.85);
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .adm-careers-table th,
+html.dark .adm-careers-table th {
+  background: rgba(30, 41, 59, 0.6);
+  border-bottom-color: #334155;
+  color: #94a3b8;
+}
+
+.adm-careers-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+[data-theme="dark"] .adm-careers-table td,
+html.dark .adm-careers-table td {
+  border-bottom-color: rgba(51, 65, 85, 0.45);
+}
+
+.adm-careers-table tr:hover td {
+  background: rgba(2, 132, 199, 0.02);
+}
+
+[data-theme="dark"] .adm-careers-table tr:hover td,
+html.dark .adm-careers-table tr:hover td {
+  background: rgba(56, 189, 248, 0.03);
+}
+
+/* Row ID */
+.adm-row-id {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-weight: 800;
+  font-size: 0.78rem;
+  color: #64748b;
+  display: inline-block;
+}
+
+[data-theme="dark"] .adm-row-id,
+html.dark .adm-row-id {
+  color: #94a3b8;
+}
+
+/* Candidate Profile Column */
+.adm-candidate-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adm-candidate-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.2);
+}
+
+.adm-candidate-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.adm-candidate-name {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 0.84rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .adm-candidate-name,
+html.dark .adm-candidate-name {
+  color: #f8fafc;
+}
+
+.adm-candidate-contacts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+  font-size: 0.71rem;
+  color: #64748b;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .adm-candidate-contacts,
+html.dark .adm-candidate-contacts {
+  color: #94a3b8;
+}
+
+.adm-candidate-link {
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+
+.adm-candidate-link:hover {
+  color: #0284c7;
+}
+
+[data-theme="dark"] .adm-candidate-link:hover {
+  color: #38bdf8;
+}
+
+.adm-contact-sep {
+  color: #cbd5e1;
+  font-weight: bold;
+}
+
+[data-theme="dark"] .adm-contact-sep {
+  color: #475569;
+}
+
+/* Position Column */
+.adm-position-pill {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(2, 132, 199, 0.08);
+  border: 1px solid rgba(2, 132, 199, 0.16);
+  color: #0369a1;
+  font-weight: 700;
+  font-size: 0.74rem;
+  line-height: 1.3;
+}
+
+[data-theme="dark"] .adm-position-pill,
+html.dark .adm-position-pill {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+}
+
+/* Experience & Notice Cell */
+.adm-exp-notice-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.adm-exp-val {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .adm-exp-val,
+html.dark .adm-exp-val {
+  color: #f1f5f9;
+}
+
+.adm-notice-val {
+  font-size: 0.7rem;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.adm-notice-val strong {
+  color: #475569;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .adm-notice-val,
+html.dark .adm-notice-val {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .adm-notice-val strong,
+html.dark .adm-notice-val strong {
+  color: #cbd5e1;
+}
+
+/* Resume Document Button */
+.adm-resume-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(2, 132, 199, 0.08);
+  border: 1px solid rgba(2, 132, 199, 0.2);
+  color: #0284c7;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .adm-resume-btn,
+html.dark .adm-resume-btn {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+}
+
+.adm-resume-btn:hover {
+  background: #0284c7;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.adm-no-resume-pill {
+  display: inline-block;
+  padding: 3px 6px;
+  border-radius: 5px;
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Status Selector Dropdown inside row */
+.adm-status-select {
+  height: 28px;
+  padding: 0 20px 0 8px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  display: inline-block;
+  white-space: nowrap;
+  max-width: 115px;
+}
+
+.adm-status-select.New {
+  background-color: rgba(244, 63, 94, 0.12);
+  border-color: rgba(244, 63, 94, 0.3);
+  color: #e11d48;
+}
+
+.adm-status-select.In-Review {
+  background-color: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #d97706;
+}
+
+.adm-status-select.Shortlisted {
+  background-color: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #059669;
+}
+
+.adm-status-select.Interview-Scheduled {
+  background-color: rgba(139, 92, 246, 0.12);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: #7c3aed;
+}
+
+.adm-status-select.Offer-Extended {
+  background-color: rgba(2, 132, 199, 0.12);
+  border-color: rgba(2, 132, 199, 0.3);
+  color: #0284c7;
+}
+
+.adm-status-select.Rejected {
+  background-color: rgba(100, 116, 139, 0.12);
+  border-color: rgba(100, 116, 139, 0.3);
+  color: #64748b;
+}
+
+/* Applied On Date Cell */
+.adm-date-cell {
+  white-space: nowrap;
+}
+
+.adm-date-main {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #334155;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .adm-date-main,
+html.dark .adm-date-main {
+  color: #e2e8f0;
+}
+
+.adm-date-sub {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .adm-date-sub,
+html.dark .adm-date-sub {
+  color: #94a3b8;
+}
+
+/* Actions in Table Row */
+.adm-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.adm-action-icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.18s ease;
+}
+
+.adm-action-icon-btn:hover {
+  background: #f1f5f9;
+  color: #0284c7;
+}
+
+[data-theme="dark"] .adm-action-icon-btn:hover {
+  background: #334155;
+  color: #38bdf8;
+}
+
+.adm-action-icon-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* ── 5. DOSSIER & NOTES MODAL ────────────────────────────────────────────── */
+.adm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.adm-modal-card {
+  background: #ffffff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="dark"] .adm-modal-card,
+html.dark .adm-modal-card {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+.adm-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+[data-theme="dark"] .adm-modal-header,
+html.dark .adm-modal-header {
+  border-bottom-color: #1e293b;
+}
+
+.adm-modal-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.adm-modal-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.adm-modal-close-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .adm-modal-close-btn:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+.adm-modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.adm-dossier-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+[data-theme="dark"] .adm-dossier-grid,
+html.dark .adm-dossier-grid {
+  background: rgba(30, 41, 59, 0.5);
+  border-color: #334155;
+}
+
+.adm-dossier-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-dossier-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 3px;
+}
+
+.adm-dossier-val {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .adm-dossier-val,
+html.dark .adm-dossier-val {
+  color: #f8fafc;
+}
+
+.adm-notes-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 0.86rem;
+  outline: none;
+  resize: vertical;
+}
+
+[data-theme="dark"] .adm-notes-textarea,
+html.dark .adm-notes-textarea {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+.adm-notes-textarea:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.adm-modal-footer {
+  padding: 18px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+[data-theme="dark"] .adm-modal-footer,
+html.dark .adm-modal-footer {
+  border-top-color: #1e293b;
+}
+
+/* Empty State */
+.adm-empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #64748b;
+}
+
+.adm-empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(2, 132, 199, 0.08);
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}

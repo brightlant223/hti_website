@@ -17,6 +17,15 @@ from pathlib import Path
 from contextlib import asynccontextmanager
 
 from database import init_db, seed_db, get_connection, add_audit_log, DB_PATH
+from mysql_db import (
+    init_careers_db,
+    get_careers_db_status,
+    insert_career_application,
+    fetch_career_applications,
+    update_application_status,
+    update_application_notes,
+    delete_career_application
+)
 
 SERVER_START_TIME = time.time()
 
@@ -25,11 +34,16 @@ FRONTEND_UPLOAD_DIR = Path(__file__).resolve().parent.parent / "frontend" / "pub
 FRONTEND_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 BACKEND_UPLOAD_DIR = Path(__file__).resolve().parent / "uploads"
 BACKEND_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+RESUME_UPLOAD_DIR = FRONTEND_UPLOAD_DIR / "resumes"
+RESUME_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+BACKEND_RESUME_DIR = BACKEND_UPLOAD_DIR / "resumes"
+BACKEND_RESUME_DIR.mkdir(parents=True, exist_ok=True)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
     seed_db()
+    init_careers_db()
     yield
 
 app = FastAPI(
@@ -1403,6 +1417,212 @@ def delete_inquiry(inquiry_id: int, admin_user: Optional[str] = Query("admin")):
     add_audit_log(admin_user, "DELETE_INQUIRY", "Inquiries", f"Deleted inquiry #{inquiry_id}")
 
     return {"success": True, "message": f"Inquiry #{inquiry_id} removed"}
+
+# =========================================================================
+# CAREERS & TALENT ACQUISITION (Module 5B - MySQL Connected)
+# =========================================================================
+
+class CareerStatusPayload(BaseModel):
+    status: str
+
+class CareerNotesPayload(BaseModel):
+    notes: str
+
+@app.get("/api/careers/db-status")
+def get_career_database_status():
+    """Returns the live connection status of the MySQL database used for careers."""
+    return get_careers_db_status()
+
+@app.post("/api/careers/apply", status_code=status.HTTP_201_CREATED)
+async def submit_career_application(
+    full_name: str = Form(...),
+    email: str = Form(...),
+    phone: str = Form(...),
+    position: str = Form(...),
+    experience: Optional[str] = Form(""),
+    notice_period: Optional[str] = Form(""),
+    cover_letter: Optional[str] = Form(""),
+    step_saved: Optional[int] = Form(3),
+    resume: Optional[UploadFile] = File(None)
+):
+    # Field validations
+    if not full_name or len(full_name.strip()) < 2:
+        raise HTTPException(status_code=400, detail="Valid candidate full name is required.")
+    if not email or "@" not in email:
+        raise HTTPException(status_code=400, detail="Valid email address is required.")
+    if not phone or len(re.sub(r"\D", "", phone)) < 10:
+        raise HTTPException(status_code=400, detail="Valid 10-digit phone number is required.")
+    if not position or not position.strip():
+        raise HTTPException(status_code=400, detail="Position applied for is required.")
+
+    resume_filename = ""
+    resume_url = ""
+
+    # Process and save uploaded resume if provided
+    if resume and resume.filename:
+        original_name = resume.filename
+        ext = os.path.splitext(original_name)[1].lower()
+        if ext not in [".pdf", ".doc", ".docx"]:
+            raise HTTPException(status_code=400, detail="Invalid file format. Only PDF, DOC, or DOCX files are allowed.")
+        
+        # Safe unique filename
+        safe_base = re.sub(r'[^a-zA-Z0-9_\-]', '_', os.path.splitext(original_name)[0])[:30]
+        timestamp = int(time.time())
+        saved_filename = f"{safe_base}_{timestamp}{ext}"
+
+        dest_frontend = RESUME_UPLOAD_DIR / saved_filename
+        dest_backend = BACKEND_RESUME_DIR / saved_filename
+
+        try:
+            content = await resume.read()
+            with open(dest_frontend, "wb") as f_out:
+                f_out.write(content)
+            with open(dest_backend, "wb") as f_out:
+                f_out.write(content)
+
+            resume_filename = original_name
+            resume_url = f"/uploads/resumes/{saved_filename}"
+        except Exception as e:
+            print(f"Error saving uploaded resume: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to process and store resume file: {e}")
+
+    app_data = {
+        "full_name": full_name.strip(),
+        "email": email.strip().lower(),
+        "phone": phone.strip(),
+        "position": position.strip(),
+        "experience": experience.strip() if experience else "Not specified",
+        "notice_period": notice_period.strip() if notice_period else "Immediate",
+        "resume_filename": resume_filename,
+        "resume_url": resume_url,
+        "cover_letter": cover_letter.strip() if cover_letter else "",
+        "step_saved": step_saved or 3,
+        "status": "New",
+        "notes": ""
+    }
+
+    result = insert_career_application(app_data)
+    created_record = result.get("data", {})
+    engine_used = result.get("engine", "mysql")
+
+    add_audit_log(
+        "system",
+        "CAREER_APPLICATION_SUBMITTED",
+        "Careers",
+        f"New application received from {full_name} for position '{position}' [DB: {engine_used}]"
+    )
+
+    return {
+        "success": True,
+        "message": "Thank you! Your career application has been securely submitted to HTI Talent Acquisition.",
+        "application": created_record,
+        "engine": engine_used
+    }
+
+@app.post("/api/careers/draft")
+async def save_career_draft(payload: Dict[str, Any]):
+    """Saves intermediate candidate details at Step 1 or Step 2 to prevent data loss."""
+    full_name = payload.get("full_name") or payload.get("fullName") or "Candidate Draft"
+    email = payload.get("email") or "draft@applicant.local"
+    phone = payload.get("phone") or "0000000000"
+    position = payload.get("position") or "General Inquiry"
+    step_saved = payload.get("step_saved", 1)
+
+    app_data = {
+        "full_name": full_name,
+        "email": email,
+        "phone": phone,
+        "position": position,
+        "experience": payload.get("experience", ""),
+        "notice_period": payload.get("noticePeriod", ""),
+        "resume_filename": payload.get("resume_filename", ""),
+        "resume_url": payload.get("resume_url", ""),
+        "cover_letter": payload.get("cover_letter", ""),
+        "step_saved": step_saved,
+        "status": "Draft",
+        "notes": f"Saved at Step {step_saved}"
+    }
+
+    result = insert_career_application(app_data)
+    return {"success": True, "draft_id": result.get("data", {}).get("id"), "engine": result.get("engine")}
+
+@app.get("/api/careers/applications")
+def get_career_applications(
+    status_filter: Optional[str] = None,
+    search: Optional[str] = None,
+    position: Optional[str] = None
+):
+    result = fetch_career_applications(status_filter=status_filter, search=search, position=position)
+    return {
+        "success": True,
+        "applications": result.get("items", []),
+        "engine": result.get("engine", "mysql"),
+        "total": len(result.get("items", []))
+    }
+
+@app.patch("/api/careers/applications/{app_id}/status")
+def patch_career_status(app_id: int, payload: CareerStatusPayload, admin_user: Optional[str] = "admin"):
+    user_str = admin_user if isinstance(admin_user, str) else "admin"
+    success = update_application_status(app_id, payload.status)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to update application status")
+    
+    add_audit_log(user_str, "UPDATE_CAREER_STATUS", "Careers", f"Changed status of application #{app_id} to '{payload.status}'")
+    return {"success": True, "message": f"Application #{app_id} status updated to {payload.status}"}
+
+@app.patch("/api/careers/applications/{app_id}/notes")
+def patch_career_notes(app_id: int, payload: CareerNotesPayload, admin_user: Optional[str] = "admin"):
+    user_str = admin_user if isinstance(admin_user, str) else "admin"
+    success = update_application_notes(app_id, payload.notes)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to update notes")
+
+    add_audit_log(user_str, "UPDATE_CAREER_NOTES", "Careers", f"Updated recruiter notes for application #{app_id}")
+    return {"success": True, "message": f"Notes for application #{app_id} saved"}
+
+@app.delete("/api/careers/applications/{app_id}")
+def remove_career_application(app_id: int, admin_user: Optional[str] = "admin"):
+    user_str = admin_user if isinstance(admin_user, str) else "admin"
+    success = delete_career_application(app_id)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to delete application")
+
+    add_audit_log(user_str, "DELETE_CAREER_APPLICATION", "Careers", f"Deleted job application #{app_id}")
+    return {"success": True, "message": f"Job application #{app_id} deleted"}
+
+@app.get("/api/careers/applications/export")
+def export_career_applications_csv():
+    result = fetch_career_applications()
+    items = result.get("items", [])
+
+    output = []
+    headers = ["ID", "Full Name", "Email", "Phone", "Position", "Experience", "Notice Period", "Resume URL", "Status", "Notes", "Applied At"]
+    output.append(",".join(f'"{h}"' for h in headers))
+
+    for item in items:
+        row = [
+            str(item.get("id", "")),
+            str(item.get("full_name", "")).replace('"', '""'),
+            str(item.get("email", "")).replace('"', '""'),
+            str(item.get("phone", "")).replace('"', '""'),
+            str(item.get("position", "")).replace('"', '""'),
+            str(item.get("experience", "")).replace('"', '""'),
+            str(item.get("notice_period", "")).replace('"', '""'),
+            str(item.get("resume_url", "")).replace('"', '""'),
+            str(item.get("status", "")).replace('"', '""'),
+            str(item.get("notes", "")).replace('"', '""').replace('\n', ' '),
+            str(item.get("created_at", ""))
+        ]
+        output.append(",".join(f'"{val}"' for val in row))
+
+    csv_data = "\n".join(output)
+    return Response(
+        content=csv_data,
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": f"attachment; filename=hti_job_applications_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        }
+    )
 
 # =========================================================================
 # PROJECTS & INSTALLATIONS (Module 6)

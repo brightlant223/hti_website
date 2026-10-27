@@ -6,6 +6,7 @@ import AdminBlogsManager from './AdminBlogsManager';
 import AdminWebsiteContentManager from './AdminWebsiteContentManager';
 import AdminEnquiriesManager from './AdminEnquiriesManager';
 import AdminUsersSecurityManager from './AdminUsersSecurityManager';
+import AdminCareersManager from './AdminCareersManager';
 import AdminSidebar from './AdminSidebar';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
@@ -168,6 +169,8 @@ export default function AdminPanel({
   const [partners, setPartners] = useState([]);
   const [inquiries, setInquiries] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [careerApplications, setCareerApplications] = useState([]);
+  const [careerDbStatus, setCareerDbStatus] = useState(null);
   const [adminUsers, setAdminUsers] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [systemHealth, setSystemHealth] = useState(null);
@@ -438,6 +441,79 @@ export default function AdminPanel({
     }
   };
 
+  const fetchCareerApplications = async () => {
+    try {
+      const [appRes, dbRes] = await Promise.all([
+        fetch('/api/careers/applications'),
+        fetch('/api/careers/db-status')
+      ]);
+      if (appRes.ok) {
+        const data = await appRes.json();
+        setCareerApplications(data.applications || []);
+      }
+      if (dbRes.ok) {
+        const dbData = await dbRes.json();
+        setCareerDbStatus(dbData);
+      }
+      updateTimestamp();
+    } catch (err) {
+      console.error('Failed to fetch career applications or db status:', err);
+    }
+  };
+
+  const handleUpdateCareerStatus = async (appId, newStatus) => {
+    try {
+      const res = await fetch(`/api/careers/applications/${appId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (res.ok) {
+        setCareerApplications((prev) =>
+          prev.map((a) => (a.id === appId ? { ...a, status: newStatus } : a))
+        );
+        fetchUsersAndAudit();
+      }
+    } catch (err) {
+      console.error('Failed to update career status:', err);
+      throw err;
+    }
+  };
+
+  const handleSaveCareerNotes = async (appId, notes) => {
+    try {
+      const res = await fetch(`/api/careers/applications/${appId}/notes`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes })
+      });
+      if (res.ok) {
+        setCareerApplications((prev) =>
+          prev.map((a) => (a.id === appId ? { ...a, notes } : a))
+        );
+        fetchUsersAndAudit();
+      }
+    } catch (err) {
+      console.error('Failed to save career notes:', err);
+      throw err;
+    }
+  };
+
+  const handleDeleteCareerApplication = async (appId) => {
+    try {
+      const res = await fetch(`/api/careers/applications/${appId}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setCareerApplications((prev) => prev.filter((a) => a.id !== appId));
+        fetchUsersAndAudit();
+      }
+    } catch (err) {
+      console.error('Failed to delete career application:', err);
+      throw err;
+    }
+  };
+
   const refreshAllData = () => {
     fetchSystemHealth();
     fetchProducts();
@@ -445,6 +521,7 @@ export default function AdminPanel({
     fetchClientsAndPartners();
     fetchInquiries();
     fetchProjects();
+    fetchCareerApplications();
     fetchWebsiteContent();
     fetchUsersAndAudit();
     fetchSettingsAndBackups();
@@ -1738,6 +1815,7 @@ export default function AdminPanel({
           inquiries={inquiries}
           unansweredInquiries={unansweredInquiries}
           adminUsers={adminUsers}
+          careerApplications={careerApplications}
         />
 
         {/* MAIN WORKSPACE */}
@@ -2801,6 +2879,24 @@ export default function AdminPanel({
                 onSaveNotes={handleSaveInquiryNotes}
                 onExportCSV={handleExportInquiriesCSV}
                 onRefresh={fetchInquiries}
+                showFeedback={showFeedback}
+                currentUser={currentUser}
+              />
+            </div>
+          )}
+
+          {/* =========================================================================
+              MODULE 5B: CAREERS & TALENT ACQUISITION PIPELINE (MySQL / SQLite Dual-Engine)
+              ========================================================================= */}
+          {activeTab === 'careers' && (
+            <div className="admin-body-content" style={{ padding: 0 }}>
+              <AdminCareersManager
+                applications={careerApplications}
+                dbStatus={careerDbStatus}
+                onUpdateStatus={handleUpdateCareerStatus}
+                onSaveNotes={handleSaveCareerNotes}
+                onDelete={handleDeleteCareerApplication}
+                onRefresh={fetchCareerApplications}
                 showFeedback={showFeedback}
                 currentUser={currentUser}
               />

@@ -23,5 +23,17 @@ venv/
 .DS_Store
 Thumbs.db
 
+# Environment & Secrets (Never commit to Git)
+.env
+*.env
+backend/.env
+
+# Uploaded Files & Resumes
+backend/uploads/resumes/*
+!backend/uploads/resumes/.gitkeep
+frontend/public/uploads/resumes/*
+!frontend/public/uploads/resumes/.gitkeep
+
 # Scratch
 scratch/
+

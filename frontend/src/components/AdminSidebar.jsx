@@ -13,7 +13,8 @@ import {
   ChevronsLeft,
   ChevronsRight,
   ChevronRight,
-  LogOut
+  LogOut,
+  UserCheck
 } from 'lucide-react';
 
 export default function AdminSidebar({
@@ -29,7 +30,8 @@ export default function AdminSidebar({
   projects = [],
   inquiries = [],
   unansweredInquiries = [],
-  adminUsers = []
+  adminUsers = [],
+  careerApplications = []
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -38,6 +40,7 @@ export default function AdminSidebar({
   const newInquiriesCount = unansweredInquiries.length > 0
     ? unansweredInquiries.length
     : inquiries.filter(i => (i.status || '').toLowerCase() === 'new').length;
+  const newCareerCount = careerApplications.filter(a => (a.status || '').toLowerCase() === 'new').length;
 
   const avatarInitials = (currentUser || 'AD').slice(0, 2).toUpperCase();
 
@@ -123,6 +126,16 @@ export default function AdminSidebar({
           badge: newInquiriesCount > 0
             ? { text: `${newInquiriesCount} New`, variant: 'red-solid' }
             : { text: inquiries.length || 4, variant: 'red-solid' }
+        },
+        {
+          id: 'careers',
+          label: 'Careers & Talent',
+          subtitle: 'Candidate & MySQL pipeline',
+          icon: UserCheck,
+          accent: 'blue',
+          badge: newCareerCount > 0
+            ? { text: `${newCareerCount} New`, variant: 'red-solid' }
+            : { text: careerApplications.length || 0, variant: 'pale-blue' }
         },
         {
           id: 'users',
