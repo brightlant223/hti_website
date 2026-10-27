@@ -1386,6 +1386,39 @@ export default function AdminPanel({
     return { mb };
   }, [systemHealth?.database]);
 
+  // Turnkey projects summary statistics (placed above ALL conditional returns to strictly obey Rules of Hooks)
+  const projectMetrics = useMemo(() => {
+    const list = Array.isArray(projects) ? projects : [];
+    const total = list.length;
+    const published = list.filter(p => Boolean(p && p.is_published)).length;
+    const drafts = Math.max(0, total - published);
+    const approved = list.filter(p => Boolean(p && p.client_approved)).length;
+    return { total, published, drafts, approved };
+  }, [projects]);
+
+  // Turnkey projects industry filter options (placed above ALL conditional returns to strictly obey Rules of Hooks)
+  const projectIndustryOptions = useMemo(() => {
+    const base = [
+      { key: 'All', label: 'All Industries' },
+      { key: 'Pharmaceutical', label: 'Pharmaceutical' },
+      { key: 'Life Sciences', label: 'Life Sciences & R&D' },
+      { key: 'Chemical', label: 'Chemical & Industrial' },
+      { key: 'Academic', label: 'Academic & Research' }
+    ];
+    const list = Array.isArray(projects) ? projects : [];
+    const custom = [];
+    list.forEach(p => {
+      if (!p || !p.industry) return;
+      const ind = String(p.industry).trim();
+      if (!ind) return;
+      const matchesBase = base.some(b => b.key !== 'All' && ind.toLowerCase().includes(b.key.toLowerCase()));
+      if (!matchesBase && !custom.includes(ind)) {
+        custom.push(ind);
+      }
+    });
+    return [...base, ...custom.map(c => ({ key: c, label: c }))];
+  }, [projects]);
+
   const getAuditCategoryInfo = (module = '') => {
     const m = String(module).toLowerCase();
     if (m.includes('security') || m.includes('auth') || m.includes('user')) {
@@ -1478,40 +1511,7 @@ export default function AdminPanel({
     return matchesSearch && matchesInd;
   });
 
-  // Summary statistics strip computed purely from existing projects array
-  const projectMetrics = useMemo(() => {
-    const total = projects.length;
-    const published = projects.filter(p => p.is_published).length;
-    const drafts = total - published;
-    const approved = projects.filter(p => p.client_approved).length;
-    return { total, published, drafts, approved };
-  }, [projects]);
-
-  // Industry options with dynamic counts for pills and filter selector
-  const projectIndustryOptions = useMemo(() => {
-    const base = [
-      { key: 'All', label: 'All Industries' },
-      { key: 'Pharmaceutical', label: 'Pharmaceutical' },
-      { key: 'Life Sciences', label: 'Life Sciences & R&D' },
-      { key: 'Chemical', label: 'Chemical & Industrial' },
-      { key: 'Academic', label: 'Academic & Research' }
-    ];
-    const custom = [];
-    projects.forEach(p => {
-      if (!p.industry) return;
-      const ind = p.industry.trim();
-      const matchesBase = base.some(b => b.key !== 'All' && ind.toLowerCase().includes(b.key.toLowerCase()));
-      if (!matchesBase && !custom.includes(ind)) {
-        custom.push(ind);
-      }
-    });
-    return [...base, ...custom.map(c => ({ key: c, label: c }))];
-  }, [projects]);
-
   const unansweredInquiries = inquiries.filter(i => (i.status || '').toLowerCase() === 'new');
-
-  // If panel is not open, do not render anything into DOM
-  if (!isOpen) return null;
 
   // =========================================================================
   // VIEW 1: ULTRA-PREMIUM LOGIN SCREEN (Reference-Matched Modal Popup)
