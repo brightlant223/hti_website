@@ -1826,16 +1826,6 @@ export default function AdminPanel({
               <span>Users & Security</span>
               <span className="sidebar-counter adm-sidebar-counter">{adminUsers.length}</span>
             </button>
-
-            {/* 9. Settings & System Health */}
-            <button
-              className={`sidebar-nav-item adm-sidebar-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-              onClick={() => setActiveTab('settings')}
-            >
-              <Settings size={17} />
-              <span>System Health</span>
-              <span className="sidebar-counter adm-sidebar-counter" style={{ color: '#10b981' }}>Live</span>
-            </button>
           </nav>
 
           {/* Sidebar Telemetry Box (Real Measured Values) */}
