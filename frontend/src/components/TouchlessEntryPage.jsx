@@ -661,6 +661,245 @@ export default function TouchlessEntryPage({
 
       {/* 4. HOW IT WORKS & IDEAL FOR MULTIPLE APPLICATIONS */}
       <section className="touchless-workflow-app-section" id="service-workflow-section">
+        {/* Responsive Styling for Mobile & Tablet - Scoped strictly to #service-workflow-section */}
+        <style>{`
+          /* Tablet (768px - 1024px) */
+          @media (min-width: 768px) and (max-width: 1024px) {
+            #service-workflow-section .workflow-and-app-grid {
+              grid-template-columns: 1.15fr 1fr;
+              gap: 24px;
+            }
+            #service-workflow-section .workflow-steps-horizontal {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 12px;
+            }
+            #service-workflow-section .step-arrow-connector {
+              display: none;
+            }
+            #service-workflow-section .application-tiles-grid {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 12px;
+            }
+            #service-workflow-section .app-tile-label {
+              white-space: normal;
+              line-height: 1.3;
+              min-height: 38px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 6px 8px;
+            }
+          }
+
+          /* Mobile Stacked Layout (below 768px) */
+          @media (max-width: 767px) {
+            #service-workflow-section {
+              padding: 36px 0;
+            }
+            #service-workflow-section .touchless-container {
+              padding-left: 16px;
+              padding-right: 16px;
+            }
+            #service-workflow-section .workflow-and-app-grid {
+              display: flex;
+              flex-direction: column;
+              gap: 36px;
+              width: 100%;
+            }
+            #service-workflow-section .workflow-block,
+            #service-workflow-section .applications-block {
+              width: 100%;
+              min-width: 0;
+            }
+            #service-workflow-section .section-subheading-wrap {
+              margin-bottom: 18px;
+            }
+            #service-workflow-section .section-title {
+              font-size: 20px;
+              line-height: 1.3;
+            }
+
+            /* 1. How It Works Process Cards */
+            #service-workflow-section .workflow-steps-horizontal {
+              display: flex;
+              flex-direction: column;
+              gap: 14px;
+              width: 100%;
+              margin-bottom: 16px;
+            }
+            #service-workflow-section .workflow-step-card {
+              width: 100%;
+              box-sizing: border-box;
+              padding: 18px 16px 16px 16px;
+              text-align: center;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              border-radius: 12px;
+              position: relative;
+              min-height: unset;
+              height: auto;
+            }
+            #service-workflow-section .step-num-badge {
+              position: absolute;
+              top: -8px;
+              left: 14px;
+              width: 22px;
+              height: 22px;
+              font-size: 11px;
+              z-index: 2;
+            }
+            #service-workflow-section .step-icon-wrap {
+              width: 48px;
+              height: 48px;
+              margin: 2px auto 10px auto;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            #service-workflow-section .step-name {
+              font-size: 15px;
+              font-weight: 700;
+              line-height: 1.35;
+              margin: 0 0 6px 0;
+              color: #0f172a;
+              white-space: normal;
+              word-break: break-word;
+            }
+            #service-workflow-section .step-desc {
+              font-size: 12.5px;
+              line-height: 1.45;
+              color: #64748b;
+              margin: 0;
+              white-space: normal;
+              word-break: break-word;
+              max-width: 100%;
+            }
+            #service-workflow-section .step-arrow-connector {
+              display: none;
+            }
+            #service-workflow-section .step-active-callout {
+              padding: 14px 16px;
+              border-radius: 0 8px 8px 0;
+              margin-top: 14px;
+            }
+            #service-workflow-section .callout-indicator {
+              font-size: 13px;
+              font-weight: 700;
+              margin-bottom: 6px;
+              gap: 6px;
+              flex-wrap: wrap;
+            }
+            #service-workflow-section .step-active-callout p {
+              font-size: 13px;
+              line-height: 1.5;
+              word-break: break-word;
+            }
+
+            /* 2. Ideal For Multiple Applications Gallery */
+            #service-workflow-section .application-tiles-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 12px;
+              width: 100%;
+            }
+            #service-workflow-section .app-tile {
+              display: flex;
+              flex-direction: column;
+              border-radius: 10px;
+              overflow: hidden;
+              background: #ffffff;
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+              width: 100%;
+              min-width: 0;
+              box-sizing: border-box;
+            }
+            #service-workflow-section .app-tile-media {
+              width: 100%;
+              height: 110px;
+              overflow: hidden;
+              background-color: #0f172a;
+              position: relative;
+            }
+            #service-workflow-section .app-tile-img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              display: block;
+            }
+            #service-workflow-section .app-tile-label {
+              padding: 10px 8px;
+              font-size: 12px;
+              font-weight: 700;
+              color: #1e293b;
+              text-align: center;
+              white-space: normal;
+              overflow: visible;
+              text-overflow: clip;
+              word-break: break-word;
+              min-height: 40px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              line-height: 1.35;
+              box-sizing: border-box;
+            }
+          }
+
+          /* Small Mobile (below 400px) */
+          @media (max-width: 400px) {
+            #service-workflow-section {
+              padding: 28px 0;
+            }
+            #service-workflow-section .touchless-container {
+              padding-left: 12px;
+              padding-right: 12px;
+            }
+            #service-workflow-section .workflow-and-app-grid {
+              gap: 28px;
+            }
+            #service-workflow-section .section-title {
+              font-size: 18px;
+            }
+            #service-workflow-section .workflow-step-card {
+              padding: 14px 12px 12px 12px;
+            }
+            #service-workflow-section .step-icon-wrap {
+              width: 42px;
+              height: 42px;
+              margin-bottom: 8px;
+            }
+            #service-workflow-section .step-name {
+              font-size: 14px;
+            }
+            #service-workflow-section .step-desc {
+              font-size: 12px;
+              line-height: 1.4;
+            }
+            #service-workflow-section .application-tiles-grid {
+              gap: 8px;
+            }
+            #service-workflow-section .app-tile-media {
+              height: 95px;
+            }
+            #service-workflow-section .app-tile-label {
+              font-size: 11px;
+              padding: 8px 4px;
+              min-height: 36px;
+            }
+          }
+
+          /* Extremely Narrow Mobile (below 320px) */
+          @media (max-width: 320px) {
+            #service-workflow-section .application-tiles-grid {
+              grid-template-columns: 1fr;
+            }
+            #service-workflow-section .app-tile-media {
+              height: 130px;
+            }
+          }
+        `}</style>
+
         <div className="touchless-container">
           <div className="workflow-and-app-grid">
             {/* Left: How It Works ? */}
