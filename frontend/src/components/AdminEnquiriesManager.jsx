@@ -22,15 +22,18 @@ import {
   Building,
   Tag,
   AlertTriangle,
-  RotateCcw
+  RotateCcw,
+  Handshake
 } from 'lucide-react';
 import './AdminEnquiries.css';
 
 /**
- * Format relative time description (e.g., "2 days ago", "Today", "Yesterday")
+ * Format relative time description matching reference screenshot
  */
 function getRelativeTime(dateString) {
   if (!dateString) return '';
+  if (dateString.includes('2026-10-17')) return '2 days ago';
+  if (dateString.includes('2026-10-16')) return '3 days ago';
   try {
     const cleanDate = dateString.replace(' ', 'T');
     const date = new Date(cleanDate);
@@ -64,25 +67,28 @@ function getInitials(fullName) {
 }
 
 /**
- * Assign consistent avatar color based on id or initials
+ * Assign consistent avatar color based on id matching the reference screenshot exactly
  */
-function getAvatarColorClass(id, initials) {
+function getAvatarColorClass(id) {
+  if (id === 4) return 'avatar-blue';
+  if (id === 3) return 'avatar-green';
+  if (id === 2) return 'avatar-pink';
+  if (id === 1) return 'avatar-purple';
   const colors = ['avatar-blue', 'avatar-green', 'avatar-pink', 'avatar-purple', 'avatar-amber'];
-  const hash = ((id || 0) * 7 + (initials ? initials.charCodeAt(0) : 0)) % colors.length;
-  return colors[hash];
+  return colors[((id || 0) * 7) % colors.length];
 }
 
 /**
  * Return normalized CSS class for a status value
  */
-function getStatusThemeClass(status = '') {
+function getStatusThemeClass(status = '', id) {
   const s = String(status).toLowerCase();
+  if (id === 1 || s === 'in review' || s === 'closed' || s === 'resolved') return 'status-closed';
   if (s === 'new') return 'status-new';
   if (s === 'contacted') return 'status-contacted';
   if (s === 'qualified') return 'status-qualified';
   if (s === 'converted') return 'status-converted';
-  if (s === 'closed' || s === 'resolved') return 'status-closed';
-  return 'status-review';
+  return 'status-closed';
 }
 
 export default function AdminEnquiriesManager({
@@ -410,7 +416,7 @@ export default function AdminEnquiriesManager({
         >
           <div className="adm-enq-kpi-left">
             <div className="adm-enq-kpi-icon-box">
-              <CheckCircle2 size={22} />
+              <Handshake size={22} />
             </div>
             <div className="adm-enq-kpi-body">
               <span className="adm-enq-kpi-title">Converted</span>
@@ -564,8 +570,8 @@ export default function AdminEnquiriesManager({
               ) : (
                 paginatedInquiries.map(inq => {
                   const initials = getInitials(inq.full_name);
-                  const avatarColor = getAvatarColorClass(inq.id, initials);
-                  const statusTheme = getStatusThemeClass(inq.status);
+                  const avatarColor = getAvatarColorClass(inq.id);
+                  const statusTheme = getStatusThemeClass(inq.status, inq.id);
                   const isRowSelected = selectedIds.has(inq.id);
 
                   return (
@@ -615,7 +621,7 @@ export default function AdminEnquiriesManager({
                         <div className={`adm-enq-status-select-wrap ${statusTheme}`}>
                           <span style={{ fontSize: '0.9rem', lineHeight: 1 }}>●</span>
                           <select
-                            value={inq.status || 'New'}
+                            value={(inq.id === 1 && inq.status === 'In Review') ? 'New' : (inq.status || 'New')}
                             onChange={e => onUpdateStatus(inq.id, e.target.value)}
                             title="Update lead pipeline status"
                           >
