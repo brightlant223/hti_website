@@ -315,7 +315,7 @@ export default function App() {
     total_partners: 15,
     total_clients: 100,
     total_inquiries: 1,
-    total_blogs: 3
+    total_blogs: 6
   });
   const [partners, setPartners] = useState([]);
   const [clients, setClients] = useState([]);

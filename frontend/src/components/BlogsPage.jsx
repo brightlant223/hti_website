@@ -210,33 +210,38 @@ Dynamic pass boxes equipped with HEPA filtration, magnehelic differential pressu
     }
   ];
 
-  // Merge backend blogs if available without dropping defaults
+  // Map backend blogs if available, using defaultArticles metadata for visual enhancements
   const articles = useMemo(() => {
     if (blogs && blogs.length > 0) {
-      const apiArticles = blogs.map((b, idx) => ({
-        id: b.id || `api-${idx}`,
-        slug: b.slug || `article-${b.id || idx}`,
-        title: b.title,
-        category: b.category || 'Cleanroom Engineering',
-        categorySlug: (b.category || '').toLowerCase().includes('clean') ? 'cleanroom' :
-                      (b.category || '').toLowerCase().includes('fire') ? 'fire' :
-                      (b.category || '').toLowerCase().includes('hyg') ? 'hygiene' :
-                      (b.category || '').toLowerCase().includes('auto') ? 'automation' : 'cleanroom',
-        author: b.author || 'HTI Technical Staff',
-        authorRole: b.authorRole || 'Engineering Division',
-        readTime: b.readTime || `${Math.max(3, Math.ceil((b.content?.length || 500) / 400))} min read`,
-        date: b.date || 'Recent',
-        badge: b.badge || null,
-        image: b.image || defaultArticles[idx % defaultArticles.length].image,
-        icon: FileText,
-        excerpt: b.excerpt || b.content?.slice(0, 160) + '...',
-        takeaways: b.takeaways || [],
-        content: b.content || b.excerpt || '',
-        tags: b.tags || ['HTI Engineering']
-      }));
-      const existingTitles = new Set(apiArticles.map(a => a.title.toLowerCase().trim()));
-      const remainingDefaults = defaultArticles.filter(d => !existingTitles.has(d.title.toLowerCase().trim()));
-      return [...apiArticles, ...remainingDefaults];
+      return blogs.map((b, idx) => {
+        const defaultMatch = defaultArticles.find(
+          d => d.slug === b.slug || d.title.toLowerCase().trim() === (b.title || '').toLowerCase().trim()
+        );
+        return {
+          id: b.id || `api-${idx}`,
+          slug: b.slug || `article-${b.id || idx}`,
+          title: b.title,
+          category: b.category || defaultMatch?.category || 'Cleanroom Engineering',
+          categorySlug: (b.category || defaultMatch?.category || '').toLowerCase().includes('clean') ? 'cleanroom' :
+                        (b.category || defaultMatch?.category || '').toLowerCase().includes('fire') ? 'fire' :
+                        (b.category || defaultMatch?.category || '').toLowerCase().includes('hyg') ? 'hygiene' :
+                        (b.category || defaultMatch?.category || '').toLowerCase().includes('auto') ? 'automation' : 'cleanroom',
+          author: b.author || defaultMatch?.author || 'HTI Technical Staff',
+          authorRole: b.authorRole || defaultMatch?.authorRole || 'Engineering Division',
+          readTime: b.read_time || b.readTime || defaultMatch?.readTime || `${Math.max(3, Math.ceil((b.content?.length || 500) / 400))} min read`,
+          date: b.date || defaultMatch?.date || (b.created_at ? new Date(b.created_at.replace(' ', 'T')).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Recent'),
+          badge: b.badge || defaultMatch?.badge || null,
+          image: b.image_url || b.image || defaultMatch?.image || defaultArticles[idx % defaultArticles.length]?.image || '/case-studies/case-cleanroom.jpg',
+          icon: b.icon || defaultMatch?.icon || Layers,
+          excerpt: b.excerpt || defaultMatch?.excerpt || b.content?.slice(0, 160) + '...',
+          takeaways: b.takeaways || defaultMatch?.takeaways || [
+            'High precision engineering standards compliant with ISO and GMP requirements.',
+            'Fail-safe hardware logic integrated with facility BMS and fire alarm interfaces.'
+          ],
+          content: b.content || defaultMatch?.content || b.excerpt || '',
+          tags: Array.isArray(b.tags) ? b.tags : (typeof b.tags === 'string' && b.tags ? b.tags.split(',').map(t => t.trim()) : (defaultMatch?.tags || ['HTI Engineering']))
+        };
+      });
     }
     return defaultArticles;
   }, [blogs]);

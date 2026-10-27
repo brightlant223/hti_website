@@ -12,6 +12,7 @@ const PRESET_CATEGORIES = [
   'Hygiene & Energy Efficiency',
   'Fire & Life Safety',
   'Cleanroom Engineering',
+  'Entrance Automation',
   'Industrial Access Automation',
   'Surveillance & Security Systems'
 ];
@@ -361,7 +362,7 @@ export default function AdminBlogsManager({
             return (
               <button
                 key={cat}
-                className={`adm-category-chip ${cls} ${isActive ? 'active' : ''}`}
+                className={`adm-category-chip ${cls} ${cls === 'default' ? 'default-cat' : ''} ${isActive ? 'active' : ''}`}
                 onClick={() => setSelectedCategory(isActive ? 'All' : cat)}
               >
                 {cat} ({count})

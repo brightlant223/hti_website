@@ -1190,49 +1190,97 @@ def seed_db():
             "In Review"
         ))
 
-    # Seed initial blogs if empty
-    cursor.execute("SELECT COUNT(*) as count FROM blogs")
-    if cursor.fetchone()["count"] == 0:
-        blogs = [
-            (
-                "optimizing-cleanroom-differential-pressure",
-                "Optimizing Cleanroom Differential Pressure with Multi-Door Interlock Systems",
-                "Cleanroom Engineering",
-                "Er. H. Mishra, Lead Systems Engineer",
-                "6 min read",
-                "Understanding the role of 2-to-12 door electrical interlocking and programmable delay timers in maintaining air classification under USFDA and ISO 14644-1 guidelines.",
-                "In sterile pharmaceutical manufacturing, preventing cross-contamination between adjacent processing blocks is the primary objective of facility engineering. When personnel move between grey areas and Grade A/B cleanrooms, opening a door creates an instantaneous pressure drop. Without an automated interlock controller, simultaneous opening of adjoining airlock doors causes turbulent particulate ingress.\n\nHTI's multi-door interlocking architecture incorporates programmable delays between door activations. This engineered pause gives the HVAC air handling unit (AHU) the requisite 3 to 5 seconds to re-establish the critical differential pressure barrier (+15 to +30 Pascals) before allowing the secondary door strike to release.\n\nFurthermore, for hazardous solvent storage areas, intrinsically safe and flameproof (Ex-d) door stations provide explosion protection while maintaining full integration with emergency evacuation override switches.",
-                "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
-                1
-            ),
-            (
-                "turnkey-fire-hydrant-nbc-compliance",
-                "Turnkey Fire Hydrant & FAS Compliance under National Building Code (NBC 2016)",
-                "Fire & Life Safety",
-                "HTI Technical Projects Directorate",
-                "5 min read",
-                "Key technical considerations for designing, installing, and commissioning high-pressure fire hydrant piping networks and addressable fire panels for industrial plants.",
-                "A robust fire protection infrastructure is non-negotiable for industrial warehouses, corporate campuses, and pharmaceutical API synthesis blocks. Under Part 4 of NBC 2016, industrial occupancies require a dedicated fire water storage capacity coupled with electric main, diesel standby, and pressure-sustaining jockey pumps capable of delivering 7 to 14 kg/cm² pressure.\n\nHTI provides turnkey execution—from hydraulic pipe sizing calculations, installation of ISI-certified landing valves and canvas hose reels, to linking addressable fire alarm control panels (FACP) with automatic AHU trip dampers and emergency door releases.\n\nIntegrating the fire alarm system directly with door interlocks ensures that upon a validated smoke or heat detector trip, all electromagnetic access locks immediately drop power to enable unhindered personnel evacuation.",
-                "https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=800&q=80",
-                1
-            ),
-            (
-                "thermo-zone-air-curtains-energy-savings",
-                "Thermo-Zone Air Curtains: Slashing HVAC Energy Losses in Pharmaceutical Facilities",
-                "Hygiene & Energy Efficiency",
-                "HTI Clean Environment Division",
-                "4 min read",
-                "How calibrated laminar air curtains prevent cold air escape, block flying insect ingress, and reduce corporate energy expenditures by up to 35%.",
-                "Loading bays, staff entrances, and packaging corridors experience hundreds of door cycles daily. In air-conditioned and humidity-regulated spaces, each door opening allows chilled air to cascade out while humid, dusty outside air rushes in.\n\nHTI's industrial air curtains utilize precision Thermo-Zone aerodynamic nozzles with balanced centrifugal blowers generating an air velocity of 18 to 24 m/sec. This creates an invisible, impermeable pressure curtain that stops flying insects, outdoor particulate matter, and ambient summer heat from entering.\n\nAvailable in flameproof configurations for chemical atmospheres and whisper-quiet designs for corporate lobbies, air curtains typically pay for themselves within 8 to 14 months through HVAC electricity reduction alone.",
-                "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
-                1
-            )
-        ]
-        for b in blogs:
+    # Seed canonical technical articles if missing
+    blogs = [
+        (
+            "optimizing-cleanroom-differential-pressure",
+            "Optimizing Cleanroom Differential Pressure with Multi-Door Interlock Systems",
+            "Cleanroom Engineering",
+            "Er. H. Mishra, Lead Systems Engineer",
+            "6 min read",
+            "Understanding the role of 2-to-12 door electrical interlocking, air cascade pressure balancing, and programmable delay timers in maintaining air classification under USFDA and ISO 14644-1 guidelines.",
+            "In sterile pharmaceutical manufacturing, preventing cross-contamination between adjacent processing blocks is the primary objective of facility engineering. When personnel move between grey areas and Grade A/B cleanrooms, opening a door creates an instantaneous pressure drop. Without an automated interlock controller, simultaneous opening of adjoining airlock doors causes turbulent particulate ingress.\n\nHTI's multi-door interlocking architecture incorporates programmable delays between door activations. This engineered pause gives the HVAC air handling unit (AHU) the requisite 3 to 5 seconds to re-establish the critical differential pressure barrier (+15 to +30 Pascals) before allowing the secondary door strike to release.\n\nFurthermore, for hazardous solvent storage areas, intrinsically safe and flameproof (Ex-d) door stations provide explosion protection while maintaining full integration with emergency evacuation override switches. In the event of a fire alarm trigger, all locks release immediately to enable unhindered egress.\n\nKey Engineering Formula:\n• ΔP = (Q / (Cd × A))² × (ρ / 2)\nWhere Q is air leakage rate through door gaps, Cd is discharge coefficient, A is crack perimeter area, and ρ is air density. Calibrated door perimeter silicone seals combined with HTI interlock synchronization reduce unintentional air loss by over 74%.",
+            "/case-studies/case-cleanroom.jpg",
+            1,
+            "USFDA Compliance, ISO 14644-1, Differential Pressure, Flameproof Ex-d"
+        ),
+        (
+            "turnkey-fire-hydrant-nbc-compliance",
+            "Turnkey Fire Hydrant & FAS Compliance under National Building Code (NBC 2016)",
+            "Fire & Life Safety",
+            "HTI Technical Projects Directorate",
+            "5 min read",
+            "Key technical considerations for designing, installing, and commissioning high-pressure fire hydrant piping networks and addressable fire panels for industrial plants.",
+            "A robust fire protection infrastructure is non-negotiable for industrial warehouses, corporate campuses, and pharmaceutical API synthesis blocks. Under Part 4 of NBC 2016, industrial occupancies require a dedicated fire water storage capacity coupled with electric main, diesel standby, and pressure-sustaining jockey pumps capable of delivering 7 to 14 kg/cm² pressure.\n\nHTI provides turnkey execution—from hydraulic pipe sizing calculations, installation of ISI-certified landing valves and canvas hose reels, to linking addressable fire alarm control panels (FACP) with automatic AHU trip dampers and emergency door releases.\n\nIntegrating the fire alarm system directly with door interlocks ensures that upon a validated smoke or heat detector trip, all electromagnetic access locks immediately drop power to enable unhindered personnel evacuation without relying on manual keys.\n\nPump Room Sizing Guidelines:\n• Main Electric Pump: 2850 LPM capacity @ 7.0 kg/cm² head (IS 1520 compliance)\n• Diesel Standby Engine: Direct mechanical drive with automatic 12V cranking sequence upon electric power phase failure.\n• Jockey Pump: 180 LPM @ 7.5 kg/cm² to maintain static line pressurization without running heavy main engines for trivial micro-leaks.",
+            "/case-studies/case-fire-hydrant.jpg",
+            1,
+            "NBC 2016, Fire Hydrant, Addressable Fire Alarm, Industrial Safety"
+        ),
+        (
+            "thermo-zone-air-curtains-energy-savings",
+            "Thermo-Zone Air Curtains: Slashing HVAC Energy Losses in Pharmaceutical Facilities",
+            "Hygiene & Energy Efficiency",
+            "HTI Clean Environment Division",
+            "4 min read",
+            "How calibrated laminar air curtains prevent cold air escape, block flying insect ingress, and reduce corporate energy expenditures by up to 35%.",
+            "Loading bays, staff entrances, and packaging corridors experience hundreds of door cycles daily. In air-conditioned and humidity-regulated spaces, each door opening allows chilled air to cascade out while humid, dusty outside air rushes in.\n\nHTI's industrial air curtains utilize precision Thermo-Zone aerodynamic nozzles with balanced centrifugal blowers generating an air velocity of 18 to 24 m/sec. This creates an invisible, impermeable pressure curtain that stops flying insects, outdoor particulate matter, and ambient summer heat from entering.\n\nAvailable in flameproof configurations for chemical atmospheres and whisper-quiet designs for corporate lobbies, air curtains typically pay for themselves within 8 to 14 months through HVAC electricity reduction alone.\n\nAerodynamic Discharge Geometry:\nThe air jet angle is calibrated at 15° outward tilt relative to the door opening plane. This angled jet deflects external headwind pressure vectors (up to 12 km/h ambient gusts) without entraining airborne floor dust into clean production rooms.",
+            "/case-studies/case-air-curtain.jpg",
+            1,
+            "Energy Efficiency, HVAC Optimization, Cleanroom Hygiene, Insect Barrier"
+        ),
+        (
+            "ai-video-analytics-boom-barriers-logistics",
+            "AI Video Analytics & Dual-Loop Boom Barriers: Securing Industrial Gate Corridors",
+            "Entrance Automation",
+            "HTI Automation Engineering Team",
+            "5 min read",
+            "Integration of automatic number plate recognition (ANPR), radar anti-tailgating sensors, and brushless DC boom barriers for high-security industrial gate corridors.",
+            "Modern multi-acre logistics hubs and manufacturing plants process upwards of 2,000 heavy commercial vehicles per shift. Manual guard inspection at entry gates creates vehicle queuing backlogs extending onto public highways.\n\nHTI deploys high-speed BLDC boom barrier systems paired with AI ANPR cameras capable of reading Indian state HSRP number plates at 98.4% accuracy even under torrential rain or headlight glare.\n\nSafety is paramount: HTI utilizes dual inductive loops embedded in concrete paired with a 24 GHz microwave radar sensor. Even if a vehicle stops directly under the descending boom arm, the anti-smash algorithm halts descent and auto-reverses the boom within 12 milliseconds, eliminating vehicle damage liability.",
+            "/case-studies/case-boom-barrier.jpg",
+            1,
+            "ANPR Cameras, BLDC Motors, Anti-Tailgating, Logistics Automation"
+        ),
+        (
+            "ss304-shoe-polishers-mist-air-showers",
+            "Static Dissipative SS304 Shoe Polishers & Mist Air Showers in Sterile Pharma Production",
+            "Hygiene & Energy Efficiency",
+            "HTI Cleanroom Solutions Directorate",
+            "4 min read",
+            "Zero-particulate transfer in personnel change rooms (PCR) using electro-polished SS304 motorized shoe polishers and HEPA mist air shower tunnels.",
+            "Over 80% of foreign contaminants in cleanrooms enter via the soles of personnel footwear. Traditional sticky mats quickly saturate after 10 to 15 footprints, losing adhesive capture efficacy and generating recurring consumable waste.\n\nHTI's SS304 Heavy-Duty Motorized Shoe Polishers utilize dual infrared optical sensors that trigger automatically when a cleanroom operative places their boot in the chamber. Counter-rotating antistatic nylon brushes scrub both sides and soles simultaneously, while an integrated vacuum extraction drawer traps debris inside a sealed HEPA chamber.\n\nConstructed without exposed screws or crevices, our hygiene units satisfy both USFDA cGMP and EU-GMP Annex 1 hygiene sanitation criteria.",
+            "/case-studies/case-ss304-mist.jpg",
+            1,
+            "cGMP Annex 1, SS304 Hygiene, Shoe Polishers, Zero-Particulate"
+        ),
+        (
+            "air-shower-pass-box-contamination-control",
+            "Air Shower & Pass Box Integration for Contamination Control",
+            "Cleanroom Engineering",
+            "HTI Cleanroom Validation Cell",
+            "6 min read",
+            "Design and operational best practices for air showers, pass boxes, and personnel material flow in Grade B/C/D cleanrooms to minimize particulate transfer.",
+            "In pharmaceutical manufacturing, semiconductor fabrication, and biotechnology laboratories, personnel and materials entering critical areas represent the largest source of particulate contamination. Air showers and pass boxes serve as essential engineering controls at the boundary between different cleanliness classifications.\n\nHTI air showers utilize adjustable stainless steel nozzles delivering HEPA-filtered air at velocities exceeding 25 m/s. This scrub action dislodges surface particulates from cleanroom garments, which are then captured by pre-filters and high-efficiency HEPA H14 filters recirculated through negative-pressure plenums.\n\nDynamic pass boxes equipped with HEPA filtration, magnehelic differential pressure gauges, and electronic door interlocking ensure that cleanroom grade classifications remain undisturbed during raw material and sampling transfer. Integrated UV-C germicidal lamps automatically cycle between door access events to maintain sterile contact surfaces.",
+            "/hero-cleanroom-interlock-chamber.jpg",
+            1,
+            "Cleanroom Airlocks, Pass Box Systems, HEPA Filtration, ISO 14644-1"
+        )
+    ]
+    for b in blogs:
+        cursor.execute("SELECT id, image_url, tags FROM blogs WHERE slug = ?", (b[0],))
+        existing = cursor.fetchone()
+        if not existing:
             cursor.execute("""
-            INSERT INTO blogs (slug, title, category, author, read_time, excerpt, content, image_url, is_published)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO blogs (slug, title, category, author, read_time, excerpt, content, image_url, is_published, tags)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, b)
+        else:
+            # Sync local image and tags if empty or using external unsplash fallback
+            curr_img = existing["image_url"] or ""
+            curr_tags = existing["tags"] or ""
+            if not curr_img or "unsplash.com" in curr_img:
+                cursor.execute("UPDATE blogs SET image_url = ? WHERE id = ?", (b[7], existing["id"]))
+            if not curr_tags and b[9]:
+                cursor.execute("UPDATE blogs SET tags = ? WHERE id = ?", (b[9], existing["id"]))
 
     # Admin Users (Module 8: Admin Users & Roles)
     cursor.execute("SELECT COUNT(*) as count FROM admin_users")
