@@ -4,6 +4,8 @@ import './AdminClientsPartners.css';
 import AdminProductsManager from './AdminProductsManager';
 import AdminBlogsManager from './AdminBlogsManager';
 import AdminWebsiteContentManager from './AdminWebsiteContentManager';
+import AdminEnquiriesManager from './AdminEnquiriesManager';
+import AdminUsersSecurityManager from './AdminUsersSecurityManager';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
   FileText, Package, MessageSquare, Search, AlertCircle,
@@ -373,8 +375,7 @@ export default function AdminPanel({
 
   const fetchInquiries = async () => {
     try {
-      const url = inquiryStatusFilter === 'All' ? '/api/inquiries' : `/api/inquiries?status_filter=${encodeURIComponent(inquiryStatusFilter)}`;
-      const res = await fetch(url);
+      const res = await fetch('/api/inquiries');
       if (res.ok) {
         const data = await res.json();
         setInquiries(data);

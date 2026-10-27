@@ -1,0 +1,1251 @@
+/* ==========================================================================
+   HTI CONTROL ADMIN PANEL — MODULE 8: USERS & SECURITY
+   SECURITY COMMAND CENTER — PREMIUM ENTERPRISE LIGHT THEME
+   Matches reference screenshot layout, colors, typography, cards, table & timeline
+   ========================================================================== */
+
+:root {
+  --hti-blue: #0875F9;
+  --hti-blue-hover: #0660d4;
+  --hti-navy: #10264F;
+  --hti-page-bg: #F5F9FE;
+  --hti-card-bg: #FFFFFF;
+  --hti-border: #DCE7F5;
+  --hti-muted: #607695;
+  --hti-subtle: #8FA2BD;
+  --hti-green: #10B981;
+  --hti-red: #F04455;
+  --hti-amber: #F59E0B;
+  --hti-purple: #8B5CF6;
+  --hti-slate: #475569;
+}
+
+.adm-sec-page {
+  width: 100%;
+  max-width: 100%;
+  background: var(--hti-page-bg);
+  min-height: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: var(--hti-navy);
+  padding: 0 0 40px 0;
+}
+
+/* --------------------------------------------------------------------------
+   1. TWO-COLUMN MAIN LAYOUT (~70% LEFT / ~30% RIGHT)
+   -------------------------------------------------------------------------- */
+.adm-sec-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
+}
+
+.adm-sec-col-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.adm-sec-col-side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. SECURITY OVERVIEW BANNER (DARK NAVY TO BLUE GRADIENT)
+   -------------------------------------------------------------------------- */
+.adm-sec-banner {
+  background: linear-gradient(135deg, #0d2248 0%, #0c3374 52%, #0875f9 100%);
+  border-radius: 16px;
+  padding: 24px 28px;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 4px 20px rgba(13, 34, 72, 0.12);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.adm-sec-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.adm-sec-banner-shield-box {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  background: rgba(8, 117, 249, 0.35);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(8, 117, 249, 0.45);
+  flex-shrink: 0;
+}
+
+.adm-sec-banner-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-sec-banner-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.adm-sec-banner-desc {
+  margin: 4px 0 0 0;
+  font-size: 0.86rem;
+  color: #D0E1F9;
+  line-height: 1.45;
+  max-width: 380px;
+}
+
+.adm-sec-banner-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* 3D Shield Vector Graphic */
+.adm-sec-banner-graphic {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-sec-graphic-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, rgba(8, 117, 249, 0) 70%);
+  filter: blur(8px);
+}
+
+.adm-sec-graphic-shield {
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 6px 12px rgba(8, 117, 249, 0.5));
+}
+
+.adm-sec-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.adm-sec-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.adm-sec-feature-icon {
+  color: #10B981;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   3. FOUR SUMMARY CARDS
+   -------------------------------------------------------------------------- */
+.adm-sec-summary-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.adm-sec-summary-card {
+  background: var(--hti-card-bg);
+  border: 1px solid var(--hti-border);
+  border-radius: 14px;
+  padding: 16px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 1px 4px rgba(16, 38, 79, 0.03);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.adm-sec-summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(16, 38, 79, 0.07);
+}
+
+.adm-sec-summary-card.card-users {
+  background: #EEF5FF;
+  border-color: #BFDBFE;
+}
+
+.adm-sec-summary-card.card-active {
+  background: #F0FDF4;
+  border-color: #DCFCE7;
+}
+
+.adm-sec-summary-card.card-admins {
+  background: #FAF5FF;
+  border-color: #F3E8FF;
+}
+
+.adm-sec-summary-card.card-audit {
+  background: #FFFBEB;
+  border-color: #FEF3C7;
+}
+
+.adm-sec-summary-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-users .adm-sec-summary-icon-box {
+  background: #DBEAFE;
+  color: var(--hti-blue);
+}
+
+.card-active .adm-sec-summary-icon-box {
+  background: #DCFCE7;
+  color: var(--hti-green);
+}
+
+.card-admins .adm-sec-summary-icon-box {
+  background: #F3E8FF;
+  color: var(--hti-purple);
+}
+
+.card-audit .adm-sec-summary-icon-box {
+  background: #FEF3C7;
+  color: var(--hti-amber);
+}
+
+.adm-sec-summary-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-sec-summary-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.card-users .adm-sec-summary-title { color: var(--hti-blue); }
+.card-active .adm-sec-summary-title { color: var(--hti-green); }
+.card-admins .adm-sec-summary-title { color: var(--hti-purple); }
+.card-audit .adm-sec-summary-title { color: #D97706; }
+
+.adm-sec-summary-number {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--hti-navy);
+  line-height: 1.15;
+  margin-top: 1px;
+}
+
+.adm-sec-summary-sub {
+  font-size: 0.72rem;
+  color: var(--hti-muted);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   4. ACCOUNT MANAGEMENT TABS & CREATE BUTTON
+   -------------------------------------------------------------------------- */
+.adm-sec-tabs-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.adm-sec-tabs-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adm-sec-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.adm-sec-tab-btn.inactive {
+  background: #FFFFFF;
+  border: 1px solid var(--hti-border);
+  color: var(--hti-navy);
+  box-shadow: 0 1px 2px rgba(16, 38, 79, 0.02);
+}
+
+.adm-sec-tab-btn.inactive:hover {
+  background: #F8FAFD;
+  border-color: #BFDBFE;
+}
+
+.adm-sec-tab-btn.active {
+  background: var(--hti-blue);
+  border: 1px solid var(--hti-blue);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(8, 117, 249, 0.25);
+}
+
+.adm-sec-create-btn {
+  background: var(--hti-blue);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(8, 117, 249, 0.25);
+  white-space: nowrap;
+}
+
+.adm-sec-create-btn:hover {
+  background: var(--hti-blue-hover);
+  box-shadow: 0 4px 12px rgba(8, 117, 249, 0.35);
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   5. SEARCH AND FILTER TOOLBAR
+   -------------------------------------------------------------------------- */
+.adm-sec-toolbar {
+  background: var(--hti-card-bg);
+  border: 1px solid var(--hti-border);
+  border-radius: 12px;
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  box-shadow: 0 1px 3px rgba(16, 38, 79, 0.03);
+}
+
+.adm-sec-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 240px;
+}
+
+.adm-sec-search-icon {
+  color: var(--hti-blue);
+  flex-shrink: 0;
+}
+
+.adm-sec-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--hti-navy);
+}
+
+.adm-sec-search-input::placeholder {
+  color: var(--hti-subtle);
+}
+
+.adm-sec-filters-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.adm-sec-filter-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid var(--hti-border);
+  border-radius: 9px;
+  padding: 6px 12px 6px 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--hti-navy);
+  box-shadow: 0 1px 2px rgba(16, 38, 79, 0.02);
+}
+
+.adm-sec-filter-pill svg.filter-icon {
+  margin-right: 6px;
+  color: var(--hti-muted);
+  flex-shrink: 0;
+}
+
+.adm-sec-filter-pill select {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--hti-navy);
+  cursor: pointer;
+  appearance: none;
+  padding-right: 14px;
+}
+
+.adm-sec-filter-pill svg.chevron-icon {
+  position: absolute;
+  right: 8px;
+  pointer-events: none;
+  color: var(--hti-muted);
+}
+
+.adm-sec-slider-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: #FFFFFF;
+  border: 1px solid var(--hti-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hti-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.adm-sec-slider-btn:hover {
+  background: #F8FAFD;
+  color: var(--hti-blue);
+  border-color: #BFDBFE;
+}
+
+/* --------------------------------------------------------------------------
+   6. ADMINISTRATIVE ACCOUNTS TABLE
+   -------------------------------------------------------------------------- */
+.adm-sec-table-card {
+  background: var(--hti-card-bg);
+  border: 1px solid var(--hti-border);
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(16, 38, 79, 0.04);
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.adm-sec-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.adm-sec-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.adm-sec-table thead {
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--hti-border);
+}
+
+.adm-sec-table th {
+  padding: 14px 16px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--hti-navy);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.adm-sec-table th.col-cb {
+  width: 44px;
+  text-align: center;
+}
+
+.adm-sec-table tbody tr {
+  border-bottom: 1px solid #EDF2F7;
+  transition: background-color 0.15s ease;
+  background: #FFFFFF;
+}
+
+.adm-sec-table tbody tr:hover {
+  background: #F8FAFF;
+}
+
+.adm-sec-table td {
+  padding: 16px 16px;
+  vertical-align: middle;
+  font-size: 0.86rem;
+}
+
+/* Username with Avatar */
+.adm-sec-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.adm-sec-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+
+.adm-sec-avatar.avatar-admin {
+  background: #E0F2FE;
+  color: #0284C7;
+}
+
+.adm-sec-avatar.avatar-editor {
+  background: #F3E8FF;
+  color: #9333EA;
+}
+
+.adm-sec-avatar.avatar-viewer {
+  background: #DCFCE7;
+  color: #16A34A;
+}
+
+.adm-sec-username-text {
+  font-weight: 700;
+  color: var(--hti-blue);
+  font-size: 0.88rem;
+}
+
+.adm-sec-fullname-text {
+  font-weight: 700;
+  color: var(--hti-navy);
+  font-size: 0.88rem;
+}
+
+.adm-sec-email-text {
+  font-size: 0.82rem;
+  color: var(--hti-muted);
+}
+
+/* Role Badges */
+.adm-sec-role-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.adm-sec-role-badge.role-administrator {
+  background: #E0F2FE;
+  color: #0284C7;
+}
+
+.adm-sec-role-badge.role-editor {
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+.adm-sec-role-badge.role-viewer {
+  background: #DCFCE7;
+  color: #16A34A;
+}
+
+/* Status Indicator */
+.adm-sec-status-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.80rem;
+}
+
+.adm-sec-status-cell.active {
+  color: var(--hti-green);
+}
+
+.adm-sec-status-cell.disabled {
+  color: #94A3B8;
+}
+
+/* Actions */
+.adm-sec-actions-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.adm-sec-action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.adm-sec-action-btn.btn-edit {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  color: var(--hti-blue);
+}
+
+.adm-sec-action-btn.btn-edit:hover {
+  background: #DBEAFE;
+  border-color: #93C5FD;
+  transform: translateY(-1px);
+}
+
+.adm-sec-action-btn.btn-delete {
+  background: #FFF1F2;
+  border-color: #FECDD3;
+  color: var(--hti-red);
+}
+
+.adm-sec-action-btn.btn-delete:hover:not(:disabled) {
+  background: #FFE4E6;
+  border-color: #FDA4AF;
+  transform: translateY(-1px);
+}
+
+.adm-sec-action-btn.btn-delete:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   7. TABLE FOOTER & PAGINATION
+   -------------------------------------------------------------------------- */
+.adm-sec-table-footer {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--hti-border);
+  background: #FFFFFF;
+  font-size: 0.82rem;
+  color: var(--hti-muted);
+}
+
+.adm-sec-footer-summary {
+  font-weight: 500;
+}
+
+.adm-sec-footer-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.adm-sec-rows-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid var(--hti-border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.80rem;
+  font-weight: 500;
+  color: var(--hti-navy);
+}
+
+.adm-sec-rows-dropdown select {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.80rem;
+  font-weight: 500;
+  color: var(--hti-navy);
+  cursor: pointer;
+  appearance: none;
+  padding-right: 14px;
+}
+
+.adm-sec-rows-dropdown svg {
+  position: absolute;
+  right: 8px;
+  pointer-events: none;
+  color: var(--hti-muted);
+}
+
+.adm-sec-pagination-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.adm-sec-page-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--hti-border);
+  background: #FFFFFF;
+  color: var(--hti-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.80rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.adm-sec-page-btn:hover:not(:disabled) {
+  border-color: #BFDBFE;
+  background: #F8FAFF;
+  color: var(--hti-blue);
+}
+
+.adm-sec-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.adm-sec-page-btn.active {
+  background: var(--hti-blue);
+  border-color: var(--hti-blue);
+  color: #FFFFFF;
+}
+
+/* --------------------------------------------------------------------------
+   8. RIGHT COLUMN: RECENT AUDIT ACTIVITY CARD
+   -------------------------------------------------------------------------- */
+.adm-sec-timeline-card {
+  background: var(--hti-card-bg);
+  border: 1px solid var(--hti-border);
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(16, 38, 79, 0.03);
+  padding: 18px 20px;
+}
+
+.adm-sec-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.adm-sec-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adm-sec-header-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #EFF6FF;
+  color: var(--hti-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-sec-card-title {
+  margin: 0;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--hti-navy);
+  line-height: 1.2;
+}
+
+.adm-sec-card-sub {
+  margin: 2px 0 0 0;
+  font-size: 0.74rem;
+  color: var(--hti-muted);
+}
+
+.adm-sec-view-all-btn {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  color: var(--hti-blue);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.adm-sec-view-all-btn:hover {
+  background: #DBEAFE;
+  border-color: #93C5FD;
+}
+
+/* Vertical Timeline */
+.adm-sec-timeline-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-left: 28px;
+}
+
+.adm-sec-timeline-wrap::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: 24px;
+  left: 11px;
+  width: 2px;
+  background: #E2E8F0;
+}
+
+.adm-sec-timeline-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.adm-sec-timeline-item:last-child {
+  border-bottom: none;
+}
+
+.adm-sec-timeline-marker {
+  position: absolute;
+  left: -28px;
+  top: 14px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 0 0 3px #FFFFFF;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.adm-sec-timeline-marker.marker-login {
+  background: #10B981;
+}
+
+.adm-sec-timeline-marker.marker-update {
+  background: #0875F9;
+}
+
+.adm-sec-timeline-marker.marker-create {
+  background: #8B5CF6;
+}
+
+.adm-sec-timeline-marker.marker-role {
+  background: #F59E0B;
+}
+
+.adm-sec-timeline-marker.marker-logout {
+  background: #F04455;
+}
+
+.adm-sec-timeline-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.adm-sec-timeline-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--hti-navy);
+  line-height: 1.25;
+}
+
+.adm-sec-timeline-desc {
+  font-size: 0.74rem;
+  color: var(--hti-muted);
+  margin-top: 2px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.adm-sec-timeline-ago {
+  font-size: 0.70rem;
+  color: #94A3B8;
+  margin-top: 3px;
+}
+
+.adm-sec-timeline-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.adm-sec-timeline-date {
+  font-size: 0.70rem;
+  color: #94A3B8;
+  white-space: nowrap;
+}
+
+.adm-sec-timeline-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.adm-sec-timeline-badge.badge-login {
+  background: #DCFCE7;
+  color: #16A34A;
+}
+
+.adm-sec-timeline-badge.badge-update {
+  background: #E0F2FE;
+  color: #0284C7;
+}
+
+.adm-sec-timeline-badge.badge-create {
+  background: #F3E8FF;
+  color: #9333EA;
+}
+
+.adm-sec-timeline-badge.badge-role {
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+.adm-sec-timeline-badge.badge-logout {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+/* --------------------------------------------------------------------------
+   9. RIGHT COLUMN: SECURITY GUIDELINES CARD
+   -------------------------------------------------------------------------- */
+.adm-sec-guidelines-card {
+  background: var(--hti-card-bg);
+  border: 1px solid var(--hti-border);
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(16, 38, 79, 0.03);
+  padding: 18px 20px;
+}
+
+.adm-sec-guidelines-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.adm-sec-guidelines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.adm-sec-guideline-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: #475569;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.adm-sec-guideline-icon {
+  color: var(--hti-blue);
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   10. MODALS (CREATE, EDIT, DELETE)
+   -------------------------------------------------------------------------- */
+.adm-sec-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 38, 79, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.18s ease-out;
+}
+
+.adm-sec-modal-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  box-shadow: 0 16px 40px rgba(16, 38, 79, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--hti-border);
+}
+
+.adm-sec-modal-header {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--hti-border);
+  background: #FAFCFF;
+}
+
+.adm-sec-modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.adm-sec-modal-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--hti-navy);
+}
+
+.adm-sec-modal-subtitle {
+  margin: 2px 0 0 0;
+  font-size: 0.78rem;
+  color: var(--hti-muted);
+}
+
+.adm-sec-modal-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--hti-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.adm-sec-modal-close-btn:hover {
+  background: #EFF6FF;
+  color: var(--hti-navy);
+}
+
+.adm-sec-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.adm-sec-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.adm-sec-form-label {
+  font-size: 0.80rem;
+  font-weight: 600;
+  color: var(--hti-navy);
+}
+
+.adm-sec-form-input,
+.adm-sec-form-select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--hti-border);
+  border-radius: 8px;
+  font-size: 0.86rem;
+  color: var(--hti-navy);
+  background: #FFFFFF;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.adm-sec-form-input:focus,
+.adm-sec-form-select:focus {
+  border-color: var(--hti-blue);
+  box-shadow: 0 0 0 3px rgba(8, 117, 249, 0.12);
+}
+
+.adm-sec-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 14px;
+  background: #F8FAFD;
+  border-radius: 8px;
+  border: 1px solid var(--hti-border);
+  user-select: none;
+}
+
+.adm-sec-toggle-row input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--hti-blue);
+  cursor: pointer;
+}
+
+.adm-sec-modal-footer {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--hti-border);
+  background: #FAFCFF;
+}
+
+.adm-sec-btn-secondary {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--hti-border);
+  background: #FFFFFF;
+  color: var(--hti-navy);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.adm-sec-btn-secondary:hover {
+  background: #F1F5F9;
+}
+
+.adm-sec-btn-primary {
+  padding: 9px 20px;
+  border-radius: 8px;
+  border: none;
+  background: var(--hti-blue);
+  color: #FFFFFF;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-sec-btn-primary:hover {
+  background: var(--hti-blue-hover);
+}
+
+/* --------------------------------------------------------------------------
+   11. RESPONSIVE BREAKPOINTS
+   -------------------------------------------------------------------------- */
+@media (max-width: 1180px) {
+  .adm-sec-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .adm-sec-col-side {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 900px) {
+  .adm-sec-summary-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .adm-sec-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .adm-sec-banner-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .adm-sec-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .adm-sec-filters-wrap {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 680px) {
+  .adm-sec-col-side {
+    grid-template-columns: 1fr;
+  }
+  
+  .adm-sec-summary-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .adm-sec-tabs-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .adm-sec-tabs-group {
+    flex-direction: column;
+  }
+  
+  .adm-sec-table-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}
