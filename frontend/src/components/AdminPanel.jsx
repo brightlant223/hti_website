@@ -1334,7 +1334,7 @@ export default function AdminPanel({
   return (
     <div className="admin-overlay" onClick={onClose}>
       <div className={`admin-dashboard-container adm-dashboard-container theme-${adminTheme}`} onClick={e => e.stopPropagation()}>
-        {/* SIDEBAR NAVIGATION (Concept 2 - Premium Glass Light Blue) */}
+        {/* SIDEBAR NAVIGATION (Minimal, Calm & Consistent) */}
         <AdminSidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
