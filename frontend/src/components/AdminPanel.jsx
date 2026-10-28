@@ -19,7 +19,7 @@ import {
   Send, AlertTriangle, ShieldCheck, UserCheck, Key, FileSpreadsheet,
   ArrowRight, CheckSquare, MessageCircle, HeartHandshake,
   Server, Link, Image, Hash, Info, Sun, Moon, Save,
-  Zap, User, HelpCircle, MapPin
+  Zap, User, HelpCircle, MapPin, Menu
 } from 'lucide-react';
 
 // Custom animated number count-up hook with cleanup and prefers-reduced-motion support
@@ -100,6 +100,7 @@ export default function AdminPanel({
   // 'dashboard' | 'products' | 'blogs' | 'clients_partners' | 'inquiries' | 'projects' | 'content' | 'users' | 'settings'
   const [activeTab, setActiveTab] = useState('dashboard');
   const [adminTheme, setAdminTheme] = useState(() => localStorage.getItem('hti_admin_theme') || 'light');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
   const [lastSyncedTime, setLastSyncedTime] = useState('Just now');
@@ -109,6 +110,21 @@ export default function AdminPanel({
     setAdminTheme(next);
     localStorage.setItem('hti_admin_theme', next);
   };
+
+  // Close mobile drawer on desktop resize (>=1024px) or tab switch
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMobileNavOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [activeTab]);
 
   // Sub-tabs
   const [clientPartnerSubTab, setClientPartnerSubTab] = useState('clients'); // 'clients' | 'partners'
@@ -1348,6 +1364,9 @@ export default function AdminPanel({
           unansweredInquiries={unansweredInquiries}
           adminUsers={adminUsers}
           careerApplications={careerApplications}
+          isMobileNavOpen={mobileNavOpen}
+          onCloseMobileNav={() => setMobileNavOpen(false)}
+          onCloseConsole={onClose}
         />
 
         {/* MAIN WORKSPACE */}
@@ -1355,10 +1374,22 @@ export default function AdminPanel({
           {/* Top Bar */}
           <div className="admin-topbar adm-topbar">
             <div className="admin-topbar-title-wrap adm-topbar-title-wrap">
+              {/* Mobile/Tablet Hamburger Trigger (<1024px) */}
+              <button
+                type="button"
+                className="adm-topbar-hamburger-btn"
+                onClick={() => setMobileNavOpen(true)}
+                aria-label="Open Navigation Menu"
+                aria-expanded={mobileNavOpen}
+                aria-controls="admin-sidebar-drawer"
+              >
+                <Menu size={20} />
+              </button>
+
               <div className="adm-mobile-avatar" title={`Admin: ${currentUser}`}>
                 <span>{currentUser.slice(0, 2).toUpperCase()}</span>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="adm-topbar-headings" style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                 <h2 className="admin-topbar-title adm-topbar-title" style={{ margin: 0, fontSize: '1.22rem', fontWeight: 800 }}>
                   {activeTab === 'dashboard' && 'Executive Dashboard & Live System Telemetry'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
@@ -1369,14 +1400,14 @@ export default function AdminPanel({
                   {activeTab === 'users' && 'Administrative Access Control & Audit Log'}
                   {activeTab === 'settings' && 'System Health, Tested Backups & Settings'}
                 </h2>
-                <span style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 2 }}>
+                <span className="adm-topbar-subtitle" style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 2 }}>
                   HTI Control Enterprise BMS Administrative Console
                 </span>
               </div>
             </div>
 
             <div className="admin-topbar-actions adm-topbar-actions">
-              <span className="topbar-live-tag adm-topbar-live-tag" style={{ background: '#ecfdf5', color: '#059669', borderColor: '#a7f3d0' }}>
+              <span className="topbar-live-tag adm-topbar-live-tag" title="SQL DB: hti_backend (Live)" style={{ background: '#ecfdf5', color: '#059669', borderColor: '#a7f3d0' }}>
                 <span className="tag-dot adm-tag-dot" style={{ background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
                 <span>SQL DB: hti_backend (Live)</span>
               </span>
@@ -1412,7 +1443,7 @@ export default function AdminPanel({
               </button>
 
               <button
-                className="topbar-btn adm-topbar-btn"
+                className="topbar-btn adm-topbar-btn adm-topbar-help-btn"
                 style={{ padding: '7px 9px' }}
                 title="Help & System Info"
                 aria-label="Help & System Info"

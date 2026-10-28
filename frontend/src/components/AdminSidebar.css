@@ -2,6 +2,19 @@
    HTI CONTROL — MINIMAL, CALM & CONSISTENT ADMIN SIDEBAR
    ========================================================================== */
 
+/* Base drawer elements (hidden on desktop >=1024px) */
+.adm-sidebar-backdrop {
+  display: none;
+}
+
+.adm-sidebar-close-btn {
+  display: none;
+}
+
+.adm-drawer-footer-actions {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------
    Shell
    -------------------------------------------------------------------------- */
@@ -462,133 +475,286 @@
 }
 
 /* --------------------------------------------------------------------------
-   4. RESPONSIVE DESIGN (TABLET & MOBILE)
+   4. RESPONSIVE DESIGN: SLIDE-IN DRAWER (< 1024px Tablet & Mobile)
    -------------------------------------------------------------------------- */
-/* Tablet (under 1024px): collapsed icon rail */
-@media (min-width: 641px) and (max-width: 1023px) {
-  .adm-sidebar,
-  .concept2-glass-sidebar {
-    width: 68px !important;
-    min-width: 68px !important;
-    max-width: 68px !important;
+@media (max-width: 1023px) {
+  /* Backdrop */
+  .adm-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1099;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--adm-transition-fast, 200ms ease);
   }
 
+  .adm-sidebar-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Fixed Left Drawer (280px, max 85vw, full height, translateX slide) */
+  .adm-sidebar,
+  .concept2-glass-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 85vw !important;
+    height: 100% !important;
+    max-height: 100dvh !important;
+    z-index: 1100 !important;
+    background: var(--adm-bg-surface) !important;
+    border-right: 1px solid var(--adm-border) !important;
+    border-bottom: none !important;
+    box-shadow: none;
+    display: flex !important;
+    flex-direction: column !important;
+    transform: translateX(-100%);
+    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+    user-select: none;
+  }
+
+  .adm-sidebar.mobile-open,
+  .concept2-glass-sidebar.mobile-open {
+    transform: translateX(0) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  /* Header & Brand block */
   .adm-sidebar-header {
-    padding: 12px 8px;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
+    padding: 14px 16px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    border-bottom: 1px solid var(--adm-border) !important;
+    flex-shrink: 0 !important;
   }
 
   .adm-brand-block {
-    justify-content: center;
-    flex: none;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+    flex: 1 !important;
   }
 
-  .adm-brand-text,
-  .adm-section-label,
-  .adm-nav-label,
-  .adm-badge,
-  .adm-profile-info,
+  .adm-brand-logo-wrap {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .adm-brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .adm-brand-title {
+    display: block !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    color: var(--adm-text-primary) !important;
+  }
+
+  /* Hide desktop collapse button under 1024px */
   .adm-collapse-btn {
     display: none !important;
   }
 
-  .adm-nav-item {
-    justify-content: center;
-    padding: 0;
-    border-left: 3px solid transparent;
-  }
-
-  .adm-nav-item.is-active {
-    border-left: 3px solid var(--accent-cyan);
-    background: rgba(2, 132, 199, 0.09);
-  }
-
-  .adm-collapsed-dot {
-    display: block !important;
-  }
-
-  .adm-sidebar-footer {
-    padding: 10px 8px;
-  }
-
-  .adm-profile-row {
-    flex-direction: column;
-    justify-content: center;
+  /* Show mobile close button */
+  .adm-sidebar-close-btn {
+    display: flex !important;
     align-items: center;
-    gap: 8px;
-  }
-}
-
-/* Mobile (under 640px): horizontal top nav row with 44px tap targets */
-@media (max-width: 640px) {
-  .adm-sidebar,
-  .concept2-glass-sidebar {
-    width: 100% !important;
-    min-width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    border-right: none;
-    border-bottom: 1px solid var(--adm-border);
-    flex-direction: column;
-    overflow-x: hidden;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: var(--adm-text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background var(--adm-transition-fast), color var(--adm-transition-fast);
   }
 
-  .adm-sidebar-header {
-    padding: 8px 12px;
+  .adm-sidebar-close-btn:hover {
+    background: var(--adm-bg-card-subtle);
+    color: var(--adm-text-primary);
   }
 
-  .adm-brand-logo-wrap {
-    width: 28px;
-    height: 28px;
+  .adm-sidebar-close-btn:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 1px;
   }
 
-  .adm-collapse-btn {
-    display: none;
-  }
-
+  /* Nav list: scrolls on its own */
   .adm-sidebar-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 6px 10px;
-    gap: 6px;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 10px 8px !important;
+    gap: 6px !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--adm-border) transparent;
     -webkit-overflow-scrolling: touch;
   }
 
   .adm-section-group {
-    flex-direction: row;
-    gap: 6px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
   }
 
   .adm-section-label {
-    display: none;
+    display: block !important;
+    font-size: 0.65rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    color: var(--adm-text-muted) !important;
+    text-transform: uppercase !important;
+    padding: 10px 12px 4px !important;
   }
 
   .adm-items-list {
-    flex-direction: row;
-    gap: 6px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
   }
 
   .adm-nav-item {
-    width: auto;
-    flex-shrink: 0;
-    min-height: 44px;
-    height: 44px;
-    padding: 0 12px;
-    border-radius: 8px;
-    border-left: none;
-    border-bottom: 2px solid transparent;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    width: 100% !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
+    border-left: 3px solid transparent !important;
+    border-bottom: none !important;
   }
 
   .adm-nav-item.is-active {
-    border-left: none;
-    border-bottom: 2px solid var(--accent-cyan);
+    border-left: 3px solid var(--accent-cyan) !important;
+    border-bottom: none !important;
+    background: rgba(2, 132, 199, 0.09) !important;
+    color: var(--accent-cyan) !important;
   }
 
+  .adm-nav-label {
+    display: block !important;
+  }
+
+  .adm-badge {
+    display: inline-flex !important;
+  }
+
+  .adm-collapsed-dot {
+    display: none !important;
+  }
+
+  /* Footer at bottom with avatar, profile info, logout, help, and close console */
   .adm-sidebar-footer {
-    display: none;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+    border-top: 1px solid var(--adm-border) !important;
+    background: var(--adm-bg-surface) !important;
+    flex-shrink: 0 !important;
+  }
+
+  .adm-profile-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .adm-profile-avatar {
+    display: flex !important;
+  }
+
+  .adm-profile-info {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .adm-profile-name {
+    display: block !important;
+  }
+
+  .adm-profile-role {
+    display: block !important;
+  }
+
+  .adm-logout-btn {
+    display: flex !important;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  /* Drawer action buttons */
+  .adm-drawer-footer-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    padding-top: 6px !important;
+    border-top: 1px solid var(--adm-border) !important;
+  }
+
+  .adm-drawer-action-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-height: 40px !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    border: 1px solid var(--adm-border) !important;
+    color: var(--adm-text-secondary) !important;
+    font-family: inherit !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: background var(--adm-transition-fast), color var(--adm-transition-fast) !important;
+  }
+
+  .adm-drawer-action-btn:hover {
+    background: var(--adm-bg-card-subtle) !important;
+    color: var(--adm-text-primary) !important;
+  }
+
+  .adm-drawer-action-btn:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 1px;
+  }
+
+  .adm-drawer-close-console-btn {
+    color: var(--accent-red) !important;
+    border-color: rgba(239, 68, 68, 0.25) !important;
+  }
+
+  .adm-drawer-close-console-btn:hover {
+    background: rgba(239, 68, 68, 0.08) !important;
   }
 }
 
@@ -600,9 +766,17 @@
   .concept2-glass-sidebar,
   .adm-nav-item,
   .adm-collapse-btn,
-  .adm-logout-btn {
+  .adm-logout-btn,
+  .adm-sidebar-backdrop,
+  .adm-sidebar-close-btn,
+  .adm-drawer-action-btn {
     transition: none !important;
     animation: none !important;
+  }
+  .adm-sidebar,
+  .concept2-glass-sidebar,
+  .adm-sidebar.mobile-open,
+  .concept2-glass-sidebar.mobile-open {
     transform: none !important;
   }
 }

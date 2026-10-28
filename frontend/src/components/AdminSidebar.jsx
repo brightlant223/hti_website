@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './AdminSidebar.css';
 import {
   LayoutDashboard,
@@ -10,7 +10,9 @@ import {
   ChevronsLeft,
   ChevronsRight,
   LogOut,
-  UserCheck
+  UserCheck,
+  X,
+  HelpCircle
 } from 'lucide-react';
 
 export default function AdminSidebar({
@@ -25,9 +27,90 @@ export default function AdminSidebar({
   inquiries = [],
   unansweredInquiries = [],
   adminUsers = [],
-  careerApplications = []
+  careerApplications = [],
+  isMobileNavOpen = false,
+  onCloseMobileNav = () => {},
+  onCloseConsole,
+  onOpenHelp
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const sidebarRef = useRef(null);
+
+  // Background scroll lock when mobile drawer is open
+  useEffect(() => {
+    if (isMobileNavOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isMobileNavOpen]);
+
+  // Close drawer on Escape key
+  useEffect(() => {
+    if (!isMobileNavOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onCloseMobileNav();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileNavOpen, onCloseMobileNav]);
+
+  // Focus trap inside drawer and return focus on close
+  useEffect(() => {
+    if (isMobileNavOpen && sidebarRef.current) {
+      const focusable = sidebarRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length > 0) {
+        focusable[0].focus();
+      }
+
+      const handleFocusTrap = (e) => {
+        if (e.key !== 'Tab') return;
+        const nodes = Array.from(
+          sidebarRef.current.querySelectorAll(
+            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        );
+        if (nodes.length === 0) return;
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      };
+
+      const drawerEl = sidebarRef.current;
+      drawerEl.addEventListener('keydown', handleFocusTrap);
+      return () => {
+        drawerEl.removeEventListener('keydown', handleFocusTrap);
+        const trigger = document.querySelector('.adm-topbar-hamburger-btn');
+        if (trigger) {
+          trigger.focus();
+        }
+      };
+    }
+  }, [isMobileNavOpen]);
+
+  const handleNavSelect = (id) => {
+    setActiveTab(id);
+    if (onCloseMobileNav) {
+      onCloseMobileNav();
+    }
+  };
 
   const totalClientsAndPartners = clients.length + partners.length;
   const newInquiriesCount = unansweredInquiries.length > 0
@@ -63,10 +146,7 @@ export default function AdminSidebar({
           id: 'content',
           label: 'Website Content',
           icon: Globe,
-          badge: {
-            text: 'CMS',
-            isAttention: false
-          }
+          badge: null
         }
       ]
     },
@@ -79,7 +159,7 @@ export default function AdminSidebar({
           icon: MessageSquare,
           badge: newInquiriesCount > 0
             ? { text: `${newInquiriesCount} New`, isAttention: true }
-            : { text: inquiries.length || 4, isAttention: false }
+            : null
         },
         {
           id: 'careers',
@@ -87,7 +167,7 @@ export default function AdminSidebar({
           icon: UserCheck,
           badge: newCareerCount > 0
             ? { text: `${newCareerCount} New`, isAttention: true }
-            : { text: careerApplications.length || 0, isAttention: false }
+            : null
         },
         {
           id: 'users',
@@ -100,10 +180,22 @@ export default function AdminSidebar({
   ];
 
   return (
-    <aside
-      className={`concept2-glass-sidebar adm-sidebar ${isCollapsed ? 'collapsed' : 'expanded'}`}
-      aria-label="Admin Navigation"
-    >
+    <>
+      {/* Mobile/Tablet Backdrop (<1024px) */}
+      <div
+        className={`adm-sidebar-backdrop ${isMobileNavOpen ? 'is-open' : ''}`}
+        onClick={onCloseMobileNav}
+        aria-hidden="true"
+      />
+
+      <aside
+        id="admin-sidebar-drawer"
+        ref={sidebarRef}
+        className={`concept2-glass-sidebar adm-sidebar ${isCollapsed ? 'collapsed' : 'expanded'} ${isMobileNavOpen ? 'mobile-open' : ''}`}
+        aria-label="Admin Navigation"
+        role={isMobileNavOpen ? 'dialog' : undefined}
+        aria-modal={isMobileNavOpen ? 'true' : undefined}
+      >
       {/* 1. BRAND / HEADER BLOCK */}
       <div className="adm-sidebar-header">
         <div className="adm-brand-block">
@@ -119,6 +211,18 @@ export default function AdminSidebar({
           )}
         </div>
 
+        {/* Mobile/Tablet Drawer Close Button (<1024px) */}
+        <button
+          type="button"
+          className="adm-sidebar-close-btn"
+          onClick={onCloseMobileNav}
+          title="Close drawer"
+          aria-label="Close navigation drawer"
+        >
+          <X size={18} />
+        </button>
+
+        {/* Desktop Collapse Button (>=1024px) */}
         <button
           type="button"
           className="adm-collapse-btn"
@@ -152,7 +256,7 @@ export default function AdminSidebar({
                     key={item.id}
                     type="button"
                     className={`adm-nav-item ${isActive ? 'is-active' : ''}`}
-                    onClick={() => setActiveTab(item.id)}
+                    onClick={() => handleNavSelect(item.id)}
                     aria-current={isActive ? 'page' : undefined}
                     aria-label={item.label}
                     title={isCollapsed ? (badgeText ? `${item.label} (${badgeText})` : item.label) : undefined}
@@ -213,7 +317,39 @@ export default function AdminSidebar({
             <LogOut size={16} />
           </button>
         </div>
+
+        {/* Mobile/Tablet Drawer Actions (<1024px) */}
+        <div className="adm-drawer-footer-actions">
+          <button
+            type="button"
+            className="adm-drawer-action-btn"
+            onClick={() => {
+              if (onOpenHelp) onOpenHelp();
+              else alert('HTI Control System BMS - Help & Documentation');
+            }}
+            aria-label="Help & System Info"
+          >
+            <HelpCircle size={15} />
+            <span>Help & Info</span>
+          </button>
+
+          {onCloseConsole && (
+            <button
+              type="button"
+              className="adm-drawer-action-btn adm-drawer-close-console-btn"
+              onClick={() => {
+                onCloseMobileNav();
+                onCloseConsole();
+              }}
+              aria-label="Close console"
+            >
+              <X size={15} />
+              <span>Close Console</span>
+            </button>
+          )}
+        </div>
       </div>
     </aside>
+    </>
   );
 }
