@@ -826,7 +826,7 @@
   flex-direction: column;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(16, 29, 64, 0.03);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, background-color 0.2s ease;
   user-select: none;
   position: relative;
 }
@@ -841,37 +841,47 @@
   outline-offset: 2px;
 }
 
-/* Card Themes */
+/* --------------------------------------------------------------------------
+   Four Summary Cards Faint Pastel Color Schemes
+   -------------------------------------------------------------------------- */
+/* Card 1: Commercial Leads */
 .adm-summary-card.card-orange {
-  background: #fffaf5;
-  border: 1px solid #fed7aa;
+  background: #FFF8F0;
+  border: 1px solid #FFE2C2;
 }
 .adm-summary-card.card-orange:hover {
-  border-color: #fb923c;
+  border-color: #FED7AA;
+  box-shadow: 0 6px 18px rgba(249, 115, 22, 0.09);
 }
 
+/* Card 2: Talent & Careers */
 .adm-summary-card.card-purple {
-  background: #faf5ff;
-  border: 1px solid #e9d5ff;
+  background: #FAF5FF;
+  border: 1px solid #E9D5FF;
 }
 .adm-summary-card.card-purple:hover {
-  border-color: #c084fc;
+  border-color: #D8B4FE;
+  box-shadow: 0 6px 18px rgba(147, 51, 234, 0.09);
 }
 
+/* Card 3: Technical Articles */
 .adm-summary-card.card-rose {
-  background: #fff1f2;
-  border: 1px solid #fecdd3;
+  background: #FFF5F5;
+  border: 1px solid #FFD5D5;
 }
 .adm-summary-card.card-rose:hover {
-  border-color: #fda4af;
+  border-color: #FECDD3;
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.09);
 }
 
+/* Card 4: Clients & Partners */
 .adm-summary-card.card-mint {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
 }
 .adm-summary-card.card-mint:hover {
-  border-color: #86efac;
+  border-color: #86EFAC;
+  box-shadow: 0 6px 18px rgba(22, 163, 74, 0.09);
 }
 
 .adm-card-top-row {
@@ -895,23 +905,24 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
 .adm-card-icon-box.orange {
-  background: #ffedd5;
-  color: #f97316;
+  background: #FFF0DB;
+  color: #F97316;
 }
 .adm-card-icon-box.purple {
-  background: #f3e8ff;
-  color: #9333ea;
+  background: #F0E7FF;
+  color: #9333EA;
 }
 .adm-card-icon-box.rose {
-  background: #ffe4e6;
-  color: #e11d48;
+  background: #FFE5E7;
+  color: #E11D48;
 }
 .adm-card-icon-box.mint {
-  background: #dcfce7;
-  color: #16a34a;
+  background: #DCFCE7;
+  color: #16A34A;
 }
 
 .adm-card-label {
@@ -936,10 +947,22 @@
   transform: translateX(2px);
 }
 
-.adm-card-arrow-wrap.orange { color: #f97316; }
-.adm-card-arrow-wrap.purple { color: #9333ea; }
-.adm-card-arrow-wrap.rose { color: #e11d48; }
-.adm-card-arrow-wrap.mint { color: #16a34a; }
+.adm-card-arrow-wrap.orange {
+  color: #F97316;
+  background: #FFF0DB;
+}
+.adm-card-arrow-wrap.purple {
+  color: #9333EA;
+  background: #F0E7FF;
+}
+.adm-card-arrow-wrap.rose {
+  color: #E11D48;
+  background: #FFE5E7;
+}
+.adm-card-arrow-wrap.mint {
+  color: #16A34A;
+  background: #DCFCE7;
+}
 
 .adm-card-count {
   font-family: var(--font-heading, "Plus Jakarta Sans", sans-serif);
