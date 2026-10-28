@@ -1883,13 +1883,13 @@ def admin_login(creds: AdminLoginRequest):
 
     cursor.execute("SELECT * FROM admin_users WHERE LOWER(username) = ? AND is_active = 1", (username,))
     user = cursor.fetchone()
+    conn.close()
 
     # Fallback to default hardcoded credentials if user table empty or for emergency break-glass
     if not user and username in ["admin", "htiadmin"]:
         if (username == "admin" and creds.password == "admin123") or (username == "htiadmin" and creds.password == "hti@2026"):
             token = f"hti_sec_token_{username}_{int(time.time())}"
             add_audit_log(username, "ADMIN_LOGIN", "Security", f"User '{username}' logged in successfully via super-admin credential.")
-            conn.close()
             return {
                 "success": True,
                 "token": token,
@@ -1901,7 +1901,6 @@ def admin_login(creds: AdminLoginRequest):
             }
 
     if not user or user["password_hash"] != creds.password:
-        conn.close()
         add_audit_log(username, "FAILED_LOGIN", "Security", f"Failed login attempt for username '{username}'")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -1910,7 +1909,6 @@ def admin_login(creds: AdminLoginRequest):
 
     token = f"hti_sec_token_{user['username']}_{int(time.time())}"
     add_audit_log(user["username"], "ADMIN_LOGIN", "Security", f"User '{user['username']}' ({user['role']}) logged in.")
-    conn.close()
 
     permissions = ["all"] if user["role"] == "Administrator" else (
         ["products", "blogs", "clients", "partners", "projects", "content"] if user["role"] == "Editor" else ["inquiries", "read_only"]

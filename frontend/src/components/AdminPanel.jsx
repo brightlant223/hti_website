@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './AdminDashboard.css';
 import './AdminClientsPartners.css';
-import AdminProductsManager from './AdminProductsManager';
 import AdminBlogsManager from './AdminBlogsManager';
 import AdminWebsiteContentManager from './AdminWebsiteContentManager';
 import AdminEnquiriesManager from './AdminEnquiriesManager';
@@ -120,10 +119,8 @@ function ProjectCardImage({ src, alt, industry, isPublished, onTogglePublish }) 
 export default function AdminPanel({
   isOpen,
   onClose,
-  onProductsChanged,
   onBlogsChanged,
   onClientsChanged,
-  onProjectsChanged,
   onContentChanged
 }) {
   // Authentication states
@@ -163,12 +160,10 @@ export default function AdminPanel({
   const [contentSubTab, setContentSubTab] = useState('homepage_hero'); // 'homepage_hero' | 'company_profile' | 'contact_details' | 'testimonials'
 
   // Data states
-  const [products, setProducts] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [clients, setClients] = useState([]);
   const [partners, setPartners] = useState([]);
   const [inquiries, setInquiries] = useState([]);
-  const [projects, setProjects] = useState([]);
   const [careerApplications, setCareerApplications] = useState([]);
   const [careerDbStatus, setCareerDbStatus] = useState(null);
   const [adminUsers, setAdminUsers] = useState([]);
@@ -187,10 +182,6 @@ export default function AdminPanel({
   const [websiteContent, setWebsiteContent] = useState({});
 
   // Search & filter states
-  const [productSearch, setProductSearch] = useState('');
-  const [productCategoryFilter, setProductCategoryFilter] = useState('All');
-  const [productFilterType, setProductFilterType] = useState('all'); // 'all' | 'featured'
-  const [productViewMode, setProductViewMode] = useState('table'); // 'table' | 'cards'
 
   const [blogSearch, setBlogSearch] = useState('');
   const [blogStatusFilter, setBlogStatusFilter] = useState('All'); // 'All' | 'Published' | 'Draft'
@@ -204,34 +195,9 @@ export default function AdminPanel({
   const [inquiryStatusFilter, setInquiryStatusFilter] = useState('All');
   const [inquirySearch, setInquirySearch] = useState('');
 
-  const [projectSearch, setProjectSearch] = useState('');
-  const [projectIndustryFilter, setProjectIndustryFilter] = useState('All');
-  const [projectViewMode, setProjectViewMode] = useState('grid'); // 'grid' | 'list'
-
   // Interactive Lead Detail / Follow-up Drawer
   const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [inquiryNotesText, setInquiryNotesText] = useState('');
-
-  // Product Add / Edit modal
-  const [editingProduct, setEditingProduct] = useState(null); // null | 'new' | product obj
-  const [productModalTab, setProductModalTab] = useState('basic'); // 'basic' | 'specs' | 'media' | 'preview'
-  const [productForm, setProductForm] = useState({
-    name: '',
-    category: 'Automation',
-    subcategory: '',
-    tagline: '',
-    description: '',
-    featuresText: '',
-    specsList: [{ key: '', value: '' }],
-    applicationsText: '',
-    badge: '',
-    is_featured: false,
-    image_url: '',
-    brochure_url: '',
-    datasheet_url: '',
-    is_published: true,
-    display_order: 0
-  });
 
   // Blog Add / Edit modal
   const [editingBlog, setEditingBlog] = useState(null);
@@ -276,22 +242,6 @@ export default function AdminPanel({
     is_authorized: true
   });
 
-  // Project Add / Edit modal
-  const [editingProject, setEditingProject] = useState(null);
-  const [projectForm, setProjectForm] = useState({
-    title: '',
-    client_name: '',
-    client_approved: true,
-    industry: 'Pharmaceutical Cleanroom',
-    location: '',
-    completion_year: '2025',
-    description: '',
-    image_url: '',
-    related_products_text: '',
-    is_published: true,
-    display_order: 0
-  });
-
   // Admin User Add / Edit modal
   const [editingUser, setEditingUser] = useState(null);
   const [userForm, setUserForm] = useState({
@@ -304,8 +254,6 @@ export default function AdminPanel({
   });
 
   // Preview modals
-  const [previewProduct, setPreviewProduct] = useState(null);
-  const [previewProject, setPreviewProject] = useState(null);
 
   // Backup in progress state
   const [isBackingUp, setIsBackingUp] = useState(false);
@@ -331,22 +279,6 @@ export default function AdminPanel({
       }
     } catch (err) {
       console.error('Failed to fetch system health:', err);
-    }
-  };
-
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch('/api/products?include_unpublished=true');
-      if (res.ok) {
-        const data = await res.json();
-        setProducts(data);
-        updateTimestamp();
-      }
-    } catch (err) {
-      console.error('Failed to fetch products:', err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -387,19 +319,6 @@ export default function AdminPanel({
       }
     } catch (err) {
       console.error('Failed to fetch inquiries:', err);
-    }
-  };
-
-  const fetchProjects = async () => {
-    try {
-      const res = await fetch('/api/projects');
-      if (res.ok) {
-        const data = await res.json();
-        setProjects(data);
-        updateTimestamp();
-      }
-    } catch (err) {
-      console.error('Failed to fetch projects:', err);
     }
   };
 
@@ -516,11 +435,9 @@ export default function AdminPanel({
 
   const refreshAllData = () => {
     fetchSystemHealth();
-    fetchProducts();
     fetchBlogs();
     fetchClientsAndPartners();
     fetchInquiries();
-    fetchProjects();
     fetchCareerApplications();
     fetchWebsiteContent();
     fetchUsersAndAudit();
@@ -551,20 +468,16 @@ export default function AdminPanel({
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         if (selectedInquiry) setSelectedInquiry(null);
-        else if (editingProduct) setEditingProduct(null);
         else if (editingBlog) setEditingBlog(null);
         else if (editingClient) setEditingClient(null);
         else if (editingPartner) setEditingPartner(null);
-        else if (editingProject) setEditingProject(null);
         else if (editingUser) setEditingUser(null);
-        else if (previewProduct) setPreviewProduct(null);
-        else if (previewProject) setPreviewProject(null);
         else if (onClose) onClose();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, selectedInquiry, editingProduct, editingBlog, editingClient, editingPartner, editingProject, editingUser, previewProduct, previewProject, onClose]);
+  }, [isOpen, selectedInquiry, editingBlog, editingClient, editingPartner, editingUser, onClose]);
 
   // ===================== AUTHENTICATION ACTIONS =====================
   const handleLoginSubmit = async (e) => {
@@ -573,14 +486,19 @@ export default function AdminPanel({
     setLoginLoading(true);
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: loginForm.username,
           password: loginForm.password
-        })
+        }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       if (res.ok) {
         const data = await res.json();
@@ -651,171 +569,6 @@ export default function AdminPanel({
     setIsAuthenticated(false);
     setActiveTab('dashboard');
     showFeedback('success', 'Logged out safely.');
-  };
-
-  // ===================== PRODUCT CRUD ACTIONS =====================
-  const handleOpenAddProduct = () => {
-    setProductForm({
-      name: '',
-      category: 'Automation',
-      subcategory: 'Cleanroom Interlocking',
-      tagline: '',
-      description: '',
-      featuresText: 'High reliability optical sensor\nMicrocontroller-based logic\nProgrammable door open delay\nEmergency release override integration',
-      specsList: [
-        { key: 'Enclosure Material', value: 'Stainless Steel SS304 / Impact ABS' },
-        { key: 'Operating Voltage', value: '12V / 24V DC regulated' },
-        { key: 'Status Indication', value: 'Bi-color Red/Green optical LED' }
-      ],
-      applicationsText: 'Pharmaceutical Cleanrooms, Biotech Laboratories, Hospital OT Airlocks',
-      badge: 'Certified',
-      is_featured: false,
-      image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
-      brochure_url: '',
-      datasheet_url: '',
-      is_published: true,
-      display_order: products.length + 1
-    });
-    setProductModalTab('basic');
-    setEditingProduct('new');
-  };
-
-  const handleOpenEditProduct = (prod) => {
-    const specsArray = [];
-    if (prod.specs && typeof prod.specs === 'object') {
-      Object.entries(prod.specs).forEach(([k, v]) => {
-        specsArray.push({ key: k, value: String(v) });
-      });
-    }
-    if (specsArray.length === 0) {
-      specsArray.push({ key: '', value: '' });
-    }
-
-    setProductForm({
-      name: prod.name,
-      category: prod.category,
-      subcategory: prod.subcategory || '',
-      tagline: prod.tagline || '',
-      description: prod.description || '',
-      featuresText: Array.isArray(prod.features) ? prod.features.join('\n') : '',
-      specsList: specsArray,
-      applicationsText: Array.isArray(prod.applications) ? prod.applications.join(', ') : '',
-      badge: prod.badge || '',
-      is_featured: Boolean(prod.is_featured),
-      image_url: prod.image_url || '',
-      brochure_url: prod.brochure_url || '',
-      datasheet_url: prod.datasheet_url || '',
-      is_published: prod.is_published !== undefined ? Boolean(prod.is_published) : true,
-      display_order: prod.display_order || 0
-    });
-    setProductModalTab('basic');
-    setEditingProduct(prod);
-  };
-
-  const handleSaveProduct = async (e) => {
-    e.preventDefault();
-    if (!productForm.name || !productForm.category || !productForm.description) {
-      showFeedback('error', 'Please provide required fields: Product Name, Category, and Description.');
-      return;
-    }
-
-    // Convert specs list to object
-    const specsObj = {};
-    productForm.specsList.forEach(s => {
-      if (s.key.trim()) {
-        specsObj[s.key.trim()] = s.value.trim();
-      }
-    });
-
-    const featuresArr = productForm.featuresText
-      .split('\n')
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    const applicationsArr = productForm.applicationsText
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    const payload = {
-      name: productForm.name,
-      category: productForm.category,
-      subcategory: productForm.subcategory || productForm.category,
-      tagline: productForm.tagline,
-      description: productForm.description,
-      features: featuresArr,
-      specs: specsObj,
-      applications: applicationsArr,
-      badge: productForm.badge,
-      is_featured: productForm.is_featured,
-      image_url: productForm.image_url,
-      brochure_url: productForm.brochure_url,
-      datasheet_url: productForm.datasheet_url,
-      is_published: productForm.is_published,
-      display_order: parseInt(productForm.display_order, 10) || 0
-    };
-
-    try {
-      const url = editingProduct === 'new'
-        ? `/api/products?admin_user=${encodeURIComponent(currentUser)}`
-        : `/api/products/${editingProduct.id}?admin_user=${encodeURIComponent(currentUser)}`;
-      const method = editingProduct === 'new' ? 'POST' : 'PUT';
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (res.ok) {
-        showFeedback('success', editingProduct === 'new' ? 'Product created and published successfully!' : 'Product updated successfully!');
-        setEditingProduct(null);
-        await fetchProducts();
-        await fetchSystemHealth();
-        if (onProductsChanged) onProductsChanged();
-      } else {
-        const err = await res.json();
-        showFeedback('error', err.detail || 'Failed to save product.');
-      }
-    } catch (err) {
-      showFeedback('error', 'Network error while saving product.');
-    }
-  };
-
-  const handleToggleProductPublish = async (prod) => {
-    try {
-      const res = await fetch(`/api/products/${prod.id}/toggle-publish?admin_user=${encodeURIComponent(currentUser)}`, {
-        method: 'PATCH'
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setProducts(prev => prev.map(p => p.id === prod.id ? { ...p, is_published: data.is_published } : p));
-        showFeedback('success', `Product '${prod.name}' marked as ${data.status}`);
-        if (onProductsChanged) onProductsChanged();
-      }
-    } catch (err) {
-      showFeedback('error', 'Failed to toggle publication status.');
-    }
-  };
-
-  const handleDeleteProduct = async (prod) => {
-    if (!window.confirm(`Are you sure you want to permanently delete product "${prod.name}"?`)) return;
-
-    try {
-      const res = await fetch(`/api/products/${prod.id}?admin_user=${encodeURIComponent(currentUser)}`, {
-        method: 'DELETE'
-      });
-      if (res.ok) {
-        showFeedback('success', `Product "${prod.name}" removed.`);
-        await fetchProducts();
-        await fetchSystemHealth();
-        if (onProductsChanged) onProductsChanged();
-      } else {
-        showFeedback('error', 'Failed to delete product.');
-      }
-    } catch (err) {
-      showFeedback('error', 'Network error deleting product.');
-    }
   };
 
   // ===================== BLOG CRUD ACTIONS =====================
@@ -1175,125 +928,6 @@ export default function AdminPanel({
     showFeedback('success', 'Exporting sales inquiries to CSV file...');
   };
 
-  // ===================== PROJECTS & INSTALLATIONS =====================
-  const handleOpenAddProject = () => {
-    setProjectForm({
-      title: '',
-      client_name: 'Glenmark Pharmaceuticals',
-      client_approved: true,
-      industry: 'Pharmaceutical Cleanroom',
-      location: 'Navi Mumbai, Maharashtra',
-      completion_year: '2025',
-      description: 'Comprehensive installation of multi-door cleanroom interlocking system, AHU interlocks, and emergency fire evacuation override integration.',
-      image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
-      related_products_text: 'Door Interlock System, Air Shower Automation, Electromagnetic Locks',
-      is_published: true,
-      display_order: projects.length + 1
-    });
-    setEditingProject('new');
-  };
-
-  const handleOpenEditProject = (proj) => {
-    setProjectForm({
-      title: proj.title,
-      client_name: proj.client_name || '',
-      client_approved: Boolean(proj.client_approved),
-      industry: proj.industry,
-      location: proj.location,
-      completion_year: proj.completion_year || '2025',
-      description: proj.description,
-      image_url: proj.image_url || '',
-      related_products_text: Array.isArray(proj.related_products) ? proj.related_products.join(', ') : '',
-      is_published: Boolean(proj.is_published),
-      display_order: proj.display_order || 0
-    });
-    setEditingProject(proj);
-  };
-
-  const handleSaveProject = async (e) => {
-    e.preventDefault();
-    if (!projectForm.title || !projectForm.industry || !projectForm.description) {
-      showFeedback('error', 'Please provide Project Title, Industry, and Description.');
-      return;
-    }
-
-    const relProds = projectForm.related_products_text
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    const payload = {
-      title: projectForm.title,
-      client_name: projectForm.client_name,
-      client_approved: projectForm.client_approved,
-      industry: projectForm.industry,
-      location: projectForm.location,
-      completion_year: projectForm.completion_year,
-      description: projectForm.description,
-      image_url: projectForm.image_url,
-      related_products: relProds,
-      is_published: projectForm.is_published,
-      display_order: parseInt(projectForm.display_order, 10) || 0
-    };
-
-    try {
-      const url = editingProject === 'new'
-        ? `/api/projects?admin_user=${encodeURIComponent(currentUser)}`
-        : `/api/projects/${editingProject.id}?admin_user=${encodeURIComponent(currentUser)}`;
-      const method = editingProject === 'new' ? 'POST' : 'PUT';
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (res.ok) {
-        showFeedback('success', editingProject === 'new' ? 'Case study created!' : 'Case study updated!');
-        setEditingProject(null);
-        await fetchProjects();
-        await fetchSystemHealth();
-        if (onProjectsChanged) onProjectsChanged();
-      } else {
-        const err = await res.json();
-        showFeedback('error', err.detail || 'Failed to save project.');
-      }
-    } catch (err) {
-      showFeedback('error', 'Network error saving case study.');
-    }
-  };
-
-  const handleToggleProjectPublish = async (proj) => {
-    try {
-      const res = await fetch(`/api/projects/${proj.id}/toggle-publish?admin_user=${encodeURIComponent(currentUser)}`, {
-        method: 'PATCH'
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setProjects(prev => prev.map(p => p.id === proj.id ? { ...p, is_published: data.is_published } : p));
-        showFeedback('success', `Project '${proj.title}' marked as ${data.status}`);
-        if (onProjectsChanged) onProjectsChanged();
-      }
-    } catch (err) {
-      showFeedback('error', 'Failed to toggle project publication.');
-    }
-  };
-
-  const handleDeleteProject = async (proj) => {
-    if (!window.confirm(`Are you sure you want to remove project "${proj.title}"?`)) return;
-    try {
-      const res = await fetch(`/api/projects/${proj.id}?admin_user=${encodeURIComponent(currentUser)}`, { method: 'DELETE' });
-      if (res.ok) {
-        showFeedback('success', `Project "${proj.title}" deleted.`);
-        await fetchProjects();
-        await fetchSystemHealth();
-        if (onProjectsChanged) onProjectsChanged();
-      }
-    } catch (err) {
-      showFeedback('error', 'Network error deleting project.');
-    }
-  };
-
   // ===================== WEBSITE CONTENT CMS =====================
   const handleSaveContentSection = async (sectionKey, sectionData) => {
     try {
@@ -1514,18 +1148,6 @@ export default function AdminPanel({
   if (!isOpen) return null;
 
   // ===================== FILTERED LISTS =====================
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = productSearch === '' ||
-      p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
-      (p.description && p.description.toLowerCase().includes(productSearch.toLowerCase())) ||
-      (p.subcategory && p.subcategory.toLowerCase().includes(productSearch.toLowerCase())) ||
-      (p.tagline && p.tagline.toLowerCase().includes(productSearch.toLowerCase()));
-
-    const matchesCat = productCategoryFilter === 'All' || p.category.toLowerCase() === productCategoryFilter.toLowerCase();
-    const matchesType = productFilterType === 'featured' ? Boolean(p.is_featured) : true;
-    return matchesSearch && matchesCat && matchesType;
-  });
-
   const filteredBlogs = blogs.filter(b => {
     const matchesSearch = blogSearch === '' ||
       b.title.toLowerCase().includes(blogSearch.toLowerCase()) ||
@@ -1576,17 +1198,6 @@ export default function AdminPanel({
 
     const matchesStatus = inquiryStatusFilter === 'All' || i.status.toLowerCase() === inquiryStatusFilter.toLowerCase();
     return matchesSearch && matchesStatus;
-  });
-
-  const filteredProjects = projects.filter(pr => {
-    const matchesSearch = projectSearch === '' ||
-      pr.title.toLowerCase().includes(projectSearch.toLowerCase()) ||
-      pr.client_name.toLowerCase().includes(projectSearch.toLowerCase()) ||
-      pr.industry.toLowerCase().includes(projectSearch.toLowerCase()) ||
-      pr.location.toLowerCase().includes(projectSearch.toLowerCase());
-
-    const matchesInd = projectIndustryFilter === 'All' || pr.industry.toLowerCase().includes(projectIndustryFilter.toLowerCase());
-    return matchesSearch && matchesInd;
   });
 
   const unansweredInquiries = inquiries.filter(i => (i.status || '').toLowerCase() === 'new');
@@ -1807,11 +1418,9 @@ export default function AdminPanel({
           currentUser={currentUser}
           userRole={userRole}
           handleLogout={handleLogout}
-          products={products}
           blogs={blogs}
           clients={clients}
           partners={partners}
-          projects={projects}
           inquiries={inquiries}
           unansweredInquiries={unansweredInquiries}
           adminUsers={adminUsers}
@@ -1829,24 +1438,17 @@ export default function AdminPanel({
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <h2 className="admin-topbar-title adm-topbar-title" style={{ margin: 0, fontSize: '1.22rem', fontWeight: 800 }}>
                   {activeTab === 'dashboard' && 'Executive Dashboard & Live System Telemetry'}
-                  {activeTab === 'products' && 'Product Catalogue & Specifications Manager'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
                   {activeTab === 'clients_partners' && 'Enterprise Clients & Technology Partners Roster'}
                   {activeTab === 'inquiries' && 'Commercial Enquiries & Lead Pipeline Management'}
-                  {activeTab === 'projects' && 'Completed Turnkey Projects & Case Studies'}
+                  {activeTab === 'careers' && 'Careers & Talent Acquisition Pipeline'}
                   {activeTab === 'content' && 'Live Website Content & Copy CMS'}
                   {activeTab === 'users' && 'Administrative Access Control & Audit Log'}
                   {activeTab === 'settings' && 'System Health, Tested Backups & Settings'}
                 </h2>
-                {activeTab === 'products' ? (
-                  <span style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 2 }}>
-                    Manage your products, solutions and detailed specifications
-                  </span>
-                ) : (
-                  <span style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 2 }}>
-                    HTI Control Enterprise BMS Administrative Console
-                  </span>
-                )}
+                <span style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 2 }}>
+                  HTI Control Enterprise BMS Administrative Console
+                </span>
               </div>
             </div>
 
@@ -1999,29 +1601,7 @@ export default function AdminPanel({
 
               {/* Metric KPI Cards Grid (5-card balanced single row) */}
               <div className="adm-kpi-grid">
-                {/* 1. Products */}
-                <div className="adm-kpi-card">
-                  <div className="adm-kpi-header">
-                    <span className="adm-kpi-label">Catalog Products</span>
-                    <div className="adm-kpi-icon-tile cyan"><Package size={18} /></div>
-                  </div>
-                  <div className="adm-kpi-val"><AnimatedNumber value={products.length} /></div>
-                  <div className="adm-kpi-pills">
-                    <span className="adm-pill success">
-                      <span className="adm-pill-dot" />
-                      {products.filter(p => p.is_featured).length} Featured
-                    </span>
-                    <span className="adm-pill neutral">
-                      {products.filter(p => p.is_published).length} Published
-                    </span>
-                  </div>
-                  <button className="adm-kpi-footer-link" onClick={() => setActiveTab('products')}>
-                    <span>Manage Products</span>
-                    <ChevronRight size={14} />
-                  </button>
-                </div>
-
-                {/* 2. Commercial Leads */}
+                {/* 1. Commercial Leads */}
                 <div className="adm-kpi-card">
                   <div className="adm-kpi-header">
                     <span className="adm-kpi-label">Commercial Leads</span>
@@ -2039,6 +1619,28 @@ export default function AdminPanel({
                   </div>
                   <button className="adm-kpi-footer-link" onClick={() => setActiveTab('inquiries')}>
                     <span>Open Lead Pipeline</span>
+                    <ChevronRight size={14} />
+                  </button>
+                </div>
+
+                {/* 2. Candidate Applications */}
+                <div className="adm-kpi-card">
+                  <div className="adm-kpi-header">
+                    <span className="adm-kpi-label">Talent & Careers</span>
+                    <div className="adm-kpi-icon-tile blue"><UserCheck size={18} /></div>
+                  </div>
+                  <div className="adm-kpi-val"><AnimatedNumber value={careerApplications.length} /></div>
+                  <div className="adm-kpi-pills">
+                    <span className={`adm-pill ${careerApplications.filter(a => (a.status || '').toLowerCase() === 'new').length > 0 ? 'danger' : 'success'}`}>
+                      <span className="adm-pill-dot" />
+                      {careerApplications.filter(a => (a.status || '').toLowerCase() === 'new').length} New
+                    </span>
+                    <span className="adm-pill neutral">
+                      {careerApplications.filter(a => (a.status || '').toLowerCase() === 'interviewed' || (a.status || '').toLowerCase() === 'selected').length} Active
+                    </span>
+                  </div>
+                  <button className="adm-kpi-footer-link" onClick={() => setActiveTab('careers')}>
+                    <span>Review Candidates</span>
                     <ChevronRight size={14} />
                   </button>
                 </div>
@@ -2085,28 +1687,6 @@ export default function AdminPanel({
                     <ChevronRight size={14} />
                   </button>
                 </div>
-
-                {/* 5. Turnkey Case Studies (Joined row - no longer orphan) */}
-                <div className="adm-kpi-card">
-                  <div className="adm-kpi-header">
-                    <span className="adm-kpi-label">Turnkey Case Studies</span>
-                    <div className="adm-kpi-icon-tile blue"><Briefcase size={18} /></div>
-                  </div>
-                  <div className="adm-kpi-val"><AnimatedNumber value={projects.length} /></div>
-                  <div className="adm-kpi-pills">
-                    <span className="adm-pill success">
-                      <span className="adm-pill-dot" />
-                      {projects.filter(p => p.is_published).length} Published
-                    </span>
-                    <span className="adm-pill cyan">
-                      {projects.filter(p => p.client_approved).length} Approved
-                    </span>
-                  </div>
-                  <button className="adm-kpi-footer-link" onClick={() => setActiveTab('projects')}>
-                    <span>Manage Case Studies</span>
-                    <ChevronRight size={14} />
-                  </button>
-                </div>
               </div>
 
               {/* Quick Actions Row */}
@@ -2119,24 +1699,19 @@ export default function AdminPanel({
                 </div>
 
                 <div className="adm-actions-grid">
-                  <button className="adm-action-btn primary" onClick={() => { setActiveTab('products'); handleOpenAddProduct(); }}>
-                    <Plus size={16} />
-                    <span>Add New Product</span>
-                  </button>
-
-                  <button className="adm-action-btn secondary" onClick={() => { setActiveTab('blogs'); handleOpenAddBlog(); }}>
+                  <button className="adm-action-btn primary" onClick={() => { setActiveTab('blogs'); handleOpenAddBlog(); }}>
                     <FileText size={16} />
                     <span>Publish Article</span>
-                  </button>
-
-                  <button className="adm-action-btn secondary" onClick={() => { setActiveTab('projects'); handleOpenAddProject(); }}>
-                    <Briefcase size={16} />
-                    <span>New Case Study</span>
                   </button>
 
                   <button className="adm-action-btn secondary" onClick={() => { setActiveTab('clients_partners'); handleOpenAddClient(); }}>
                     <Building2 size={16} />
                     <span>Add Client / Partner</span>
+                  </button>
+
+                  <button className="adm-action-btn secondary" onClick={() => setActiveTab('careers')}>
+                    <UserCheck size={16} />
+                    <span>Review Candidates</span>
                   </button>
 
                   <button className="adm-action-btn secondary" onClick={handleExportInquiriesCSV}>
@@ -2288,26 +1863,7 @@ export default function AdminPanel({
             </div>
           )}
 
-          {/* =========================================================================
-              MODULE 2: PRODUCTS CATALOG MANAGEMENT
-              ========================================================================= */}
-          {activeTab === 'products' && (
-            <div className="admin-body-content">
-              <AdminProductsManager
-                products={products}
-                currentUser={currentUser}
-                onRefresh={async () => {
-                  await fetchProducts();
-                  await fetchSystemHealth();
-                  if (onProductsChanged) onProductsChanged();
-                }}
-                onFeedback={showFeedback}
-                onNavigateToPublicProduct={(slug) => {
-                  if (onClose) onClose();
-                }}
-              />
-            </div>
-          )}
+
 
           {/* =========================================================================
               MODULE 3: BLOGS & TECHNICAL ARTICLES
@@ -2904,450 +2460,6 @@ export default function AdminPanel({
           )}
 
           {/* =========================================================================
-              MODULE 6: PROJECTS & INSTALLATIONS (Case Studies)
-              ========================================================================= */}
-          {activeTab === 'projects' && (
-            <div className="admin-body-content">
-              {/* TOP HEADER & TOOLBAR CARD */}
-              <div className="adm-proj-header-card">
-                <div className="adm-proj-header-top">
-                  <div className="adm-proj-title-wrap">
-                    <div className="adm-proj-eyebrow">
-                      <Briefcase size={13} />
-                      <span>Turnkey Case Studies & Deliverables</span>
-                    </div>
-                    <h2 className="adm-proj-title">Completed Turnkey Projects</h2>
-                    <p className="adm-proj-subtitle">
-                      Manage validated cleanroom interlocks, air showers, containment automation, and client showcase studies.
-                    </p>
-                  </div>
-                  <div className="adm-proj-header-actions">
-                    <button
-                      type="button"
-                      className="adm-proj-btn-primary"
-                      onClick={handleOpenAddProject}
-                    >
-                      <Plus size={16} />
-                      <span>New Project Case Study</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* KPI SUMMARY STRIP */}
-                <div className="adm-proj-kpi-strip">
-                  <div className="adm-proj-kpi-chip">
-                    <div className="adm-proj-kpi-icon-box blue">
-                      <Briefcase size={16} />
-                    </div>
-                    <div className="adm-proj-kpi-content">
-                      <span className="adm-proj-kpi-num">{projectMetrics.total}</span>
-                      <span className="adm-proj-kpi-label">Total Projects</span>
-                    </div>
-                  </div>
-
-                  <div className="adm-proj-kpi-chip">
-                    <div className="adm-proj-kpi-icon-box green">
-                      <CheckCircle2 size={16} />
-                    </div>
-                    <div className="adm-proj-kpi-content">
-                      <span className="adm-proj-kpi-num">{projectMetrics.published}</span>
-                      <span className="adm-proj-kpi-label">Published Live</span>
-                    </div>
-                  </div>
-
-                  <div className="adm-proj-kpi-chip">
-                    <div className="adm-proj-kpi-icon-box amber">
-                      <Clock size={16} />
-                    </div>
-                    <div className="adm-proj-kpi-content">
-                      <span className="adm-proj-kpi-num">{projectMetrics.drafts}</span>
-                      <span className="adm-proj-kpi-label">Draft Reviews</span>
-                    </div>
-                  </div>
-
-                  <div className="adm-proj-kpi-chip">
-                    <div className="adm-proj-kpi-icon-box cyan">
-                      <ShieldCheck size={16} />
-                    </div>
-                    <div className="adm-proj-kpi-content">
-                      <span className="adm-proj-kpi-num">{projectMetrics.approved}</span>
-                      <span className="adm-proj-kpi-label">Client Approved</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* CONTROLS: SEARCH, INDUSTRY PILLS & VIEW TOGGLE */}
-                <div className="adm-proj-toolbar">
-                  <div className="adm-proj-search-wrap">
-                    <Search size={16} className="adm-proj-search-icon" />
-                    <input
-                      type="text"
-                      className="adm-proj-search-input"
-                      placeholder="Search projects by client, title, industry, location..."
-                      value={projectSearch}
-                      onChange={e => setProjectSearch(e.target.value)}
-                      aria-label="Search turnkey project case studies"
-                    />
-                    {projectSearch && (
-                      <button
-                        type="button"
-                        className="adm-proj-search-clear"
-                        onClick={() => setProjectSearch('')}
-                        title="Clear search"
-                        aria-label="Clear search query"
-                      >
-                        <X size={14} />
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="adm-proj-filter-controls">
-                    {/* Industry Pill Chips with Counts */}
-                    <div className="adm-proj-pill-chips-scroll" role="tablist" aria-label="Filter by industry">
-                      {projectIndustryOptions.map(opt => {
-                        const count = opt.key === 'All'
-                          ? projects.length
-                          : projects.filter(p => (p.industry || '').toLowerCase().includes(opt.key.toLowerCase())).length;
-                        const isSelected = projectIndustryFilter === opt.key;
-                        return (
-                          <button
-                            key={opt.key}
-                            type="button"
-                            role="tab"
-                            aria-selected={isSelected}
-                            className={`adm-proj-pill-chip ${isSelected ? 'active' : ''}`}
-                            onClick={() => setProjectIndustryFilter(opt.key)}
-                          >
-                            <span>{opt.label}</span>
-                            <span className="adm-proj-pill-count">{count}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* View Switcher (Grid / List) */}
-                    <div className="adm-proj-view-toggle" role="group" aria-label="View toggle">
-                      <button
-                        type="button"
-                        className={`adm-proj-view-btn ${projectViewMode === 'grid' ? 'active' : ''}`}
-                        onClick={() => setProjectViewMode('grid')}
-                        title="Grid View"
-                        aria-label="Switch to grid view"
-                      >
-                        <Grid size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        className={`adm-proj-view-btn ${projectViewMode === 'list' ? 'active' : ''}`}
-                        onClick={() => setProjectViewMode('list')}
-                        title="List View"
-                        aria-label="Switch to list view"
-                      >
-                        <List size={16} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* STATES: LOADING SKELETON / EMPTY / CONTENT */}
-              {loading && projects.length === 0 ? (
-                <div className="adm-proj-grid">
-                  {[1, 2, 3, 4, 5, 6].map(i => (
-                    <div key={i} className="adm-proj-skeleton-card">
-                      <div className="adm-proj-skeleton-img" />
-                      <div className="adm-proj-skeleton-body">
-                        <div className="adm-proj-skeleton-line short" />
-                        <div className="adm-proj-skeleton-line title" />
-                        <div className="adm-proj-skeleton-line desc" />
-                        <div className="adm-proj-skeleton-line desc short" />
-                        <div className="adm-proj-skeleton-chips">
-                          <span className="adm-proj-skeleton-chip" />
-                          <span className="adm-proj-skeleton-chip" />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : filteredProjects.length === 0 ? (
-                <div className="adm-proj-empty">
-                  <div className="adm-proj-empty-icon-box">
-                    <Briefcase size={32} />
-                  </div>
-                  <h3 className="adm-proj-empty-title">No projects found</h3>
-                  <p className="adm-proj-empty-desc">
-                    {projectSearch || projectIndustryFilter !== 'All'
-                      ? `No project case studies matched your current filter criteria ("${projectSearch || projectIndustryFilter}").`
-                      : 'No project case studies have been registered yet. Add your first completed installation to showcase your engineering excellence.'}
-                  </p>
-                  <div className="adm-proj-empty-actions">
-                    {(projectSearch || projectIndustryFilter !== 'All') && (
-                      <button
-                        type="button"
-                        className="adm-proj-btn-secondary"
-                        onClick={() => {
-                          setProjectSearch('');
-                          setProjectIndustryFilter('All');
-                        }}
-                      >
-                        <X size={15} />
-                        <span>Clear Filters</span>
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      className="adm-proj-btn-primary"
-                      onClick={handleOpenAddProject}
-                    >
-                      <Plus size={15} />
-                      <span>Add Turnkey Project</span>
-                    </button>
-                  </div>
-                </div>
-              ) : projectViewMode === 'grid' ? (
-                /* GRID VIEW */
-                <div className="adm-proj-grid">
-                  {filteredProjects.map((proj, idx) => {
-                    const relatedList = Array.isArray(proj.related_products)
-                      ? proj.related_products
-                      : (proj.related_products_text ? proj.related_products_text.split(',').map(s => s.trim()).filter(Boolean) : []);
-                    const maxChips = 3;
-                    const visibleChips = relatedList.slice(0, maxChips);
-                    const extraCount = relatedList.length - maxChips;
-
-                    return (
-                      <article
-                        key={proj.id}
-                        className="adm-proj-card"
-                        style={{ '--proj-index': idx }}
-                      >
-                        {/* Image Cover with Gradient Overlay & Badges */}
-                        <ProjectCardImage
-                          src={proj.image_url}
-                          alt={proj.title}
-                          industry={proj.industry}
-                          isPublished={proj.is_published}
-                          onTogglePublish={() => handleToggleProjectPublish(proj)}
-                        />
-
-                        {/* Card Body */}
-                        <div className="adm-proj-card-body">
-                          {/* Client & Verification Badge */}
-                          <div className="adm-proj-client-row">
-                            <span className="adm-proj-client-name" title={proj.client_name}>
-                              {proj.client_name || 'Confidential Client'}
-                            </span>
-                            {proj.client_approved ? (
-                              <span className="adm-proj-badge-approved" title="Client approved publication">
-                                <CheckCircle2 size={12} />
-                                <span>Approved</span>
-                              </span>
-                            ) : (
-                              <span className="adm-proj-badge-unapproved" title="Client consent pending">
-                                <AlertCircle size={12} />
-                                <span>Unapproved</span>
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Location */}
-                          <div className="adm-proj-location-row">
-                            <MapPin size={13} className="adm-proj-location-icon" />
-                            <span>{proj.location || 'Location not specified'}</span>
-                          </div>
-
-                          {/* Title */}
-                          <h3 className="adm-proj-card-title" title={proj.title}>
-                            {proj.title}
-                          </h3>
-
-                          {/* Description */}
-                          <p className="adm-proj-card-desc" title={proj.description}>
-                            {proj.description}
-                          </p>
-
-                          {/* Related Product Chips */}
-                          {visibleChips.length > 0 && (
-                            <div className="adm-proj-chips-row">
-                              {visibleChips.map((rp, i) => (
-                                <span key={i} className="adm-proj-chip" title={rp}>
-                                  {rp}
-                                </span>
-                              ))}
-                              {extraCount > 0 && (
-                                <span className="adm-proj-chip-more" title={relatedList.slice(maxChips).join(', ')}>
-                                  +{extraCount}
-                                </span>
-                              )}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Card Footer */}
-                        <div className="adm-proj-card-footer">
-                          <div className="adm-proj-year">
-                            <Calendar size={13} />
-                            <span>{proj.completion_year ? `Completed ${proj.completion_year}` : 'Completed 2025'}</span>
-                          </div>
-
-                          <div className="adm-proj-card-actions">
-                            <button
-                              type="button"
-                              className="adm-proj-action-btn preview"
-                              onClick={() => setPreviewProject(proj)}
-                              title="Preview Case Study"
-                              aria-label={`Preview ${proj.title}`}
-                            >
-                              <Eye size={15} />
-                            </button>
-                            <button
-                              type="button"
-                              className="adm-proj-action-btn edit"
-                              onClick={() => handleOpenEditProject(proj)}
-                              title="Edit Case Study"
-                              aria-label={`Edit ${proj.title}`}
-                            >
-                              <Edit3 size={15} />
-                            </button>
-                            <button
-                              type="button"
-                              className="adm-proj-action-btn delete"
-                              onClick={() => handleDeleteProject(proj)}
-                              title="Delete Case Study"
-                              aria-label={`Delete ${proj.title}`}
-                            >
-                              <Trash2 size={15} />
-                            </button>
-                          </div>
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
-              ) : (
-                /* LIST VIEW */
-                <div className="adm-proj-table-wrap">
-                  <table className="adm-proj-table">
-                    <thead>
-                      <tr>
-                        <th style={{ width: '70px' }}>Thumbnail</th>
-                        <th>Project & Client</th>
-                        <th>Industry</th>
-                        <th>Location</th>
-                        <th>Year</th>
-                        <th>Approval</th>
-                        <th>Status</th>
-                        <th style={{ textAlign: 'right' }}>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredProjects.map((proj, idx) => (
-                        <tr key={proj.id} style={{ '--proj-index': idx }}>
-                          <td>
-                            <div className="adm-proj-table-thumb">
-                              {proj.image_url ? (
-                                <img
-                                  src={proj.image_url}
-                                  alt={proj.title}
-                                  loading="lazy"
-                                  onError={(e) => {
-                                    e.currentTarget.style.display = 'none';
-                                    if (e.currentTarget.nextSibling) e.currentTarget.nextSibling.style.display = 'flex';
-                                  }}
-                                />
-                              ) : null}
-                              <div
-                                className="adm-proj-table-thumb-fallback"
-                                style={{ display: proj.image_url ? 'none' : 'flex' }}
-                              >
-                                <Briefcase size={18} />
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="adm-proj-table-title-cell">
-                              <span className="adm-proj-table-title">{proj.title}</span>
-                              <span className="adm-proj-table-client">{proj.client_name || 'Confidential Client'}</span>
-                            </div>
-                          </td>
-                          <td>
-                            <span className="adm-proj-table-pill">{proj.industry}</span>
-                          </td>
-                          <td>
-                            <div className="adm-proj-table-location">
-                              <MapPin size={12} />
-                              <span>{proj.location || '—'}</span>
-                            </div>
-                          </td>
-                          <td>
-                            <span className="adm-proj-table-year">{proj.completion_year || '—'}</span>
-                          </td>
-                          <td>
-                            {proj.client_approved ? (
-                              <span className="adm-proj-badge-approved">
-                                <CheckCircle2 size={11} />
-                                <span>Approved</span>
-                              </span>
-                            ) : (
-                              <span className="adm-proj-badge-unapproved">
-                                <AlertCircle size={11} />
-                                <span>Unapproved</span>
-                              </span>
-                            )}
-                          </td>
-                          <td>
-                            <button
-                              type="button"
-                              className={`adm-proj-status-btn ${proj.is_published ? 'published' : 'draft'}`}
-                              onClick={() => handleToggleProjectPublish(proj)}
-                              title={proj.is_published ? 'Live on website — Click to set Draft' : 'Draft — Click to Publish live'}
-                              aria-label={proj.is_published ? 'Published project. Click to mark draft' : 'Draft project. Click to publish'}
-                            >
-                              <span className={`adm-proj-status-dot ${proj.is_published ? 'live' : ''}`} />
-                              <span>{proj.is_published ? 'Published' : 'Draft'}</span>
-                            </button>
-                          </td>
-                          <td>
-                            <div className="adm-proj-table-actions">
-                              <button
-                                type="button"
-                                className="adm-proj-action-btn preview"
-                                onClick={() => setPreviewProject(proj)}
-                                title="Preview Case Study"
-                                aria-label={`Preview ${proj.title}`}
-                              >
-                                <Eye size={15} />
-                              </button>
-                              <button
-                                type="button"
-                                className="adm-proj-action-btn edit"
-                                onClick={() => handleOpenEditProject(proj)}
-                                title="Edit Case Study"
-                                aria-label={`Edit ${proj.title}`}
-                              >
-                                <Edit3 size={15} />
-                              </button>
-                              <button
-                                type="button"
-                                className="adm-proj-action-btn delete"
-                                onClick={() => handleDeleteProject(proj)}
-                                title="Delete Case Study"
-                                aria-label={`Delete ${proj.title}`}
-                              >
-                                <Trash2 size={15} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* =========================================================================
               MODULE 7: WEBSITE CONTENT MANAGEMENT (Live CMS)
               ========================================================================= */}
           {activeTab === 'content' && (
@@ -3816,236 +2928,6 @@ export default function AdminPanel({
       )}
 
       {/* =========================================================================
-          MODAL 5: PROJECT ADD / EDIT MODAL
-          ========================================================================= */}
-      {editingProject && (
-        <div className="admin-modal-overlay" onClick={() => setEditingProject(null)}>
-          <div className="adm-proj-modal-container" onClick={e => e.stopPropagation()}>
-            {/* Modal Header */}
-            <div className="adm-proj-modal-header">
-              <div className="adm-proj-modal-title-group">
-                <div className="adm-proj-modal-icon-badge">
-                  <Briefcase size={18} />
-                </div>
-                <div>
-                  <h3 className="adm-proj-modal-title">
-                    {editingProject === 'new' ? 'New Turnkey Project Case Study' : `Edit Case Study: ${editingProject.title}`}
-                  </h3>
-                  <p className="adm-proj-modal-subtitle">
-                    Configure turnkey engineering deliverables, client authorization, and public visibility.
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                className="adm-proj-modal-close-btn"
-                onClick={() => setEditingProject(null)}
-                aria-label="Close modal"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Modal Form */}
-            <form onSubmit={handleSaveProject} className="adm-proj-modal-form">
-              <div className="adm-proj-modal-scroll">
-                {/* SECTION 1: BASICS */}
-                <div className="adm-proj-form-section">
-                  <div className="adm-proj-section-header">
-                    <span className="adm-proj-section-tag">01</span>
-                    <h4 className="adm-proj-section-title">Project Basics & Identity</h4>
-                  </div>
-
-                  <div className="adm-proj-form-group full-width">
-                    <label className="adm-proj-label">
-                      <span>Project Title</span>
-                      <span className="adm-proj-required">*</span>
-                    </label>
-                    <input
-                      className="adm-proj-input"
-                      required
-                      value={projectForm.title}
-                      onChange={e => setProjectForm({ ...projectForm, title: e.target.value })}
-                      placeholder="e.g. Turnkey 12-Door Cleanroom Interlocking Network"
-                    />
-                  </div>
-
-                  <div className="adm-proj-form-grid">
-                    <div className="adm-proj-form-group">
-                      <label className="adm-proj-label">Client Name</label>
-                      <input
-                        className="adm-proj-input"
-                        value={projectForm.client_name}
-                        onChange={e => setProjectForm({ ...projectForm, client_name: e.target.value })}
-                        placeholder="e.g. Glenmark Pharmaceuticals"
-                      />
-                    </div>
-                    <div className="adm-proj-form-group">
-                      <label className="adm-proj-label">
-                        <span>Industry</span>
-                        <span className="adm-proj-required">*</span>
-                      </label>
-                      <input
-                        className="adm-proj-input"
-                        required
-                        value={projectForm.industry}
-                        onChange={e => setProjectForm({ ...projectForm, industry: e.target.value })}
-                        placeholder="e.g. Pharmaceutical Cleanroom"
-                      />
-                    </div>
-                    <div className="adm-proj-form-group">
-                      <label className="adm-proj-label">Location / Site</label>
-                      <input
-                        className="adm-proj-input"
-                        value={projectForm.location}
-                        onChange={e => setProjectForm({ ...projectForm, location: e.target.value })}
-                        placeholder="e.g. Navi Mumbai, Maharashtra"
-                      />
-                    </div>
-                    <div className="adm-proj-form-group">
-                      <label className="adm-proj-label">Completion Year</label>
-                      <input
-                        className="adm-proj-input"
-                        value={projectForm.completion_year}
-                        onChange={e => setProjectForm({ ...projectForm, completion_year: e.target.value })}
-                        placeholder="e.g. 2025"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* SECTION 2: MEDIA */}
-                <div className="adm-proj-form-section">
-                  <div className="adm-proj-section-header">
-                    <span className="adm-proj-section-tag">02</span>
-                    <h4 className="adm-proj-section-title">Media & Visual Showcase</h4>
-                  </div>
-
-                  <div className="adm-proj-form-group full-width">
-                    <label className="adm-proj-label">Project Photo URL</label>
-                    <input
-                      className="adm-proj-input"
-                      value={projectForm.image_url}
-                      onChange={e => setProjectForm({ ...projectForm, image_url: e.target.value })}
-                      placeholder="https://images.unsplash.com/... or /images/..."
-                    />
-                    {projectForm.image_url && (
-                      <div className="adm-proj-modal-thumb-preview">
-                        <img
-                          src={projectForm.image_url}
-                          alt="Preview"
-                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                        />
-                        <span className="adm-proj-modal-thumb-label">Image Preview</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* SECTION 3: SCOPE & DELIVERABLES */}
-                <div className="adm-proj-form-section">
-                  <div className="adm-proj-section-header">
-                    <span className="adm-proj-section-tag">03</span>
-                    <h4 className="adm-proj-section-title">Technical Scope & Integrated Hardware</h4>
-                  </div>
-
-                  <div className="adm-proj-form-group full-width">
-                    <label className="adm-proj-label">
-                      <span>Technical Scope & Description</span>
-                      <span className="adm-proj-required">*</span>
-                    </label>
-                    <textarea
-                      className="adm-proj-textarea"
-                      rows={4}
-                      required
-                      value={projectForm.description}
-                      onChange={e => setProjectForm({ ...projectForm, description: e.target.value })}
-                      placeholder="Describe engineering specifications, AHU interlocks, door counts, emergency overrides, and cleanroom validation standard achieved..."
-                    />
-                  </div>
-
-                  <div className="adm-proj-form-group full-width">
-                    <label className="adm-proj-label">Related HTI Products (comma-separated)</label>
-                    <input
-                      className="adm-proj-input"
-                      value={projectForm.related_products_text}
-                      onChange={e => setProjectForm({ ...projectForm, related_products_text: e.target.value })}
-                      placeholder="e.g. Door Interlock System, Air Shower Automation, Electromagnetic Locks"
-                    />
-                    <span className="adm-proj-helper-text">
-                      Separate product names with commas to render individual showcase tags.
-                    </span>
-                  </div>
-                </div>
-
-                {/* SECTION 4: PUBLISHING & CLIENT APPROVAL */}
-                <div className="adm-proj-form-section">
-                  <div className="adm-proj-section-header">
-                    <span className="adm-proj-section-tag">04</span>
-                    <h4 className="adm-proj-section-title">Publishing & Client Approval</h4>
-                  </div>
-
-                  <div className="adm-proj-toggle-cards">
-                    <label className={`adm-proj-toggle-card ${projectForm.client_approved ? 'checked' : ''}`}>
-                      <input
-                        type="checkbox"
-                        checked={projectForm.client_approved}
-                        onChange={e => setProjectForm({ ...projectForm, client_approved: e.target.checked })}
-                      />
-                      <div className="adm-proj-toggle-card-content">
-                        <div className="adm-proj-toggle-card-header">
-                          <ShieldCheck size={16} className="adm-proj-toggle-icon blue" />
-                          <span className="adm-proj-toggle-card-title">Client Approved</span>
-                        </div>
-                        <p className="adm-proj-toggle-card-desc">
-                          Client has officially authorized HTI to mention their corporate name and installation details.
-                        </p>
-                      </div>
-                    </label>
-
-                    <label className={`adm-proj-toggle-card ${projectForm.is_published ? 'checked' : ''}`}>
-                      <input
-                        type="checkbox"
-                        checked={projectForm.is_published}
-                        onChange={e => setProjectForm({ ...projectForm, is_published: e.target.checked })}
-                      />
-                      <div className="adm-proj-toggle-card-content">
-                        <div className="adm-proj-toggle-card-header">
-                          <CheckCircle2 size={16} className="adm-proj-toggle-icon green" />
-                          <span className="adm-proj-toggle-card-title">Published & Live</span>
-                        </div>
-                        <p className="adm-proj-toggle-card-desc">
-                          Immediately visible to public website visitors on the Projects & Case Studies catalog.
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Sticky Footer */}
-              <div className="adm-proj-modal-footer">
-                <button
-                  type="button"
-                  className="adm-proj-btn-secondary"
-                  onClick={() => setEditingProject(null)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="adm-proj-btn-primary"
-                >
-                  <Save size={16} />
-                  <span>Save Case Study</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* =========================================================================
           MODAL 6: INTERACTIVE INQUIRY DETAIL DRAWER
           ========================================================================= */}
       {selectedInquiry && (
@@ -4266,183 +3148,6 @@ export default function AdminPanel({
         </div>
       )}
 
-      {/* =========================================================================
-          MODAL 8: PRODUCT QUICK PREVIEW MODAL
-          ========================================================================= */}
-      {previewProduct && (
-        <div className="admin-modal-overlay" onClick={() => setPreviewProduct(null)}>
-          <div className="admin-modal-container" style={{ maxWidth: '640px' }} onClick={e => e.stopPropagation()}>
-            <div className="admin-modal-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Eye size={18} className="text-cyan" />
-                <h3 className="admin-modal-title">Live Preview: {previewProduct.name}</h3>
-              </div>
-              <button className="topbar-close-btn" onClick={() => setPreviewProduct(null)}><X size={18} /></button>
-            </div>
-            <div style={{ padding: '24px', maxHeight: '72vh', overflowY: 'auto' }}>
-              <div style={{ height: '220px', borderRadius: '10px', overflow: 'hidden', background: '#1e293b', marginBottom: '16px' }}>
-                {previewProduct.image_url ? (
-                  <img src={previewProduct.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                  <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                    <Package size={48} style={{ color: '#475569' }} />
-                  </div>
-                )}
-              </div>
-              <span className="pill-category cat-auto">{previewProduct.category}</span>
-              <h3 style={{ margin: '8px 0 4px 0', color: '#ffffff', fontSize: '1.2rem' }}>{previewProduct.name}</h3>
-              <p style={{ color: '#38bdf8', fontSize: '0.9rem', margin: '0 0 12px 0' }}>{previewProduct.tagline}</p>
-              <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: '0 0 16px 0' }}>{previewProduct.description}</p>
-
-              {previewProduct.features && previewProduct.features.length > 0 && (
-                <div style={{ marginBottom: '16px' }}>
-                  <div style={{ fontWeight: '700', color: '#ffffff', fontSize: '0.85rem', marginBottom: '6px' }}>Key Engineering Features</div>
-                  <ul style={{ margin: 0, paddingLeft: '18px', color: '#cbd5e1', fontSize: '0.82rem', lineHeight: '1.5' }}>
-                    {previewProduct.features.map((f, idx) => (
-                      <li key={idx}>{f}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =========================================================================
-          MODAL 9: PROJECT QUICK PREVIEW MODAL
-          ========================================================================= */}
-      {previewProject && (
-        <div className="admin-modal-overlay" onClick={() => setPreviewProject(null)}>
-          <div className="adm-proj-preview-modal-container" onClick={e => e.stopPropagation()}>
-            {/* Header */}
-            <div className="adm-proj-modal-header">
-              <div className="adm-proj-modal-title-group">
-                <div className="adm-proj-modal-icon-badge blue">
-                  <Briefcase size={18} />
-                </div>
-                <div>
-                  <h3 className="adm-proj-modal-title">Case Study Preview</h3>
-                  <p className="adm-proj-modal-subtitle">
-                    Live presentation view for this turnkey client installation.
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                className="adm-proj-modal-close-btn"
-                onClick={() => setPreviewProject(null)}
-                aria-label="Close preview"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Scrollable Preview Body */}
-            <div className="adm-proj-preview-body">
-              {/* Media Banner */}
-              <div className="adm-proj-preview-media">
-                {previewProject.image_url ? (
-                  <img
-                    src={previewProject.image_url}
-                    alt={previewProject.title}
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      if (e.currentTarget.nextSibling) e.currentTarget.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                ) : null}
-                <div
-                  className="adm-proj-preview-media-fallback"
-                  style={{ display: previewProject.image_url ? 'none' : 'flex' }}
-                >
-                  <Briefcase size={48} />
-                  <span>HTI Engineering Installation Showcase</span>
-                </div>
-                <div className="adm-proj-preview-media-overlay" />
-                <span className="adm-proj-pill-industry">{previewProject.industry}</span>
-                <span className={`adm-proj-status-btn ${previewProject.is_published ? 'published' : 'draft'}`} style={{ cursor: 'default' }}>
-                  <span className={`adm-proj-status-dot ${previewProject.is_published ? 'live' : ''}`} />
-                  <span>{previewProject.is_published ? 'Published Live' : 'Draft Mode'}</span>
-                </span>
-              </div>
-
-              {/* Meta & Badges */}
-              <div className="adm-proj-preview-meta-row">
-                <div className="adm-proj-preview-client-box">
-                  <span className="adm-proj-preview-client">{previewProject.client_name || 'Confidential Client'}</span>
-                  {previewProject.client_approved ? (
-                    <span className="adm-proj-badge-approved">
-                      <CheckCircle2 size={12} />
-                      <span>Approved</span>
-                    </span>
-                  ) : (
-                    <span className="adm-proj-badge-unapproved">
-                      <AlertCircle size={12} />
-                      <span>Unapproved</span>
-                    </span>
-                  )}
-                </div>
-
-                <div className="adm-proj-preview-location-box">
-                  <MapPin size={13} />
-                  <span>{previewProject.location || 'Location not specified'}</span>
-                  <span className="adm-proj-preview-dot">•</span>
-                  <Calendar size={13} />
-                  <span>Completed {previewProject.completion_year || '2025'}</span>
-                </div>
-              </div>
-
-              {/* Title */}
-              <h2 className="adm-proj-preview-title">{previewProject.title}</h2>
-
-              {/* Technical Description */}
-              <div className="adm-proj-preview-desc-wrap">
-                <h4 className="adm-proj-preview-section-title">Technical Scope & Integration</h4>
-                <p className="adm-proj-preview-desc">{previewProject.description}</p>
-              </div>
-
-              {/* Related Products */}
-              {previewProject.related_products && previewProject.related_products.length > 0 && (
-                <div className="adm-proj-preview-products-wrap">
-                  <h4 className="adm-proj-preview-section-title">Integrated HTI Systems & Hardware</h4>
-                  <div className="adm-proj-chips-row">
-                    {previewProject.related_products.map((rp, i) => (
-                      <span key={i} className="adm-proj-chip large">
-                        <Package size={12} />
-                        <span>{rp}</span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Sticky Preview Footer */}
-            <div className="adm-proj-modal-footer">
-              <button
-                type="button"
-                className="adm-proj-btn-secondary"
-                onClick={() => setPreviewProject(null)}
-              >
-                Close Preview
-              </button>
-              <button
-                type="button"
-                className="adm-proj-btn-primary"
-                onClick={() => {
-                  const proj = previewProject;
-                  setPreviewProject(null);
-                  handleOpenEditProject(proj);
-                }}
-              >
-                <Edit3 size={15} />
-                <span>Edit Case Study</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+      </div>
   );
 }

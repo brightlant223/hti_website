@@ -1,14 +1,21 @@
 import os
-import pymysql
 import sqlite3
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Load environment variables from .env in backend directory or root
-BACKEND_DIR = Path(__file__).resolve().parent
-ENV_PATH = BACKEND_DIR / ".env"
-load_dotenv(dotenv_path=ENV_PATH)
-load_dotenv()  # Fallback to current working dir or system env
+try:
+    import pymysql
+except ImportError:
+    pymysql = None
+
+try:
+    from dotenv import load_dotenv
+    BACKEND_DIR = Path(__file__).resolve().parent
+    ENV_PATH = BACKEND_DIR / ".env"
+    load_dotenv(dotenv_path=ENV_PATH)
+    load_dotenv()
+except ImportError:
+    BACKEND_DIR = Path(__file__).resolve().parent
+    ENV_PATH = BACKEND_DIR / ".env"
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = int(os.getenv("DB_PORT", "3306"))
@@ -23,6 +30,8 @@ def test_mysql_connectivity():
     Tests if local MySQL server is reachable with the provided credentials.
     Returns (True, "Connected") or (False, error_message).
     """
+    if pymysql is None:
+        return False, "PyMySQL module not installed"
     try:
         conn = pymysql.connect(
             host=DB_HOST,

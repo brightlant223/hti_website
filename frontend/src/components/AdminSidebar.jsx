@@ -3,10 +3,8 @@ import './AdminSidebar.css';
 import {
   Home,
   LayoutDashboard,
-  Layers,
   FileText,
   Users,
-  Briefcase,
   Globe,
   MessageSquare,
   ShieldCheck,
@@ -23,11 +21,9 @@ export default function AdminSidebar({
   currentUser = 'Admin',
   userRole = 'Administrator',
   handleLogout,
-  products = [],
   blogs = [],
   clients = [],
   partners = [],
-  projects = [],
   inquiries = [],
   unansweredInquiries = [],
   adminUsers = [],
@@ -58,17 +54,6 @@ export default function AdminSidebar({
           badge: null
         },
         {
-          id: 'products',
-          label: 'Products',
-          subtitle: 'Manage product catalogue',
-          icon: Layers,
-          accent: 'purple',
-          badge: {
-            text: products.length || 30,
-            variant: 'pale-blue'
-          }
-        },
-        {
           id: 'blogs',
           label: 'Blogs & Tech',
           subtitle: 'Articles & technical insights',
@@ -88,17 +73,6 @@ export default function AdminSidebar({
           badge: {
             text: totalClientsAndPartners || 27,
             variant: 'pale-green'
-          }
-        },
-        {
-          id: 'projects',
-          label: 'Projects',
-          subtitle: 'Turnkey case studies',
-          icon: Briefcase,
-          accent: 'orange',
-          badge: {
-            text: projects.length || 4,
-            variant: 'pale-orange'
           }
         },
         {
