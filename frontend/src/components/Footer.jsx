@@ -356,6 +356,18 @@ export default function Footer({ onNavigate }) {
                 Sitemap
               </a>
               <span className="footer-dot-sep" aria-hidden="true">|</span>
+              <a
+                href="/admin"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLinkClick('admin');
+                }}
+                className="footer-admin-link"
+                title="HTI Control Administrative Console"
+              >
+                Admin Login
+              </a>
+              <span className="footer-dot-sep" aria-hidden="true">|</span>
               <div className="footer-credit">
                 Designed &amp; Developed by{' '}
                 <a

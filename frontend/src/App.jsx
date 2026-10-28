@@ -236,7 +236,21 @@ const parseUrlRoute = () => {
     return { page: 'server-room-monitoring', param: null };
   }
 
-  if (path === '/admin' || path === '/admin/' || hash === '#/admin' || hash === '#admin') {
+  // Check admin portal route (/admin, /admin-login, /login, /admin/login)
+  const cleanPathLower = (path || '').toLowerCase().replace(/\/$/, '');
+  const cleanHashLower = (hash || '').toLowerCase().replace(/\/$/, '');
+  if (
+    cleanPathLower === '/admin' ||
+    cleanPathLower === '/admin-login' ||
+    cleanPathLower === '/login' ||
+    cleanPathLower === '/admin/login' ||
+    cleanHashLower === '#/admin' ||
+    cleanHashLower === '#admin' ||
+    cleanHashLower === '#/admin-login' ||
+    cleanHashLower === '#admin-login' ||
+    cleanHashLower === '#/login' ||
+    cleanHashLower === '#login'
+  ) {
     return { page: 'home', param: null, openAdmin: true };
   }
 
@@ -304,6 +318,66 @@ const parseUrlRoute = () => {
   return { page: 'home', param: null };
 };
 
+// Robust Error Boundary to guarantee no white screens on unexpected component errors
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Captured UI runtime error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          padding: '30px',
+          margin: '20px auto',
+          maxWidth: '600px',
+          background: '#ffffff',
+          borderRadius: '16px',
+          border: '1px solid #fecaca',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+          textAlign: 'center',
+          fontFamily: 'Inter, system-ui, sans-serif'
+        }}>
+          <h3 style={{ color: '#b91c1c', marginBottom: '8px', fontSize: '1.25rem' }}>
+            {this.props.fallbackTitle || 'Unable to render component'}
+          </h3>
+          <p style={{ color: '#475569', fontSize: '0.9rem', marginBottom: '16px' }}>
+            An unexpected error occurred: {this.state.error?.message || 'Unknown runtime error'}.
+          </p>
+          <button
+            onClick={() => {
+              this.setState({ hasError: false, error: null });
+              if (this.props.onReset) this.props.onReset();
+              else window.location.reload();
+            }}
+            style={{
+              padding: '10px 20px',
+              background: '#075be8',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '8px',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            Retry / Reload
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   const [routeState, setRouteState] = useState(parseUrlRoute);
   const [products, setProducts] = useState(productsData);
@@ -327,7 +401,13 @@ export default function App() {
   const [prefilledProduct, setPrefilledProduct] = useState('');
   const [prefilledCategory, setPrefilledCategory] = useState('');
 
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(() => {
+    try {
+      return Boolean(parseUrlRoute().openAdmin);
+    } catch {
+      return false;
+    }
+  });
 
   // Theme management ('light' | 'dark' | 'system')
   const [theme, setTheme] = useState(() => {
@@ -555,6 +635,15 @@ export default function App() {
       const canonicalPage = page === 'access-automation' ? 'automation' : page;
       targetUrl = `/${canonicalPage}`;
       targetPage = canonicalPage;
+    } else if (page === 'admin' || page === 'admin-login' || page === 'login') {
+      targetUrl = '/admin';
+      targetPage = 'home';
+      setIsAdminOpen(true);
+      setRouteState({ page: 'home', param: null, openAdmin: true });
+      if (window.location.pathname !== '/admin') {
+        window.history.pushState({}, '', '/admin');
+      }
+      return;
     } else if (page === 'home') {
       targetUrl = '/';
     }
@@ -817,6 +906,21 @@ export default function App() {
             />
           </>
         )}
+
+        {/* Fallback to Home if unknown route */}
+        {![
+          'product', 'catalog', 'automation', 'security-systems', 'cleanroom-interlocks',
+          'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring',
+          'clients', 'about', 'contact', 'partners', 'blogs', 'careers', 'home',
+          ...ALL_SERVICE_SLUGS
+        ].includes(routeState.page) && (
+          <Hero
+            onQuoteClick={scrollToContact}
+            onCatalogClick={scrollToCatalog}
+            onDemoClick={scrollToDemo}
+            onNavigate={navigateTo}
+          />
+        )}
       </main>
 
       {/* Product Deep-Dive Modal (if triggered from catalog) */}
@@ -828,16 +932,33 @@ export default function App() {
         />
       )}
 
-      {/* Admin Panel */}
-      <AdminPanel
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
-        onProductsChanged={handleRefreshProducts}
-        onBlogsChanged={handleRefreshBlogs}
-        onClientsChanged={handleRefreshClients}
-        onProjectsChanged={handleRefreshProjects}
-        onContentChanged={handleRefreshContent}
-      />
+      {/* Admin Panel wrapped in ErrorBoundary to guarantee graceful recovery */}
+      <ErrorBoundary
+        fallbackTitle="Admin Console Initialization Notice"
+        onReset={() => setIsAdminOpen(false)}
+      >
+        <AdminPanel
+          isOpen={isAdminOpen}
+          onClose={() => {
+            setIsAdminOpen(false);
+            if (
+              window.location.pathname === '/admin' ||
+              window.location.pathname === '/admin/' ||
+              window.location.pathname === '/admin-login' ||
+              window.location.pathname === '/login' ||
+              window.location.hash.includes('admin') ||
+              window.location.hash.includes('login')
+            ) {
+              window.history.pushState({}, '', '/');
+            }
+          }}
+          onProductsChanged={handleRefreshProducts}
+          onBlogsChanged={handleRefreshBlogs}
+          onClientsChanged={handleRefreshClients}
+          onProjectsChanged={handleRefreshProjects}
+          onContentChanged={handleRefreshContent}
+        />
+      </ErrorBoundary>
 
       {/* Footer */}
       <Footer onNavigate={navigateTo} />
