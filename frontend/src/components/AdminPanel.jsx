@@ -1391,8 +1391,8 @@ export default function AdminPanel({
 
             <div className="admin-topbar-actions adm-topbar-actions">
               <span className="topbar-live-tag adm-topbar-live-tag" title="SQL DB: hti_backend (Live)" style={{ background: '#ecfdf5', color: '#059669', borderColor: '#a7f3d0' }}>
-                <Database size={13} style={{ color: '#059669', flexShrink: 0 }} />
-                <span>SQL DB : hti_backend (Live)</span>
+                <span className="tag-dot adm-tag-dot" style={{ background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
+                <span>SQL DB: hti_backend (Live)</span>
               </span>
 
               <button
