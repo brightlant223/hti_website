@@ -72,50 +72,6 @@ function AnimatedNumber({ value }) {
   return <span>{animatedValue}</span>;
 }
 
-function ProjectImageFallback({ className }) {
-  return (
-    <div className={`adm-proj-img-fallback ${className || ''}`}>
-      <Briefcase size={36} className="adm-proj-fallback-icon" />
-      <span className="adm-proj-fallback-label">HTI Case Study</span>
-    </div>
-  );
-}
-
-function ProjectCardImage({ src, alt, industry, isPublished, onTogglePublish }) {
-  const [imgError, setImgError] = useState(false);
-
-  return (
-    <div className="adm-proj-card-media">
-      {src && !imgError ? (
-        <img
-          src={src}
-          alt={alt || 'Project installation'}
-          className="adm-proj-card-img"
-          loading="lazy"
-          onError={() => setImgError(true)}
-        />
-      ) : (
-        <ProjectImageFallback />
-      )}
-      <div className="adm-proj-card-overlay" />
-      <span className="adm-proj-pill-industry">{industry}</span>
-      <button
-        type="button"
-        className={`adm-proj-status-btn ${isPublished ? 'published' : 'draft'}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (onTogglePublish) onTogglePublish();
-        }}
-        title={isPublished ? 'Live on website — Click to set Draft' : 'Draft — Click to Publish live'}
-        aria-label={isPublished ? 'Published project. Click to mark draft' : 'Draft project. Click to publish'}
-      >
-        <span className={`adm-proj-status-dot ${isPublished ? 'live' : ''}`} />
-        <span>{isPublished ? 'Published' : 'Draft'}</span>
-      </button>
-    </div>
-  );
-}
-
 export default function AdminPanel({
   isOpen,
   onClose,
@@ -1097,39 +1053,6 @@ export default function AdminPanel({
     }
     return { mb };
   }, [systemHealth?.database]);
-
-  // Turnkey projects summary statistics (placed above ALL conditional returns to strictly obey Rules of Hooks)
-  const projectMetrics = useMemo(() => {
-    const list = Array.isArray(projects) ? projects : [];
-    const total = list.length;
-    const published = list.filter(p => Boolean(p && p.is_published)).length;
-    const drafts = Math.max(0, total - published);
-    const approved = list.filter(p => Boolean(p && p.client_approved)).length;
-    return { total, published, drafts, approved };
-  }, [projects]);
-
-  // Turnkey projects industry filter options (placed above ALL conditional returns to strictly obey Rules of Hooks)
-  const projectIndustryOptions = useMemo(() => {
-    const base = [
-      { key: 'All', label: 'All Industries' },
-      { key: 'Pharmaceutical', label: 'Pharmaceutical' },
-      { key: 'Life Sciences', label: 'Life Sciences & R&D' },
-      { key: 'Chemical', label: 'Chemical & Industrial' },
-      { key: 'Academic', label: 'Academic & Research' }
-    ];
-    const list = Array.isArray(projects) ? projects : [];
-    const custom = [];
-    list.forEach(p => {
-      if (!p || !p.industry) return;
-      const ind = String(p.industry).trim();
-      if (!ind) return;
-      const matchesBase = base.some(b => b.key !== 'All' && ind.toLowerCase().includes(b.key.toLowerCase()));
-      if (!matchesBase && !custom.includes(ind)) {
-        custom.push(ind);
-      }
-    });
-    return [...base, ...custom.map(c => ({ key: c, label: c }))];
-  }, [projects]);
 
   const getAuditCategoryInfo = (module = '') => {
     const m = String(module).toLowerCase();
