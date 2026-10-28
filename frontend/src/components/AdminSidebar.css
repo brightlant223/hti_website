@@ -1,662 +1,782 @@
 /* ==========================================================================
-   CONCEPT 2 — PREMIUM GLASS (LIGHT BLUE) ADMIN SIDEBAR
+   HTI CONTROL — MINIMAL, CALM & CONSISTENT ADMIN SIDEBAR
    ========================================================================== */
 
+/* Base drawer elements (hidden on desktop >=1024px) */
+.adm-sidebar-backdrop {
+  display: none;
+}
+
+.adm-sidebar-close-btn {
+  display: none;
+}
+
+.adm-drawer-footer-actions {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Shell
+   -------------------------------------------------------------------------- */
+.adm-sidebar,
 .concept2-glass-sidebar {
-  width: 260px;
-  min-width: 260px;
-  max-width: 260px;
+  width: 256px;
+  min-width: 256px;
+  max-width: 256px;
+  height: 100%;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   position: relative;
-  z-index: 35;
-  background: linear-gradient(180deg, #EDF5FE 0%, #FFFFFF 35%, #F0F6FE 100%);
-  border-right: 1.5px solid #D8E7F9;
-  height: 100%;
+  z-index: 25;
+  background: var(--adm-bg-surface);
+  border-right: 1px solid var(--adm-border);
   box-sizing: border-box;
   user-select: none;
-  box-shadow: 0 10px 30px -5px rgba(8, 117, 249, 0.08);
-  transition: width 280ms cubic-bezier(0.4, 0, 0.2, 1),
-              min-width 280ms cubic-bezier(0.4, 0, 0.2, 1),
-              max-width 280ms cubic-bezier(0.4, 0, 0.2, 1);
-  overflow-x: visible; /* Allows flyout tooltips in collapsed mode */
+  box-shadow: none;
+  transition: width var(--adm-transition-fast), min-width var(--adm-transition-fast), max-width var(--adm-transition-fast);
 }
 
+.adm-sidebar.collapsed,
 .concept2-glass-sidebar.collapsed {
-  width: 78px;
-  min-width: 78px;
-  max-width: 78px;
+  width: 68px;
+  min-width: 68px;
+  max-width: 68px;
 }
 
 /* --------------------------------------------------------------------------
-   1. TOP BRANDING HEADER
+   1. HEADER / BRAND BLOCK
    -------------------------------------------------------------------------- */
-.concept2-header {
-  position: relative;
-  padding: 16px 14px 14px;
-  border-bottom: 1px solid #EBF3FC;
-  overflow: hidden;
-  background: linear-gradient(180deg, #EDF5FE 0%, #F5F9FE 100%);
-}
-
-.concept2-header-wave {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.concept2-header-wave svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.concept2-header-content {
-  position: relative;
-  z-index: 2;
+.adm-sidebar-header {
+  padding: 14px 12px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid var(--adm-border);
+  flex-shrink: 0;
+  background: var(--adm-bg-surface);
+  box-sizing: border-box;
 }
 
-.concept2-logo-box {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  background: #FFFFFF;
-  border: 1.5px solid #D8E7F9;
-  box-shadow: 0 4px 14px rgba(8, 117, 249, 0.09);
+.adm-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.adm-brand-logo-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px;
   flex-shrink: 0;
+  background: var(--adm-bg-card-subtle);
+  border: 1px solid var(--adm-border);
+  padding: 3px;
+  box-sizing: border-box;
 }
 
-.concept2-logo-img {
+.adm-brand-logo {
   width: 100%;
   height: 100%;
-  max-width: 34px;
-  max-height: 34px;
+  max-width: 24px;
+  max-height: 24px;
   object-fit: contain;
 }
 
-.concept2-brand-text {
-  flex: 1;
+.adm-brand-text {
   min-width: 0;
-}
-
-.concept2-brand-title {
-  font-family: inherit;
-  font-size: 1.02rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-  color: #0E1F44;
-  margin: 0;
-  line-height: 1.15;
-  white-space: nowrap;
-}
-
-.concept2-bms-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 3px;
-}
-
-.concept2-live-pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
-  animation: c2LivePulse 2s infinite ease-in-out;
-}
-
-@keyframes c2LivePulse {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-  }
-  70% {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-  }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-  }
-}
-
-.concept2-bms-label {
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  color: #10B981;
-  white-space: nowrap;
-}
-
-/* Circular Collapse Toggle Button */
-.concept2-collapse-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  border: 1.5px solid #D8E7F9;
-  box-shadow: 0 2px 6px rgba(14, 31, 68, 0.08);
-  color: #607695;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 200ms ease;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
-.concept2-collapse-btn:hover {
-  background: #EAF4FF;
-  color: #0875F9;
-  border-color: #BFDBFE;
-  transform: scale(1.05);
-}
-
-.concept2-glass-sidebar.collapsed .concept2-header-content {
-  justify-content: center;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.concept2-glass-sidebar.collapsed .concept2-collapse-btn {
-  margin: 0;
-}
-
-/* --------------------------------------------------------------------------
-   2. SCROLLABLE NAVIGATION SECTIONS
-   -------------------------------------------------------------------------- */
-.concept2-nav-scroll {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
 }
 
-/* Custom smooth scrollbar */
-.concept2-nav-scroll::-webkit-scrollbar {
-  width: 5px;
-}
-.concept2-nav-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-.concept2-nav-scroll::-webkit-scrollbar-thumb {
-  background: #E1EDFA;
-  border-radius: 10px;
-}
-.concept2-nav-scroll::-webkit-scrollbar-thumb:hover {
-  background: #CBD5E1;
-}
-
-.concept2-section-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.concept2-section-group.section-divider {
-  padding-top: 6px;
-  border-top: 1px solid #EBF3FC;
-}
-
-.concept2-section-title {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  color: #6A82A5;
-  text-transform: uppercase;
-  padding: 4px 8px 3px;
-}
-
-.concept2-items-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.concept2-item-wrapper {
-  position: relative;
-  display: flex;
-}
-
-.concept2-nav-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 10px;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  background: transparent;
-  cursor: pointer;
-  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  text-align: left;
-  position: relative;
-  box-sizing: border-box;
-}
-
-.concept2-nav-item:hover {
-  background: rgba(240, 247, 255, 0.85);
-  transform: translateX(2px);
-}
-
-.concept2-nav-item:hover .concept2-icon-box {
-  transform: translateX(2px);
-}
-
-.concept2-nav-item:active {
-  transform: scale(0.98);
-}
-
-/* ACTIVE STATE: Vibrant Blue-to-Cyan Gradient */
-.concept2-nav-item.is-active {
-  background: linear-gradient(90deg, #0468E8 0%, #0091FF 55%, #00C6FF 100%);
-  border-color: #0468E8;
-  box-shadow: 0 8px 22px -3px rgba(4, 104, 232, 0.42);
-  transform: none;
-}
-
-.concept2-nav-item.is-active:hover {
-  background: linear-gradient(90deg, #035ecc 0%, #0088f0 55%, #00bcf2 100%);
-}
-
-.concept2-active-indicator-bar {
-  position: absolute;
-  left: -12px;
-  top: 6px;
-  bottom: 6px;
-  width: 4px;
-  border-radius: 0 4px 4px 0;
-  background: #0468E8;
-}
-
-/* Pastel-Colored Rounded-Square Icon Containers */
-.concept2-icon-box {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 200ms ease;
-  border: 1px solid transparent;
-}
-
-/* Individual Pastel Accent Colors */
-.concept2-icon-box.accent-blue {
-  background: #EAF4FF;
-  border-color: #D2E7FF;
-  color: #0875F9;
-}
-
-.concept2-icon-box.accent-purple {
-  background: #F3EEFF;
-  border-color: #E4D7FF;
-  color: #7C3AED;
-}
-
-.concept2-icon-box.accent-pink {
-  background: #FFF0F3;
-  border-color: #FFE0E6;
-  color: #E11D48;
-}
-
-.concept2-icon-box.accent-green {
-  background: #EDFAF2;
-  border-color: #D2F5E1;
-  color: #10B981;
-}
-
-.concept2-icon-box.accent-orange {
-  background: #FFF5EB;
-  border-color: #FFE5CF;
-  color: #EA580C;
-}
-
-.concept2-icon-box.accent-violet {
-  background: #F4EFFF;
-  border-color: #E6D8FF;
-  color: #8B5CF6;
-}
-
-.concept2-icon-box.accent-coral {
-  background: #FFF0F2;
-  border-color: #FFE0E5;
-  color: #F04455;
-}
-
-/* Active Icon Box */
-.active-icon-box {
-  background: rgba(255, 255, 255, 0.22) !important;
-  color: #FFFFFF !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.concept2-item-label {
+.adm-brand-title {
   font-size: 0.88rem;
-  font-weight: 600;
-  color: #10264F;
+  font-weight: 700;
+  color: var(--adm-text-primary);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex: 1;
 }
 
-.concept2-nav-item.is-active .concept2-item-label {
-  color: #FFFFFF;
-  font-weight: 700;
+.adm-brand-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
 }
 
-.concept2-active-chevron {
-  color: rgba(255, 255, 255, 0.85);
-  margin-left: auto;
+.adm-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
   flex-shrink: 0;
 }
 
-/* Badges Matching Reference Screenshot */
-.concept2-badge {
-  font-size: 0.72rem;
+.adm-status-text {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #10b981;
+  line-height: 1;
+}
+
+/* Plain icon collapse button: no border, no shadow */
+.adm-collapse-btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--adm-text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--adm-transition-fast), color var(--adm-transition-fast);
+}
+
+.adm-collapse-btn:hover {
+  background: var(--adm-bg-card-subtle);
+  color: var(--adm-text-primary);
+}
+
+.adm-collapse-btn:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 1px;
+}
+
+.adm-sidebar.collapsed .adm-sidebar-header,
+.concept2-glass-sidebar.collapsed .adm-sidebar-header {
+  padding: 12px 8px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.adm-sidebar.collapsed .adm-brand-block,
+.concept2-glass-sidebar.collapsed .adm-brand-block {
+  justify-content: center;
+  flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   2. SCROLLABLE NAVIGATION LIST
+   -------------------------------------------------------------------------- */
+.adm-sidebar-nav {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--adm-border) transparent;
+}
+
+.adm-sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.adm-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.adm-sidebar-nav::-webkit-scrollbar-thumb {
+  background: var(--adm-border);
+  border-radius: 4px;
+}
+
+.adm-sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--adm-text-muted);
+}
+
+.adm-section-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Section labels: small, muted, uppercase, plain font (not monospace) */
+.adm-section-label {
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--adm-text-muted);
+  text-transform: uppercase;
+  padding: 10px 12px 4px;
+  line-height: 1.2;
+}
+
+.adm-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Nav items: flat rows, no coloured icon tiles, 40px height, 8px radius, 12px padding, 2px gap */
+.adm-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  color: var(--adm-text-secondary);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background var(--adm-transition-fast), color var(--adm-transition-fast);
+}
+
+/* Hover: very light background change only. No movement. */
+.adm-nav-item:hover {
+  background: var(--adm-bg-card-subtle);
+  color: var(--adm-text-primary);
+  transform: none;
+}
+
+/* Active item: light tinted background with brand accent, 3px left bar, bold label. No gradient, no glow, no chevron */
+.adm-nav-item.is-active {
+  background: rgba(2, 132, 199, 0.09);
+  border-left: 3px solid var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: none;
+  transform: none;
+}
+
+.theme-dark .adm-nav-item.is-active,
+[data-theme="dark"] .adm-nav-item.is-active {
+  background: rgba(56, 189, 248, 0.12);
+  border-left: 3px solid var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.adm-nav-item.is-active .adm-nav-label {
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 999px;
+  color: var(--accent-cyan);
+}
+
+.theme-dark .adm-nav-item.is-active .adm-nav-label,
+[data-theme="dark"] .adm-nav-item.is-active .adm-nav-label {
+  color: var(--adm-text-primary);
+}
+
+/* Visible focus ring on every item */
+.adm-nav-item:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: -1px;
+}
+
+/* Nav Icon: 18px outline icon */
+.adm-nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.adm-nav-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
+}
+
+/* Badges: Neutral grey pill & Red attention pill */
+.adm-badge {
   margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 999px;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  line-height: 1.35;
 }
 
-.badge-pale-blue {
-  background: #E1F0FE;
-  color: #0284C7;
-  border: 1px solid #BAE6FD;
+.adm-badge.badge-neutral {
+  background: var(--adm-bg-card-subtle);
+  color: var(--adm-text-muted);
+  border: 1px solid var(--adm-border);
 }
 
-.badge-pale-pink {
-  background: #FFE8EC;
-  color: #E11D48;
-  border: 1px solid #FECDD3;
-}
-
-.badge-pale-green {
-  background: #DCFCE7;
-  color: #16A34A;
-  border: 1px solid #BBF7D0;
-}
-
-.badge-pale-orange {
-  background: #FEF3C7;
-  color: #D97706;
-  border: 1px solid #FDE68A;
-}
-
-.badge-pale-purple {
-  background: #F3E8FF;
-  color: #7C3AED;
-  border: 1px solid #E9D5FF;
-}
-
-.badge-red-solid {
-  background: #F04455;
-  color: #FFFFFF;
-  border: 1px solid #F04455;
-  box-shadow: 0 2px 8px rgba(240, 68, 85, 0.4);
-}
-
-.badge-blue-solid {
-  background: #0875F9;
-  color: #FFFFFF;
-  border: 1px solid #0875F9;
-  box-shadow: 0 2px 6px rgba(8, 117, 249, 0.3);
-}
-
-.concept2-nav-item.is-active .concept2-badge:not(.badge-red-solid):not(.badge-blue-solid) {
-  background: rgba(255, 255, 255, 0.25);
-  color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Collapsed Mode Active Dot */
-.concept2-collapsed-active-dot {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #0875F9;
-}
-
-.concept2-glass-sidebar.collapsed .concept2-nav-item {
-  justify-content: center;
-  padding: 6px 0;
-}
-
-.concept2-glass-sidebar.collapsed .concept2-active-indicator-bar {
-  left: 2px;
-}
-
-/* Collapsed Mode Hover Flyout Tooltip */
-.concept2-tooltip-flyout {
-  position: absolute;
-  left: calc(100% + 12px);
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1000;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid #D8E7F9;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px -5px rgba(14, 31, 68, 0.2);
-  padding: 10px 14px;
-  min-width: 200px;
-  pointer-events: none;
-  animation: c2FlyoutIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes c2FlyoutIn {
-  from {
-    opacity: 0;
-    transform: translateY(-50%) translateX(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
-  }
-}
-
-.concept2-tooltip-inner {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.concept2-tooltip-text {
-  flex: 1;
-  min-width: 0;
-}
-
-.concept2-tooltip-label {
-  font-size: 0.86rem;
+.adm-badge.badge-attention {
+  background: var(--accent-red);
+  color: #ffffff;
+  border: 1px solid var(--accent-red);
   font-weight: 700;
-  color: #10264F;
 }
 
-.concept2-tooltip-sub {
-  font-size: 0.7rem;
-  color: #607695;
-  margin-top: 1px;
+/* Collapsed Nav Item State */
+.adm-sidebar.collapsed .adm-nav-item,
+.concept2-glass-sidebar.collapsed .adm-nav-item {
+  justify-content: center;
+  padding: 0;
+  border-left: 3px solid transparent;
+}
+
+.adm-sidebar.collapsed .adm-nav-item.is-active,
+.concept2-glass-sidebar.collapsed .adm-nav-item.is-active {
+  border-left: 3px solid var(--accent-cyan);
+  background: rgba(2, 132, 199, 0.09);
+}
+
+.adm-collapsed-dot {
+  position: absolute;
+  top: 7px;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.adm-collapsed-dot.dot-attention {
+  background: var(--accent-red);
+}
+
+.adm-collapsed-dot.dot-neutral {
+  background: var(--adm-text-muted);
+  opacity: 0.7;
 }
 
 /* --------------------------------------------------------------------------
-   3. ADMINISTRATOR PROFILE CARD (CONCEPT 2 GRADIENT STYLE)
+   3. PROFILE ROW AT BOTTOM
+   Plain row: avatar circle, name, role in muted text, and logout icon button.
+   Light top border, no gradient.
    -------------------------------------------------------------------------- */
-.concept2-profile-container {
-  padding: 8px 12px 14px;
+.adm-sidebar-footer {
+  padding: 12px 14px;
+  border-top: 1px solid var(--adm-border);
+  background: var(--adm-bg-surface);
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
-.concept2-profile-card {
-  position: relative;
-  background: linear-gradient(135deg, #0A368A 0%, #0468E8 50%, #00A6FF 100%);
-  border-radius: 18px;
-  padding: 11px 13px;
-  box-shadow: 0 8px 24px -4px rgba(4, 104, 232, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  overflow: hidden;
-  transition: all 200ms ease;
-}
-
-.concept2-profile-card:hover {
-  box-shadow: 0 10px 28px -3px rgba(4, 104, 232, 0.52);
-  transform: translateY(-1px);
-}
-
-/* Inner wave shine for premium glass look */
-.profile-inner-wave-glow {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 50%;
-  background: radial-gradient(circle at 100% 50%, rgba(255, 255, 255, 0.18) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.concept2-profile-inner {
-  position: relative;
-  z-index: 2;
+.adm-profile-row {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
+  width: 100%;
 }
 
-.concept2-avatar-wrap {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.concept2-avatar-circle {
-  width: 44px;
-  height: 44px;
+.adm-profile-avatar {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #0052D4 0%, #4364F7 50%, #6FB1FC 100%);
-  color: #FFFFFF;
+  background: var(--adm-bg-card-subtle);
+  border: 1px solid var(--adm-border);
+  color: var(--adm-text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.88rem;
-  font-weight: 800;
-  border: 2px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  font-size: 0.76rem;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
-.concept2-online-dot {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #10B981;
-  border: 2.5px solid #FFFFFF;
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
-}
-
-.concept2-user-details {
+.adm-profile-info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.concept2-user-name {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: #FFFFFF;
+.adm-profile-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--adm-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.2;
 }
 
-.concept2-user-role {
-  font-size: 0.74rem;
-  color: rgba(255, 255, 255, 0.82);
+.adm-profile-role {
+  font-size: 0.7rem;
+  color: var(--adm-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: 1px;
 }
 
-.concept2-logout-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  color: #FFFFFF;
+.adm-logout-btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--adm-text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 180ms ease;
   flex-shrink: 0;
+  transition: background var(--adm-transition-fast), color var(--adm-transition-fast);
 }
 
-.concept2-logout-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.55);
-  transform: scale(1.05);
+.adm-logout-btn:hover {
+  background: var(--adm-bg-card-subtle);
+  color: var(--accent-red);
 }
 
-.concept2-logout-btn:active {
-  transform: scale(0.96);
+.adm-logout-btn:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 1px;
 }
 
-.concept2-glass-sidebar.collapsed .concept2-profile-card {
-  padding: 6px;
+/* Collapsed Profile Footer */
+.adm-sidebar.collapsed .adm-sidebar-footer,
+.concept2-glass-sidebar.collapsed .adm-sidebar-footer {
+  padding: 10px 8px;
 }
 
-.concept2-glass-sidebar.collapsed .concept2-profile-inner {
+.adm-sidebar.collapsed .adm-profile-row,
+.concept2-glass-sidebar.collapsed .adm-profile-row {
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 8px;
 }
 
-.concept2-glass-sidebar.collapsed .concept2-logout-btn {
-  display: none;
+.adm-sidebar.collapsed .adm-logout-btn,
+.concept2-glass-sidebar.collapsed .adm-logout-btn {
+  margin: 0;
 }
 
 /* --------------------------------------------------------------------------
-   4. REDUCED MOTION PREFERENCE
+   4. RESPONSIVE DESIGN: SLIDE-IN DRAWER (< 1024px Tablet & Mobile)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  /* Backdrop */
+  .adm-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1099;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--adm-transition-fast, 200ms ease);
+  }
+
+  .adm-sidebar-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Fixed Left Drawer (280px, max 85vw, full height, translateX slide) */
+  .adm-sidebar,
+  .concept2-glass-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 85vw !important;
+    height: 100% !important;
+    max-height: 100dvh !important;
+    z-index: 1100 !important;
+    background: var(--adm-bg-surface) !important;
+    border-right: 1px solid var(--adm-border) !important;
+    border-bottom: none !important;
+    box-shadow: none;
+    display: flex !important;
+    flex-direction: column !important;
+    transform: translateX(-100%);
+    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+    user-select: none;
+  }
+
+  .adm-sidebar.mobile-open,
+  .concept2-glass-sidebar.mobile-open {
+    transform: translateX(0) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  /* Header & Brand block */
+  .adm-sidebar-header {
+    padding: 14px 16px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    border-bottom: 1px solid var(--adm-border) !important;
+    flex-shrink: 0 !important;
+  }
+
+  .adm-brand-block {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+
+  .adm-brand-logo-wrap {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .adm-brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .adm-brand-title {
+    display: block !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    color: var(--adm-text-primary) !important;
+  }
+
+  /* Hide desktop collapse button under 1024px */
+  .adm-collapse-btn {
+    display: none !important;
+  }
+
+  /* Show mobile close button */
+  .adm-sidebar-close-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: var(--adm-text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background var(--adm-transition-fast), color var(--adm-transition-fast);
+  }
+
+  .adm-sidebar-close-btn:hover {
+    background: var(--adm-bg-card-subtle);
+    color: var(--adm-text-primary);
+  }
+
+  .adm-sidebar-close-btn:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 1px;
+  }
+
+  /* Nav list: scrolls on its own */
+  .adm-sidebar-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 10px 8px !important;
+    gap: 6px !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--adm-border) transparent;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .adm-section-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .adm-section-label {
+    display: block !important;
+    font-size: 0.65rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    color: var(--adm-text-muted) !important;
+    text-transform: uppercase !important;
+    padding: 10px 12px 4px !important;
+  }
+
+  .adm-items-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .adm-nav-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    width: 100% !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
+    border-left: 3px solid transparent !important;
+    border-bottom: none !important;
+  }
+
+  .adm-nav-item.is-active {
+    border-left: 3px solid var(--accent-cyan) !important;
+    border-bottom: none !important;
+    background: rgba(2, 132, 199, 0.09) !important;
+    color: var(--accent-cyan) !important;
+  }
+
+  .adm-nav-label {
+    display: block !important;
+  }
+
+  .adm-badge {
+    display: inline-flex !important;
+  }
+
+  .adm-collapsed-dot {
+    display: none !important;
+  }
+
+  /* Footer at bottom with avatar, profile info, logout, help, and close console */
+  .adm-sidebar-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+    border-top: 1px solid var(--adm-border) !important;
+    background: var(--adm-bg-surface) !important;
+    flex-shrink: 0 !important;
+  }
+
+  .adm-profile-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .adm-profile-avatar {
+    display: flex !important;
+  }
+
+  .adm-profile-info {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .adm-profile-name {
+    display: block !important;
+  }
+
+  .adm-profile-role {
+    display: block !important;
+  }
+
+  .adm-logout-btn {
+    display: flex !important;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  /* Drawer action buttons */
+  .adm-drawer-footer-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    padding-top: 6px !important;
+    border-top: 1px solid var(--adm-border) !important;
+  }
+
+  .adm-drawer-action-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-height: 40px !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    border: 1px solid var(--adm-border) !important;
+    color: var(--adm-text-secondary) !important;
+    font-family: inherit !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: background var(--adm-transition-fast), color var(--adm-transition-fast) !important;
+  }
+
+  .adm-drawer-action-btn:hover {
+    background: var(--adm-bg-card-subtle) !important;
+    color: var(--adm-text-primary) !important;
+  }
+
+  .adm-drawer-action-btn:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 1px;
+  }
+
+  .adm-drawer-close-console-btn {
+    color: var(--accent-red) !important;
+    border-color: rgba(239, 68, 68, 0.25) !important;
+  }
+
+  .adm-drawer-close-console-btn:hover {
+    background: rgba(239, 68, 68, 0.08) !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. REDUCED MOTION PREFERENCE
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
+  .adm-sidebar,
   .concept2-glass-sidebar,
-  .concept2-nav-item,
-  .concept2-icon-box,
-  .concept2-collapse-btn,
-  .concept2-live-pulse-dot,
-  .concept2-tooltip-flyout,
-  .concept2-profile-card {
+  .adm-nav-item,
+  .adm-collapse-btn,
+  .adm-logout-btn,
+  .adm-sidebar-backdrop,
+  .adm-sidebar-close-btn,
+  .adm-drawer-action-btn {
     transition: none !important;
     animation: none !important;
+  }
+  .adm-sidebar,
+  .concept2-glass-sidebar,
+  .adm-sidebar.mobile-open,
+  .concept2-glass-sidebar.mobile-open {
     transform: none !important;
   }
 }

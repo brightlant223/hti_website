@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './AdminSidebar.css';
 import {
-  Home,
   LayoutDashboard,
   FileText,
   Users,
@@ -10,9 +9,10 @@ import {
   ShieldCheck,
   ChevronsLeft,
   ChevronsRight,
-  ChevronRight,
   LogOut,
-  UserCheck
+  UserCheck,
+  X,
+  HelpCircle
 } from 'lucide-react';
 
 export default function AdminSidebar({
@@ -27,10 +27,90 @@ export default function AdminSidebar({
   inquiries = [],
   unansweredInquiries = [],
   adminUsers = [],
-  careerApplications = []
+  careerApplications = [],
+  isMobileNavOpen = false,
+  onCloseMobileNav = () => {},
+  onCloseConsole,
+  onOpenHelp
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState(null);
+  const sidebarRef = useRef(null);
+
+  // Background scroll lock when mobile drawer is open
+  useEffect(() => {
+    if (isMobileNavOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isMobileNavOpen]);
+
+  // Close drawer on Escape key
+  useEffect(() => {
+    if (!isMobileNavOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onCloseMobileNav();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileNavOpen, onCloseMobileNav]);
+
+  // Focus trap inside drawer and return focus on close
+  useEffect(() => {
+    if (isMobileNavOpen && sidebarRef.current) {
+      const focusable = sidebarRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length > 0) {
+        focusable[0].focus();
+      }
+
+      const handleFocusTrap = (e) => {
+        if (e.key !== 'Tab') return;
+        const nodes = Array.from(
+          sidebarRef.current.querySelectorAll(
+            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        );
+        if (nodes.length === 0) return;
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      };
+
+      const drawerEl = sidebarRef.current;
+      drawerEl.addEventListener('keydown', handleFocusTrap);
+      return () => {
+        drawerEl.removeEventListener('keydown', handleFocusTrap);
+        const trigger = document.querySelector('.adm-topbar-hamburger-btn');
+        if (trigger) {
+          trigger.focus();
+        }
+      };
+    }
+  }, [isMobileNavOpen]);
+
+  const handleNavSelect = (id) => {
+    setActiveTab(id);
+    if (onCloseMobileNav) {
+      onCloseMobileNav();
+    }
+  };
 
   const totalClientsAndPartners = clients.length + partners.length;
   const newInquiriesCount = unansweredInquiries.length > 0
@@ -40,7 +120,6 @@ export default function AdminSidebar({
 
   const avatarInitials = (currentUser || 'AD').slice(0, 2).toUpperCase();
 
-  // Navigation Items matching Concept 2 — Premium Glass (Light Blue)
   const navigationSections = [
     {
       section: 'EXECUTIVE NEXUS',
@@ -48,43 +127,26 @@ export default function AdminSidebar({
         {
           id: 'dashboard',
           label: 'Dashboard',
-          subtitle: 'View overall system status',
-          icon: Home,
-          accent: 'blue',
+          icon: LayoutDashboard,
           badge: null
         },
         {
           id: 'blogs',
-          label: 'Blogs & Tech',
-          subtitle: 'Articles & technical insights',
+          label: 'Blogs',
           icon: FileText,
-          accent: 'pink',
-          badge: {
-            text: blogs.length || 6,
-            variant: 'pale-pink'
-          }
+          badge: null
         },
         {
           id: 'clients_partners',
           label: 'Clients & Partners',
-          subtitle: 'Enterprise partner network',
           icon: Users,
-          accent: 'green',
-          badge: {
-            text: totalClientsAndPartners || 27,
-            variant: 'pale-green'
-          }
+          badge: null
         },
         {
           id: 'content',
           label: 'Website Content',
-          subtitle: 'CMS copy & hero settings',
           icon: Globe,
-          accent: 'violet',
-          badge: {
-            text: 'CMS',
-            variant: 'pale-purple'
-          }
+          badge: null
         }
       ]
     },
@@ -94,183 +156,132 @@ export default function AdminSidebar({
         {
           id: 'inquiries',
           label: 'Enquiries & Leads',
-          subtitle: 'Commercial lead pipeline',
           icon: MessageSquare,
-          accent: 'coral',
           badge: newInquiriesCount > 0
-            ? { text: `${newInquiriesCount} New`, variant: 'red-solid' }
-            : { text: inquiries.length || 4, variant: 'red-solid' }
+            ? { text: `${newInquiriesCount} New`, isAttention: true }
+            : null
         },
         {
           id: 'careers',
           label: 'Careers & Talent',
-          subtitle: 'Candidate & MySQL pipeline',
           icon: UserCheck,
-          accent: 'blue',
           badge: newCareerCount > 0
-            ? { text: `${newCareerCount} New`, variant: 'red-solid' }
-            : { text: careerApplications.length || 0, variant: 'pale-blue' }
+            ? { text: `${newCareerCount} New`, isAttention: true }
+            : null
         },
         {
           id: 'users',
           label: 'Users & Security',
-          subtitle: 'Access control & audit log',
           icon: ShieldCheck,
-          accent: 'blue',
-          badge: {
-            text: adminUsers.length || 3,
-            variant: 'blue-solid'
-          }
+          badge: null
         }
       ]
     }
   ];
 
   return (
-    <aside
-      className={`concept2-glass-sidebar ${isCollapsed ? 'collapsed' : 'expanded'}`}
-      aria-label="HTI Control Navigation Sidebar"
-    >
-      {/* 1. TOP BRANDING HEADER */}
-      <div className="concept2-header">
-        {/* Subtle Decorative Wave Accents in Header */}
-        <div className="concept2-header-wave" aria-hidden="true">
-          <svg viewBox="0 0 260 85" fill="none" preserveAspectRatio="none">
-            <path
-              d="M0 40 C80 18 160 65 260 22 L260 0 L0 0 Z"
-              fill="url(#c2HeaderGrad1)"
-              opacity="0.65"
-            />
-            <path
-              d="M0 60 C90 32 175 75 260 45 L260 0 L0 0 Z"
-              fill="url(#c2HeaderGrad2)"
-              opacity="0.4"
-            />
-            <defs>
-              <linearGradient id="c2HeaderGrad1" x1="0" y1="0" x2="260" y2="70" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#D9ECFE" stopOpacity="0.8" />
-                <stop stopColor="#C4E2FE" stopOpacity="0.3" />
-              </linearGradient>
-              <linearGradient id="c2HeaderGrad2" x1="0" y1="0" x2="260" y2="85" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#BAE0FE" stopOpacity="0.45" />
-                <stop stopColor="#EFF6FF" stopOpacity="0.1" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
+    <>
+      {/* Mobile/Tablet Backdrop (<1024px) */}
+      <div
+        className={`adm-sidebar-backdrop ${isMobileNavOpen ? 'is-open' : ''}`}
+        onClick={onCloseMobileNav}
+        aria-hidden="true"
+      />
 
-        <div className="concept2-header-content">
-          {/* Logo in White Rounded-Square Box */}
-          <div className="concept2-logo-box" title="HTI Control Enterprise BMS">
-            <img src="/hti-logo.png" alt="HTI Logo" className="concept2-logo-img" />
+      <aside
+        id="admin-sidebar-drawer"
+        ref={sidebarRef}
+        className={`concept2-glass-sidebar adm-sidebar ${isCollapsed ? 'collapsed' : 'expanded'} ${isMobileNavOpen ? 'mobile-open' : ''}`}
+        aria-label="Admin Navigation"
+        role={isMobileNavOpen ? 'dialog' : undefined}
+        aria-modal={isMobileNavOpen ? 'true' : undefined}
+      >
+      {/* 1. BRAND / HEADER BLOCK */}
+      <div className="adm-sidebar-header">
+        <div className="adm-brand-block">
+          <div className="adm-brand-logo-wrap">
+            <img src="/hti-logo.png" alt="HTI Logo" className="adm-brand-logo" />
           </div>
 
-          {/* Branding Text (Expanded Mode) */}
           {!isCollapsed && (
-            <div className="concept2-brand-text">
-              <h1 className="concept2-brand-title">HTI CONTROL</h1>
-              <div className="concept2-bms-status">
-                <span className="concept2-live-pulse-dot" />
-                <span className="concept2-bms-label">BMS OPERATIONAL</span>
-              </div>
+            <div className="adm-brand-text">
+              <span className="adm-brand-title">HTI CONTROL</span>
+
             </div>
           )}
-
-          {/* Circular Collapse Toggle Button */}
-          <button
-            type="button"
-            className="concept2-collapse-btn"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-            aria-label={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-          >
-            {isCollapsed ? <ChevronsRight size={16} /> : <ChevronsLeft size={16} />}
-          </button>
         </div>
+
+        {/* Mobile/Tablet Drawer Close Button (<1024px) */}
+        <button
+          type="button"
+          className="adm-sidebar-close-btn"
+          onClick={onCloseMobileNav}
+          title="Close drawer"
+          aria-label="Close navigation drawer"
+        >
+          <X size={18} />
+        </button>
+
+        {/* Desktop Collapse Button (>=1024px) */}
+        <button
+          type="button"
+          className="adm-collapse-btn"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? <ChevronsRight size={16} /> : <ChevronsLeft size={16} />}
+        </button>
       </div>
 
-      {/* 2. SCROLLABLE NAVIGATION SECTIONS */}
-      <nav className="concept2-nav-scroll" aria-label="Modules Navigation">
+      {/* 2. SCROLLABLE NAVIGATION LIST */}
+      <nav className="adm-sidebar-nav" aria-label="Modules Navigation">
         {navigationSections.map((sec, secIdx) => (
-          <div key={sec.section} className={`concept2-section-group ${secIdx > 0 ? 'section-divider' : ''}`}>
-            {!isCollapsed && (
-              <div className="concept2-section-title">
+          <div key={sec.section} className="adm-section-group">
+            {!isCollapsed && secIdx > 0 && (
+              <div className="adm-section-label">
                 {sec.section}
               </div>
             )}
 
-            <div className="concept2-items-list">
+            <div className="adm-items-list">
               {sec.items.map((item) => {
                 const IconComponent = item.icon;
                 const isActive = activeTab === item.id;
+                const badgeText = item.badge?.text;
+                const isAttention = item.badge?.isAttention;
 
                 return (
-                  <div
+                  <button
                     key={item.id}
-                    className="concept2-item-wrapper"
-                    onMouseEnter={() => setHoveredItem(item.id)}
-                    onMouseLeave={() => setHoveredItem(null)}
+                    type="button"
+                    className={`adm-nav-item ${isActive ? 'is-active' : ''}`}
+                    onClick={() => handleNavSelect(item.id)}
+                    aria-current={isActive ? 'page' : undefined}
+                    aria-label={item.label}
+                    title={isCollapsed ? (badgeText ? `${item.label} (${badgeText})` : item.label) : undefined}
                   >
-                    <button
-                      type="button"
-                      className={`concept2-nav-item ${isActive ? 'is-active' : ''}`}
-                      onClick={() => setActiveTab(item.id)}
-                      aria-current={isActive ? 'page' : undefined}
-                      title={isCollapsed ? item.label : undefined}
-                    >
-                      {/* Active Left Indicator Bar */}
-                      {isActive && <span className="concept2-active-indicator-bar" />}
+                    <IconComponent size={18} className="adm-nav-icon" aria-hidden="true" />
 
-                      {/* Pastel-Colored Icon Container */}
-                      <span className={`concept2-icon-box accent-${item.accent} ${isActive ? 'active-icon-box' : ''}`}>
-                        <IconComponent size={19} strokeWidth={isActive ? 2.4 : 2} />
+                    {!isCollapsed && (
+                      <span className="adm-nav-label">
+                        {item.label}
                       </span>
-
-                      {/* Item Label (Expanded Mode) */}
-                      {!isCollapsed && (
-                        <span className="concept2-item-label">
-                          {item.label}
-                        </span>
-                      )}
-
-                      {/* Dynamic Badge (Expanded Mode) */}
-                      {!isCollapsed && item.badge && (
-                        <span className={`concept2-badge badge-${item.badge.variant}`}>
-                          {item.badge.text}
-                        </span>
-                      )}
-
-                      {/* Active Item Right Chevron Arrow (Expanded Mode) */}
-                      {!isCollapsed && isActive && (
-                        <ChevronRight size={17} className="concept2-active-chevron" />
-                      )}
-
-                      {/* Collapsed Active Blue Dot */}
-                      {isCollapsed && isActive && (
-                        <span className="concept2-collapsed-active-dot" />
-                      )}
-                    </button>
-
-                    {/* Collapsed Mode Hover Flyout Tooltip Card */}
-                    {isCollapsed && hoveredItem === item.id && (
-                      <div className="concept2-tooltip-flyout" role="tooltip">
-                        <div className="concept2-tooltip-inner">
-                          <span className={`concept2-icon-box accent-${item.accent}`}>
-                            <IconComponent size={16} />
-                          </span>
-                          <div className="concept2-tooltip-text">
-                            <div className="concept2-tooltip-label">{item.label}</div>
-                            <div className="concept2-tooltip-sub">{item.subtitle}</div>
-                          </div>
-                          {item.badge && (
-                            <span className={`concept2-badge badge-${item.badge.variant}`}>
-                              {item.badge.text}
-                            </span>
-                          )}
-                        </div>
-                      </div>
                     )}
-                  </div>
+
+                    {!isCollapsed && item.badge && (
+                      <span className={`adm-badge ${isAttention ? 'badge-attention' : 'badge-neutral'}`}>
+                        {badgeText}
+                      </span>
+                    )}
+
+                    {isCollapsed && item.badge && (
+                      <span
+                        className={`adm-collapsed-dot ${isAttention ? 'dot-attention' : 'dot-neutral'}`}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </button>
                 );
               })}
             </div>
@@ -278,46 +289,67 @@ export default function AdminSidebar({
         ))}
       </nav>
 
-      {/* 3. ADMINISTRATOR PROFILE CARD */}
-      <div className="concept2-profile-container">
-        <div className="concept2-profile-card">
-          {/* Subtle inner wave shine */}
-          <div className="profile-inner-wave-glow" aria-hidden="true" />
+      {/* 3. PROFILE ROW AT BOTTOM */}
+      <div className="adm-sidebar-footer">
+        <div className="adm-profile-row">
+          <div className="adm-profile-avatar" title={`Admin: ${currentUser}`} aria-hidden="true">
+            <span>{avatarInitials}</span>
+          </div>
 
-          <div className="concept2-profile-inner">
-            {/* Avatar Circle with Online Dot */}
-            <div className="concept2-avatar-wrap">
-              <div className="concept2-avatar-circle">
-                <span>{avatarInitials}</span>
+          {!isCollapsed && (
+            <div className="adm-profile-info">
+              <div className="adm-profile-name" title={currentUser}>
+                {currentUser}
               </div>
-              <span className="concept2-online-dot" title="Admin Active & Online" />
+              <div className="adm-profile-role" title={userRole}>
+                {userRole}
+              </div>
             </div>
+          )}
 
-            {/* User Details (Expanded Mode) */}
-            {!isCollapsed && (
-              <div className="concept2-user-details">
-                <div className="concept2-user-name" title={currentUser}>
-                  {currentUser}
-                </div>
-                <div className="concept2-user-role" title={userRole}>
-                  {userRole}
-                </div>
-              </div>
-            )}
+          <button
+            type="button"
+            className="adm-logout-btn"
+            onClick={handleLogout}
+            title="Log out"
+            aria-label="Log out"
+          >
+            <LogOut size={16} />
+          </button>
+        </div>
 
-            {/* Logout Action Button */}
+        {/* Mobile/Tablet Drawer Actions (<1024px) */}
+        <div className="adm-drawer-footer-actions">
+          <button
+            type="button"
+            className="adm-drawer-action-btn"
+            onClick={() => {
+              if (onOpenHelp) onOpenHelp();
+              else alert('HTI Control System BMS - Help & Documentation');
+            }}
+            aria-label="Help & System Info"
+          >
+            <HelpCircle size={15} />
+            <span>Help & Info</span>
+          </button>
+
+          {onCloseConsole && (
             <button
               type="button"
-              className="concept2-logout-btn"
-              onClick={handleLogout}
-              title="Log Out Safely"
-              aria-label="Log Out Safely"
+              className="adm-drawer-action-btn adm-drawer-close-console-btn"
+              onClick={() => {
+                onCloseMobileNav();
+                onCloseConsole();
+              }}
+              aria-label="Close console"
             >
-              <LogOut size={18} />
+              <X size={15} />
+              <span>Close Console</span>
             </button>
-          </div>
+          )}
         </div>
       </div>
     </aside>
+    </>
   );
 }
