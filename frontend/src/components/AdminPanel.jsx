@@ -108,6 +108,7 @@ export default function AdminPanel({
   const [showPassword, setShowPassword] = useState(false);
   const [autoLoginChecked, setAutoLoginChecked] = useState(false);
   const [copiedDemo, setCopiedDemo] = useState(false);
+  const [capsLockActive, setCapsLockActive] = useState(false);
   const [currentUser, setCurrentUser] = useState(() => {
     return localStorage.getItem('hti_admin_user') || 'admin';
   });
@@ -524,24 +525,35 @@ export default function AdminPanel({
     }
   };
 
-  const handleQuickDemoFill = () => {
+  const handleQuickDemoFill = (autoSubmit = false) => {
     setLoginForm({ username: 'admin', password: 'admin123' });
     setAutoLoginChecked(true);
     setLoginError('');
+    setCopiedDemo(true);
+    setTimeout(() => setCopiedDemo(false), 2200);
+
+    if (autoSubmit) {
+      setTimeout(() => {
+        const formEl = document.getElementById('hti-admin-login-form');
+        if (formEl) {
+          if (typeof formEl.requestSubmit === 'function') {
+            formEl.requestSubmit();
+          } else {
+            formEl.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+          }
+        }
+      }, 60);
+    }
   };
 
   const handleCopyDemo = (e) => {
-    e.stopPropagation();
+    if (e && e.stopPropagation) e.stopPropagation();
     try {
       if (navigator.clipboard) {
         navigator.clipboard.writeText('admin / admin123');
       }
     } catch (err) { }
-    setLoginForm({ username: 'admin', password: 'admin123' });
-    setAutoLoginChecked(true);
-    setLoginError('');
-    setCopiedDemo(true);
-    setTimeout(() => setCopiedDemo(false), 2000);
+    handleQuickDemoFill(false);
   };
 
   const handleAutoLoginToggle = (e) => {
@@ -1091,7 +1103,7 @@ export default function AdminPanel({
   if (!isOpen) return null;
 
   // =========================================================================
-  // VIEW 1: ULTRA-PREMIUM LOGIN SCREEN (Reference-Matched Modal Popup)
+// VIEW 1: ULTRA-PREMIUM ENTERPRISE LOGIN SCREEN
   // =========================================================================
   if (!isAuthenticated) {
     return (
@@ -1103,18 +1115,28 @@ export default function AdminPanel({
         aria-labelledby="hti-admin-login-title"
       >
         <div className="hti-admin-login-modal" onClick={e => e.stopPropagation()}>
+          {/* Top Brand Accent Line */}
+          <div className="hti-login-card-accent" />
+
           {/* Top-Right Circular Close Button */}
           <button
             type="button"
             className="hti-login-close-circle"
             onClick={onClose}
             aria-label="Close Admin Login"
+            title="Close Console"
           >
             <X size={16} />
           </button>
 
           {/* Top Center: Official HTI Logo & Branding */}
           <div className="hti-login-brand-header">
+            {/* Live Gateway Indicator Pill */}
+            <div className="hti-login-gateway-pill">
+              <span className="hti-gateway-pulse-dot" />
+              <span>HTI ENTERPRISE GATEWAY</span>
+            </div>
+
             <div className="hti-login-brand-logo-row">
               <img src="/hti-logo.png" alt="HTI Logo" className="hti-login-logo-img" />
             </div>
@@ -1130,37 +1152,39 @@ export default function AdminPanel({
               Admin <span className="hti-login-title-blue">Login</span>
             </h2>
             <p className="hti-login-subtitle">
-              Access the HTI Executive Console to manage enterprise systems, catalog and telemetry.
+              Access the HTI Executive Console to manage systems, catalog & telemetry.
             </p>
           </div>
 
           {/* Login Error Notification */}
           {loginError && (
             <div className="hti-login-error-alert" role="alert">
-              <AlertCircle size={16} className="flex-shrink-0" />
+              <AlertCircle size={15} className="flex-shrink-0" />
               <span>{loginError}</span>
             </div>
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleLoginSubmit} className="hti-login-form">
+          <form id="hti-admin-login-form" onSubmit={handleLoginSubmit} className="hti-login-form">
             {/* Field 1: Administrator ID */}
             <div className="hti-login-field-group">
               <div className="hti-login-label-row">
                 <label htmlFor="hti-admin-id" className="hti-login-label">
                   Administrator ID
                 </label>
-                <span className="hti-login-role-tag">Role: SuperAdmin / Editor</span>
+                <span className="hti-login-role-tag">SuperAdmin / Editor</span>
               </div>
               <div className="hti-login-input-box">
                 <User size={18} className="hti-login-input-icon text-blue" />
                 <input
                   id="hti-admin-id"
+                  name="username"
                   type="text"
                   required
                   placeholder="Enter administrator ID"
                   value={loginForm.username}
                   onChange={e => setLoginForm({ ...loginForm, username: e.target.value })}
+                  autoComplete="username"
                   autoFocus
                 />
               </div>
@@ -1172,17 +1196,28 @@ export default function AdminPanel({
                 <label htmlFor="hti-admin-password" className="hti-login-label">
                   Security Token / Password
                 </label>
-                <span className="hti-login-crypto-tag">AES-256 Protected</span>
+                <div className="hti-login-label-right">
+                  {capsLockActive && (
+                    <span className="hti-caps-lock-pill" title="Caps Lock is active">
+                      <AlertTriangle size={11} /> Caps Lock ON
+                    </span>
+                  )}
+                  <span className="hti-login-crypto-tag">AES-256 Protected</span>
+                </div>
               </div>
               <div className="hti-login-input-box">
                 <Lock size={18} className="hti-login-input-icon text-muted" />
                 <input
                   id="hti-admin-password"
+                  name="password"
                   type={showPassword ? 'text' : 'password'}
                   required
                   placeholder="Enter password"
                   value={loginForm.password}
                   onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
+                  onKeyDown={e => setCapsLockActive(Boolean(e.getModifierState && e.getModifierState('CapsLock')))}
+                  onKeyUp={e => setCapsLockActive(Boolean(e.getModifierState && e.getModifierState('CapsLock')))}
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"
@@ -1191,55 +1226,70 @@ export default function AdminPanel({
                   title={showPassword ? 'Hide password' : 'Show password'}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                 </button>
               </div>
             </div>
 
             {/* Quick Demo Fill Panel */}
-            <div
-              className="hti-login-demo-panel"
-              onClick={handleQuickDemoFill}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleQuickDemoFill();
-                }
-              }}
-              title="Click to populate demo credentials"
-            >
-              <div className="hti-demo-panel-left">
-                <Zap size={18} className="hti-demo-bolt" fill="#0066FF" color="#0066FF" />
+            <div className="hti-login-demo-panel">
+              <div
+                className="hti-demo-panel-left"
+                onClick={() => handleQuickDemoFill(false)}
+                title="Click to fill demo credentials"
+              >
+                <div className="hti-demo-bolt-circle">
+                  <Zap size={14} className="hti-demo-bolt" />
+                </div>
                 <div className="hti-demo-panel-text">
                   <div className="hti-demo-title">Quick Demo Fill</div>
-                  <div className="hti-demo-sub">Fill with admin credentials</div>
+                  <div className="hti-demo-sub">Auto-fill verified admin credentials</div>
                 </div>
               </div>
 
-              <div
-                className="hti-demo-badge"
-                onClick={handleCopyDemo}
-                title="Click to copy & fill credentials"
-              >
-                <span>{copiedDemo ? 'Copied & Filled!' : 'admin / admin123'}</span>
-                <Copy size={13} className="hti-demo-copy-icon" />
+              <div className="hti-demo-actions">
+                <button
+                  type="button"
+                  className={`hti-demo-badge-btn ${copiedDemo ? 'hti-demo-applied' : ''}`}
+                  onClick={handleCopyDemo}
+                  title="Click to fill admin credentials"
+                >
+                  {copiedDemo ? (
+                    <>
+                      <Check size={13} className="text-emerald-500" />
+                      <span>Filled &amp; Ready!</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>admin / admin123</span>
+                      <Copy size={12} className="hti-demo-copy-icon" />
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
-            {/* Auto Login Checkbox */}
-            <div className="hti-login-auto-row">
-              <input
-                type="checkbox"
-                id="hti-auto-login"
-                checked={autoLoginChecked}
-                onChange={handleAutoLoginToggle}
-                className="hti-login-checkbox"
-              />
+            {/* Options Row: Auto Login & 1-Click Access */}
+            <div className="hti-login-options-row">
               <label htmlFor="hti-auto-login" className="hti-login-auto-label">
-                Auto login (use demo credentials)
+                <input
+                  type="checkbox"
+                  id="hti-auto-login"
+                  checked={autoLoginChecked}
+                  onChange={handleAutoLoginToggle}
+                  className="hti-login-checkbox"
+                />
+                <span>Auto login (use demo credentials)</span>
               </label>
+
+              <button
+                type="button"
+                className="hti-instant-demo-btn"
+                onClick={() => handleQuickDemoFill(true)}
+                title="Fill credentials and sign in immediately"
+              >
+                1-Click Sign In &rarr;
+              </button>
             </div>
 
             {/* Submit Button */}
@@ -1257,6 +1307,7 @@ export default function AdminPanel({
                 <>
                   <LogIn size={18} />
                   <span>Login to Executive Console</span>
+                  <ArrowRight size={15} className="hti-submit-arrow" />
                 </>
               )}
             </button>
@@ -1265,26 +1316,36 @@ export default function AdminPanel({
           {/* Security Footer with 3 Indicators */}
           <div className="hti-login-security-footer">
             <div className="hti-security-col">
-              <ShieldCheck size={20} className="hti-sec-icon-blue" />
+              <div className="hti-sec-icon-wrap blue">
+                <ShieldCheck size={14} />
+              </div>
               <div className="hti-sec-info">
                 <div className="hti-sec-title">256-Bit SSL</div>
-                <div className="hti-sec-desc">Secure Connection</div>
+                <div className="hti-sec-desc">End-to-End TLS</div>
               </div>
             </div>
 
+            <div className="hti-security-divider" />
+
             <div className="hti-security-col">
-              <Database size={20} className="hti-sec-icon-green" />
+              <div className="hti-sec-icon-wrap green">
+                <Database size={14} />
+              </div>
               <div className="hti-sec-info">
                 <div className="hti-sec-title">SQLite Live</div>
-                <div className="hti-sec-desc">v3.42</div>
+                <div className="hti-sec-desc">Encrypted v3.42</div>
               </div>
             </div>
 
+            <div className="hti-security-divider" />
+
             <div className="hti-security-col">
-              <ShieldCheck size={20} className="hti-sec-icon-blue" />
+              <div className="hti-sec-icon-wrap purple">
+                <Lock size={14} />
+              </div>
               <div className="hti-sec-info">
-                <div className="hti-sec-title">Zero Trust Policy</div>
-                <div className="hti-sec-desc">Enterprise Security</div>
+                <div className="hti-sec-title">Zero Trust</div>
+                <div className="hti-sec-desc">Enterprise RBAC</div>
               </div>
             </div>
           </div>
@@ -1293,8 +1354,7 @@ export default function AdminPanel({
     );
   }
 
-  // =========================================================================
-  // VIEW 2: AUTHENTICATED ADMIN DASHBOARD (9 Full Modules)
+    // VIEW 2: AUTHENTICATED ADMIN DASHBOARD (9 Full Modules)
   // =========================================================================
   // Safely computed filtered lists and quick counts for authenticated views
   const unansweredInquiries = (inquiries || []).filter(i => (i?.status || '').toLowerCase() === 'new');
