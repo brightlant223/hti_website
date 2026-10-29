@@ -1526,3 +1526,331 @@
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #38bdf8 !important;
 }
+
+
+/* ============================================================
+   OVERRIDE: USERS & SECURITY — PROFESSIONAL REDESIGN
+   ============================================================ */
+
+/* Page padding */
+.adm-sec-page {
+  padding: 16px !important;
+  background: #f8fafc !important;
+}
+
+/* ---- SUMMARY CARDS — professional, not neon ---- */
+.adm-sec-summary-row {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 12px !important;
+  margin-bottom: 16px !important;
+}
+
+.adm-sec-summary-card {
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 1px 4px rgba(16,38,79,0.05) !important;
+  border-top-width: 3px !important;
+}
+.adm-sec-summary-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(16,38,79,0.10) !important;
+}
+.adm-sec-summary-card.selected {
+  box-shadow: 0 4px 14px rgba(8,117,249,0.15) !important;
+}
+
+/* Total Accounts — Blue */
+.adm-sec-summary-card.card-users {
+  border-top-color: #0284c7 !important;
+  border-color: #e2e8f0 !important;
+}
+.adm-sec-summary-card.card-users .adm-sec-summary-icon-box {
+  background: rgba(2,132,199,0.10) !important;
+  color: #0284c7 !important;
+}
+.adm-sec-summary-card.card-users .adm-sec-summary-number {
+  color: #0284c7 !important;
+}
+
+/* Active Accounts — Emerald */
+.adm-sec-summary-card.card-active {
+  border-top-color: #059669 !important;
+  border-color: #e2e8f0 !important;
+}
+.adm-sec-summary-card.card-active .adm-sec-summary-icon-box {
+  background: rgba(5,150,105,0.10) !important;
+  color: #059669 !important;
+}
+.adm-sec-summary-card.card-active .adm-sec-summary-number {
+  color: #059669 !important;
+}
+
+/* Administrators — Purple */
+.adm-sec-summary-card.card-admins {
+  border-top-color: #7c3aed !important;
+  border-color: #e2e8f0 !important;
+}
+.adm-sec-summary-card.card-admins .adm-sec-summary-icon-box {
+  background: rgba(124,58,237,0.10) !important;
+  color: #7c3aed !important;
+}
+.adm-sec-summary-card.card-admins .adm-sec-summary-number {
+  color: #7c3aed !important;
+}
+
+/* Audit Events — Amber */
+.adm-sec-summary-card.card-audit {
+  border-top-color: #d97706 !important;
+  border-color: #e2e8f0 !important;
+}
+.adm-sec-summary-card.card-audit .adm-sec-summary-icon-box {
+  background: rgba(217,119,6,0.10) !important;
+  color: #d97706 !important;
+}
+.adm-sec-summary-card.card-audit .adm-sec-summary-number {
+  color: #d97706 !important;
+}
+
+/* Icon box sizing */
+.adm-sec-summary-icon-box {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* Summary numbers/text */
+.adm-sec-summary-number {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+}
+.adm-sec-summary-title {
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  letter-spacing: 0.02em !important;
+}
+.adm-sec-summary-sub {
+  font-size: 0.68rem !important;
+  color: #94a3b8 !important;
+  margin-top: 1px !important;
+}
+
+/* ---- TABLE ---- */
+.adm-sec-table-card {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 4px rgba(16,38,79,0.04) !important;
+}
+.adm-sec-table {
+  font-size: 0.83rem !important;
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+.adm-sec-table thead th {
+  padding: 9px 14px !important;
+  font-size: 0.72rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+.adm-sec-table tbody tr {
+  border-bottom: 1px solid #f1f5f9 !important;
+  transition: background 0.12s !important;
+}
+.adm-sec-table tbody tr:hover {
+  background: #f8fafd !important;
+}
+.adm-sec-table tbody td {
+  padding: 9px 14px !important;
+  vertical-align: middle !important;
+}
+
+/* Avatar */
+.adm-sec-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  border-radius: 50% !important;
+  font-size: 0.70rem !important;
+  font-weight: 700 !important;
+}
+
+/* Toolbar */
+.adm-sec-toolbar {
+  margin-bottom: 10px !important;
+  gap: 10px !important;
+}
+.adm-sec-search-input {
+  font-size: 0.83rem !important;
+  padding: 7px 10px 7px 36px !important;
+  border-radius: 9px !important;
+}
+.adm-sec-create-btn {
+  padding: 7px 14px !important;
+  font-size: 0.80rem !important;
+  border-radius: 9px !important;
+}
+
+/* Tabs bar */
+.adm-sec-tabs-bar {
+  margin-bottom: 12px !important;
+  padding: 0 !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+.adm-sec-tab-btn {
+  padding: 6px 14px !important;
+  font-size: 0.80rem !important;
+  border-radius: 8px !important;
+}
+
+/* Right audit panel */
+.adm-sec-col-side {
+  gap: 12px !important;
+}
+
+/* ---- SECURITY PAGE DARK MODE ---- */
+.theme-dark .adm-sec-page,
+[data-theme="dark"] .adm-sec-page {
+  background: #060b18 !important;
+}
+
+/* Summary cards dark */
+.theme-dark .adm-sec-summary-card,
+[data-theme="dark"] .adm-sec-summary-card {
+  background: #0f172a !important;
+  border-color: rgba(255,255,255,0.07) !important;
+}
+.theme-dark .adm-sec-summary-card.card-users,
+[data-theme="dark"] .adm-sec-summary-card.card-users {
+  border-top-color: #0284c7 !important;
+}
+.theme-dark .adm-sec-summary-card.card-users .adm-sec-summary-icon-box,
+[data-theme="dark"] .adm-sec-summary-card.card-users .adm-sec-summary-icon-box {
+  background: rgba(2,132,199,0.18) !important;
+  color: #38bdf8 !important;
+}
+.theme-dark .adm-sec-summary-card.card-users .adm-sec-summary-number,
+[data-theme="dark"] .adm-sec-summary-card.card-users .adm-sec-summary-number { color: #38bdf8 !important; }
+
+.theme-dark .adm-sec-summary-card.card-active,
+[data-theme="dark"] .adm-sec-summary-card.card-active {
+  border-top-color: #059669 !important;
+}
+.theme-dark .adm-sec-summary-card.card-active .adm-sec-summary-icon-box,
+[data-theme="dark"] .adm-sec-summary-card.card-active .adm-sec-summary-icon-box {
+  background: rgba(5,150,105,0.18) !important;
+  color: #34d399 !important;
+}
+.theme-dark .adm-sec-summary-card.card-active .adm-sec-summary-number,
+[data-theme="dark"] .adm-sec-summary-card.card-active .adm-sec-summary-number { color: #34d399 !important; }
+
+.theme-dark .adm-sec-summary-card.card-admins,
+[data-theme="dark"] .adm-sec-summary-card.card-admins {
+  border-top-color: #7c3aed !important;
+}
+.theme-dark .adm-sec-summary-card.card-admins .adm-sec-summary-icon-box,
+[data-theme="dark"] .adm-sec-summary-card.card-admins .adm-sec-summary-icon-box {
+  background: rgba(124,58,237,0.18) !important;
+  color: #a78bfa !important;
+}
+.theme-dark .adm-sec-summary-card.card-admins .adm-sec-summary-number,
+[data-theme="dark"] .adm-sec-summary-card.card-admins .adm-sec-summary-number { color: #a78bfa !important; }
+
+.theme-dark .adm-sec-summary-card.card-audit,
+[data-theme="dark"] .adm-sec-summary-card.card-audit {
+  border-top-color: #d97706 !important;
+}
+.theme-dark .adm-sec-summary-card.card-audit .adm-sec-summary-icon-box,
+[data-theme="dark"] .adm-sec-summary-card.card-audit .adm-sec-summary-icon-box {
+  background: rgba(217,119,6,0.18) !important;
+  color: #fbbf24 !important;
+}
+.theme-dark .adm-sec-summary-card.card-audit .adm-sec-summary-number,
+[data-theme="dark"] .adm-sec-summary-card.card-audit .adm-sec-summary-number { color: #fbbf24 !important; }
+
+.theme-dark .adm-sec-summary-title,
+[data-theme="dark"] .adm-sec-summary-title { color: #cbd5e1 !important; }
+.theme-dark .adm-sec-summary-sub,
+[data-theme="dark"] .adm-sec-summary-sub { color: #64748b !important; }
+
+/* Table dark */
+.theme-dark .adm-sec-table-card,
+[data-theme="dark"] .adm-sec-table-card {
+  background: #0d1424 !important;
+  border-color: rgba(255,255,255,0.07) !important;
+}
+.theme-dark .adm-sec-table thead th,
+[data-theme="dark"] .adm-sec-table thead th {
+  background: #0a0f1e !important;
+  color: #64748b !important;
+  border-bottom-color: rgba(255,255,255,0.07) !important;
+}
+.theme-dark .adm-sec-table tbody tr,
+[data-theme="dark"] .adm-sec-table tbody tr {
+  border-bottom-color: rgba(255,255,255,0.05) !important;
+}
+.theme-dark .adm-sec-table tbody tr:hover,
+[data-theme="dark"] .adm-sec-table tbody tr:hover {
+  background: rgba(255,255,255,0.03) !important;
+}
+.theme-dark .adm-sec-table tbody td,
+[data-theme="dark"] .adm-sec-table tbody td {
+  color: #cbd5e1 !important;
+}
+.theme-dark .adm-sec-username-text,
+[data-theme="dark"] .adm-sec-username-text { color: #38bdf8 !important; }
+.theme-dark .adm-sec-fullname-text,
+[data-theme="dark"] .adm-sec-fullname-text { color: #f1f5f9 !important; }
+.theme-dark .adm-sec-email-text,
+[data-theme="dark"] .adm-sec-email-text { color: #64748b !important; }
+
+/* Header badges dark */
+.theme-dark .adm-sec-status-chip,
+[data-theme="dark"] .adm-sec-status-chip {
+  background: rgba(5,150,105,0.15) !important;
+  border-color: rgba(5,150,105,0.3) !important;
+  color: #34d399 !important;
+}
+.theme-dark .adm-sec-crypto-chip,
+[data-theme="dark"] .adm-sec-crypto-chip {
+  background: rgba(71,85,105,0.3) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  color: #94a3b8 !important;
+}
+
+/* Right panel dark */
+.theme-dark .adm-sec-col-side,
+[data-theme="dark"] .adm-sec-col-side {
+  color: #cbd5e1 !important;
+}
+
+/* Responsive for summary cards */
+@media (max-width: 900px) {
+  .adm-sec-summary-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 480px) {
+  .adm-sec-summary-row {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
