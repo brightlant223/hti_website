@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import './AdminCareersManager.css';
+import './AdminEnquiries.css';
 import AdminDropdown from './AdminDropdown';
 import {
   Briefcase,
@@ -10,10 +11,12 @@ import {
   Download,
   FileText,
   Eye,
+  Pencil,
   Trash2,
   CheckCircle2,
   AlertCircle,
   Clock,
+  Calendar,
   Mail,
   Phone,
   Copy,
@@ -24,10 +27,16 @@ import {
   Sparkles,
   UserCheck,
   ChevronRight,
+  ChevronLeft,
   X,
   Save,
   Check
 } from 'lucide-react';
+
+function getAvatarColorClass(id) {
+  const colors = ['avatar-blue', 'avatar-green', 'avatar-pink', 'avatar-purple', 'avatar-amber'];
+  return colors[((id || 0) * 7) % colors.length];
+}
 
 const STATUS_OPTIONS = [
   'New',
@@ -139,6 +148,28 @@ export default function AdminCareersManager({
   const [showDbModal, setShowDbModal] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
 
+  // Row selection & pagination state
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(new Set(filteredApplications.map((a) => a.id)));
+    } else {
+      setSelectedIds(new Set());
+    }
+  };
+
+  const handleToggleRow = (id) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   // Calculate statistics (6 pipeline stages matching Sales Enquiries)
   const stats = useMemo(() => {
     const total = applications.length;
@@ -190,6 +221,17 @@ export default function AdminCareersManager({
       return matchSearch && matchStatus && matchPosition;
     });
   }, [applications, searchQuery, selectedStatus, selectedPosition]);
+
+  const totalApps = filteredApplications.length;
+  const totalPages = Math.max(1, Math.ceil(totalApps / rowsPerPage));
+  const validCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedApplications = useMemo(() => {
+    const start = (validCurrentPage - 1) * rowsPerPage;
+    return filteredApplications.slice(start, start + rowsPerPage);
+  }, [filteredApplications, validCurrentPage, rowsPerPage]);
+
+  const startAppNum = totalApps === 0 ? 0 : (validCurrentPage - 1) * rowsPerPage + 1;
+  const endAppNum = Math.min(validCurrentPage * rowsPerPage, totalApps);
 
   // Open dossier modal
   const handleOpenDossier = (app) => {
@@ -254,377 +296,456 @@ export default function AdminCareersManager({
   };
 
   return (
-    <div className="adm-careers-container">
-      {/* ── 1. HEADER CARD ───────────────────────────────────────────────── */}
-      <div className="adm-careers-header-card">
-        <div className="adm-careers-header-top">
-          <div>
-            <div className="adm-careers-eyebrow">
-              <UserCheck size={14} />
-              <span>Talent Acquisition &amp; Careers</span>
-            </div>
-            <h2 className="adm-careers-title">Candidate Pipeline &amp; Database</h2>
-            <p className="adm-careers-sub">
-              Live candidate applications, resume evaluations, and dual-engine MySQL/SQLite pipeline telemetry.
-            </p>
-          </div>
-
-          <div className="adm-careers-header-actions">
-            {/* Database Engine Pill */}
-            <button
-              type="button"
-              className={`adm-careers-db-pill ${dbStatus?.is_connected ? 'mysql' : 'sqlite'}`}
-              onClick={() => setShowDbModal(true)}
-              title="Click to view database connection diagnostics"
-            >
-              <span className="adm-careers-db-dot" />
-              <span>
-                {dbStatus?.is_connected ? 'MySQL 8.0 Connected' : 'SQLite Fallback Active'}
-              </span>
-            </button>
-
-            {/* Refresh Button */}
-            <button
-              type="button"
-              className="adm-careers-btn secondary"
-              onClick={onRefresh}
-              title="Refresh candidate applications"
-            >
-              <RefreshCw size={15} />
-              <span>Refresh</span>
-            </button>
-
-            {/* Export CSV */}
-            <a
-              href="/api/careers/applications/export"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="adm-careers-btn secondary"
-              title="Download CSV report of applications"
-            >
-              <Download size={15} />
-              <span>Export CSV</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 2. SIX KPI / PIPELINE CARDS (Matches Sales Enquiries design) ── */}
-      <div className="adm-careers-kpi-row">
+    <div className="adm-enq-page">
+      {/* =====================================================================
+          1. SIX KPI CARDS (Exact match to Sales Enquiries)
+          ===================================================================== */}
+      <div className="adm-enq-kpi-row">
         {/* Card 1: All Candidates */}
         <div
-          className={`adm-careers-kpi-card card-all ${selectedStatus === 'All' ? 'selected' : ''}`}
-          onClick={() => setSelectedStatus('All')}
+          className={`adm-enq-kpi-card card-all ${selectedStatus === 'All' ? 'selected' : ''}`}
+          onClick={() => {
+            setSelectedStatus('All');
+            setCurrentPage(1);
+          }}
           title="Show all candidate applications"
         >
-          <div className="adm-careers-kpi-left">
-            <div className="adm-careers-kpi-icon-box">
+          <div className="adm-enq-kpi-left">
+            <div className="adm-enq-kpi-icon-box">
               <Users size={22} />
             </div>
-            <div className="adm-careers-kpi-body">
-              <span className="adm-careers-kpi-title">All Candidates</span>
-              <span className="adm-careers-kpi-number">{stats.total}</span>
-              <span className="adm-careers-kpi-sub">Total Applications</span>
+            <div className="adm-enq-kpi-body">
+              <span className="adm-enq-kpi-title">All Candidates</span>
+              <span className="adm-enq-kpi-number">{stats.total}</span>
+              <span className="adm-enq-kpi-sub">Total Applications</span>
             </div>
           </div>
-          {selectedStatus === 'All' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
+          {selectedStatus === 'All' && <ChevronRight size={18} className="adm-enq-kpi-arrow" />}
         </div>
 
         {/* Card 2: New */}
         <div
-          className={`adm-careers-kpi-card card-new ${selectedStatus === 'New' ? 'selected' : ''}`}
-          onClick={() => setSelectedStatus(selectedStatus === 'New' ? 'All' : 'New')}
+          className={`adm-enq-kpi-card card-new ${selectedStatus === 'New' ? 'selected' : ''}`}
+          onClick={() => {
+            setSelectedStatus('New');
+            setCurrentPage(1);
+          }}
           title="Filter by New applications"
         >
-          <div className="adm-careers-kpi-left">
-            <div className="adm-careers-kpi-icon-box">
+          <div className="adm-enq-kpi-left">
+            <div className="adm-enq-kpi-icon-box">
               <Sparkles size={22} />
             </div>
-            <div className="adm-careers-kpi-body">
-              <span className="adm-careers-kpi-title">New</span>
-              <span className="adm-careers-kpi-number">{stats.newCount}</span>
-              <span className="adm-careers-kpi-sub">Recent Submissions</span>
+            <div className="adm-enq-kpi-body">
+              <span className="adm-enq-kpi-title">New</span>
+              <span className="adm-enq-kpi-number">{stats.newCount}</span>
+              <span className="adm-enq-kpi-sub">Recent Applications</span>
             </div>
           </div>
-          {selectedStatus === 'New' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
+          {selectedStatus === 'New' && <ChevronRight size={18} className="adm-enq-kpi-arrow" />}
         </div>
 
         {/* Card 3: In Review */}
         <div
-          className={`adm-careers-kpi-card card-review ${selectedStatus === 'In Review' ? 'selected' : ''}`}
-          onClick={() => setSelectedStatus(selectedStatus === 'In Review' ? 'All' : 'In Review')}
+          className={`adm-enq-kpi-card card-contacted ${selectedStatus === 'In Review' ? 'selected' : ''}`}
+          onClick={() => {
+            setSelectedStatus('In Review');
+            setCurrentPage(1);
+          }}
           title="Filter by In Review applications"
         >
-          <div className="adm-careers-kpi-left">
-            <div className="adm-careers-kpi-icon-box">
+          <div className="adm-enq-kpi-left">
+            <div className="adm-enq-kpi-icon-box">
               <Clock size={22} />
             </div>
-            <div className="adm-careers-kpi-body">
-              <span className="adm-careers-kpi-title">In Review</span>
-              <span className="adm-careers-kpi-number">{stats.inReviewCount}</span>
-              <span className="adm-careers-kpi-sub">Profile Screening</span>
+            <div className="adm-enq-kpi-body">
+              <span className="adm-enq-kpi-title">In Review</span>
+              <span className="adm-enq-kpi-number">{stats.inReviewCount}</span>
+              <span className="adm-enq-kpi-sub">Profile Screening</span>
             </div>
           </div>
-          {selectedStatus === 'In Review' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
+          {selectedStatus === 'In Review' && <ChevronRight size={18} className="adm-enq-kpi-arrow" />}
         </div>
 
         {/* Card 4: Shortlisted */}
         <div
-          className={`adm-careers-kpi-card card-shortlist ${selectedStatus === 'Shortlisted' ? 'selected' : ''}`}
-          onClick={() => setSelectedStatus(selectedStatus === 'Shortlisted' ? 'All' : 'Shortlisted')}
+          className={`adm-enq-kpi-card card-qualified ${selectedStatus === 'Shortlisted' ? 'selected' : ''}`}
+          onClick={() => {
+            setSelectedStatus('Shortlisted');
+            setCurrentPage(1);
+          }}
           title="Filter by Shortlisted candidates"
         >
-          <div className="adm-careers-kpi-left">
-            <div className="adm-careers-kpi-icon-box">
+          <div className="adm-enq-kpi-left">
+            <div className="adm-enq-kpi-icon-box">
               <Filter size={22} />
             </div>
-            <div className="adm-careers-kpi-body">
-              <span className="adm-careers-kpi-title">Shortlisted</span>
-              <span className="adm-careers-kpi-number">{stats.shortlistedCount}</span>
-              <span className="adm-careers-kpi-sub">Qualified Pipeline</span>
+            <div className="adm-enq-kpi-body">
+              <span className="adm-enq-kpi-title">Shortlisted</span>
+              <span className="adm-enq-kpi-number">{stats.shortlistedCount}</span>
+              <span className="adm-enq-kpi-sub">Under Evaluation</span>
             </div>
           </div>
-          {selectedStatus === 'Shortlisted' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
+          {selectedStatus === 'Shortlisted' && <ChevronRight size={18} className="adm-enq-kpi-arrow" />}
         </div>
 
         {/* Card 5: Interview / Offers */}
         <div
-          className={`adm-careers-kpi-card card-interview ${
+          className={`adm-enq-kpi-card card-converted ${
             selectedStatus === 'Interview / Offers' || ['interview scheduled', 'offer extended'].includes(selectedStatus.toLowerCase())
               ? 'selected'
               : ''
           }`}
-          onClick={() =>
+          onClick={() => {
             setSelectedStatus(
               selectedStatus === 'Interview / Offers' || ['interview scheduled', 'offer extended'].includes(selectedStatus.toLowerCase())
                 ? 'All'
                 : 'Interview / Offers'
-            )
-          }
+            );
+            setCurrentPage(1);
+          }}
           title="Filter by Interview & Offer stage"
         >
-          <div className="adm-careers-kpi-left">
-            <div className="adm-careers-kpi-icon-box">
+          <div className="adm-enq-kpi-left">
+            <div className="adm-enq-kpi-icon-box">
               <CheckCircle2 size={22} />
             </div>
-            <div className="adm-careers-kpi-body">
-              <span className="adm-careers-kpi-title">Interview / Offers</span>
-              <span className="adm-careers-kpi-number">{stats.interviewOffersCount}</span>
-              <span className="adm-careers-kpi-sub">Active Discussions</span>
+            <div className="adm-enq-kpi-body">
+              <span className="adm-enq-kpi-title">Interview / Offers</span>
+              <span className="adm-enq-kpi-number">{stats.interviewOffersCount}</span>
+              <span className="adm-enq-kpi-sub">Successful</span>
             </div>
           </div>
           {(selectedStatus === 'Interview / Offers' || ['interview scheduled', 'offer extended'].includes(selectedStatus.toLowerCase())) && (
-            <ChevronRight size={18} className="adm-careers-kpi-arrow" />
+            <ChevronRight size={18} className="adm-enq-kpi-arrow" />
           )}
         </div>
 
         {/* Card 6: Rejected */}
         <div
-          className={`adm-careers-kpi-card card-rejected ${selectedStatus === 'Rejected' ? 'selected' : ''}`}
-          onClick={() => setSelectedStatus(selectedStatus === 'Rejected' ? 'All' : 'Rejected')}
+          className={`adm-enq-kpi-card card-closed ${selectedStatus === 'Rejected' ? 'selected' : ''}`}
+          onClick={() => {
+            setSelectedStatus('Rejected');
+            setCurrentPage(1);
+          }}
           title="Filter by Rejected applications"
         >
-          <div className="adm-careers-kpi-left">
-            <div className="adm-careers-kpi-icon-box">
+          <div className="adm-enq-kpi-left">
+            <div className="adm-enq-kpi-icon-box">
               <X size={22} />
             </div>
-            <div className="adm-careers-kpi-body">
-              <span className="adm-careers-kpi-title">Rejected</span>
-              <span className="adm-careers-kpi-number">{stats.rejectedCount}</span>
-              <span className="adm-careers-kpi-sub">Archived Profiles</span>
+            <div className="adm-enq-kpi-body">
+              <span className="adm-enq-kpi-title">Rejected</span>
+              <span className="adm-enq-kpi-number">{stats.rejectedCount}</span>
+              <span className="adm-enq-kpi-sub">Completed</span>
             </div>
           </div>
-          {selectedStatus === 'Rejected' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
+          {selectedStatus === 'Rejected' && <ChevronRight size={18} className="adm-enq-kpi-arrow" />}
         </div>
       </div>
 
-      {/* ── 3. TOOLBAR (SEARCH & FILTERS) ───────────────────────────────── */}
-      <div className="adm-careers-toolbar">
-        <div className="adm-careers-search-wrap">
-          <Search size={16} className="adm-careers-search-icon" />
+      {/* =====================================================================
+          2. SEARCH, FILTERS, AND EXPORT TOOLBAR
+          ===================================================================== */}
+      <div className="adm-enq-toolbar">
+        {/* Search Input with Blue Magnifying Glass */}
+        <div className="adm-enq-search-wrap">
+          <Search size={18} className="adm-enq-search-icon" />
           <input
-            type="text"
-            className="adm-careers-search-input"
-            placeholder="Search candidate name, email, phone, position..."
+            type="search"
+            name="admin_careers_query"
+            id="admin_careers_query"
+            autoComplete="off"
+            className="adm-enq-search-input"
+            placeholder="Search by client, company, email, phone or product..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
           />
         </div>
 
-        <div className="adm-careers-filter-group">
+        {/* Filters Group & Export Button */}
+        <div className="adm-enq-filter-group">
+          {/* Status Dropdown */}
           <AdminDropdown
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
+            onChange={(e) => {
+              setSelectedStatus(e.target.value);
+              setCurrentPage(1);
+            }}
             options={[
-              { value: 'All', label: `All Statuses (${applications.length})` },
+              { value: 'All', label: 'All Status' },
               ...STATUS_OPTIONS_WITH_COLORS
             ]}
             prefixIcon={<Filter size={15} />}
-            className="adm-careers-bs5-filter"
+            className="adm-enq-bs5-filter"
           />
 
+          {/* Position Dropdown */}
           <AdminDropdown
             value={selectedPosition}
-            onChange={(e) => setSelectedPosition(e.target.value)}
+            onChange={(e) => {
+              setSelectedPosition(e.target.value);
+              setCurrentPage(1);
+            }}
             options={[
               { value: 'All', label: 'All Positions' },
-              ...positionsList.map(pos => ({ value: pos, label: pos }))
+              ...positionsList.map((pos) => ({ value: pos, label: pos }))
             ]}
             prefixIcon={<Briefcase size={15} />}
-            className="adm-careers-bs5-filter"
+            className="adm-enq-bs5-filter"
           />
+
+          {/* Export to CSV / Excel Button (Solid Blue matching screenshot) */}
+          <a
+            href="/api/careers/applications/export"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="adm-enq-export-btn"
+            title="Download full candidate dataset as Excel-compatible CSV"
+          >
+            <Download size={16} />
+            <span>Export to CSV / Excel</span>
+          </a>
         </div>
       </div>
 
-      {/* ── 4. APPLICATIONS TABLE ───────────────────────────────────────── */}
-      <div className="adm-careers-table-wrap">
-        {filteredApplications.length === 0 ? (
-          <div className="adm-empty-state">
-            <div className="adm-empty-icon">
-              <Briefcase size={28} />
-            </div>
-            <h4>No Career Applications Found</h4>
-            <p>
-              {searchQuery || selectedStatus !== 'All' || selectedPosition !== 'All'
-                ? 'Try adjusting your search criteria or filter tags.'
-                : 'Job applications submitted via the website Careers page will appear here instantly.'}
-            </p>
-          </div>
-        ) : (
-          <table className="adm-careers-table">
+      {/* =====================================================================
+          3. CANDIDATES TABLE
+          ===================================================================== */}
+      <div className="adm-enq-table-card">
+        <div className="adm-enq-table-responsive">
+          <table className="adm-enq-table">
             <thead>
               <tr>
-                <th style={{ width: '45px', textAlign: 'center' }}>ID</th>
-                <th>Candidate Dossier</th>
-                <th>Applied Role</th>
-                <th>Experience &amp; Notice</th>
-                <th style={{ width: '95px', textAlign: 'center' }}>Resume</th>
-                <th style={{ width: '120px', textAlign: 'center' }}>Status</th>
-                <th style={{ width: '105px', whiteSpace: 'nowrap' }}>Applied On</th>
-                <th style={{ width: '70px', textAlign: 'right' }}>Actions</th>
+                <th className="col-cb">
+                  <input
+                    type="checkbox"
+                    className="adm-enq-checkbox"
+                    checked={totalApps > 0 && selectedIds.size === totalApps}
+                    onChange={handleSelectAll}
+                    title="Select all applicants"
+                  />
+                </th>
+                <th className="col-id">ID</th>
+                <th className="col-contact">CANDIDATE DOSSIER</th>
+                <th className="col-product">APPLIED ROLE</th>
+                <th>EXPERIENCE &amp; NOTICE</th>
+                <th style={{ width: '95px', textAlign: 'center' }}>RESUME</th>
+                <th className="col-status">STATUS PIPELINE</th>
+                <th className="col-date">APPLIED ON</th>
+                <th className="col-actions">ACTIONS</th>
               </tr>
             </thead>
             <tbody>
-              {filteredApplications.map((app) => {
-                const initials = getInitials(app.full_name);
-                const displayName = formatDisplayName(app.full_name);
-                const cleanPosition = (app.position || 'Open Application').replace(/[?]/g, '-').trim();
-                const statusClass = (app.status || 'New').replace(/\s+/g, '-');
+              {paginatedApplications.length === 0 ? (
+                <tr>
+                  <td colSpan={9}>
+                    <div className="adm-enq-empty-state">
+                      <div className="adm-enq-empty-icon">
+                        <Users size={28} />
+                      </div>
+                      <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', color: '#10264F' }}>
+                        No career applications found
+                      </h4>
+                      <p style={{ margin: 0, fontSize: '0.84rem', color: '#607695' }}>
+                        Try clearing search terms or status filters.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                paginatedApplications.map((app) => {
+                  const initials = getInitials(app.full_name);
+                  const avatarColor = getAvatarColorClass(app.id);
+                  const isRowSelected = selectedIds.has(app.id);
+                  const cleanPosition = (app.position || 'Open Application').replace(/[?]/g, '-').trim();
 
-                return (
-                  <tr key={app.id}>
-                    <td style={{ textAlign: 'center' }}>
-                      <span className="adm-row-id">
-                        #{app.id}
-                      </span>
-                    </td>
+                  return (
+                    <tr key={app.id} className={isRowSelected ? 'row-selected' : ''}>
+                      {/* Checkbox */}
+                      <td className="col-cb">
+                        <input
+                          type="checkbox"
+                          className="adm-enq-checkbox"
+                          checked={isRowSelected}
+                          onChange={() => handleToggleRow(app.id)}
+                        />
+                      </td>
 
-                    <td>
-                      <div className="adm-candidate-cell">
-                        <div className="adm-candidate-avatar">{initials}</div>
-                        <div className="adm-candidate-meta">
-                          <span className="adm-candidate-name">{displayName}</span>
-                          <div className="adm-candidate-contacts">
-                            <a
-                              href={`mailto:${app.email}`}
-                              className="adm-candidate-link"
-                              title="Send email to applicant"
-                            >
-                              <Mail size={12} />
-                              <span>{app.email}</span>
-                            </a>
-                            <span className="adm-contact-sep">·</span>
-                            <a
-                              href={`tel:${app.phone}`}
-                              className="adm-candidate-link"
-                              title="Call applicant"
-                            >
-                              <Phone size={12} />
-                              <span>{app.phone}</span>
-                            </a>
+                      {/* ID */}
+                      <td className="col-id">
+                        <span className="adm-enq-lead-id">#{app.id}</span>
+                      </td>
+
+                      {/* Candidate Contact */}
+                      <td className="col-contact">
+                        <div className="adm-enq-contact-cell">
+                          <div className={`adm-enq-avatar ${avatarColor}`}>{initials}</div>
+                          <div className="adm-enq-contact-info">
+                            <span className="adm-enq-client-name">{formatDisplayName(app.full_name)}</span>
+                            <span className="adm-enq-client-company">{app.email}</span>
+                            <span className="adm-enq-client-phone">{app.phone}</span>
                           </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td>
-                      <span className="adm-position-pill">{cleanPosition}</span>
-                    </td>
+                      {/* Applied Role */}
+                      <td className="col-product">
+                        <div className="adm-enq-product-cell">
+                          <span className="adm-enq-product-name">{cleanPosition}</span>
+                          <span className="adm-enq-product-badge">Automation &amp; Engineering</span>
+                        </div>
+                      </td>
 
-                    <td>
-                      <div className="adm-exp-notice-cell">
-                        <span className="adm-exp-val">
-                          {app.experience || 'Fresher / 0 Years'}
-                        </span>
-                        <span className="adm-notice-val">
-                          Notice: <strong>{app.notice_period || 'Immediately Available'}</strong>
-                        </span>
-                      </div>
-                    </td>
+                      {/* Experience & Notice */}
+                      <td>
+                        <div className="adm-exp-notice-cell">
+                          <span className="adm-exp-val">{app.experience || 'Fresher / 0 Years'}</span>
+                          <span className="adm-notice-val">Notice: <strong>{app.notice_period || 'Immediately Available'}</strong></span>
+                        </div>
+                      </td>
 
-                    <td style={{ textAlign: 'center' }}>
-                      {app.resume_url ? (
-                        <a
-                          href={app.resume_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="adm-resume-btn"
-                          title="Open uploaded CV document in new tab"
-                        >
-                          <FileText size={13} />
-                          <span>View CV</span>
-                        </a>
-                      ) : (
-                        <span className="adm-no-resume-pill">No file</span>
-                      )}
-                    </td>
+                      {/* Resume CV */}
+                      <td style={{ textAlign: 'center' }}>
+                        {app.resume_url ? (
+                          <a
+                            href={app.resume_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="adm-resume-btn"
+                            title="Open uploaded CV document in new tab"
+                          >
+                            <FileText size={13} />
+                            <span>View CV</span>
+                          </a>
+                        ) : (
+                          <span className="adm-no-resume-pill">No file</span>
+                        )}
+                      </td>
 
-                    <td style={{ textAlign: 'center' }}>
-                      <AdminDropdown
-                        value={app.status || 'New'}
-                        onChange={(e) => handleStatusChange(app.id, e.target.value)}
-                        options={STATUS_OPTIONS_WITH_COLORS}
-                        size="sm"
-                        isPill={true}
-                        customColorTheme={getStatusTheme(app.status)}
-                        className="adm-careers-table-dropdown"
-                      />
-                    </td>
+                      {/* Status Dropdown */}
+                      <td className="col-status">
+                        <AdminDropdown
+                          value={app.status || 'New'}
+                          onChange={(e) => handleStatusChange(app.id, e.target.value)}
+                          options={STATUS_OPTIONS_WITH_COLORS}
+                          size="sm"
+                          isPill={true}
+                          customColorTheme={getStatusTheme(app.status)}
+                          className="adm-careers-table-dropdown"
+                        />
+                      </td>
 
-                    <td className="adm-date-cell">
-                      <span className="adm-date-main">{formatAppDate(app.created_at)}</span>
-                      {formatAppTime(app.created_at) && (
-                        <span className="adm-date-sub">{formatAppTime(app.created_at)}</span>
-                      )}
-                    </td>
+                      {/* Date Received / Applied */}
+                      <td className="col-date">
+                        <div className="adm-enq-date-cell">
+                          <Calendar size={13} className="adm-enq-date-icon" />
+                          <div className="adm-enq-date-info">
+                            <span className="adm-enq-date-str">{formatAppDate(app.created_at)}</span>
+                            <span className="adm-enq-date-rel">{formatAppTime(app.created_at) || 'Recent'}</span>
+                          </div>
+                        </div>
+                      </td>
 
-                    <td style={{ textAlign: 'right' }}>
-                      <div className="adm-row-actions" style={{ justifyContent: 'flex-end' }}>
-                        <button
-                          type="button"
-                          className="adm-action-icon-btn"
-                          onClick={() => handleOpenDossier(app)}
-                          title="View Full Profile & Recruiter Notes"
-                        >
-                          <Eye size={15} />
-                        </button>
+                      {/* Actions */}
+                      <td className="col-actions">
+                        <div className="adm-enq-actions-cell">
+                          <button
+                            type="button"
+                            className="adm-enq-btn-action btn-view"
+                            onClick={() => handleOpenDossier(app)}
+                            title="View Full Candidate Dossier"
+                          >
+                            <Eye size={14} />
+                          </button>
 
-                        <button
-                          type="button"
-                          className="adm-action-icon-btn delete"
-                          onClick={() => setApplicantToDelete(app)}
-                          title="Delete application"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                          <button
+                            type="button"
+                            className="adm-enq-btn-action btn-edit"
+                            onClick={() => handleOpenDossier(app)}
+                            title="Edit Notes & Details"
+                          >
+                            <Pencil size={14} />
+                          </button>
+
+                          <button
+                            type="button"
+                            className="adm-enq-btn-action btn-delete"
+                            onClick={() => setApplicantToDelete(app)}
+                            title="Delete Application"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
-        )}
+        </div>
+
+        {/* 4. Table Footer & Pagination */}
+        <div className="adm-enq-table-footer">
+          <div className="adm-enq-footer-summary">
+            Showing {startAppNum} to {endAppNum} of {totalApps} applicants
+          </div>
+
+          <div className="adm-enq-footer-controls">
+            <div className="adm-enq-rows-per-page">
+              <AdminDropdown
+                value={rowsPerPage}
+                onChange={(e) => {
+                  setRowsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                options={[
+                  { value: 10, label: '10 per page' },
+                  { value: 25, label: '25 per page' },
+                  { value: 50, label: '50 per page' }
+                ]}
+                size="sm"
+              />
+            </div>
+
+            <div className="adm-enq-pagination-btns">
+              <button
+                type="button"
+                className="adm-enq-page-btn"
+                disabled={validCurrentPage <= 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                title="Previous page"
+              >
+                <ChevronLeft size={15} />
+              </button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                <button
+                  key={pageNum}
+                  type="button"
+                  className={`adm-enq-page-btn ${pageNum === validCurrentPage ? 'active' : ''}`}
+                  onClick={() => setCurrentPage(pageNum)}
+                >
+                  {pageNum}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                className="adm-enq-page-btn"
+                disabled={validCurrentPage >= totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                title="Next page"
+              >
+                <ChevronRight size={15} />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── 5. CANDIDATE DOSSIER & NOTES MODAL ───────────────────────────── */}
