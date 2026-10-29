@@ -92,6 +92,58 @@ function formatAuditDateTime(ts) {
   }
 }
 
+// Submodule Error Boundary to ensure admin console never crashes or closes on child module errors
+class AdminModuleErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('Captured Admin module error:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          padding: '40px 24px',
+          margin: '24px auto',
+          maxWidth: '560px',
+          background: 'var(--adm-surface, #ffffff)',
+          borderRadius: '16px',
+          border: '1px solid var(--adm-border, #e2e8f0)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+          textAlign: 'center'
+        }}>
+          <h3 style={{ color: 'var(--adm-text-primary, #0f172a)', marginBottom: '8px', fontSize: '1.2rem' }}>
+            {this.props.title || 'Module Display Notice'}
+          </h3>
+          <p style={{ color: 'var(--adm-text-secondary, #64748b)', fontSize: '0.9rem', marginBottom: '18px' }}>
+            {this.state.error?.message || 'An unexpected issue occurred while rendering this module.'}
+          </p>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            style={{
+              padding: '9px 20px',
+              background: '#0284c7',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '8px',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            Reload Module
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function AdminPanel({
   isOpen,
   onClose,
@@ -2684,16 +2736,18 @@ export default function AdminPanel({
               ========================================================================= */}
           {activeTab === 'careers' && (
             <div className="admin-body-content" style={{ padding: 0 }}>
-              <AdminCareersManager
-                applications={careerApplications}
-                dbStatus={careerDbStatus}
-                onUpdateStatus={handleUpdateCareerStatus}
-                onSaveNotes={handleSaveCareerNotes}
-                onDelete={handleDeleteCareerApplication}
-                onRefresh={fetchCareerApplications}
-                showFeedback={showFeedback}
-                currentUser={currentUser}
-              />
+              <AdminModuleErrorBoundary title="Talent & Careers Module">
+                <AdminCareersManager
+                  applications={careerApplications}
+                  dbStatus={careerDbStatus}
+                  onUpdateStatus={handleUpdateCareerStatus}
+                  onSaveNotes={handleSaveCareerNotes}
+                  onDelete={handleDeleteCareerApplication}
+                  onRefresh={fetchCareerApplications}
+                  showFeedback={showFeedback}
+                  currentUser={currentUser}
+                />
+              </AdminModuleErrorBoundary>
             </div>
           )}
 

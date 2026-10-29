@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Shield, RefreshCw, Trash2, CheckCircle, Clock, Mail, Phone, Building, Calendar, Check } from 'lucide-react';
+import AdminDropdown from './AdminDropdown';
 
 export default function AdminInquiryDrawer({ isOpen, onClose, onCountUpdate }) {
   const [inquiries, setInquiries] = useState([]);
