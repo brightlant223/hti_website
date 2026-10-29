@@ -4031,3 +4031,355 @@
   }
 }
 
+
+
+/* ==========================================================================
+   EXECUTIVE DASHBOARD: HIGH-DENSITY COMPACT & RESPONSIVE OVERRIDES
+   Reduces vertical bloat, scales down heights & gaps, optimizes typography
+   and guarantees full-screen responsiveness without forcing awkward scrolling.
+   ========================================================================== */
+
+/* Topbar: Slim 48px header */
+.adm-topbar {
+  padding: 8px 18px !important;
+  min-height: 48px !important;
+  height: 48px !important;
+}
+
+.adm-topbar-title {
+  font-size: 1.02rem !important;
+  line-height: 1.2 !important;
+}
+
+.adm-topbar-sub {
+  font-size: 0.72rem !important;
+  margin-top: 1px !important;
+  line-height: 1.2 !important;
+}
+
+.adm-topbar-live-tag {
+  font-size: 0.68rem !important;
+  padding: 2px 8px !important;
+}
+
+.adm-topbar-btn {
+  padding: 3px 9px !important;
+  height: 30px !important;
+  font-size: 0.76rem !important;
+  border-radius: 7px !important;
+}
+
+.adm-topbar-close-btn {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 7px !important;
+}
+
+/* Body Content Area */
+.adm-body-content {
+  padding: 12px 18px !important;
+  gap: 12px !important;
+}
+
+/* Sales Alert Card: Slim Compact Strip */
+.adm-sales-alert-card {
+  padding: 7px 12px !important;
+  border-radius: 10px !important;
+  gap: 10px !important;
+}
+
+.adm-sales-alert-icon-box {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 7px !important;
+}
+
+.adm-sales-alert-title {
+  font-size: 0.82rem !important;
+  line-height: 1.2 !important;
+}
+
+.adm-sales-alert-sub {
+  font-size: 0.72rem !important;
+  line-height: 1.25 !important;
+}
+
+.adm-sales-alert-btn {
+  padding: 0 11px !important;
+  height: 28px !important;
+  font-size: 0.74rem !important;
+  border-radius: 7px !important;
+}
+
+/* 4 Summary Cards: Compact & High Density */
+.adm-summary-grid {
+  gap: 10px !important;
+}
+
+.adm-summary-card {
+  padding: 10px 12px !important;
+  border-radius: 11px !important;
+}
+
+.adm-card-top-row {
+  margin-bottom: 4px !important;
+}
+
+.adm-card-title-group {
+  gap: 7px !important;
+}
+
+.adm-card-icon-box {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 7px !important;
+}
+
+.adm-card-label {
+  font-size: 0.78rem !important;
+}
+
+.adm-card-arrow-wrap {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.adm-card-count {
+  font-size: 1.45rem !important;
+  font-weight: 850 !important;
+  line-height: 1.1 !important;
+  margin-bottom: 5px !important;
+}
+
+.adm-card-pills-row {
+  gap: 5px !important;
+}
+
+.adm-card-pill {
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  padding: 1.5px 6px !important;
+  border-radius: 5px !important;
+}
+
+/* Middle Row: Quick Actions & Status */
+.adm-middle-split-row {
+  gap: 10px !important;
+}
+
+.adm-card-box {
+  padding: 11px 14px !important;
+  border-radius: 11px !important;
+}
+
+.adm-quick-actions-header {
+  margin-bottom: 9px !important;
+  gap: 8px !important;
+}
+
+.adm-quick-actions-title {
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+}
+
+.adm-quick-actions-sub {
+  font-size: 0.71rem !important;
+}
+
+.adm-quick-actions-row {
+  gap: 7px !important;
+}
+
+.adm-btn-action {
+  padding: 6px 10px !important;
+  height: 32px !important;
+  font-size: 0.74rem !important;
+  border-radius: 8px !important;
+}
+
+/* System Status */
+.adm-panel-head {
+  margin-bottom: 8px !important;
+  gap: 10px !important;
+}
+
+.adm-panel-title {
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+}
+
+.adm-panel-sub {
+  font-size: 0.71rem !important;
+}
+
+.adm-panel-view-all-btn {
+  padding: 2px 8px !important;
+  height: 24px !important;
+  font-size: 0.72rem !important;
+  border-radius: 6px !important;
+}
+
+.adm-system-status-body {
+  min-height: 48px !important;
+}
+
+.adm-status-live-row {
+  gap: 8px !important;
+  margin-bottom: 6px !important;
+}
+
+.adm-live-pulse-dot {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.adm-live-pulse-inner {
+  width: 8px !important;
+  height: 8px !important;
+}
+
+.adm-status-headline {
+  font-size: 0.94rem !important;
+  font-weight: 800 !important;
+}
+
+.adm-status-wave-container {
+  height: 30px !important;
+  bottom: -11px !important;
+  left: -14px !important;
+  right: -14px !important;
+}
+
+/* Bottom Row: Telemetry & Audit Stream */
+.adm-bottom-split-row {
+  gap: 10px !important;
+}
+
+.adm-disk-host-row {
+  gap: 6px !important;
+  margin-bottom: 2px !important;
+}
+
+.adm-disk-host-label {
+  font-size: 0.7rem !important;
+}
+
+.adm-disk-gb-strong {
+  font-size: 0.94rem !important;
+  font-weight: 800 !important;
+}
+
+.adm-disk-free-pct {
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+}
+
+.adm-disk-bar-container {
+  height: 7px !important;
+  margin-top: 3px !important;
+  margin-bottom: 4px !important;
+}
+
+.adm-disk-legend-row {
+  gap: 14px !important;
+  font-size: 0.74rem !important;
+}
+
+.adm-stream-timeline {
+  gap: 9px !important;
+}
+
+.adm-stream-item {
+  gap: 10px !important;
+}
+
+.adm-stream-line {
+  left: 7px !important;
+  top: 14px !important;
+  bottom: -14px !important;
+}
+
+.adm-stream-marker {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.adm-stream-dot {
+  width: 5px !important;
+  height: 5px !important;
+}
+
+.adm-stream-user {
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
+}
+
+.adm-stream-badge {
+  font-size: 0.65rem !important;
+  padding: 1px 5px !important;
+}
+
+.adm-stream-time {
+  font-size: 0.67rem !important;
+}
+
+.adm-stream-desc {
+  font-size: 0.73rem !important;
+}
+
+/* ==========================================================================
+   FLUID RESPONSIVE MEDIA QUERIES (DESKTOP, LAPTOP, TABLET, MOBILE)
+   ========================================================================== */
+@media (max-width: 1240px) {
+  .adm-middle-split-row,
+  .adm-bottom-split-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .adm-summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .adm-quick-actions-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .adm-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .adm-quick-actions-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+  .adm-body-content {
+    padding: 10px 14px !important;
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .adm-summary-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .adm-quick-actions-row {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+  .adm-sales-alert-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+  .adm-sales-alert-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .adm-card-count {
+    font-size: 1.3rem !important;
+  }
+}

@@ -20,9 +20,9 @@
    -------------------------------------------------------------------------- */
 .adm-sidebar,
 .concept2-glass-sidebar {
-  width: 256px;
-  min-width: 256px;
-  max-width: 256px;
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
   height: 100%;
   flex-shrink: 0;
   display: flex;
@@ -39,24 +39,25 @@
 
 .adm-sidebar.collapsed,
 .concept2-glass-sidebar.collapsed {
-  width: 68px;
-  min-width: 68px;
-  max-width: 68px;
+  width: 58px;
+  min-width: 58px;
+  max-width: 58px;
 }
 
 /* --------------------------------------------------------------------------
    1. HEADER / BRAND BLOCK
    -------------------------------------------------------------------------- */
 .adm-sidebar-header {
-  padding: 14px 12px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
   border-bottom: 1px solid var(--adm-border);
   flex-shrink: 0;
   background: var(--adm-bg-surface);
   box-sizing: border-box;
+  min-height: 48px;
 }
 
 .adm-brand-block {

@@ -1529,7 +1529,7 @@ export default function AdminPanel({
                   <div className="adm-sales-alert-card">
                     <div className="adm-sales-alert-left">
                       <div className="adm-sales-alert-icon-box">
-                        <AlertTriangle size={20} />
+                        <AlertTriangle size={16} />
                       </div>
                       <div className="adm-sales-alert-info">
                         <div className="adm-sales-alert-title">
@@ -1570,12 +1570,12 @@ export default function AdminPanel({
                   <div className="adm-card-top-row">
                     <div className="adm-card-title-group">
                       <div className="adm-card-icon-box orange">
-                        <MessageSquare size={18} />
+                        <MessageSquare size={15} />
                       </div>
                       <span className="adm-card-label">Commercial Leads</span>
                     </div>
                     <div className="adm-card-arrow-wrap orange">
-                      <ChevronRight size={15} />
+                      <ChevronRight size={13} />
                     </div>
                   </div>
                   <div className="adm-card-count">
@@ -1603,7 +1603,7 @@ export default function AdminPanel({
                   <div className="adm-card-top-row">
                     <div className="adm-card-title-group">
                       <div className="adm-card-icon-box purple">
-                        <Users size={18} />
+                        <Users size={15} />
                       </div>
                       <span className="adm-card-label">Talent & Careers</span>
                     </div>
@@ -1636,7 +1636,7 @@ export default function AdminPanel({
                   <div className="adm-card-top-row">
                     <div className="adm-card-title-group">
                       <div className="adm-card-icon-box rose">
-                        <FileText size={18} />
+                        <FileText size={15} />
                       </div>
                       <span className="adm-card-label">Technical Articles</span>
                     </div>
@@ -1669,7 +1669,7 @@ export default function AdminPanel({
                   <div className="adm-card-top-row">
                     <div className="adm-card-title-group">
                       <div className="adm-card-icon-box mint">
-                        <Building2 size={18} />
+                        <Building2 size={15} />
                       </div>
                       <span className="adm-card-label">Clients & Partners</span>
                     </div>
@@ -1698,7 +1698,7 @@ export default function AdminPanel({
                 {/* Executive Quick Actions */}
                 <div className="adm-card-box adm-quick-actions-box">
                   <div className="adm-quick-actions-header">
-                    <Zap size={22} className="adm-quick-actions-bolt" />
+                    <Zap size={17} className="adm-quick-actions-bolt" />
                     <div>
                       <h3 className="adm-quick-actions-title">Executive Quick Actions</h3>
                       <p className="adm-quick-actions-sub">Fast-track common administrative tasks with 1-click workflows</p>
@@ -1707,22 +1707,22 @@ export default function AdminPanel({
 
                   <div className="adm-quick-actions-row">
                     <button className="adm-btn-action primary-blue" onClick={() => { setActiveTab('blogs'); handleOpenAddBlog(); }}>
-                      <FileText size={17} />
+                      <FileText size={14} />
                       <span>Publish Article</span>
                     </button>
 
                     <button className="adm-btn-action neutral-white" onClick={() => { setActiveTab('clients_partners'); handleOpenAddClient(); }}>
-                      <Users size={17} />
+                      <Users size={14} />
                       <span>Add Client / Partner</span>
                     </button>
 
                     <button className="adm-btn-action neutral-white" onClick={() => setActiveTab('careers')}>
-                      <UserCheck size={17} />
+                      <UserCheck size={14} />
                       <span>Review Candidates</span>
                     </button>
 
                     <button className="adm-btn-action neutral-white" onClick={handleExportInquiriesCSV}>
-                      <Download size={17} />
+                      <Download size={14} />
                       <span>Export Leads (CSV)</span>
                     </button>
                   </div>
@@ -1732,7 +1732,7 @@ export default function AdminPanel({
                 <div className="adm-card-box adm-system-status-box">
                   <div className="adm-panel-head">
                     <div className="adm-panel-title-wrap">
-                      <Activity size={20} className="adm-panel-icon green" />
+                      <Activity size={16} className="adm-panel-icon green" />
                       <h4 className="adm-panel-title">System Status</h4>
                     </div>
                     <button
@@ -1778,7 +1778,7 @@ export default function AdminPanel({
                 <div className="adm-card-box adm-telemetry-box">
                   <div className="adm-panel-head">
                     <div className="adm-panel-title-wrap">
-                      <Database size={20} className="adm-panel-icon blue" />
+                      <Database size={16} className="adm-panel-icon blue" />
                       <div>
                         <h4 className="adm-panel-title">Measured System Telemetry</h4>
                         <p className="adm-panel-sub">Live measured metrics verified directly from SQLite &amp; host OS</p>
