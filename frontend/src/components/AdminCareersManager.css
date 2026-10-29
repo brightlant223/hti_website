@@ -179,116 +179,307 @@ html.dark .adm-careers-btn.secondary {
   box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35);
 }
 
-/* ── 2. STAT / KPI CARDS ─────────────────────────────────────────────────── */
-.adm-careers-stats-grid {
+/* ── 2. SIX KPI / PIPELINE CARDS (Matches Sales Enquiries design) ── */
+.adm-careers-kpi-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-@media (max-width: 1024px) {
-  .adm-careers-stats-grid {
+@media (max-width: 1280px) {
+  .adm-careers-kpi-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .adm-careers-kpi-row {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 640px) {
-  .adm-careers-stats-grid {
+@media (max-width: 440px) {
+  .adm-careers-kpi-row {
     grid-template-columns: 1fr;
   }
 }
 
-.adm-careers-stat-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  border-radius: 14px;
-  padding: 18px 20px;
+.adm-careers-kpi-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(16, 38, 79, 0.03);
+  position: relative;
+  user-select: none;
+  text-align: left;
 }
 
-[data-theme="dark"] .adm-careers-stat-card,
-html.dark .adm-careers-stat-card {
-  background: rgba(15, 23, 42, 0.6);
-  border-color: rgba(51, 65, 85, 0.65);
-}
-
-.adm-careers-stat-card:hover {
+.adm-careers-kpi-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 6px 16px rgba(16, 38, 79, 0.08);
 }
 
-.adm-careers-stat-icon-wrap {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+.adm-careers-kpi-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.adm-careers-kpi-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
-.adm-careers-stat-icon-wrap.blue {
+.adm-careers-kpi-card:hover .adm-careers-kpi-icon-box {
+  transform: scale(1.06);
+}
+
+.adm-careers-kpi-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.adm-careers-kpi-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1e293b;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-careers-kpi-number {
+  font-size: 1.35rem;
+  line-height: 1.1;
+  font-weight: 700;
+  margin: 1px 0;
+}
+
+.adm-careers-kpi-sub {
+  font-size: 0.68rem;
+  color: #64748b;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-careers-kpi-arrow {
+  color: currentColor;
+  opacity: 0.85;
+  flex-shrink: 0;
+  animation: admCareersArrowIn 0.2s ease-out;
+}
+
+@keyframes admCareersArrowIn {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 0.85;
+    transform: translateX(0);
+  }
+}
+
+/* Card 1: All Candidates — Blue */
+.adm-careers-kpi-card.card-all {
+  background: #ffffff;
+  border-color: #0284c7;
+  border-top: 3px solid #0284c7;
+}
+.adm-careers-kpi-card.card-all .adm-careers-kpi-icon-box {
   background: rgba(2, 132, 199, 0.12);
   color: #0284c7;
 }
-
-.adm-careers-stat-icon-wrap.coral {
-  background: rgba(244, 63, 94, 0.12);
-  color: #f43f5e;
+.adm-careers-kpi-card.card-all .adm-careers-kpi-number {
+  color: #0284c7;
+}
+.adm-careers-kpi-card.card-all.selected {
+  border-color: #0284c7;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.22);
 }
 
-.adm-careers-stat-icon-wrap.emerald {
-  background: rgba(16, 185, 129, 0.12);
-  color: #10b981;
+/* Card 2: New — Rose */
+.adm-careers-kpi-card.card-new {
+  background: #ffffff;
+  border-color: #e11d48;
+  border-top: 3px solid #e11d48;
+}
+.adm-careers-kpi-card.card-new .adm-careers-kpi-icon-box {
+  background: rgba(225, 29, 72, 0.10);
+  color: #e11d48;
+}
+.adm-careers-kpi-card.card-new .adm-careers-kpi-number {
+  color: #e11d48;
+}
+.adm-careers-kpi-card.card-new.selected {
+  border-color: #e11d48;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.22);
 }
 
-.adm-careers-stat-icon-wrap.purple {
-  background: rgba(139, 92, 246, 0.12);
-  color: #8b5cf6;
+/* Card 3: In Review — Amber */
+.adm-careers-kpi-card.card-review {
+  background: #ffffff;
+  border-color: #d97706;
+  border-top: 3px solid #d97706;
+}
+.adm-careers-kpi-card.card-review .adm-careers-kpi-icon-box {
+  background: rgba(217, 119, 6, 0.10);
+  color: #d97706;
+}
+.adm-careers-kpi-card.card-review .adm-careers-kpi-number {
+  color: #d97706;
+}
+.adm-careers-kpi-card.card-review.selected {
+  border-color: #d97706;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.22);
 }
 
-.adm-careers-stat-info {
-  display: flex;
-  flex-direction: column;
+/* Card 4: Shortlisted — Purple */
+.adm-careers-kpi-card.card-shortlist {
+  background: #ffffff;
+  border-color: #7c3aed;
+  border-top: 3px solid #7c3aed;
+}
+.adm-careers-kpi-card.card-shortlist .adm-careers-kpi-icon-box {
+  background: rgba(124, 58, 237, 0.10);
+  color: #7c3aed;
+}
+.adm-careers-kpi-card.card-shortlist .adm-careers-kpi-number {
+  color: #7c3aed;
+}
+.adm-careers-kpi-card.card-shortlist.selected {
+  border-color: #7c3aed;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.22);
 }
 
-.adm-careers-stat-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-  margin-bottom: 2px;
+/* Card 5: Interview / Offers — Emerald */
+.adm-careers-kpi-card.card-interview {
+  background: #ffffff;
+  border-color: #059669;
+  border-top: 3px solid #059669;
+}
+.adm-careers-kpi-card.card-interview .adm-careers-kpi-icon-box {
+  background: rgba(5, 150, 105, 0.10);
+  color: #059669;
+}
+.adm-careers-kpi-card.card-interview .adm-careers-kpi-number {
+  color: #059669;
+}
+.adm-careers-kpi-card.card-interview.selected {
+  border-color: #059669;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.22);
 }
 
-[data-theme="dark"] .adm-careers-stat-label,
-html.dark .adm-careers-stat-label {
+/* Card 6: Rejected — Slate */
+.adm-careers-kpi-card.card-rejected {
+  background: #ffffff;
+  border-color: #475569;
+  border-top: 3px solid #475569;
+}
+.adm-careers-kpi-card.card-rejected .adm-careers-kpi-icon-box {
+  background: rgba(71, 85, 105, 0.10);
+  color: #475569;
+}
+.adm-careers-kpi-card.card-rejected .adm-careers-kpi-number {
+  color: #475569;
+}
+.adm-careers-kpi-card.card-rejected.selected {
+  border-color: #475569;
+  box-shadow: 0 4px 14px rgba(71, 85, 105, 0.22);
+}
+
+/* Dark Mode Overrides for KPI cards */
+[data-theme="dark"] .adm-careers-kpi-card,
+html.dark .adm-careers-kpi-card {
+  background: #0f172a !important;
+}
+
+[data-theme="dark"] .adm-careers-kpi-title,
+html.dark .adm-careers-kpi-title {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .adm-careers-kpi-sub,
+html.dark .adm-careers-kpi-sub {
   color: #94a3b8;
 }
 
-.adm-careers-stat-val {
-  font-family: var(--font-heading, 'Outfit', sans-serif);
-  font-size: 1.65rem;
-  font-weight: 800;
-  color: #0f172a;
-  line-height: 1.1;
+[data-theme="dark"] .adm-careers-kpi-card.card-all .adm-careers-kpi-icon-box,
+html.dark .adm-careers-kpi-card.card-all .adm-careers-kpi-icon-box {
+  background: rgba(2, 132, 199, 0.18);
+  color: #38bdf8;
+}
+[data-theme="dark"] .adm-careers-kpi-card.card-all .adm-careers-kpi-number,
+html.dark .adm-careers-kpi-card.card-all .adm-careers-kpi-number {
+  color: #38bdf8;
 }
 
-[data-theme="dark"] .adm-careers-stat-val,
-html.dark .adm-careers-stat-val {
-  color: #f8fafc;
+[data-theme="dark"] .adm-careers-kpi-card.card-new .adm-careers-kpi-icon-box,
+html.dark .adm-careers-kpi-card.card-new .adm-careers-kpi-icon-box {
+  background: rgba(225, 29, 72, 0.16);
+  color: #fb7185;
+}
+[data-theme="dark"] .adm-careers-kpi-card.card-new .adm-careers-kpi-number,
+html.dark .adm-careers-kpi-card.card-new .adm-careers-kpi-number {
+  color: #fb7185;
 }
 
-.adm-careers-stat-sub {
-  font-size: 0.72rem;
+[data-theme="dark"] .adm-careers-kpi-card.card-review .adm-careers-kpi-icon-box,
+html.dark .adm-careers-kpi-card.card-review .adm-careers-kpi-icon-box {
+  background: rgba(217, 119, 6, 0.16);
+  color: #fbbf24;
+}
+[data-theme="dark"] .adm-careers-kpi-card.card-review .adm-careers-kpi-number,
+html.dark .adm-careers-kpi-card.card-review .adm-careers-kpi-number {
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .adm-careers-kpi-card.card-shortlist .adm-careers-kpi-icon-box,
+html.dark .adm-careers-kpi-card.card-shortlist .adm-careers-kpi-icon-box {
+  background: rgba(124, 58, 237, 0.16);
+  color: #a78bfa;
+}
+[data-theme="dark"] .adm-careers-kpi-card.card-shortlist .adm-careers-kpi-number,
+html.dark .adm-careers-kpi-card.card-shortlist .adm-careers-kpi-number {
+  color: #a78bfa;
+}
+
+[data-theme="dark"] .adm-careers-kpi-card.card-interview .adm-careers-kpi-icon-box,
+html.dark .adm-careers-kpi-card.card-interview .adm-careers-kpi-icon-box {
+  background: rgba(5, 150, 105, 0.16);
+  color: #34d399;
+}
+[data-theme="dark"] .adm-careers-kpi-card.card-interview .adm-careers-kpi-number,
+html.dark .adm-careers-kpi-card.card-interview .adm-careers-kpi-number {
+  color: #34d399;
+}
+
+[data-theme="dark"] .adm-careers-kpi-card.card-rejected .adm-careers-kpi-icon-box,
+html.dark .adm-careers-kpi-card.card-rejected .adm-careers-kpi-icon-box {
+  background: rgba(71, 85, 105, 0.2);
   color: #94a3b8;
-  margin-top: 3px;
+}
+[data-theme="dark"] .adm-careers-kpi-card.card-rejected .adm-careers-kpi-number,
+html.dark .adm-careers-kpi-card.card-rejected .adm-careers-kpi-number {
+  color: #94a3b8;
 }
 
 /* ── 3. TOOLBAR (SEARCH & FILTERS) ───────────────────────────────────────── */

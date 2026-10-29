@@ -38,6 +38,35 @@ const STATUS_OPTIONS = [
   'Rejected'
 ];
 
+const STATUS_OPTIONS_WITH_COLORS = [
+  { value: 'New', label: 'New', color: '#e11d48' },
+  { value: 'In Review', label: 'In Review', color: '#d97706' },
+  { value: 'Shortlisted', label: 'Shortlisted', color: '#7c3aed' },
+  { value: 'Interview Scheduled', label: 'Interview Scheduled', color: '#0284c7' },
+  { value: 'Offer Extended', label: 'Offer Extended', color: '#059669' },
+  { value: 'Rejected', label: 'Rejected', color: '#64748b' }
+];
+
+function getStatusTheme(status) {
+  const s = (status || '').toLowerCase();
+  switch (s) {
+    case 'new':
+      return { bg: 'rgba(225, 29, 72, 0.1)', text: '#e11d48', border: 'rgba(225, 29, 72, 0.3)' };
+    case 'in review':
+      return { bg: 'rgba(217, 119, 6, 0.1)', text: '#d97706', border: 'rgba(217, 119, 6, 0.3)' };
+    case 'shortlisted':
+      return { bg: 'rgba(124, 58, 237, 0.1)', text: '#7c3aed', border: 'rgba(124, 58, 237, 0.3)' };
+    case 'interview scheduled':
+      return { bg: 'rgba(2, 132, 199, 0.1)', text: '#0284c7', border: 'rgba(2, 132, 199, 0.3)' };
+    case 'offer extended':
+      return { bg: 'rgba(5, 150, 105, 0.1)', text: '#059669', border: 'rgba(5, 150, 105, 0.3)' };
+    case 'rejected':
+      return { bg: 'rgba(100, 116, 139, 0.1)', text: '#64748b', border: 'rgba(100, 116, 139, 0.3)' };
+    default:
+      return { bg: 'rgba(2, 132, 199, 0.1)', text: '#0284c7', border: 'rgba(2, 132, 199, 0.3)' };
+  }
+}
+
 function formatAppDate(dateStr) {
   if (!dateStr) return 'Just now';
   try {
@@ -110,20 +139,20 @@ export default function AdminCareersManager({
   const [showDbModal, setShowDbModal] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
 
-  // Calculate statistics
+  // Calculate statistics (6 pipeline stages matching Sales Enquiries)
   const stats = useMemo(() => {
     const total = applications.length;
     const newCount = applications.filter((a) => (a.status || '').toLowerCase() === 'new').length;
-    const reviewingCount = applications.filter(
-      (a) => (a.status || '').toLowerCase() === 'in review' || (a.status || '').toLowerCase() === 'shortlisted'
-    ).length;
-    const interviewCount = applications.filter(
+    const inReviewCount = applications.filter((a) => (a.status || '').toLowerCase() === 'in review').length;
+    const shortlistedCount = applications.filter((a) => (a.status || '').toLowerCase() === 'shortlisted').length;
+    const interviewOffersCount = applications.filter(
       (a) =>
         (a.status || '').toLowerCase() === 'interview scheduled' ||
         (a.status || '').toLowerCase() === 'offer extended'
     ).length;
+    const rejectedCount = applications.filter((a) => (a.status || '').toLowerCase() === 'rejected').length;
 
-    return { total, newCount, reviewingCount, interviewCount };
+    return { total, newCount, inReviewCount, shortlistedCount, interviewOffersCount, rejectedCount };
   }, [applications]);
 
   // Unique job positions for filter
@@ -145,9 +174,15 @@ export default function AdminCareersManager({
         (app.phone || '').includes(searchQuery) ||
         (app.position || '').toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchStatus =
-        selectedStatus === 'All' ||
-        (app.status || '').toLowerCase() === selectedStatus.toLowerCase();
+      const appStatus = (app.status || '').toLowerCase();
+      let matchStatus = false;
+      if (selectedStatus === 'All') {
+        matchStatus = true;
+      } else if (selectedStatus === 'Interview / Offers') {
+        matchStatus = ['interview scheduled', 'offer extended'].includes(appStatus);
+      } else {
+        matchStatus = appStatus === selectedStatus.toLowerCase();
+      }
 
       const matchPosition =
         selectedPosition === 'All' || app.position === selectedPosition;
@@ -274,50 +309,132 @@ export default function AdminCareersManager({
         </div>
       </div>
 
-      {/* ── 2. STAT / KPI CARDS ─────────────────────────────────────────── */}
-      <div className="adm-careers-stats-grid">
-        <div className="adm-careers-stat-card">
-          <div className="adm-careers-stat-icon-wrap blue">
-            <Users size={22} />
+      {/* ── 2. SIX KPI / PIPELINE CARDS (Matches Sales Enquiries design) ── */}
+      <div className="adm-careers-kpi-row">
+        {/* Card 1: All Candidates */}
+        <div
+          className={`adm-careers-kpi-card card-all ${selectedStatus === 'All' ? 'selected' : ''}`}
+          onClick={() => setSelectedStatus('All')}
+          title="Show all candidate applications"
+        >
+          <div className="adm-careers-kpi-left">
+            <div className="adm-careers-kpi-icon-box">
+              <Users size={22} />
+            </div>
+            <div className="adm-careers-kpi-body">
+              <span className="adm-careers-kpi-title">All Candidates</span>
+              <span className="adm-careers-kpi-number">{stats.total}</span>
+              <span className="adm-careers-kpi-sub">Total Applications</span>
+            </div>
           </div>
-          <div className="adm-careers-stat-info">
-            <span className="adm-careers-stat-label">Total Applicants</span>
-            <span className="adm-careers-stat-val">{stats.total}</span>
-            <span className="adm-careers-stat-sub">Across all job postings</span>
-          </div>
+          {selectedStatus === 'All' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
         </div>
 
-        <div className="adm-careers-stat-card">
-          <div className="adm-careers-stat-icon-wrap coral">
-            <Sparkles size={22} />
+        {/* Card 2: New */}
+        <div
+          className={`adm-careers-kpi-card card-new ${selectedStatus === 'New' ? 'selected' : ''}`}
+          onClick={() => setSelectedStatus(selectedStatus === 'New' ? 'All' : 'New')}
+          title="Filter by New applications"
+        >
+          <div className="adm-careers-kpi-left">
+            <div className="adm-careers-kpi-icon-box">
+              <Sparkles size={22} />
+            </div>
+            <div className="adm-careers-kpi-body">
+              <span className="adm-careers-kpi-title">New</span>
+              <span className="adm-careers-kpi-number">{stats.newCount}</span>
+              <span className="adm-careers-kpi-sub">Recent Submissions</span>
+            </div>
           </div>
-          <div className="adm-careers-stat-info">
-            <span className="adm-careers-stat-label">New / Unreviewed</span>
-            <span className="adm-careers-stat-val">{stats.newCount}</span>
-            <span className="adm-careers-stat-sub">Require initial screening</span>
-          </div>
+          {selectedStatus === 'New' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
         </div>
 
-        <div className="adm-careers-stat-card">
-          <div className="adm-careers-stat-icon-wrap emerald">
-            <CheckCircle2 size={22} />
+        {/* Card 3: In Review */}
+        <div
+          className={`adm-careers-kpi-card card-review ${selectedStatus === 'In Review' ? 'selected' : ''}`}
+          onClick={() => setSelectedStatus(selectedStatus === 'In Review' ? 'All' : 'In Review')}
+          title="Filter by In Review applications"
+        >
+          <div className="adm-careers-kpi-left">
+            <div className="adm-careers-kpi-icon-box">
+              <Clock size={22} />
+            </div>
+            <div className="adm-careers-kpi-body">
+              <span className="adm-careers-kpi-title">In Review</span>
+              <span className="adm-careers-kpi-number">{stats.inReviewCount}</span>
+              <span className="adm-careers-kpi-sub">Profile Screening</span>
+            </div>
           </div>
-          <div className="adm-careers-stat-info">
-            <span className="adm-careers-stat-label">In Review / Shortlist</span>
-            <span className="adm-careers-stat-val">{stats.reviewingCount}</span>
-            <span className="adm-careers-stat-sub">Passed initial profile check</span>
-          </div>
+          {selectedStatus === 'In Review' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
         </div>
 
-        <div className="adm-careers-stat-card">
-          <div className="adm-careers-stat-icon-wrap purple">
-            <Database size={22} />
+        {/* Card 4: Shortlisted */}
+        <div
+          className={`adm-careers-kpi-card card-shortlist ${selectedStatus === 'Shortlisted' ? 'selected' : ''}`}
+          onClick={() => setSelectedStatus(selectedStatus === 'Shortlisted' ? 'All' : 'Shortlisted')}
+          title="Filter by Shortlisted candidates"
+        >
+          <div className="adm-careers-kpi-left">
+            <div className="adm-careers-kpi-icon-box">
+              <Filter size={22} />
+            </div>
+            <div className="adm-careers-kpi-body">
+              <span className="adm-careers-kpi-title">Shortlisted</span>
+              <span className="adm-careers-kpi-number">{stats.shortlistedCount}</span>
+              <span className="adm-careers-kpi-sub">Qualified Pipeline</span>
+            </div>
           </div>
-          <div className="adm-careers-stat-info">
-            <span className="adm-careers-stat-label">Interview / Offers</span>
-            <span className="adm-careers-stat-val">{stats.interviewCount}</span>
-            <span className="adm-careers-stat-sub">Scheduled technical discussions</span>
+          {selectedStatus === 'Shortlisted' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
+        </div>
+
+        {/* Card 5: Interview / Offers */}
+        <div
+          className={`adm-careers-kpi-card card-interview ${
+            selectedStatus === 'Interview / Offers' || ['interview scheduled', 'offer extended'].includes(selectedStatus.toLowerCase())
+              ? 'selected'
+              : ''
+          }`}
+          onClick={() =>
+            setSelectedStatus(
+              selectedStatus === 'Interview / Offers' || ['interview scheduled', 'offer extended'].includes(selectedStatus.toLowerCase())
+                ? 'All'
+                : 'Interview / Offers'
+            )
+          }
+          title="Filter by Interview & Offer stage"
+        >
+          <div className="adm-careers-kpi-left">
+            <div className="adm-careers-kpi-icon-box">
+              <CheckCircle2 size={22} />
+            </div>
+            <div className="adm-careers-kpi-body">
+              <span className="adm-careers-kpi-title">Interview / Offers</span>
+              <span className="adm-careers-kpi-number">{stats.interviewOffersCount}</span>
+              <span className="adm-careers-kpi-sub">Active Discussions</span>
+            </div>
           </div>
+          {(selectedStatus === 'Interview / Offers' || ['interview scheduled', 'offer extended'].includes(selectedStatus.toLowerCase())) && (
+            <ChevronRight size={18} className="adm-careers-kpi-arrow" />
+          )}
+        </div>
+
+        {/* Card 6: Rejected */}
+        <div
+          className={`adm-careers-kpi-card card-rejected ${selectedStatus === 'Rejected' ? 'selected' : ''}`}
+          onClick={() => setSelectedStatus(selectedStatus === 'Rejected' ? 'All' : 'Rejected')}
+          title="Filter by Rejected applications"
+        >
+          <div className="adm-careers-kpi-left">
+            <div className="adm-careers-kpi-icon-box">
+              <X size={22} />
+            </div>
+            <div className="adm-careers-kpi-body">
+              <span className="adm-careers-kpi-title">Rejected</span>
+              <span className="adm-careers-kpi-number">{stats.rejectedCount}</span>
+              <span className="adm-careers-kpi-sub">Archived Profiles</span>
+            </div>
+          </div>
+          {selectedStatus === 'Rejected' && <ChevronRight size={18} className="adm-careers-kpi-arrow" />}
         </div>
       </div>
 
@@ -340,8 +457,9 @@ export default function AdminCareersManager({
             onChange={(e) => setSelectedStatus(e.target.value)}
             options={[
               { value: 'All', label: `All Statuses (${applications.length})` },
-              ...STATUS_OPTIONS.map(st => ({ value: st, label: st }))
+              ...STATUS_OPTIONS_WITH_COLORS
             ]}
+            prefixIcon={<Filter size={15} />}
             className="adm-careers-bs5-filter"
           />
 
@@ -352,6 +470,7 @@ export default function AdminCareersManager({
               { value: 'All', label: 'All Positions' },
               ...positionsList.map(pos => ({ value: pos, label: pos }))
             ]}
+            prefixIcon={<Briefcase size={15} />}
             className="adm-careers-bs5-filter"
           />
         </div>
@@ -464,10 +583,10 @@ export default function AdminCareersManager({
                       <AdminDropdown
                         value={app.status || 'New'}
                         onChange={(e) => handleStatusChange(app.id, e.target.value)}
-                        options={STATUS_OPTIONS.map(st => ({ value: st, label: st }))}
+                        options={STATUS_OPTIONS_WITH_COLORS}
                         size="sm"
                         isPill={true}
-                        customColorTheme={statusClass}
+                        customColorTheme={getStatusTheme(app.status)}
                         className="adm-careers-table-dropdown"
                       />
                     </td>
@@ -543,9 +662,10 @@ export default function AdminCareersManager({
                   <AdminDropdown
                     value={selectedApplicant.status || 'New'}
                     onChange={(e) => handleStatusChange(selectedApplicant.id, e.target.value)}
-                    options={STATUS_OPTIONS.map(st => ({ value: st, label: st }))}
+                    options={STATUS_OPTIONS_WITH_COLORS}
                     size="sm"
                     isPill={true}
+                    customColorTheme={getStatusTheme(selectedApplicant.status)}
                     className="adm-careers-drawer-dropdown"
                   />
                 </div>
