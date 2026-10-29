@@ -131,6 +131,11 @@ export default function AdminPanel({
     localStorage.setItem('hti_admin_theme', next);
   };
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', adminTheme);
+    document.body.setAttribute('data-theme', adminTheme);
+  }, [adminTheme]);
+
   // Close mobile drawer on desktop resize (>=1024px) or tab switch
   useEffect(() => {
     const handleResize = () => {
@@ -1391,8 +1396,8 @@ export default function AdminPanel({
   });
 
   return (
-    <div className="admin-overlay" onClick={onClose}>
-      <div className={`admin-dashboard-container adm-dashboard-container theme-${adminTheme}`} onClick={e => e.stopPropagation()}>
+    <div className={`admin-overlay theme-${adminTheme}`} data-theme={adminTheme} onClick={onClose}>
+      <div className={`admin-dashboard-container adm-dashboard-container theme-${adminTheme}`} data-theme={adminTheme} onClick={e => e.stopPropagation()}>
         {/* SIDEBAR NAVIGATION (Minimal, Calm & Consistent) */}
         <AdminSidebar
           activeTab={activeTab}
@@ -1463,13 +1468,13 @@ export default function AdminPanel({
               >
                 {adminTheme === 'light' ? (
                   <>
-                    <Sun size={15} style={{ color: '#d97706' }} />
-                    <span className="adm-btn-text">Light Mode</span>
+                    <Moon size={14} style={{ color: '#0284c7' }} />
+                    <span className="adm-btn-text">Dark Mode</span>
                   </>
                 ) : (
                   <>
-                    <Moon size={15} style={{ color: '#38bdf8' }} />
-                    <span className="adm-btn-text">Dark Mode</span>
+                    <Sun size={14} style={{ color: '#f59e0b' }} />
+                    <span className="adm-btn-text">Light Mode</span>
                   </>
                 )}
               </button>
@@ -2179,10 +2184,11 @@ export default function AdminPanel({
                             <thead>
                               <tr>
                                 <th className="adm-cp-col-num">#</th>
-                                <th>Client / Organization</th>
-                                <th>Sector / Industry</th>
-                                <th>Authorization Status</th>
-                                <th>Public Website</th>
+                                <th className="adm-cp-col-entity">Client / Organization</th>
+                                <th className="adm-cp-col-sector">Sector / Industry</th>
+                                <th className="adm-cp-col-auth">Authorization</th>
+                                <th className="adm-cp-col-vis">Web Status</th>
+                                <th className="adm-cp-col-web">Public Website</th>
                                 <th className="adm-cp-col-actions">Actions</th>
                               </tr>
                             </thead>
@@ -2215,53 +2221,51 @@ export default function AdminPanel({
                                         </div>
                                         <div className="adm-cp-entity-info">
                                           <div className="adm-cp-entity-name">{c.name}</div>
-                                          {c.website_url ? (
-                                            <a
-                                              href={c.website_url}
-                                              target="_blank"
-                                              rel="noreferrer"
-                                              className="adm-cp-entity-url"
-                                              title={`Visit ${c.name} website`}
-                                            >
-                                              <span>{c.website_url.replace(/^https?:\/\/(www\.)?/, '')}</span>
-                                              <ExternalLink size={10} />
-                                            </a>
-                                          ) : null}
                                         </div>
                                       </div>
                                     </td>
-                                    <td>
+                                    <td className="adm-cp-col-sector">
                                       <span className="adm-cp-sector-badge">
                                         <Tag size={11} />
                                         <span>{c.sector}</span>
                                       </span>
                                     </td>
-                                    <td>
-                                      <span
-                                        className={`adm-cp-status-pill ${c.is_authorized ? 'authorized' : 'pending'
-                                          }`}
-                                      >
+                                    <td className="adm-cp-col-auth">
+                                      <span className={`adm-cp-status-pill ${c.is_authorized ? 'authorized' : 'pending'}`}>
                                         {c.is_authorized ? (
                                           <>
                                             <CheckCircle2 size={12} />
-                                            <span>Authorized for Display</span>
+                                            <span>Authorized</span>
                                           </>
                                         ) : (
                                           <>
                                             <Clock size={12} />
-                                            <span>Pending Authorization</span>
+                                            <span>Pending</span>
                                           </>
                                         )}
                                       </span>
                                     </td>
-                                    <td>
-                                      <span
-                                        className={`adm-cp-visibility-pill ${c.is_active ? 'visible' : 'hidden'
-                                          }`}
-                                      >
+                                    <td className="adm-cp-col-vis">
+                                      <span className={`adm-cp-visibility-pill ${c.is_active ? 'visible' : 'hidden'}`}>
                                         <span className="adm-cp-vis-dot" />
                                         <span>{c.is_active ? 'Visible' : 'Hidden'}</span>
                                       </span>
+                                    </td>
+                                    <td className="adm-cp-col-web">
+                                      {c.website_url ? (
+                                        <a
+                                          href={c.website_url.startsWith('http') ? c.website_url : `https://${c.website_url}`}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="adm-cp-website-link"
+                                          title={`Visit ${c.name} website`}
+                                        >
+                                          <span>{c.website_url.replace(/^https?:\/\/(www\.)?/, '')}</span>
+                                          <ExternalLink size={10} />
+                                        </a>
+                                      ) : (
+                                        <span className="adm-cp-no-url">—</span>
+                                      )}
                                     </td>
                                     <td className="adm-cp-col-actions">
                                       <div className="adm-cp-action-group">
@@ -2348,10 +2352,11 @@ export default function AdminPanel({
                             <thead>
                               <tr>
                                 <th className="adm-cp-col-num">#</th>
-                                <th>Partner Brand</th>
-                                <th>Category</th>
-                                <th>Engineering Scope / Tagline</th>
-                                <th>Public Website</th>
+                                <th className="adm-cp-col-entity">Partner Brand</th>
+                                <th className="adm-cp-col-sector">Category</th>
+                                <th className="adm-cp-col-auth">Engineering Scope</th>
+                                <th className="adm-cp-col-vis">Web Status</th>
+                                <th className="adm-cp-col-web">Public Website</th>
                                 <th className="adm-cp-col-actions">Actions</th>
                               </tr>
                             </thead>
@@ -2384,38 +2389,39 @@ export default function AdminPanel({
                                         </div>
                                         <div className="adm-cp-entity-info">
                                           <div className="adm-cp-entity-name">{p.name}</div>
-                                          {p.website_url ? (
-                                            <a
-                                              href={p.website_url}
-                                              target="_blank"
-                                              rel="noreferrer"
-                                              className="adm-cp-entity-url"
-                                              title={`Visit ${p.name} website`}
-                                            >
-                                              <span>{p.website_url.replace(/^https?:\/\/(www\.)?/, '')}</span>
-                                              <ExternalLink size={10} />
-                                            </a>
-                                          ) : null}
                                         </div>
                                       </div>
                                     </td>
-                                    <td>
+                                    <td className="adm-cp-col-sector">
                                       <span className="adm-cp-category-badge">
                                         <Cpu size={11} />
                                         <span>{p.category}</span>
                                       </span>
                                     </td>
-                                    <td>
+                                    <td className="adm-cp-col-auth">
                                       <div className="adm-cp-tagline-text">{p.tagline || '—'}</div>
                                     </td>
-                                    <td>
-                                      <span
-                                        className={`adm-cp-visibility-pill ${p.is_active ? 'visible' : 'hidden'
-                                          }`}
-                                      >
+                                    <td className="adm-cp-col-vis">
+                                      <span className={`adm-cp-visibility-pill ${p.is_active ? 'visible' : 'hidden'}`}>
                                         <span className="adm-cp-vis-dot" />
-                                        <span>{p.is_active ? 'Active Partner' : 'Hidden'}</span>
+                                        <span>{p.is_active ? 'Active' : 'Hidden'}</span>
                                       </span>
+                                    </td>
+                                    <td className="adm-cp-col-web">
+                                      {p.website_url ? (
+                                        <a
+                                          href={p.website_url.startsWith('http') ? p.website_url : `https://${p.website_url}`}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="adm-cp-website-link"
+                                          title={`Visit ${p.name} website`}
+                                        >
+                                          <span>{p.website_url.replace(/^https?:\/\/(www\.)?/, '')}</span>
+                                          <ExternalLink size={10} />
+                                        </a>
+                                      ) : (
+                                        <span className="adm-cp-no-url">—</span>
+                                      )}
                                     </td>
                                     <td className="adm-cp-col-actions">
                                       <div className="adm-cp-action-group">
@@ -2712,8 +2718,8 @@ export default function AdminPanel({
           MODAL 3: CLIENT ADD / EDIT MODAL
           ========================================================================= */}
       {editingClient && (
-        <div className="admin-modal-overlay" onClick={() => setEditingClient(null)}>
-          <div className="adm-cp-modal-dialog" onClick={e => e.stopPropagation()}>
+        <div className={`admin-modal-overlay theme-${adminTheme}`} data-theme={adminTheme} onClick={() => setEditingClient(null)}>
+          <div className={`adm-cp-modal-dialog theme-${adminTheme}`} data-theme={adminTheme} onClick={e => e.stopPropagation()}>
             <div className="adm-cp-modal-header">
               <div className="adm-cp-modal-title-group">
                 <div className="adm-cp-modal-badge-icon">
@@ -2843,8 +2849,8 @@ export default function AdminPanel({
           MODAL 4: PARTNER ADD / EDIT MODAL
           ========================================================================= */}
       {editingPartner && (
-        <div className="admin-modal-overlay" onClick={() => setEditingPartner(null)}>
-          <div className="adm-cp-modal-dialog" onClick={e => e.stopPropagation()}>
+        <div className={`admin-modal-overlay theme-${adminTheme}`} data-theme={adminTheme} onClick={() => setEditingPartner(null)}>
+          <div className={`adm-cp-modal-dialog theme-${adminTheme}`} data-theme={adminTheme} onClick={e => e.stopPropagation()}>
             <div className="adm-cp-modal-header">
               <div className="adm-cp-modal-title-group">
                 <div className="adm-cp-modal-badge-icon">
@@ -2967,7 +2973,7 @@ export default function AdminPanel({
           MODAL 6: INTERACTIVE INQUIRY DETAIL DRAWER
           ========================================================================= */}
       {selectedInquiry && (
-        <div className="admin-modal-overlay" onClick={() => setSelectedInquiry(null)}>
+        <div className={`admin-modal-overlay theme-${adminTheme}`} data-theme={adminTheme} onClick={() => setSelectedInquiry(null)}>
           <div className="admin-modal-container" style={{ maxWidth: '640px' }} onClick={e => e.stopPropagation()}>
             <div className="admin-modal-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -3100,7 +3106,7 @@ export default function AdminPanel({
           MODAL 7: ADMIN USER ADD / EDIT MODAL
           ========================================================================= */}
       {editingUser && (
-        <div className="admin-modal-overlay" onClick={() => setEditingUser(null)}>
+        <div className={`admin-modal-overlay theme-${adminTheme}`} data-theme={adminTheme} onClick={() => setEditingUser(null)}>
           <div className="admin-modal-container" style={{ maxWidth: '520px' }} onClick={e => e.stopPropagation()}>
             <div className="admin-modal-header">
               <h3 className="admin-modal-title">
