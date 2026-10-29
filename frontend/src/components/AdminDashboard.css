@@ -4383,3 +4383,262 @@
     font-size: 1.3rem !important;
   }
 }
+
+
+/* ==========================================================================
+   EXECUTIVE DASHBOARD: HIGH-END CARDS & DARK MODE & FLUID RESPONSIVE
+   ========================================================================== */
+
+/* Modern Executive Summary Cards (Light Mode Refinement - No cheap pastels) */
+.adm-summary-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-top: 3px solid transparent !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(16, 29, 64, 0.04), 0 4px 12px -2px rgba(16, 29, 64, 0.02) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.adm-summary-card.card-orange {
+  border-top-color: #f97316 !important;
+}
+.adm-summary-card.card-orange:hover {
+  border-color: #fdba74 !important;
+  border-top-color: #f97316 !important;
+  box-shadow: 0 8px 24px -4px rgba(249, 115, 22, 0.16) !important;
+  transform: translateY(-2px);
+}
+
+.adm-summary-card.card-purple {
+  border-top-color: #8b5cf6 !important;
+}
+.adm-summary-card.card-purple:hover {
+  border-color: #c4b5fd !important;
+  border-top-color: #8b5cf6 !important;
+  box-shadow: 0 8px 24px -4px rgba(139, 92, 246, 0.16) !important;
+  transform: translateY(-2px);
+}
+
+.adm-summary-card.card-rose {
+  border-top-color: #f43f5e !important;
+}
+.adm-summary-card.card-rose:hover {
+  border-color: #fca5a5 !important;
+  border-top-color: #f43f5e !important;
+  box-shadow: 0 8px 24px -4px rgba(244, 63, 94, 0.16) !important;
+  transform: translateY(-2px);
+}
+
+.adm-summary-card.card-mint {
+  border-top-color: #10b981 !important;
+}
+.adm-summary-card.card-mint:hover {
+  border-color: #86efac !important;
+  border-top-color: #10b981 !important;
+  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.16) !important;
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   COMPREHENSIVE DARK MODE OVERRIDES FOR DASHBOARD
+   ========================================================================== */
+.theme-dark .adm-dashboard-view,
+[data-theme="dark"] .adm-dashboard-view {
+  background: transparent !important;
+}
+
+.theme-dark .adm-sales-alert-card,
+[data-theme="dark"] .adm-sales-alert-card {
+  background: rgba(127, 29, 29, 0.22) !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  border-left: 4px solid #ef4444 !important;
+}
+
+.theme-dark .adm-sales-alert-icon-box,
+[data-theme="dark"] .adm-sales-alert-icon-box {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+}
+
+.theme-dark .adm-sales-alert-title,
+[data-theme="dark"] .adm-sales-alert-title {
+  color: #fca5a5 !important;
+}
+
+.theme-dark .adm-sales-alert-sub,
+[data-theme="dark"] .adm-sales-alert-sub {
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-sales-alert-sub strong,
+[data-theme="dark"] .adm-sales-alert-sub strong {
+  color: #ffffff !important;
+}
+
+/* Summary Cards in Dark Mode */
+.theme-dark .adm-summary-card,
+[data-theme="dark"] .adm-summary-card {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top: 3px solid transparent !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
+}
+
+.theme-dark .adm-summary-card.card-orange,
+[data-theme="dark"] .adm-summary-card.card-orange {
+  border-top-color: #f97316 !important;
+}
+.theme-dark .adm-summary-card.card-orange:hover,
+[data-theme="dark"] .adm-summary-card.card-orange:hover {
+  border-color: rgba(249, 115, 22, 0.4) !important;
+  border-top-color: #f97316 !important;
+  box-shadow: 0 8px 28px -4px rgba(249, 115, 22, 0.22) !important;
+}
+
+.theme-dark .adm-summary-card.card-purple,
+[data-theme="dark"] .adm-summary-card.card-purple {
+  border-top-color: #a855f7 !important;
+}
+.theme-dark .adm-summary-card.card-purple:hover,
+[data-theme="dark"] .adm-summary-card.card-purple:hover {
+  border-color: rgba(168, 85, 247, 0.4) !important;
+  border-top-color: #a855f7 !important;
+  box-shadow: 0 8px 28px -4px rgba(168, 85, 247, 0.22) !important;
+}
+
+.theme-dark .adm-summary-card.card-rose,
+[data-theme="dark"] .adm-summary-card.card-rose {
+  border-top-color: #f43f5e !important;
+}
+.theme-dark .adm-summary-card.card-rose:hover,
+[data-theme="dark"] .adm-summary-card.card-rose:hover {
+  border-color: rgba(244, 63, 94, 0.4) !important;
+  border-top-color: #f43f5e !important;
+  box-shadow: 0 8px 28px -4px rgba(244, 63, 94, 0.22) !important;
+}
+
+.theme-dark .adm-summary-card.card-mint,
+[data-theme="dark"] .adm-summary-card.card-mint {
+  border-top-color: #10b981 !important;
+}
+.theme-dark .adm-summary-card.card-mint:hover,
+[data-theme="dark"] .adm-summary-card.card-mint:hover {
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  border-top-color: #10b981 !important;
+  box-shadow: 0 8px 28px -4px rgba(16, 185, 129, 0.22) !important;
+}
+
+.theme-dark .adm-card-count,
+[data-theme="dark"] .adm-card-count {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-card-label,
+[data-theme="dark"] .adm-card-label {
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-card-pill.pill-neutral,
+[data-theme="dark"] .adm-card-pill.pill-neutral {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Middle & Bottom Boxes in Dark Mode */
+.theme-dark .adm-card-box,
+[data-theme="dark"] .adm-card-box {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
+}
+
+.theme-dark .adm-quick-actions-title,
+.theme-dark .adm-panel-title,
+[data-theme="dark"] .adm-quick-actions-title,
+[data-theme="dark"] .adm-panel-title {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-quick-actions-sub,
+.theme-dark .adm-panel-sub,
+[data-theme="dark"] .adm-quick-actions-sub,
+[data-theme="dark"] .adm-panel-sub {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-btn-action.neutral-white,
+[data-theme="dark"] .adm-btn-action.neutral-white {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.theme-dark .adm-btn-action.neutral-white:hover,
+[data-theme="dark"] .adm-btn-action.neutral-white:hover {
+  background: #334155 !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+.theme-dark .adm-panel-view-all-btn,
+[data-theme="dark"] .adm-panel-view-all-btn {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.theme-dark .adm-panel-view-all-btn:hover,
+[data-theme="dark"] .adm-panel-view-all-btn:hover {
+  background: #334155 !important;
+  color: #38bdf8 !important;
+}
+
+.theme-dark .adm-status-headline,
+.theme-dark .adm-disk-gb-strong,
+.theme-dark .adm-disk-free-pct,
+[data-theme="dark"] .adm-status-headline,
+[data-theme="dark"] .adm-disk-gb-strong,
+[data-theme="dark"] .adm-disk-free-pct {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-disk-host-label,
+.theme-dark .adm-disk-legend-row,
+[data-theme="dark"] .adm-disk-host-label,
+[data-theme="dark"] .adm-disk-legend-row {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-disk-bar-container,
+[data-theme="dark"] .adm-disk-bar-container {
+  background: #1e293b !important;
+}
+
+.theme-dark .adm-stream-user,
+[data-theme="dark"] .adm-stream-user {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-stream-desc,
+.theme-dark .adm-stream-time,
+[data-theme="dark"] .adm-stream-desc,
+[data-theme="dark"] .adm-stream-time {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-stream-item,
+[data-theme="dark"] .adm-stream-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.theme-dark .adm-stream-line,
+[data-theme="dark"] .adm-stream-line {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.theme-dark .adm-stream-marker,
+[data-theme="dark"] .adm-stream-marker {
+  background: #0f172a !important;
+  border-color: #38bdf8 !important;
+}

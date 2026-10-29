@@ -1017,3 +1017,116 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+
+/* ==========================================================================
+   MODULE 2: BLOGS & TECHNICAL PUBLICATIONS — DARK MODE & RESPONSIVENESS
+   ========================================================================== */
+.theme-dark .adm-blogs-container,
+[data-theme="dark"] .adm-blogs-container {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-blogs-toolbar,
+[data-theme="dark"] .adm-blogs-toolbar {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
+}
+
+.theme-dark .adm-blogs-search-input,
+[data-theme="dark"] .adm-blogs-search-input {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-blogs-status-select,
+[data-theme="dark"] .adm-blogs-status-select {
+  background-color: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-filter-chip,
+.theme-dark .adm-blogs-cat-chip,
+[data-theme="dark"] .adm-filter-chip,
+[data-theme="dark"] .adm-blogs-cat-chip {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-filter-chip.active,
+.theme-dark .adm-blogs-cat-chip.active,
+[data-theme="dark"] .adm-filter-chip.active,
+[data-theme="dark"] .adm-blogs-cat-chip.active {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+.theme-dark .adm-blog-item-card,
+.theme-dark .adm-blog-card,
+[data-theme="dark"] .adm-blog-item-card,
+[data-theme="dark"] .adm-blog-card {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
+}
+
+.theme-dark .adm-blog-title,
+.theme-dark .adm-blog-card-title,
+[data-theme="dark"] .adm-blog-title,
+[data-theme="dark"] .adm-blog-card-title {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-blog-desc,
+.theme-dark .adm-blog-card-desc,
+.theme-dark .adm-blog-meta-item,
+[data-theme="dark"] .adm-blog-desc,
+[data-theme="dark"] .adm-blog-card-desc,
+[data-theme="dark"] .adm-blog-meta-item {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-blog-btn-action,
+[data-theme="dark"] .adm-blog-btn-action {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-blog-btn-action:hover,
+[data-theme="dark"] .adm-blog-btn-action:hover {
+  background: #334155 !important;
+  color: #38bdf8 !important;
+}
+
+/* Responsiveness for Blogs */
+@media (max-width: 768px) {
+  .adm-blogs-toolbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  .adm-blogs-search-wrap {
+    min-width: 100% !important;
+    width: 100% !important;
+  }
+  .adm-blogs-toolbar-actions {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  .adm-blog-item-card,
+  .adm-blog-card {
+    flex-direction: column !important;
+  }
+  .adm-blog-thumb-wrap,
+  .adm-blog-card-thumb {
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 180px !important;
+  }
+}

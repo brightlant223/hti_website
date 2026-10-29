@@ -1270,3 +1270,220 @@
     align-items: flex-start;
   }
 }
+
+
+/* ==========================================================================
+   MODULE 8: USERS & SECURITY — PREMIUM CARDS, DARK MODE & RESPONSIVENESS
+   ========================================================================== */
+
+/* Modern Executive Summary Cards (Light Mode Refinement - No cheap pastels) */
+.adm-sec-summary-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-top: 3px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(16, 38, 79, 0.04), 0 4px 12px -2px rgba(16, 38, 79, 0.02) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.adm-sec-summary-card.card-users {
+  border-top-color: #0284c7 !important;
+}
+.adm-sec-summary-card.card-active {
+  border-top-color: #10b981 !important;
+}
+.adm-sec-summary-card.card-admins {
+  border-top-color: #8b5cf6 !important;
+}
+.adm-sec-summary-card.card-audit {
+  border-top-color: #f59e0b !important;
+}
+
+.adm-sec-summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(16, 38, 79, 0.1) !important;
+}
+
+/* Comprehensive Dark Mode for Users & Security */
+.theme-dark .adm-sec-page,
+[data-theme="dark"] .adm-sec-page {
+  background: transparent !important;
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-sec-header,
+[data-theme="dark"] .adm-sec-header {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.theme-dark .adm-sec-header-title,
+[data-theme="dark"] .adm-sec-header-title {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-sec-header-sub,
+[data-theme="dark"] .adm-sec-header-sub {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-sec-summary-card,
+[data-theme="dark"] .adm-sec-summary-card {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top: 3px solid #cbd5e1 !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
+}
+
+.theme-dark .adm-sec-summary-card.card-users,
+[data-theme="dark"] .adm-sec-summary-card.card-users {
+  border-top-color: #38bdf8 !important;
+}
+.theme-dark .adm-sec-summary-card.card-active,
+[data-theme="dark"] .adm-sec-summary-card.card-active {
+  border-top-color: #34d399 !important;
+}
+.theme-dark .adm-sec-summary-card.card-admins,
+[data-theme="dark"] .adm-sec-summary-card.card-admins {
+  border-top-color: #c084fc !important;
+}
+.theme-dark .adm-sec-summary-card.card-audit,
+[data-theme="dark"] .adm-sec-summary-card.card-audit {
+  border-top-color: #fbbf24 !important;
+}
+
+.theme-dark .adm-sec-summary-count,
+[data-theme="dark"] .adm-sec-summary-count {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-sec-summary-label,
+[data-theme="dark"] .adm-sec-summary-label {
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-sec-summary-sub,
+[data-theme="dark"] .adm-sec-summary-sub {
+  color: #94a3b8 !important;
+}
+
+/* Navigation Tabs & Controls */
+.theme-dark .adm-sec-nav-row,
+[data-theme="dark"] .adm-sec-nav-row {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.theme-dark .adm-sec-tab-btn,
+[data-theme="dark"] .adm-sec-tab-btn {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.theme-dark .adm-sec-tab-btn.active,
+[data-theme="dark"] .adm-sec-tab-btn.active {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #0284c7 !important;
+}
+
+.theme-dark .adm-sec-controls,
+[data-theme="dark"] .adm-sec-controls {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.theme-dark .adm-sec-search-input,
+.theme-dark .adm-sec-select,
+[data-theme="dark"] .adm-sec-search-input,
+[data-theme="dark"] .adm-sec-select {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+}
+
+/* Tables & Audit Log Card in Dark Mode */
+.theme-dark .adm-sec-table-card,
+.theme-dark .adm-sec-audit-card,
+[data-theme="dark"] .adm-sec-table-card,
+[data-theme="dark"] .adm-sec-audit-card {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
+}
+
+.theme-dark .adm-sec-table thead th,
+[data-theme="dark"] .adm-sec-table thead th {
+  background: #090d16 !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-sec-table tbody td,
+[data-theme="dark"] .adm-sec-table tbody td {
+  background: #0f172a !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+  color: #e2e8f0 !important;
+}
+
+.theme-dark .adm-sec-table tbody tr:hover td,
+[data-theme="dark"] .adm-sec-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.theme-dark .adm-sec-user-name,
+.theme-dark .adm-sec-audit-event-title,
+[data-theme="dark"] .adm-sec-user-name,
+[data-theme="dark"] .adm-sec-audit-event-title {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-sec-user-handle,
+.theme-dark .adm-sec-user-email,
+.theme-dark .adm-sec-audit-event-desc,
+.theme-dark .adm-sec-audit-event-time,
+[data-theme="dark"] .adm-sec-user-handle,
+[data-theme="dark"] .adm-sec-user-email,
+[data-theme="dark"] .adm-sec-audit-event-desc,
+[data-theme="dark"] .adm-sec-audit-event-time {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-sec-audit-item,
+[data-theme="dark"] .adm-sec-audit-item {
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Fluid Responsiveness for Users & Security */
+@media (max-width: 1024px) {
+  .adm-sec-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .adm-sec-summary-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .adm-sec-summary-row {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .adm-sec-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .adm-sec-header-right {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+  .adm-sec-table-wrap {
+    overflow-x: auto !important;
+  }
+  .adm-sec-table {
+    min-width: 640px !important;
+  }
+}
