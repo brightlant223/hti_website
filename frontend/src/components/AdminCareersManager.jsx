@@ -334,31 +334,25 @@ export default function AdminCareersManager({
         </div>
 
         <div className="adm-careers-filter-group">
-          <select
-            className="adm-careers-select"
+          <AdminDropdown
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-          >
-            <option value="All">All Statuses ({applications.length})</option>
-            {STATUS_OPTIONS.map((st) => (
-              <option key={st} value={st}>
-                {st}
-              </option>
-            ))}
-          </select>
+            options={[
+              { value: 'All', label: `All Statuses (${applications.length})` },
+              ...STATUS_OPTIONS.map(st => ({ value: st, label: st }))
+            ]}
+            className="adm-careers-bs5-filter"
+          />
 
-          <select
-            className="adm-careers-select"
+          <AdminDropdown
             value={selectedPosition}
             onChange={(e) => setSelectedPosition(e.target.value)}
-          >
-            <option value="All">All Positions</option>
-            {positionsList.map((pos) => (
-              <option key={pos} value={pos}>
-                {pos}
-              </option>
-            ))}
-          </select>
+            options={[
+              { value: 'All', label: 'All Positions' },
+              ...positionsList.map(pos => ({ value: pos, label: pos }))
+            ]}
+            className="adm-careers-bs5-filter"
+          />
         </div>
       </div>
 
@@ -466,17 +460,15 @@ export default function AdminCareersManager({
                     </td>
 
                     <td style={{ textAlign: 'center' }}>
-                      <select
-                        className={`adm-status-select ${statusClass}`}
+                      <AdminDropdown
                         value={app.status || 'New'}
                         onChange={(e) => handleStatusChange(app.id, e.target.value)}
-                      >
-                        {STATUS_OPTIONS.map((st) => (
-                          <option key={st} value={st}>
-                            {st}
-                          </option>
-                        ))}
-                      </select>
+                        options={STATUS_OPTIONS.map(st => ({ value: st, label: st }))}
+                        size="sm"
+                        isPill={true}
+                        customColorTheme={statusClass}
+                        className="adm-careers-table-dropdown"
+                      />
                     </td>
 
                     <td className="adm-date-cell">
@@ -547,18 +539,14 @@ export default function AdminCareersManager({
 
                 <div className="adm-dossier-item">
                   <span className="adm-dossier-label">Application Status</span>
-                  <select
-                    className={`adm-status-select ${(selectedApplicant.status || 'New').replace(/\s+/g, '-')}`}
+                  <AdminDropdown
                     value={selectedApplicant.status || 'New'}
                     onChange={(e) => handleStatusChange(selectedApplicant.id, e.target.value)}
-                    style={{ width: 'fit-content' }}
-                  >
-                    {STATUS_OPTIONS.map((st) => (
-                      <option key={st} value={st}>
-                        {st}
-                      </option>
-                    ))}
-                  </select>
+                    options={STATUS_OPTIONS.map(st => ({ value: st, label: st }))}
+                    size="sm"
+                    isPill={true}
+                    className="adm-careers-drawer-dropdown"
+                  />
                 </div>
 
                 <div className="adm-dossier-item">

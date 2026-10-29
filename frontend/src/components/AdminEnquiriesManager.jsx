@@ -26,6 +26,7 @@ import {
   Handshake
 } from 'lucide-react';
 import './AdminEnquiries.css';
+import AdminDropdown from './AdminDropdown';
 
 /**
  * Format relative time description matching reference screenshot
@@ -90,6 +91,30 @@ function getStatusThemeClass(status = '', id) {
   if (s === 'converted') return 'status-converted';
   return 'status-closed';
 }
+
+
+const STATUS_DROPDOWN_OPTIONS = [
+  { value: 'New', label: 'New', color: '#16a34a' },
+  { value: 'Contacted', label: 'Contacted', color: '#0284c7' },
+  { value: 'Qualified', label: 'Qualified', color: '#9333ea' },
+  { value: 'Converted', label: 'Converted', color: '#059669' },
+  { value: 'Closed', label: 'Closed', color: '#64748b' }
+];
+
+const STATUS_FILTER_OPTIONS = [
+  { value: 'All', label: 'All Status' },
+  { value: 'New', label: 'New', color: '#16a34a' },
+  { value: 'Contacted', label: 'Contacted', color: '#0284c7' },
+  { value: 'Qualified', label: 'Qualified', color: '#9333ea' },
+  { value: 'Converted', label: 'Converted', color: '#059669' },
+  { value: 'Closed', label: 'Closed', color: '#64748b' }
+];
+
+const ROWS_PER_PAGE_OPTIONS = [
+  { value: 10, label: '10 per page' },
+  { value: 25, label: '25 per page' },
+  { value: 50, label: '50 per page' }
+];
 
 export default function AdminEnquiriesManager({
   inquiries = [],
@@ -480,44 +505,31 @@ export default function AdminEnquiriesManager({
         {/* Filters Group & Export Button */}
         <div className="adm-enq-filter-group">
           {/* Status Dropdown */}
-          <div className="adm-enq-select-wrap">
-            <Filter size={15} className="prefix-icon" />
-            <select
-              value={statusFilter}
-              onChange={e => {
-                setStatusFilter(e.target.value);
-                setCurrentPage(1);
-              }}
-            >
-              <option value="All">All Status</option>
-              <option value="New">New</option>
-              <option value="Contacted">Contacted</option>
-              <option value="Qualified">Qualified</option>
-              <option value="Converted">Converted</option>
-              <option value="Closed">Closed</option>
-            </select>
-            <ChevronDown size={14} className="chevron-icon" />
-          </div>
+          <AdminDropdown
+            value={statusFilter}
+            onChange={e => {
+              setStatusFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            options={STATUS_FILTER_OPTIONS}
+            prefixIcon={<Filter size={15} />}
+            className="adm-enq-bs5-filter"
+          />
 
           {/* Assignment Dropdown */}
-          <div className="adm-enq-select-wrap">
-            <User size={15} className="prefix-icon" />
-            <select
-              value={assigneeFilter}
-              onChange={e => {
-                setAssigneeFilter(e.target.value);
-                setCurrentPage(1);
-              }}
-            >
-              <option value="All">All Assigned</option>
-              <option value="Unassigned">Unassigned</option>
-              <option value="Lead Systems Engineer">Lead Systems Engineer</option>
-              <option value="Commercial Sales Directorate">Commercial Sales</option>
-              <option value="Cleanroom Technical Support">Cleanroom Support</option>
-              <option value="Turnkey Projects Lead">Turnkey Projects</option>
-            </select>
-            <ChevronDown size={14} className="chevron-icon" />
-          </div>
+          <AdminDropdown
+            value={assigneeFilter}
+            onChange={e => {
+              setAssigneeFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            options={[
+              { value: 'All', label: 'All Assigned' },
+              ...assigneeOptions.map(opt => ({ value: opt, label: opt }))
+            ]}
+            prefixIcon={<User size={15} />}
+            className="adm-enq-bs5-filter"
+          />
 
           {/* Export to CSV / Excel Button */}
           <button
@@ -626,40 +638,27 @@ export default function AdminEnquiriesManager({
 
                       {/* Status Pipeline Dropdown Pill */}
                       <td className="col-status">
-                        <div className={`adm-enq-status-select-wrap ${statusTheme}`}>
-                          <span style={{ fontSize: '0.9rem', lineHeight: 1 }}>●</span>
-                          <select
-                            value={(inq.id === 1 && inq.status === 'In Review') ? 'New' : (inq.status || 'New')}
-                            onChange={e => onUpdateStatus(inq.id, e.target.value)}
-                            title="Update lead pipeline status"
-                          >
-                            <option value="New">New</option>
-                            <option value="Contacted">Contacted</option>
-                            <option value="Qualified">Qualified</option>
-                            <option value="Converted">Converted</option>
-                            <option value="Closed">Closed</option>
-                          </select>
-                          <ChevronDown size={12} />
-                        </div>
+                        <AdminDropdown
+                          value={(inq.id === 1 && inq.status === 'In Review') ? 'New' : (inq.status || 'New')}
+                          onChange={e => onUpdateStatus(inq.id, e.target.value)}
+                          options={STATUS_DROPDOWN_OPTIONS}
+                          size="sm"
+                          isPill={true}
+                          customColorTheme={statusTheme}
+                          title="Update lead pipeline status"
+                        />
                       </td>
 
                       {/* Assigned To Dropdown Pill */}
                       <td className="col-assigned">
-                        <div className="adm-enq-assign-select-wrap">
-                          <User size={13} className="user-icon" />
-                          <select
-                            value={inq.assigned_to || 'Unassigned'}
-                            onChange={e => onAssign(inq.id, e.target.value)}
-                            title="Reassign specialist"
-                          >
-                            {assigneeOptions.map(opt => (
-                              <option key={opt} value={opt}>
-                                {opt}
-                              </option>
-                            ))}
-                          </select>
-                          <ChevronDown size={12} className="chevron-icon" />
-                        </div>
+                        <AdminDropdown
+                          value={inq.assigned_to || 'Unassigned'}
+                          onChange={e => onAssign(inq.id, e.target.value)}
+                          options={assigneeOptions.map(opt => ({ value: opt, label: opt }))}
+                          prefixIcon={<User size={13} />}
+                          size="sm"
+                          title="Reassign specialist"
+                        />
                       </td>
 
                       {/* Date Received */}
@@ -730,18 +729,15 @@ export default function AdminEnquiriesManager({
           <div className="adm-enq-footer-controls">
             {/* Rows Per Page */}
             <div className="adm-enq-rows-per-page">
-              <select
+              <AdminDropdown
                 value={rowsPerPage}
                 onChange={e => {
                   setRowsPerPage(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-              >
-                <option value={10}>10 per page</option>
-                <option value={25}>25 per page</option>
-                <option value={50}>50 per page</option>
-              </select>
-              <ChevronDown size={13} />
+                options={ROWS_PER_PAGE_OPTIONS}
+                size="sm"
+              />
             </div>
 
             {/* Pagination Buttons */}
@@ -923,40 +919,30 @@ export default function AdminEnquiriesManager({
               >
                 <div className="adm-enq-form-group">
                   <label className="adm-enq-form-label">Pipeline Status</label>
-                  <select
-                    className="adm-enq-form-select"
+                  <AdminDropdown
                     value={viewLead.status || 'New'}
                     onChange={e => {
                       const newSt = e.target.value;
                       setViewLead(prev => ({ ...prev, status: newSt }));
                       onUpdateStatus(viewLead.id, newSt);
                     }}
-                  >
-                    <option value="New">New</option>
-                    <option value="Contacted">Contacted</option>
-                    <option value="Qualified">Qualified</option>
-                    <option value="Converted">Converted</option>
-                    <option value="Closed">Closed</option>
-                  </select>
+                    options={STATUS_DROPDOWN_OPTIONS}
+                    size="md"
+                  />
                 </div>
 
                 <div className="adm-enq-form-group">
                   <label className="adm-enq-form-label">Assigned Specialist</label>
-                  <select
-                    className="adm-enq-form-select"
+                  <AdminDropdown
                     value={viewLead.assigned_to || 'Unassigned'}
                     onChange={e => {
                       const newAssignee = e.target.value;
                       setViewLead(prev => ({ ...prev, assigned_to: newAssignee }));
                       onAssign(viewLead.id, newAssignee);
                     }}
-                  >
-                    {assigneeOptions.map(opt => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
+                    options={assigneeOptions.map(opt => ({ value: opt, label: opt }))}
+                    size="md"
+                  />
                 </div>
               </div>
 
@@ -1115,34 +1101,24 @@ export default function AdminEnquiriesManager({
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="adm-enq-form-group">
                     <label className="adm-enq-form-label">Pipeline Status</label>
-                    <select
-                      className="adm-enq-form-select"
+                    <AdminDropdown
                       value={editForm.status}
                       onChange={e => setEditForm(prev => ({ ...prev, status: e.target.value }))}
-                    >
-                      <option value="New">New</option>
-                      <option value="Contacted">Contacted</option>
-                      <option value="Qualified">Qualified</option>
-                      <option value="Converted">Converted</option>
-                      <option value="Closed">Closed</option>
-                    </select>
+                      options={STATUS_DROPDOWN_OPTIONS}
+                      size="md"
+                    />
                   </div>
 
                   <div className="adm-enq-form-group">
                     <label className="adm-enq-form-label">Assigned Specialist</label>
-                    <select
-                      className="adm-enq-form-select"
+                    <AdminDropdown
                       value={editForm.assigned_to}
                       onChange={e =>
                         setEditForm(prev => ({ ...prev, assigned_to: e.target.value }))
                       }
-                    >
-                      {assigneeOptions.map(opt => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
+                      options={assigneeOptions.map(opt => ({ value: opt, label: opt }))}
+                      size="md"
+                    />
                   </div>
                 </div>
 

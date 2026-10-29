@@ -144,16 +144,19 @@ export default function AdminInquiryDrawer({ isOpen, onClose, onCountUpdate }) {
                         <span className="inquiry-prod-pill">{inq.product_name}</span>
                       </div>
                       <div className="inquiry-status-control">
-                        <select
-                          className={`inquiry-status-select ${statusBadgeClass}`}
+                        <AdminDropdown
                           value={inq.status}
                           onChange={e => handleUpdateStatus(inq.id, e.target.value)}
-                        >
-                          <option value="New">New</option>
-                          <option value="In Review">In Review</option>
-                          <option value="Contacted">Contacted</option>
-                          <option value="Resolved">Resolved</option>
-                        </select>
+                          options={[
+                            { value: 'New', label: 'New', color: '#16a34a' },
+                            { value: 'In Review', label: 'In Review', color: '#eab308' },
+                            { value: 'Contacted', label: 'Contacted', color: '#0284c7' },
+                            { value: 'Resolved', label: 'Resolved', color: '#059669' }
+                          ]}
+                          size="sm"
+                          isPill={true}
+                          className="inquiry-bs5-dropdown"
+                        />
                         <button
                           className="btn-trash"
                           onClick={() => handleDelete(inq.id)}

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import './AdminBlogManagement.css';
+import AdminDropdown from './AdminDropdown';
 import {
   Search, X, Plus, Edit3, Trash2, Eye, EyeOff,
   FileText, Calendar, Clock, List, Grid, ExternalLink,
@@ -320,15 +321,16 @@ export default function AdminBlogsManager({
 
         {/* Status Filter & New Article Button */}
         <div className="adm-blogs-toolbar-actions">
-          <select
-            className="adm-blogs-status-select"
+          <AdminDropdown
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-          >
-            <option value="All">All Statuses</option>
-            <option value="Published">Published ({blogs.filter((b) => b.is_published).length})</option>
-            <option value="Draft">Drafts ({blogs.filter((b) => !b.is_published).length})</option>
-          </select>
+            options={[
+              { value: 'All', label: 'All Statuses' },
+              { value: 'Published', label: `Published (${blogs.filter((b) => b.is_published).length})`, color: '#16a34a' },
+              { value: 'Draft', label: `Drafts (${blogs.filter((b) => !b.is_published).length})`, color: '#eab308' }
+            ]}
+            className="adm-blogs-bs5-select"
+          />
 
           <button
             className="adm-btn-new-article"
@@ -728,18 +730,16 @@ export default function AdminBlogsManager({
                         <label className="adm-pub-label">
                           Category <span className="adm-pub-req">*</span>
                         </label>
-                        <select
-                          className="adm-pub-select"
+                        <AdminDropdown
                           value={formData.category}
                           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        >
-                          {PRESET_CATEGORIES.map((cat) => (
-                            <option key={cat} value={cat}>{cat}</option>
-                          ))}
-                          {distinctCategories.filter((c) => !PRESET_CATEGORIES.includes(c)).map((cat) => (
-                            <option key={cat} value={cat}>{cat}</option>
-                          ))}
-                        </select>
+                          options={[
+                            ...PRESET_CATEGORIES.map(cat => ({ value: cat, label: cat })),
+                            ...distinctCategories.filter(c => !PRESET_CATEGORIES.includes(c)).map(cat => ({ value: cat, label: cat }))
+                          ]}
+                          size="md"
+                          className="w-100"
+                        />
                       </div>
 
                       <div className="adm-pub-form-group">
