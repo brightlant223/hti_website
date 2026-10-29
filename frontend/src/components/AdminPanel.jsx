@@ -1651,40 +1651,7 @@ export default function AdminPanel({
               ========================================================================= */}
           {activeTab === 'dashboard' && (
             <div className="admin-body-content adm-body-content adm-dashboard-view">
-              {/* 1. Unanswered Sales Enquiries Alert */}
-              {unansweredInquiries.length > 0 && (() => {
-                const latestLead = [...unansweredInquiries].sort((a, b) => b.id - a.id)[0] || unansweredInquiries[0];
-                return (
-                  <div className="adm-sales-alert-card">
-                    <div className="adm-sales-alert-left">
-                      <div className="adm-sales-alert-icon-box">
-                        <AlertTriangle size={16} />
-                      </div>
-                      <div className="adm-sales-alert-info">
-                        <div className="adm-sales-alert-title">
-                          {unansweredInquiries.length} New Unanswered Sales {unansweredInquiries.length === 1 ? 'Enquiry' : 'Enquiries'} Awaiting Response
-                        </div>
-                        <div className="adm-sales-alert-sub">
-                          Latest lead from <strong>{latestLead.full_name}</strong> {latestLead.company ? `(${latestLead.company})` : ''} regarding{' '}
-                          <span className="adm-sales-alert-tag">{latestLead.product_name}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      className="adm-sales-alert-btn"
-                      onClick={() => {
-                        setSelectedInquiry(latestLead);
-                        setInquiryNotesText(latestLead.followup_notes || '');
-                        setActiveTab('inquiries');
-                      }}
-                    >
-                      <MessageSquare size={15} />
-                      <span>Review Lead #{latestLead.id}</span>
-                      <ArrowRight size={14} />
-                    </button>
-                  </div>
-                );
-              })()}
+              
 
               {/* 2. Four Dashboard Summary Cards (Single Row) */}
               <div className="adm-summary-grid">

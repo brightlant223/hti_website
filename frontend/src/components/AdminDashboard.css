@@ -5364,3 +5364,324 @@ html.dark .adm-btn-view-archive,
   border-color: rgba(255, 255, 255, 0.1) !important;
   color: #f1f5f9 !important;
 }
+
+/* ==========================================================================
+   USER FIXES: COMPACT CARDS, 1-LINE ACTIONS, COMPLETE DARK/LIGHT THEME INTEGRITY
+   ========================================================================== */
+
+/* 1. Summary Cards: Compact & Sleek Single Line */
+.adm-summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin-top: 4px !important;
+}
+
+.adm-summary-card {
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  min-height: 88px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+.adm-card-top-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 2px !important;
+}
+
+.adm-card-icon-box {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 7px !important;
+}
+
+.adm-card-icon-box svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.adm-card-arrow-wrap svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.adm-card-label {
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.adm-card-count {
+  font-size: 1.45rem !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  margin: 1px 0 4px 0 !important;
+}
+
+.adm-card-pills-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex-wrap: nowrap !important;
+  overflow: hidden !important;
+}
+
+.adm-card-pill {
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  padding: 1px 6px !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+}
+
+/* 2. Executive Quick Actions: Exactly in 1 Line */
+.adm-quick-actions-box {
+  padding: 12px 18px !important;
+  margin-top: 10px !important;
+}
+
+.adm-quick-actions-row {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+}
+
+.adm-quick-actions-row .adm-btn-action {
+  flex: 1 1 0 !important;
+  white-space: nowrap !important;
+  padding: 6px 10px !important;
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  justify-content: center !important;
+  text-align: center !important;
+  min-width: 0 !important;
+}
+
+/* 3. Split rows spacing */
+.adm-bottom-split-row {
+  margin-top: 10px !important;
+  gap: 12px !important;
+}
+
+.adm-card-box {
+  padding: 14px 18px !important;
+}
+
+.adm-inquiry-cards-grid {
+  gap: 10px !important;
+  padding: 8px 0 0 0 !important;
+}
+
+.adm-inquiry-mini-card {
+  padding: 10px 12px !important;
+}
+
+/* ==========================================================================
+   DARK MODE COMPREHENSIVE FIX: ZERO LIGHT-MODE BLEED
+   ========================================================================== */
+
+/* Main Containers */
+html.dark,
+body.dark,
+[data-theme="dark"] {
+  background-color: #070b14 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .adm-dashboard-view,
+[data-theme="dark"] .adm-dashboard-view,
+html.dark .adm-main-area,
+[data-theme="dark"] .adm-main-area,
+html.dark .admin-main-area,
+[data-theme="dark"] .admin-main-area {
+  background: #070b14 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .adm-topbar,
+[data-theme="dark"] .adm-topbar {
+  background: #0d121f !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .adm-topbar-title,
+[data-theme="dark"] .adm-topbar-title {
+  color: #f8fafc !important;
+}
+
+html.dark .adm-sidebar,
+[data-theme="dark"] .adm-sidebar {
+  background: #0a0f1d !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Dark Mode 5 Summary Cards */
+html.dark .adm-summary-card.card-orange,
+[data-theme="dark"] .adm-summary-card.card-orange {
+  background: rgba(249, 115, 22, 0.08) !important;
+  border-color: rgba(249, 115, 22, 0.22) !important;
+}
+html.dark .adm-summary-card.card-orange:hover,
+[data-theme="dark"] .adm-summary-card.card-orange:hover {
+  border-color: rgba(249, 115, 22, 0.45) !important;
+}
+
+html.dark .adm-summary-card.card-purple,
+[data-theme="dark"] .adm-summary-card.card-purple {
+  background: rgba(147, 51, 234, 0.08) !important;
+  border-color: rgba(147, 51, 234, 0.22) !important;
+}
+html.dark .adm-summary-card.card-purple:hover,
+[data-theme="dark"] .adm-summary-card.card-purple:hover {
+  border-color: rgba(147, 51, 234, 0.45) !important;
+}
+
+html.dark .adm-summary-card.card-rose,
+html.dark .adm-summary-card.card-blue,
+[data-theme="dark"] .adm-summary-card.card-rose,
+[data-theme="dark"] .adm-summary-card.card-blue {
+  background: rgba(2, 132, 199, 0.08) !important;
+  border-color: rgba(2, 132, 199, 0.22) !important;
+}
+html.dark .adm-summary-card.card-rose:hover,
+html.dark .adm-summary-card.card-blue:hover,
+[data-theme="dark"] .adm-summary-card.card-rose:hover,
+[data-theme="dark"] .adm-summary-card.card-blue:hover {
+  border-color: rgba(2, 132, 199, 0.45) !important;
+}
+
+html.dark .adm-summary-card.card-mint,
+[data-theme="dark"] .adm-summary-card.card-mint {
+  background: rgba(16, 185, 129, 0.08) !important;
+  border-color: rgba(16, 185, 129, 0.22) !important;
+}
+html.dark .adm-summary-card.card-mint:hover,
+[data-theme="dark"] .adm-summary-card.card-mint:hover {
+  border-color: rgba(16, 185, 129, 0.45) !important;
+}
+
+html.dark .adm-summary-card.card-amber,
+[data-theme="dark"] .adm-summary-card.card-amber {
+  background: rgba(245, 158, 11, 0.08) !important;
+  border-color: rgba(245, 158, 11, 0.22) !important;
+}
+html.dark .adm-summary-card.card-amber:hover,
+[data-theme="dark"] .adm-summary-card.card-amber:hover {
+  border-color: rgba(245, 158, 11, 0.45) !important;
+}
+
+html.dark .adm-card-label,
+[data-theme="dark"] .adm-card-label {
+  color: #cbd5e1 !important;
+}
+
+html.dark .adm-card-count,
+[data-theme="dark"] .adm-card-count {
+  color: #ffffff !important;
+}
+
+/* Dark Mode Quick Actions & Split Boxes */
+html.dark .adm-quick-actions-box,
+[data-theme="dark"] .adm-quick-actions-box,
+html.dark .adm-card-box,
+[data-theme="dark"] .adm-card-box {
+  background: #0d121f !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+html.dark .adm-quick-actions-title,
+[data-theme="dark"] .adm-quick-actions-title,
+html.dark .adm-panel-title,
+[data-theme="dark"] .adm-panel-title,
+html.dark .adm-testimonial-author,
+[data-theme="dark"] .adm-testimonial-author {
+  color: #f8fafc !important;
+}
+
+html.dark .adm-quick-actions-sub,
+[data-theme="dark"] .adm-quick-actions-sub,
+html.dark .adm-panel-sub,
+[data-theme="dark"] .adm-panel-sub,
+html.dark .adm-testimonial-company,
+[data-theme="dark"] .adm-testimonial-company {
+  color: #94a3b8 !important;
+}
+
+html.dark .adm-btn-action.neutral-white,
+[data-theme="dark"] .adm-btn-action.neutral-white,
+html.dark .adm-panel-view-all-btn,
+[data-theme="dark"] .adm-panel-view-all-btn,
+html.dark .adm-btn-view-archive,
+[data-theme="dark"] .adm-btn-view-archive {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .adm-btn-action.neutral-white:hover,
+[data-theme="dark"] .adm-btn-action.neutral-white:hover,
+html.dark .adm-panel-view-all-btn:hover,
+[data-theme="dark"] .adm-panel-view-all-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Dark Mode Mini Cards */
+html.dark .adm-inquiry-mini-card,
+[data-theme="dark"] .adm-inquiry-mini-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .adm-inquiry-mini-card:hover,
+[data-theme="dark"] .adm-inquiry-mini-card:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+html.dark .adm-inquiry-avatar,
+[data-theme="dark"] .adm-inquiry-avatar {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .adm-inquiry-author-name,
+[data-theme="dark"] .adm-inquiry-author-name {
+  color: #f8fafc !important;
+}
+
+html.dark .adm-inquiry-author-sub,
+[data-theme="dark"] .adm-inquiry-author-sub {
+  color: #94a3b8 !important;
+}
+
+html.dark .adm-inquiry-mini-msg,
+[data-theme="dark"] .adm-inquiry-mini-msg,
+html.dark .adm-testimonial-quote,
+[data-theme="dark"] .adm-testimonial-quote {
+  color: #cbd5e1 !important;
+}
+
+html.dark .adm-panel-head,
+[data-theme="dark"] .adm-panel-head {
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+html.dark .adm-empty-talent-text,
+[data-theme="dark"] .adm-empty-talent-text {
+  color: #cbd5e1 !important;
+}
