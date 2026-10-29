@@ -168,12 +168,6 @@ export default function AdminSidebar({
           badge: testimonialsCount > 0 ? { text: `${testimonialsCount}` } : null
         },
         {
-          id: 'users',
-          label: 'Audit Logs',
-          icon: ShieldCheck,
-          badge: null
-        },
-        {
           id: 'settings',
           label: 'Settings',
           icon: HelpCircle,

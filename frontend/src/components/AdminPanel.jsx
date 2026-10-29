@@ -2234,17 +2234,6 @@ export default function AdminPanel({
                       <span>Enterprise Clients</span>
                       <span className="adm-cp-tab-count">{clients.length}</span>
                     </button>
-                    <button
-                      className={`adm-cp-tab-btn ${clientPartnerSubTab === 'partners' ? 'active' : ''}`}
-                      onClick={() => setClientPartnerSubTab('partners')}
-                      role="tab"
-                      aria-selected={clientPartnerSubTab === 'partners'}
-                      tabIndex={0}
-                    >
-                      <HeartHandshake size={16} />
-                      <span>Technology Partners</span>
-                      <span className="adm-cp-tab-count">{partners.length}</span>
-                    </button>
                   </div>
                 </div>
 

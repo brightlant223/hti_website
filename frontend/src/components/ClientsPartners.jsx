@@ -263,22 +263,6 @@ export default function ClientsPartners() {
               {stats.clients}
             </span>
           </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('Partner')}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-bold transition-all duration-200 cursor-pointer ${
-              activeTab === 'Partner'
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <HeartHandshake size={15} className={activeTab === 'Partner' ? 'text-emerald-400' : 'text-slate-500'} />
-            <span>Technology Partners</span>
-            <span className="ml-1 rounded-full bg-slate-700/80 px-2 py-0.5 text-[10px] text-slate-300 font-semibold">
-              {stats.partners}
-            </span>
-          </button>
         </div>
 
         <button
