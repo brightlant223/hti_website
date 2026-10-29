@@ -26,8 +26,8 @@
    ========================================================================== */
 
 .partners-dedicated-page {
-  /* Pin the deliberate light theme for this page and its subtree. */
-  color-scheme: light;
+  /* Inherit global theme tokens seamlessly */
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* --------------------------------------------------------------------------
@@ -298,3 +298,144 @@
     font-size: 1.25rem;
   }
 }
+
+/* ==========================================================================
+   TECHNOLOGY PARTNERS PAGE - DARK MODE OVERRIDES
+   ========================================================================== */
+
+[data-theme="dark"] .partners-dedicated-page,
+html.dark .partners-dedicated-page,
+.dark .partners-dedicated-page {
+  background: #070b14;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partners-hero-title,
+html.dark .partners-dedicated-page .partners-hero-title,
+.dark .partners-dedicated-page .partners-hero-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partners-hero-desc,
+html.dark .partners-dedicated-page .partners-hero-desc,
+.dark .partners-dedicated-page .partners-hero-desc {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partners-qa-grid,
+html.dark .partners-dedicated-page .partners-qa-grid,
+.dark .partners-dedicated-page .partners-qa-grid {
+  background: #111a2e;
+  border-color: #1e293b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .partners-dedicated-page .partners-qa-icon,
+html.dark .partners-dedicated-page .partners-qa-icon,
+.dark .partners-dedicated-page .partners-qa-icon {
+  background: #162444;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partners-qa-title,
+html.dark .partners-dedicated-page .partners-qa-title,
+.dark .partners-dedicated-page .partners-qa-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partners-qa-text,
+html.dark .partners-dedicated-page .partners-qa-text,
+.dark .partners-dedicated-page .partners-qa-text {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-detail-card,
+html.dark .partners-dedicated-page .partner-detail-card,
+.dark .partners-dedicated-page .partner-detail-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-detail-card:hover,
+html.dark .partners-dedicated-page .partner-detail-card:hover,
+.dark .partners-dedicated-page .partner-detail-card:hover {
+  background: #17233d !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.12);
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-brand-name,
+html.dark .partners-dedicated-page .partner-brand-name,
+.dark .partners-dedicated-page .partner-brand-name {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-desc,
+html.dark .partners-dedicated-page .partner-desc,
+.dark .partners-dedicated-page .partner-desc {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-solutions,
+html.dark .partners-dedicated-page .partner-solutions,
+.dark .partners-dedicated-page .partner-solutions {
+  border-top-color: #1e293b;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-solutions-label,
+html.dark .partners-dedicated-page .partner-solutions-label,
+.dark .partners-dedicated-page .partner-solutions-label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-solution-item,
+html.dark .partners-dedicated-page .partner-solution-item,
+.dark .partners-dedicated-page .partner-solution-item {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-solution-check,
+html.dark .partners-dedicated-page .partner-solution-check,
+.dark .partners-dedicated-page .partner-solution-check {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-trust-line,
+html.dark .partners-dedicated-page .partner-trust-line,
+.dark .partners-dedicated-page .partner-trust-line {
+  border-top-color: #1e293b;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-trust-text,
+html.dark .partners-dedicated-page .partner-trust-text,
+.dark .partners-dedicated-page .partner-trust-text {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-cta-box,
+html.dark .partners-dedicated-page .partner-cta-box,
+.dark .partners-dedicated-page .partner-cta-box {
+  background: #111a2e;
+  border-color: #1e293b;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-cta-box:hover,
+html.dark .partners-dedicated-page .partner-cta-box:hover,
+.dark .partners-dedicated-page .partner-cta-box:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-cta-title,
+html.dark .partners-dedicated-page .partner-cta-title,
+.dark .partners-dedicated-page .partner-cta-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .partners-dedicated-page .partner-cta-text,
+html.dark .partners-dedicated-page .partner-cta-text,
+.dark .partners-dedicated-page .partner-cta-text {
+  color: #94a3b8;
+}
+

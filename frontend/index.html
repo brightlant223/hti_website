@@ -14,7 +14,7 @@
     <script>
       (function() {
         try {
-          var saved = localStorage.getItem('hti_theme') || 'light';
+          var saved = localStorage.getItem('hti_theme') || localStorage.getItem('hti_admin_theme') || 'light';
           var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
           var theme = saved === 'system' ? (prefersDark ? 'dark' : 'light') : saved;
           document.documentElement.setAttribute('data-theme', theme);

@@ -1896,3 +1896,621 @@
   max-width: 20rem;
   margin: 0 auto;
 }
+
+/* ==========================================================================
+   HTI CONTACT OFFICE & INQUIRY PAGE - COMPREHENSIVE DARK MODE OVERRIDES
+   ========================================================================== */
+
+[data-theme="dark"] .contact-page-wrap,
+html.dark .contact-page-wrap,
+.dark .contact-page-wrap {
+  background-color: #070b14 !important;
+  color: #f8fafc !important;
+}
+
+/* 1. Main Grid Section (Contact Information & Inquiry Form) */
+[data-theme="dark"] .contact-main-grid-section,
+html.dark .contact-main-grid-section,
+.dark .contact-main-grid-section {
+  background-color: #070b14 !important;
+}
+
+[data-theme="dark"] .contact-col-heading,
+html.dark .contact-col-heading,
+.dark .contact-col-heading {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .contact-col-subtext,
+html.dark .contact-col-subtext,
+.dark .contact-col-subtext {
+  color: #94a3b8 !important;
+}
+
+/* Head Office Card */
+[data-theme="dark"] .contact-card-headoffice,
+html.dark .contact-card-headoffice,
+.dark .contact-card-headoffice {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .contact-card-headoffice:hover,
+html.dark .contact-card-headoffice:hover,
+.dark .contact-card-headoffice:hover {
+  border-color: #38bdf8 !important;
+  background: #17233d !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .contact-card-title,
+[data-theme="dark"] .headoffice-name,
+html.dark .contact-card-title,
+html.dark .headoffice-name,
+.dark .contact-card-title,
+.dark .headoffice-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .headoffice-desc,
+html.dark .headoffice-desc,
+.dark .headoffice-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .headoffice-addr,
+html.dark .headoffice-addr,
+.dark .headoffice-addr {
+  color: #cbd5e1 !important;
+}
+
+/* 3 Quick Action Square Cards */
+[data-theme="dark"] .contact-card-square,
+html.dark .contact-card-square,
+.dark .contact-card-square {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .contact-card-square:hover,
+html.dark .contact-card-square:hover,
+.dark .contact-card-square:hover {
+  border-color: #38bdf8 !important;
+  background: #17233d !important;
+}
+
+[data-theme="dark"] .contact-card-square.card-call:hover,
+html.dark .contact-card-square.card-call:hover,
+.dark .contact-card-square.card-call:hover {
+  border-color: #38bdf8 !important;
+  background: #17233d !important;
+}
+
+[data-theme="dark"] .contact-card-square.card-email:hover,
+html.dark .contact-card-square.card-email:hover,
+.dark .contact-card-square.card-email:hover {
+  border-color: #c084fc !important;
+  background: #1c1938 !important;
+}
+
+[data-theme="dark"] .contact-card-square.card-website:hover,
+html.dark .contact-card-square.card-website:hover,
+.dark .contact-card-square.card-website:hover {
+  border-color: #34d399 !important;
+  background: #0d2822 !important;
+}
+
+[data-theme="dark"] .square-card-title,
+html.dark .square-card-title,
+.dark .square-card-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .square-card-val,
+html.dark .square-card-val,
+.dark .square-card-val {
+  color: #38bdf8 !important;
+}
+
+/* Additional Contact Cards */
+[data-theme="dark"] .contact-card-item,
+html.dark .contact-card-item,
+.dark .contact-card-item {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+}
+
+[data-theme="dark"] .contact-card-item:hover,
+html.dark .contact-card-item:hover,
+.dark .contact-card-item:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .contact-card-desc,
+html.dark .contact-card-desc,
+.dark .contact-card-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .contact-card-arrow,
+html.dark .contact-card-arrow,
+.dark .contact-card-arrow {
+  background: #1e293b !important;
+  color: #38bdf8 !important;
+}
+
+/* 4 Feature Items Row */
+[data-theme="dark"] .contact-features-4col,
+html.dark .contact-features-4col,
+.dark .contact-features-4col {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .feature-col-icon,
+html.dark .feature-col-icon,
+.dark .feature-col-icon {
+  background: rgba(2, 132, 199, 0.2) !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .feature-col-title,
+html.dark .feature-col-title,
+.dark .feature-col-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .feature-col-desc,
+html.dark .feature-col-desc,
+.dark .feature-col-desc {
+  color: #94a3b8 !important;
+}
+
+/* Right Column: Inquiry Form Card */
+[data-theme="dark"] .contact-form-card-wrap,
+[data-theme="dark"] .contact-form-card,
+[data-theme="dark"] .contact-direct-card,
+html.dark .contact-form-card-wrap,
+html.dark .contact-form-card,
+html.dark .contact-direct-card,
+.dark .contact-form-card-wrap,
+.dark .contact-form-card,
+.dark .contact-direct-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .form-header-title,
+[data-theme="dark"] .card-head-title,
+[data-theme="dark"] .direct-card-title,
+[data-theme="dark"] .section-head-title,
+html.dark .form-header-title,
+html.dark .card-head-title,
+html.dark .direct-card-title,
+html.dark .section-head-title,
+.dark .form-header-title,
+.dark .card-head-title,
+.dark .direct-card-title,
+.dark .section-head-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .form-header-sub,
+[data-theme="dark"] .card-head-desc,
+[data-theme="dark"] .direct-card-desc,
+[data-theme="dark"] .section-head-desc,
+html.dark .form-header-sub,
+html.dark .card-head-desc,
+html.dark .direct-card-desc,
+html.dark .section-head-desc,
+.dark .form-header-sub,
+.dark .card-head-desc,
+.dark .direct-card-desc,
+.dark .section-head-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .form-field-label,
+[data-theme="dark"] .field-label,
+html.dark .form-field-label,
+html.dark .field-label,
+.dark .form-field-label,
+.dark .field-label {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .form-control-input,
+[data-theme="dark"] .form-control-select,
+[data-theme="dark"] .form-control-textarea,
+[data-theme="dark"] .contact-input,
+[data-theme="dark"] .contact-select,
+[data-theme="dark"] .contact-textarea,
+html.dark .form-control-input,
+html.dark .form-control-select,
+html.dark .form-control-textarea,
+html.dark .contact-input,
+html.dark .contact-select,
+html.dark .contact-textarea,
+.dark .form-control-input,
+.dark .form-control-select,
+.dark .form-control-textarea,
+.dark .contact-input,
+.dark .contact-select,
+.dark .contact-textarea {
+  background-color: #090e1a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .form-control-input:focus,
+[data-theme="dark"] .form-control-select:focus,
+[data-theme="dark"] .form-control-textarea:focus,
+[data-theme="dark"] .contact-input:focus,
+[data-theme="dark"] .contact-select:focus,
+[data-theme="dark"] .contact-textarea:focus,
+html.dark .form-control-input:focus,
+html.dark .form-control-select:focus,
+html.dark .form-control-textarea:focus,
+html.dark .contact-input:focus,
+html.dark .contact-select:focus,
+html.dark .contact-textarea:focus,
+.dark .form-control-input:focus,
+.dark .form-control-select:focus,
+.dark .form-control-textarea:focus,
+.dark .contact-input:focus,
+.dark .contact-select:focus,
+.dark .contact-textarea:focus {
+  background-color: #0f172a !important;
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 2.5px rgba(249, 115, 22, 0.25) !important;
+}
+
+[data-theme="dark"] .form-control-input::placeholder,
+[data-theme="dark"] .form-control-textarea::placeholder,
+[data-theme="dark"] .contact-input::placeholder,
+[data-theme="dark"] .contact-textarea::placeholder,
+html.dark .form-control-input::placeholder,
+html.dark .form-control-textarea::placeholder,
+html.dark .contact-input::placeholder,
+html.dark .contact-textarea::placeholder,
+.dark .form-control-input::placeholder,
+.dark .form-control-textarea::placeholder,
+.dark .contact-input::placeholder,
+.dark .contact-textarea::placeholder {
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .input-leading-icon,
+html.dark .input-leading-icon,
+.dark .input-leading-icon {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .textarea-char-count,
+html.dark .textarea-char-count,
+.dark .textarea-char-count {
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .form-secure-note,
+html.dark .form-secure-note,
+.dark .form-secure-note {
+  color: #94a3b8 !important;
+}
+
+/* 2. Product Segments Section */
+[data-theme="dark"] .contact-segments-section,
+html.dark .contact-segments-section,
+.dark .contact-segments-section {
+  background-color: #090e1a !important;
+}
+
+[data-theme="dark"] .section-main-heading,
+html.dark .section-main-heading,
+.dark .section-main-heading {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .section-main-subtext,
+html.dark .section-main-subtext,
+.dark .section-main-subtext {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .segment-card-box,
+html.dark .segment-card-box,
+.dark .segment-card-box {
+  background-color: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .segment-card-box:hover,
+html.dark .segment-card-box:hover,
+.dark .segment-card-box:hover {
+  background-color: #17233d !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .segment-card-body,
+html.dark .segment-card-body,
+.dark .segment-card-body {
+  background-color: #111a2e !important;
+}
+
+[data-theme="dark"] .segment-card-name,
+html.dark .segment-card-name,
+.dark .segment-card-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .segment-card-desc,
+html.dark .segment-card-desc,
+.dark .segment-card-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .segment-arrow-circle,
+html.dark .segment-arrow-circle,
+.dark .segment-arrow-circle {
+  background-color: #1e293b !important;
+  color: #38bdf8 !important;
+}
+
+/* 3. Location & Head Office Map Banner Section */
+[data-theme="dark"] .contact-location-section,
+html.dark .contact-location-section,
+.dark .contact-location-section {
+  background-color: #070b14 !important;
+}
+
+[data-theme="dark"] .head-office-unified-banner,
+html.dark .head-office-unified-banner,
+.dark .head-office-unified-banner {
+  background-color: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .office-banner-info-pane,
+html.dark .office-banner-info-pane,
+.dark .office-banner-info-pane {
+  background-color: #111a2e !important;
+  border-color: #1e293b !important;
+}
+
+[data-theme="dark"] .office-pane-title,
+html.dark .office-pane-title,
+.dark .office-pane-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .office-pane-sub,
+html.dark .office-pane-sub,
+.dark .office-pane-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .office-company-name,
+html.dark .office-company-name,
+.dark .office-company-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .office-address-lines,
+html.dark .office-address-lines,
+.dark .office-address-lines {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .btn-gmaps-pill,
+html.dark .btn-gmaps-pill,
+.dark .btn-gmaps-pill {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-gmaps-pill:hover,
+html.dark .btn-gmaps-pill:hover,
+.dark .btn-gmaps-pill:hover {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .office-banner-map-pane,
+[data-theme="dark"] .custom-map-container,
+html.dark .office-banner-map-pane,
+html.dark .custom-map-container,
+.dark .office-banner-map-pane,
+.dark .custom-map-container {
+  background-color: #0b1329 !important;
+  border-color: #1e293b !important;
+}
+
+[data-theme="dark"] .map-poi-item,
+html.dark .map-poi-item,
+.dark .map-poi-item {
+  background: rgba(17, 26, 46, 0.92) !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .map-marker-label,
+html.dark .map-marker-label,
+.dark .map-marker-label {
+  background: #111a2e !important;
+  border-color: #dc2626 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .map-zoom-btn,
+html.dark .map-zoom-btn,
+.dark .map-zoom-btn {
+  background: #111a2e !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+/* 4. Technology Partnerships Section */
+[data-theme="dark"] .contact-partners-section,
+html.dark .contact-partners-section,
+.dark .contact-partners-section {
+  background-color: #090e1a !important;
+}
+
+[data-theme="dark"] .contact-partners-section .partners-train-fade-left,
+html.dark .contact-partners-section .partners-train-fade-left,
+.dark .contact-partners-section .partners-train-fade-left {
+  background: linear-gradient(to right, #090e1a 35%, rgba(9, 14, 26, 0) 100%) !important;
+}
+
+[data-theme="dark"] .contact-partners-section .partners-train-fade-right,
+html.dark .contact-partners-section .partners-train-fade-right,
+.dark .contact-partners-section .partners-train-fade-right {
+  background: linear-gradient(to left, #090e1a 35%, rgba(9, 14, 26, 0) 100%) !important;
+}
+
+[data-theme="dark"] .contact-partners-section .partner-logo-tile,
+html.dark .contact-partners-section .partner-logo-tile,
+.dark .contact-partners-section .partner-logo-tile {
+  background-color: #111a2e !important;
+  border-color: #1e293b !important;
+}
+
+[data-theme="dark"] .contact-partners-section .partner-logo-tile:hover,
+html.dark .contact-partners-section .partner-logo-tile:hover,
+.dark .contact-partners-section .partner-logo-tile:hover {
+  background-color: #17233d !important;
+  border-color: #38bdf8 !important;
+}
+
+/* 5. Legacy & Alternative Modules (Branches, FAQs, Pills, Direct Blocks) */
+[data-theme="dark"] .interest-pill,
+html.dark .interest-pill,
+.dark .interest-pill {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .interest-pill.pill-selected,
+html.dark .interest-pill.pill-selected,
+.dark .interest-pill.pill-selected {
+  background: rgba(2, 132, 199, 0.2) !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .direct-comm-block,
+html.dark .direct-comm-block,
+.dark .direct-comm-block {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+[data-theme="dark"] .comm-label,
+html.dark .comm-label,
+.dark .comm-label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .comm-value,
+html.dark .comm-value,
+.dark .comm-value {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .contact-branches-section,
+html.dark .contact-branches-section,
+.dark .contact-branches-section {
+  background-color: #090e1a !important;
+}
+
+[data-theme="dark"] .branch-card,
+html.dark .branch-card,
+.dark .branch-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .branch-card:hover,
+html.dark .branch-card:hover,
+.dark .branch-card:hover {
+  background: #17233d !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+}
+
+[data-theme="dark"] .branch-name,
+html.dark .branch-name,
+.dark .branch-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .branch-addr,
+[data-theme="dark"] .branch-contact-val,
+html.dark .branch-addr,
+html.dark .branch-contact-val,
+.dark .branch-addr,
+.dark .branch-contact-val {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .contact-emergency-strip,
+html.dark .contact-emergency-strip,
+.dark .contact-emergency-strip {
+  background: #1a0f0f !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .contact-faq-section,
+html.dark .contact-faq-section,
+.dark .contact-faq-section {
+  background-color: #070b14 !important;
+}
+
+[data-theme="dark"] .contact-faq-item,
+[data-theme="dark"] .faq-item-card,
+html.dark .contact-faq-item,
+html.dark .faq-item-card,
+.dark .contact-faq-item,
+.dark .faq-item-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+}
+
+[data-theme="dark"] .faq-item-question,
+html.dark .faq-item-question,
+.dark .faq-item-question {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .faq-item-answer,
+html.dark .faq-item-answer,
+.dark .faq-item-answer {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .contact-page-wrap .form-success-title,
+html.dark .contact-page-wrap .form-success-title,
+.dark .contact-page-wrap .form-success-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .contact-page-wrap .form-success-text,
+html.dark .contact-page-wrap .form-success-text,
+.dark .contact-page-wrap .form-success-text {
+  color: #94a3b8 !important;
+}
+
+

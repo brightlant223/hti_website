@@ -5685,3 +5685,155 @@ html.dark .adm-empty-talent-text,
 [data-theme="dark"] .adm-empty-talent-text {
   color: #cbd5e1 !important;
 }
+
+/* ==========================================================================
+   ADMIN LOGIN MODAL - DARK MODE OVERRIDES
+   ========================================================================== */
+
+[data-theme="dark"] .hti-admin-login-modal,
+html.dark .hti-admin-login-modal,
+.theme-dark .hti-admin-login-modal {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.75) !important;
+}
+
+[data-theme="dark"] .hti-login-close-circle,
+html.dark .hti-login-close-circle,
+.theme-dark .hti-login-close-circle {
+  background: #1e293b !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .hti-login-close-circle:hover,
+html.dark .hti-login-close-circle:hover,
+.theme-dark .hti-login-close-circle:hover {
+  background: #334155 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-login-gateway-pill,
+html.dark .hti-login-gateway-pill,
+.theme-dark .hti-login-gateway-pill {
+  background: rgba(7, 91, 232, 0.15) !important;
+  border-color: rgba(7, 91, 232, 0.3) !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .hti-login-brand-title,
+html.dark .hti-login-brand-title,
+.theme-dark .hti-login-brand-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-login-brand-sub,
+html.dark .hti-login-brand-sub,
+.theme-dark .hti-login-brand-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .hti-login-title,
+html.dark .hti-login-title,
+.theme-dark .hti-login-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-login-subtitle,
+html.dark .hti-login-subtitle,
+.theme-dark .hti-login-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .hti-login-label,
+html.dark .hti-login-label,
+.theme-dark .hti-login-label {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-login-role-tag,
+[data-theme="dark"] .hti-login-crypto-tag,
+html.dark .hti-login-role-tag,
+html.dark .hti-login-crypto-tag,
+.theme-dark .hti-login-role-tag,
+.theme-dark .hti-login-crypto-tag {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .hti-login-input-box,
+html.dark .hti-login-input-box,
+.theme-dark .hti-login-input-box {
+  background: #162032 !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .hti-login-input-box:focus-within,
+html.dark .hti-login-input-box:focus-within,
+.theme-dark .hti-login-input-box:focus-within {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18) !important;
+  background: #162032 !important;
+}
+
+[data-theme="dark"] .hti-login-input-box input,
+html.dark .hti-login-input-box input,
+.theme-dark .hti-login-input-box input {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-login-input-box input:-webkit-autofill,
+html.dark .hti-login-input-box input:-webkit-autofill,
+.theme-dark .hti-login-input-box input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #162032 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  caret-color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-login-eye-toggle,
+html.dark .hti-login-eye-toggle,
+.theme-dark .hti-login-eye-toggle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .hti-login-eye-toggle:hover,
+html.dark .hti-login-eye-toggle:hover,
+.theme-dark .hti-login-eye-toggle:hover {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-instant-demo-btn,
+html.dark .hti-instant-demo-btn,
+.theme-dark .hti-instant-demo-btn {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .hti-instant-demo-btn:hover,
+html.dark .hti-instant-demo-btn:hover,
+.theme-dark .hti-instant-demo-btn:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #0284c7 !important;
+}
+
+[data-theme="dark"] .hti-login-footer-security,
+html.dark .hti-login-footer-security,
+.theme-dark .hti-login-footer-security {
+  border-top-color: #1e293b !important;
+}
+
+[data-theme="dark"] .hti-sec-title,
+html.dark .hti-sec-title,
+.theme-dark .hti-sec-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-sec-desc,
+html.dark .hti-sec-desc,
+.theme-dark .hti-sec-desc {
+  color: #64748b !important;
+}
+

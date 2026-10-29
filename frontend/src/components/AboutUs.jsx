@@ -43,7 +43,7 @@ const pillars = [
   },
   {
     number: "03",
-    title: "Hygiene Solutions",
+    title: "Hygiene",
     description:
       "Practical hygiene and contamination-control products for cleanrooms, workplaces, and high-traffic facilities.",
     icon: Sparkles,

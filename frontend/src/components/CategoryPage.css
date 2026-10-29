@@ -27,8 +27,8 @@
    ========================================================================== */
 
 .category-dedicated-page {
-  /* Keep the deliberate light theme for this page and its subtree. */
-  color-scheme: light;
+  /* Dynamic theme styling */
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* --------------------------------------------------------------------------
@@ -382,6 +382,16 @@ html.dark .category-dedicated-page,
   color: #f8fafc !important;
 }
 
+[data-theme="dark"] .category-overview-card,
+[data-theme="dark"] .category-overview-section,
+html.dark .category-overview-card,
+html.dark .category-overview-section,
+.dark .category-overview-card,
+.dark .category-overview-section {
+  background: #0b1120 !important;
+  color: #f8fafc !important;
+}
+
 [data-theme="dark"] .category-overview-title,
 html.dark .category-overview-title,
 .dark .category-overview-title {
@@ -396,11 +406,55 @@ html.dark .category-overview-text,
 
 [data-theme="dark"] .category-card,
 [data-theme="dark"] .cat-product-card,
+[data-theme="dark"] .auto-service-card,
 html.dark .category-card,
 html.dark .cat-product-card,
+html.dark .auto-service-card,
 .dark .category-card,
-.dark .cat-product-card {
-  background: #0f172a !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+.dark .cat-product-card,
+.dark .auto-service-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .category-card:hover,
+[data-theme="dark"] .cat-product-card:hover,
+html.dark .category-card:hover,
+html.dark .cat-product-card:hover,
+.dark .category-card:hover,
+.dark .cat-product-card:hover {
+  background: #17233d !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+}
+
+[data-theme="dark"] .category-sector-tag,
+[data-theme="dark"] .sector-pill,
+html.dark .category-sector-tag,
+html.dark .sector-pill,
+.dark .category-sector-tag,
+.dark .sector-pill {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .category-spec-row,
+html.dark .category-spec-row,
+.dark .category-spec-row {
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .category-spec-label,
+html.dark .category-spec-label,
+.dark .category-spec-label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .category-spec-value,
+html.dark .category-spec-value,
+.dark .category-spec-value {
   color: #f8fafc !important;
 }
+

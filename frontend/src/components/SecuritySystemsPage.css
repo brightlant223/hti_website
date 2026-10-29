@@ -1479,3 +1479,90 @@
     justify-content: flex-end;
   }
 }
+
+/* ==========================================================================
+   HTI SECURITY SYSTEMS PAGE - COMPREHENSIVE DARK MODE OVERRIDES
+   ========================================================================== */
+
+[data-theme="dark"] .security-page-root,
+html.dark .security-page-root,
+.dark .security-page-root {
+  background-color: #070b14 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .security-hero-section,
+html.dark .security-hero-section,
+.dark .security-hero-section {
+  background: radial-gradient(1200px circle at 15% 25%, rgba(15, 23, 42, 0.95) 0%, #070b14 70%) !important;
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .security-hero-heading,
+[data-theme="dark"] .security-section-heading,
+html.dark .security-hero-heading,
+html.dark .security-section-heading,
+.dark .security-hero-heading,
+.dark .security-section-heading {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .security-hero-desc,
+[data-theme="dark"] .security-section-sub,
+html.dark .security-hero-desc,
+html.dark .security-section-sub,
+.dark .security-hero-desc,
+.dark .security-section-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .security-solution-card,
+[data-theme="dark"] .security-process-card,
+[data-theme="dark"] .security-why-card,
+[data-theme="dark"] .security-faq-card,
+html.dark .security-solution-card,
+html.dark .security-process-card,
+html.dark .security-why-card,
+html.dark .security-faq-card,
+.dark .security-solution-card,
+.dark .security-process-card,
+.dark .security-why-card,
+.dark .security-faq-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .security-solution-card:hover,
+[data-theme="dark"] .security-process-card:hover,
+[data-theme="dark"] .security-why-card:hover,
+html.dark .security-solution-card:hover,
+html.dark .security-process-card:hover,
+html.dark .security-why-card:hover,
+.dark .security-solution-card:hover,
+.dark .security-process-card:hover,
+.dark .security-why-card:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .solution-card-media-wrap,
+html.dark .solution-card-media-wrap,
+.dark .solution-card-media-wrap {
+  background-color: #0d1629 !important;
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .solution-card-title,
+html.dark .solution-card-title,
+.dark .solution-card-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .solution-card-desc,
+html.dark .solution-card-desc,
+.dark .solution-card-desc {
+  color: #94a3b8 !important;
+}
+

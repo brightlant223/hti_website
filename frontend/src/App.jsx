@@ -729,7 +729,7 @@ export default function App() {
     : null;
 
   return (
-    <div className="app-root">
+    <div className={`app-root ${resolvedTheme === 'dark' ? 'dark' : ''}`} data-theme={resolvedTheme}>
       {/* Main Brightlant-Style Header & Mega Menus */}
       <Navbar
         currentPage={routeState.page}
@@ -943,6 +943,8 @@ export default function App() {
       >
         <AdminPanel
           isOpen={isAdminOpen}
+          theme={resolvedTheme}
+          onThemeChange={setTheme}
           onClose={() => {
             setIsAdminOpen(false);
             if (

@@ -979,13 +979,13 @@ export default function Navbar({
                 const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
                 if (onThemeChange) onThemeChange(nextTheme);
               }}
-              title={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} theme`}
-              aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} theme`}
+              title={resolvedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              aria-label={resolvedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
               {resolvedTheme === 'dark' ? (
-                <Moon size={16} className="mobile-theme-icon" />
+                <Sun size={16} className="mobile-theme-icon text-amber-400" />
               ) : (
-                <Sun size={16} className="mobile-theme-icon" />
+                <Moon size={16} className="mobile-theme-icon" />
               )}
             </button>
 

@@ -95,6 +95,8 @@ function formatAuditDateTime(ts) {
 export default function AdminPanel({
   isOpen,
   onClose,
+  theme,
+  onThemeChange,
   onBlogsChanged,
   onClientsChanged,
   onContentChanged
@@ -121,7 +123,7 @@ export default function AdminPanel({
   // 'dashboard' | 'products' | 'blogs' | 'clients_partners' | 'inquiries' | 'projects' | 'content' | 'users' | 'settings'
   const [activeTab, setActiveTab] = useState('dashboard');
   const [adminTheme, setAdminTheme] = useState(() => {
-    return localStorage.getItem('hti_theme') || localStorage.getItem('hti_admin_theme') || 'light';
+    return theme || localStorage.getItem('hti_theme') || localStorage.getItem('hti_admin_theme') || 'light';
   });
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -129,8 +131,17 @@ export default function AdminPanel({
   const [loginPopup, setLoginPopup] = useState(null); // { show: boolean, user: string, role: string }
   const [lastSyncedTime, setLastSyncedTime] = useState('Just now');
 
+  // Keep adminTheme in sync when external theme changes
+  useEffect(() => {
+    if (theme && theme !== adminTheme) {
+      setAdminTheme(theme);
+    }
+  }, [theme]);
+
+  const effectiveTheme = theme || adminTheme || 'light';
+
   const toggleAdminTheme = () => {
-    const next = adminTheme === 'light' ? 'dark' : 'light';
+    const next = effectiveTheme === 'light' ? 'dark' : 'light';
     setAdminTheme(next);
     localStorage.setItem('hti_admin_theme', next);
     localStorage.setItem('hti_theme', next);
@@ -143,19 +154,22 @@ export default function AdminPanel({
       document.documentElement.classList.remove('dark');
       document.body.classList.remove('dark');
     }
+    if (onThemeChange) {
+      onThemeChange(next);
+    }
   };
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', adminTheme);
-    document.body.setAttribute('data-theme', adminTheme);
-    if (adminTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', effectiveTheme);
+    document.body.setAttribute('data-theme', effectiveTheme);
+    if (effectiveTheme === 'dark') {
       document.documentElement.classList.add('dark');
       document.body.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
       document.body.classList.remove('dark');
     }
-  }, [adminTheme]);
+  }, [effectiveTheme]);
 
   // Close mobile drawer on desktop resize (>=1024px) or tab switch
   useEffect(() => {
@@ -1151,13 +1165,14 @@ export default function AdminPanel({
   if (!isAuthenticated) {
     return (
       <div
-        className="hti-admin-modal-overlay"
+        className={`hti-admin-modal-overlay theme-${effectiveTheme}`}
+        data-theme={effectiveTheme}
         onClick={onClose}
         role="dialog"
         aria-modal="true"
         aria-labelledby="hti-admin-login-title"
       >
-        <div className="hti-admin-login-modal" onClick={e => e.stopPropagation()}>
+        <div className={`hti-admin-login-modal theme-${effectiveTheme}`} data-theme={effectiveTheme} onClick={e => e.stopPropagation()}>
           {/* Top Brand Accent Line */}
           <div className="hti-login-card-accent" />
 

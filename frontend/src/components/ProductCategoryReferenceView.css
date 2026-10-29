@@ -609,6 +609,7 @@
     opacity: 0;
     transform: translateY(14px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -652,42 +653,118 @@
   .hti-ref-hero-title {
     font-size: 2.2rem;
   }
+}
 
-  .hti-ref-hero-image-wrap {
-    height: 240px;
-  }
+.hti-ref-hero-image-wrap {
+  height: 240px;
+}
 
-  .hti-ref-stats-strip {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
+.hti-ref-stats-strip {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
 
-  .hti-ref-solutions-grid {
-    grid-template-columns: 1fr;
-  }
+.hti-ref-solutions-grid {
+  grid-template-columns: 1fr;
+}
 
-  .hti-ref-lifecycle-card {
-    padding: 24px 20px;
-  }
+.hti-ref-lifecycle-card {
+  padding: 24px 20px;
+}
 
-  .hti-ref-lifecycle-track {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
+.hti-ref-lifecycle-track {
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
 
-  .hti-ref-hero-ctas {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.hti-ref-hero-ctas {
+  flex-direction: column;
+  align-items: stretch;
+}
 
-  .hti-ref-btn-quote,
-  .hti-ref-btn-brochure {
-    justify-content: center;
-  }
+.hti-ref-btn-quote,
+.hti-ref-btn-brochure {
+  justify-content: center;
+}
 
-  .hti-ref-toast {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-  }
+.hti-ref-toast {
+  left: 16px;
+  right: 16px;
+}
+
+/* ==========================================================================
+   HTI PRODUCT CATEGORY REFERENCE VIEW - DARK MODE OVERRIDES
+   ========================================================================== */
+
+[data-theme="dark"] .hti-ref-page-wrapper,
+html.dark .hti-ref-page-wrapper,
+.dark .hti-ref-page-wrapper {
+  background: #070b14 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-ref-hero-title,
+html.dark .hti-ref-hero-title,
+.dark .hti-ref-hero-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-ref-hero-desc,
+html.dark .hti-ref-hero-desc,
+.dark .hti-ref-hero-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .hti-ref-stat-card,
+[data-theme="dark"] .hti-ref-solution-card,
+[data-theme="dark"] .hti-ref-lifecycle-card,
+html.dark .hti-ref-stat-card,
+html.dark .hti-ref-solution-card,
+html.dark .hti-ref-lifecycle-card,
+.dark .hti-ref-stat-card,
+.dark .hti-ref-solution-card,
+.dark .hti-ref-lifecycle-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .hti-ref-solution-card:hover,
+html.dark .hti-ref-solution-card:hover,
+.dark .hti-ref-solution-card:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .hti-ref-solution-title,
+html.dark .hti-ref-solution-title,
+.dark .hti-ref-solution-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-ref-solution-desc,
+html.dark .hti-ref-solution-desc,
+.dark .hti-ref-solution-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .hti-ref-section-heading,
+html.dark .hti-ref-section-heading,
+.dark .hti-ref-section-heading {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hti-ref-section-sub,
+html.dark .hti-ref-section-sub,
+.dark .hti-ref-section-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .hti-ref-btn-brochure,
+html.dark .hti-ref-btn-brochure,
+.dark .hti-ref-btn-brochure {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
 }

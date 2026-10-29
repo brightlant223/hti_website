@@ -3180,7 +3180,7 @@
 }
 
 /* ==========================================================================
-   TOUCHLESS ENTRY SOLUTIONS - DARK MODE OVERRIDES
+   TOUCHLESS ENTRY SOLUTIONS & SERVICE DETAIL PAGES - COMPREHENSIVE DARK MODE OVERRIDES
    ========================================================================== */
 
 [data-theme="dark"] .touchless-page-root,
@@ -3190,12 +3190,13 @@ html.dark .touchless-page-root,
   color: #f8fafc !important;
 }
 
+/* 1. Hero Section */
 [data-theme="dark"] .touchless-hero-section,
 html.dark .touchless-hero-section,
 .dark .touchless-hero-section {
   background-color: #070b14 !important;
   color: #f8fafc !important;
-  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+  border-bottom-color: #1e293b !important;
 }
 
 [data-theme="dark"] .touchless-hero-title,
@@ -3207,6 +3208,330 @@ html.dark .touchless-hero-title,
 [data-theme="dark"] .touchless-hero-description,
 html.dark .touchless-hero-description,
 .dark .touchless-hero-description {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .benefit-card,
+html.dark .benefit-card,
+.dark .benefit-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .benefit-card:hover,
+html.dark .benefit-card:hover,
+.dark .benefit-card:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .benefit-title,
+html.dark .benefit-title,
+.dark .benefit-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .benefit-desc,
+html.dark .benefit-desc,
+.dark .benefit-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .benefit-icon-box,
+html.dark .benefit-icon-box,
+.dark .benefit-icon-box {
+  background: rgba(2, 132, 199, 0.2) !important;
+  color: #38bdf8 !important;
+}
+
+/* 2. Operational Showcase Section */
+[data-theme="dark"] .touchless-showcase-section,
+html.dark .touchless-showcase-section,
+.dark .touchless-showcase-section {
+  background-color: #090e1a !important;
+  border-bottom: 1px solid #1e293b !important;
+}
+
+[data-theme="dark"] .showcase-video-card,
+html.dark .showcase-video-card,
+.dark .showcase-video-card {
+  background: #070b14 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* 3. Products Section */
+[data-theme="dark"] .touchless-products-section,
+html.dark .touchless-products-section,
+.dark .touchless-products-section {
+  background-color: #070b14 !important;
+}
+
+[data-theme="dark"] .touchless-product-card,
+html.dark .touchless-product-card,
+.dark .touchless-product-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .touchless-product-card:hover,
+html.dark .touchless-product-card:hover,
+.dark .touchless-product-card:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .product-card-title,
+html.dark .product-card-title,
+.dark .product-card-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .product-card-desc,
+html.dark .product-card-desc,
+.dark .product-card-desc {
+  color: #94a3b8 !important;
+}
+
+/* 3B. Sensors Deep Dive Section */
+[data-theme="dark"] .touchless-sensors-deepdive-section,
+html.dark .touchless-sensors-deepdive-section,
+.dark .touchless-sensors-deepdive-section {
+  background-color: #090e1a !important;
+  border-top: 1px solid #1e293b !important;
+  border-bottom: 1px solid #1e293b !important;
+}
+
+[data-theme="dark"] .sensor-tab-btn,
+html.dark .sensor-tab-btn,
+.dark .sensor-tab-btn {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .sensor-tab-btn:hover,
+html.dark .sensor-tab-btn:hover,
+.dark .sensor-tab-btn:hover {
+  background: #17233d !important;
+  color: #f8fafc !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .sensor-tab-btn.is-active,
+html.dark .sensor-tab-btn.is-active,
+.dark .sensor-tab-btn.is-active {
+  background: rgba(2, 132, 199, 0.25) !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .sensor-tab-content-card,
+html.dark .sensor-tab-content-card,
+.dark .sensor-tab-content-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .sensor-spec-box,
+html.dark .sensor-spec-box,
+.dark .sensor-spec-box {
+  background: #090e1a !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+/* 4. Workflow / How It Works Section */
+[data-theme="dark"] .touchless-workflow-app-section,
+html.dark .touchless-workflow-app-section,
+.dark .touchless-workflow-app-section {
+  background-color: #070b14 !important;
+}
+
+[data-theme="dark"] .workflow-step-card,
+html.dark .workflow-step-card,
+.dark .workflow-step-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .workflow-step-card:hover,
+html.dark .workflow-step-card:hover,
+.dark .workflow-step-card:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .workflow-step-title,
+html.dark .workflow-step-title,
+.dark .workflow-step-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .workflow-step-desc,
+html.dark .workflow-step-desc,
+.dark .workflow-step-desc {
+  color: #94a3b8 !important;
+}
+
+/* 5. Technical Specifications Section */
+[data-theme="dark"] .touchless-specs-section,
+html.dark .touchless-specs-section,
+.dark .touchless-specs-section {
+  background-color: #090e1a !important;
+  border-top: 1px solid #1e293b !important;
+}
+
+[data-theme="dark"] .touchless-spec-table,
+html.dark .touchless-spec-table,
+.dark .touchless-spec-table {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .touchless-spec-table th,
+html.dark .touchless-spec-table th,
+.dark .touchless-spec-table th {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .touchless-spec-table td,
+html.dark .touchless-spec-table td,
+.dark .touchless-spec-table td {
+  border-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .cert-item-card,
+html.dark .cert-item-card,
+.dark .cert-item-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+/* 6. Gallery Section */
+[data-theme="dark"] .touchless-gallery-section,
+html.dark .touchless-gallery-section,
+.dark .touchless-gallery-section {
+  background-color: #070b14 !important;
+}
+
+[data-theme="dark"] .gallery-item-card,
+html.dark .gallery-item-card,
+.dark .gallery-item-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 6B. Frequently Asked Questions Section */
+[data-theme="dark"] .touchless-faq-section,
+html.dark .touchless-faq-section,
+.dark .touchless-faq-section {
+  background-color: #090e1a !important;
+  border-top: 1px solid #1e293b !important;
+}
+
+[data-theme="dark"] .touchless-faq-item,
+[data-theme="dark"] .faq-card,
+html.dark .touchless-faq-item,
+html.dark .faq-card,
+.dark .touchless-faq-item,
+.dark .faq-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+/* 7. Turnkey CTA Banner Section */
+[data-theme="dark"] .touchless-cta-banner-section,
+html.dark .touchless-cta-banner-section,
+.dark .touchless-cta-banner-section {
+  background-color: #070b14 !important;
+}
+
+[data-theme="dark"] .touchless-cta-box,
+html.dark .touchless-cta-box,
+.dark .touchless-cta-box {
+  background: linear-gradient(135deg, #111a2e 0%, #17233d 100%) !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 10. Dedicated Applications Section */
+[data-theme="dark"] .touchless-applications-section,
+html.dark .touchless-applications-section,
+.dark .touchless-applications-section {
+  background-color: #070b14 !important;
+}
+
+[data-theme="dark"] .app-segment-card,
+[data-theme="dark"] .application-card,
+html.dark .app-segment-card,
+html.dark .application-card,
+.dark .app-segment-card,
+.dark .application-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 11. Dedicated Inline Consultation & Contact Section */
+[data-theme="dark"] .touchless-contact-section,
+html.dark .touchless-contact-section,
+.dark .touchless-contact-section {
+  background-color: #090e1a !important;
+  border-top: 1px solid #1e293b !important;
+}
+
+[data-theme="dark"] .touchless-contact-section .contact-form-card,
+html.dark .touchless-contact-section .contact-form-card,
+.dark .touchless-contact-section .contact-form-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Common Headings, Cards & Components */
+[data-theme="dark"] .touchless-section-heading,
+[data-theme="dark"] .touchless-section-title,
+[data-theme="dark"] .section-main-heading,
+[data-theme="dark"] .section-heading,
+html.dark .touchless-section-heading,
+html.dark .touchless-section-title,
+html.dark .section-main-heading,
+html.dark .section-heading,
+.dark .touchless-section-heading,
+.dark .touchless-section-title,
+.dark .section-main-heading,
+.dark .section-heading {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .touchless-section-sub,
+[data-theme="dark"] .touchless-section-desc,
+[data-theme="dark"] .section-subheading,
+html.dark .touchless-section-sub,
+html.dark .touchless-section-desc,
+html.dark .section-subheading,
+.dark .touchless-section-sub,
+.dark .touchless-section-desc,
+.dark .section-subheading {
   color: #94a3b8 !important;
 }
 
@@ -3222,7 +3547,484 @@ html.dark .touchless-pillar-card,
 .dark .touchless-spec-card,
 .dark .touchless-feature-box,
 .dark .touchless-pillar-card {
-  background: #0f172a !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  background: #111a2e !important;
+  border-color: #1e293b !important;
   color: #f8fafc !important;
+}
+
+
+/* Additional Cleanroom Interlocks & Door Interlock Detail Overrides */
+[data-theme="dark"] .touchless-hero-tagline,
+html.dark .touchless-hero-tagline,
+.dark .touchless-hero-tagline {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .touchless-hero-desc,
+html.dark .touchless-hero-desc,
+.dark .touchless-hero-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .metric-pill,
+html.dark .metric-pill,
+.dark .metric-pill {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .metric-pill .pill-icon,
+html.dark .metric-pill .pill-icon,
+.dark .metric-pill .pill-icon {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .touchless-btn-secondary,
+html.dark .touchless-btn-secondary,
+.dark .touchless-btn-secondary {
+  background: #111a2e !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .touchless-btn-secondary:hover,
+html.dark .touchless-btn-secondary:hover,
+.dark .touchless-btn-secondary:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .touchless-door-showcase-frame,
+html.dark .touchless-door-showcase-frame,
+.dark .touchless-door-showcase-frame {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px #1e293b !important;
+}
+
+[data-theme="dark"] .door-interactive-badge,
+html.dark .door-interactive-badge,
+.dark .door-interactive-badge {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .showcase-heading,
+html.dark .showcase-heading,
+.dark .showcase-heading {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .showcase-description,
+html.dark .showcase-description,
+.dark .showcase-description {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .showcase-feature-item,
+html.dark .showcase-feature-item,
+.dark .showcase-feature-item {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .showcase-watch-btn,
+html.dark .showcase-watch-btn,
+.dark .showcase-watch-btn {
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .showcase-watch-btn:hover,
+html.dark .showcase-watch-btn:hover,
+.dark .showcase-watch-btn:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .section-title,
+html.dark .section-title,
+.dark .section-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .section-subtitle-desc,
+html.dark .section-subtitle-desc,
+.dark .section-subtitle-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .mini-chip,
+html.dark .mini-chip,
+.dark .mini-chip {
+  background: rgba(2, 132, 199, 0.2) !important;
+  border-color: rgba(56, 189, 248, 0.3) !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .product-card-bullets li,
+html.dark .product-card-bullets li,
+.dark .product-card-bullets li {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .bullet-check,
+html.dark .bullet-check,
+.dark .bullet-check {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .product-card-footer,
+html.dark .product-card-footer,
+.dark .product-card-footer {
+  border-top-color: #1e293b !important;
+}
+
+[data-theme="dark"] .learn-more-btn,
+html.dark .learn-more-btn,
+.dark .learn-more-btn {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .sensor-tech-badge,
+html.dark .sensor-tech-badge,
+.dark .sensor-tech-badge {
+  background: rgba(2, 132, 199, 0.2) !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .sensor-tech-name,
+html.dark .sensor-tech-name,
+.dark .sensor-tech-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .sensor-tech-summary,
+html.dark .sensor-tech-summary,
+.dark .sensor-tech-summary {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .sensor-hl-item,
+html.dark .sensor-hl-item,
+.dark .sensor-hl-item {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .hl-check-icon,
+html.dark .hl-check-icon,
+.dark .hl-check-icon {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .spec-metric-row,
+html.dark .spec-metric-row,
+.dark .spec-metric-row {
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .spec-metric-label,
+html.dark .spec-metric-label,
+.dark .spec-metric-label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .spec-metric-val,
+html.dark .spec-metric-val,
+.dark .spec-metric-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .sensor-inquire-btn,
+html.dark .sensor-inquire-btn,
+.dark .sensor-inquire-btn {
+  background: #111a2e !important;
+  color: #38bdf8 !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .sensor-inquire-btn:hover,
+html.dark .sensor-inquire-btn:hover,
+.dark .sensor-inquire-btn:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .step-name,
+html.dark .step-name,
+.dark .step-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .step-desc,
+html.dark .step-desc,
+.dark .step-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .step-active-callout,
+html.dark .step-active-callout,
+.dark .step-active-callout {
+  background: rgba(2, 132, 199, 0.12) !important;
+  border-left-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .step-active-callout p,
+html.dark .step-active-callout p,
+.dark .step-active-callout p {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .callout-indicator,
+html.dark .callout-indicator,
+.dark .callout-indicator {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .app-tile,
+html.dark .app-tile,
+.dark .app-tile {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .app-tile:hover,
+html.dark .app-tile:hover,
+.dark .app-tile:hover {
+  border-color: #38bdf8 !important;
+  background: #17233d !important;
+}
+
+[data-theme="dark"] .app-tile-label,
+html.dark .app-tile-label,
+.dark .app-tile-label {
+  color: #f8fafc !important;
+  background: #111a2e !important;
+}
+
+
+/* ==========================================================================
+   TECHNICAL SPECIFICATIONS & FAQ ACCORDION DARK MODE OVERRIDES
+   ========================================================================== */
+
+/* 1. Technical Specifications Table & Outer Card */
+[data-theme="dark"] .touchless-specs-section,
+html.dark .touchless-specs-section,
+.dark .touchless-specs-section {
+  background-color: #070b14 !important;
+  border-top-color: #1e293b !important;
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .specs-table-wrapper,
+[data-theme="dark"] .touchless-specs-section .specs-table-wrapper,
+html.dark .specs-table-wrapper,
+html.dark .touchless-specs-section .specs-table-wrapper,
+.dark .specs-table-wrapper,
+.dark .touchless-specs-section .specs-table-wrapper {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .specs-table-container,
+[data-theme="dark"] .touchless-specs-section .specs-table-container,
+html.dark .specs-table-container,
+html.dark .touchless-specs-section .specs-table-container,
+.dark .specs-table-container,
+.dark .touchless-specs-section .specs-table-container {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .tech-specs-table,
+html.dark .tech-specs-table,
+.dark .tech-specs-table {
+  background: transparent !important;
+}
+
+[data-theme="dark"] .tech-specs-table tr,
+html.dark .tech-specs-table tr,
+.dark .tech-specs-table tr {
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .tech-specs-table tr:nth-child(even),
+html.dark .tech-specs-table tr:nth-child(even),
+.dark .tech-specs-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+[data-theme="dark"] .tech-specs-table tr:hover,
+html.dark .tech-specs-table tr:hover,
+.dark .tech-specs-table tr:hover {
+  background-color: rgba(2, 132, 199, 0.12) !important;
+}
+
+[data-theme="dark"] .spec-category-header th,
+html.dark .spec-category-header th,
+.dark .spec-category-header th {
+  background-color: #0b1324 !important;
+  color: #38bdf8 !important;
+  border-bottom: 1px solid #1e293b !important;
+}
+
+[data-theme="dark"] .spec-label,
+html.dark .spec-label,
+.dark .spec-label {
+  color: #94a3b8 !important;
+  border-right-color: #1e293b !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .spec-value,
+html.dark .spec-value,
+.dark .spec-value {
+  color: #f8fafc !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .download-spec-btn,
+html.dark .download-spec-btn,
+.dark .download-spec-btn {
+  background: #111a2e !important;
+  color: #38bdf8 !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .download-spec-btn:hover,
+html.dark .download-spec-btn:hover,
+.dark .download-spec-btn:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+/* 2. Standards & Statutory Certifications */
+[data-theme="dark"] .cert-item-card,
+html.dark .cert-item-card,
+.dark .cert-item-card {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .cert-item-card:hover,
+html.dark .cert-item-card:hover,
+.dark .cert-item-card:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .cert-name,
+html.dark .cert-name,
+.dark .cert-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .cert-sub,
+html.dark .cert-sub,
+.dark .cert-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .cert-icon-circle,
+html.dark .cert-icon-circle,
+.dark .cert-icon-circle {
+  background: rgba(2, 132, 199, 0.2) !important;
+  border-color: rgba(56, 189, 248, 0.35) !important;
+  color: #38bdf8 !important;
+}
+
+/* 3. Frequently Asked Questions (FAQ) Section */
+[data-theme="dark"] .touchless-faq-section,
+html.dark .touchless-faq-section,
+.dark .touchless-faq-section {
+  background-color: #070b14 !important;
+  border-top-color: #1e293b !important;
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .faq-item,
+[data-theme="dark"] .touchless-faq-accordion .faq-item,
+html.dark .faq-item,
+html.dark .touchless-faq-accordion .faq-item,
+.dark .faq-item,
+.dark .touchless-faq-accordion .faq-item {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .faq-item:hover,
+html.dark .faq-item:hover,
+.dark .faq-item:hover {
+  border-color: #38bdf8 !important;
+  background: #15223c !important;
+}
+
+[data-theme="dark"] .faq-item.faq-item-open,
+[data-theme="dark"] .touchless-faq-accordion .faq-item.faq-item-open,
+html.dark .faq-item.faq-item-open,
+html.dark .touchless-faq-accordion .faq-item.faq-item-open,
+.dark .faq-item.faq-item-open,
+.dark .touchless-faq-accordion .faq-item.faq-item-open {
+  border-color: #38bdf8 !important;
+  background: #111a2e !important;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.2) !important;
+}
+
+[data-theme="dark"] .faq-question-btn,
+html.dark .faq-question-btn,
+.dark .faq-question-btn {
+  background: transparent !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .faq-q-text,
+html.dark .faq-q-text,
+.dark .faq-q-text {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .faq-item.faq-item-open .faq-q-text,
+html.dark .faq-item.faq-item-open .faq-q-text,
+.dark .faq-item.faq-item-open .faq-q-text {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .faq-toggle-icon,
+html.dark .faq-toggle-icon,
+.dark .faq-toggle-icon {
+  background: #1e293b !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .faq-item.faq-item-open .faq-toggle-icon,
+html.dark .faq-item.faq-item-open .faq-toggle-icon,
+.dark .faq-item.faq-item-open .faq-toggle-icon {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .faq-answer-body,
+html.dark .faq-answer-body,
+.dark .faq-answer-body {
+  border-top-color: #1e293b !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .faq-answer-body p,
+[data-theme="dark"] .faq-a-text,
+html.dark .faq-answer-body p,
+html.dark .faq-a-text,
+.dark .faq-answer-body p,
+.dark .faq-a-text {
+  color: #cbd5e1 !important;
 }

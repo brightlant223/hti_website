@@ -36,6 +36,15 @@
   --shadow-lg: 0 16px 36px -4px rgba(15, 23, 42, 0.1);
   --shadow-glow: 0 0 25px rgba(2, 132, 199, 0.12);
   --header-height: 116px;
+  --bg-surface: #f8fafc;
+  --bg-main: #ffffff;
+  --hti-page-bg: #f8fafc;
+  --hti-card-bg: #ffffff;
+  --hti-border: #e2e8f0;
+  --hti-navy: #0f172a;
+  --hti-slate: #334155;
+  --hti-subtle: #64748b;
+  --hti-muted: #94a3b8;
   color-scheme: light dark;
 }
 
@@ -47,6 +56,15 @@ html.dark,
   --bg-card: #111a2e;
   --bg-card-hover: #17233d;
   --bg-glass: rgba(12, 20, 39, 0.9);
+  --bg-surface: #070b14;
+  --bg-main: #070b14;
+  --hti-page-bg: #070b14;
+  --hti-card-bg: #111a2e;
+  --hti-border: #1e293b;
+  --hti-navy: #f8fafc;
+  --hti-slate: #cbd5e1;
+  --hti-subtle: #94a3b8;
+  --hti-muted: #64748b;
 
   --border-subtle: #1e293b;
   --border-hover: rgba(56, 189, 248, 0.45);
@@ -93,10 +111,13 @@ body {
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-[data-theme="dark"] body {
+[data-theme="dark"] body,
+html.dark body,
+body.dark {
   background: radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
               radial-gradient(circle at 85% 60%, rgba(239, 68, 68, 0.05) 0%, transparent 45%),
-              #070b14;
+              #070b14 !important;
+  color: #f8fafc !important;
 }
 
 #root, .app-root {
@@ -147,6 +168,24 @@ input, textarea, select {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track,
+html.dark ::-webkit-scrollbar-track,
+.dark ::-webkit-scrollbar-track {
+  background: #070b14;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb,
+html.dark ::-webkit-scrollbar-thumb,
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover,
+html.dark ::-webkit-scrollbar-thumb:hover,
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
 
 /* Layout Utilities */
@@ -288,6 +327,24 @@ input, textarea, select {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+[data-theme="dark"] .btn-secondary,
+html.dark .btn-secondary,
+.dark .btn-secondary {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .btn-secondary:hover,
+html.dark .btn-secondary:hover,
+.dark .btn-secondary:hover {
+  background: #27354a;
+  border-color: #38bdf8;
+  color: #38bdf8;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
 .btn-cyan {
   display: inline-flex;
   align-items: center;
@@ -326,6 +383,72 @@ input, textarea, select {
   border-color: var(--border-hover);
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+[data-theme="dark"] .glass-card:hover,
+html.dark .glass-card:hover,
+.dark .glass-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+/* Global Form Controls & Tables in Dark Mode */
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+[data-theme="dark"] textarea,
+[data-theme="dark"] select,
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+html.dark textarea,
+html.dark select,
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+.dark textarea,
+.dark select {
+  background-color: #0f172a;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder,
+html.dark input::placeholder,
+html.dark textarea::placeholder,
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b;
+}
+
+[data-theme="dark"] select option,
+html.dark select option,
+.dark select option {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] table,
+html.dark table,
+.dark table {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] th,
+html.dark th,
+.dark th {
+  background-color: #162444;
+  color: #f8fafc;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] td,
+html.dark td,
+.dark td {
+  border-color: #1e293b;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] tr:hover,
+html.dark tr:hover,
+.dark tr:hover {
+  background-color: rgba(56, 189, 248, 0.05);
 }
 
 /* Animations */
