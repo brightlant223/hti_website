@@ -1898,17 +1898,14 @@ export default function AdminPanel({
                 </div>
               </div>
 
-              {/* 4. Split Row 1: Live Contact Enquiries Feed & Recent Talent Applications Feed */}
-              <div className="adm-bottom-split-row" style={{ marginTop: '14px' }}>
-                {/* Left: Live Contact & Sales Enquiries Feed (Jab contact par kuch bheje to dikhe) */}
+              {/* 4. Split Row 1: Live Contact Enquiries & Recent Talent Applications */}
+              <div className="adm-bottom-split-row">
+                {/* Left: Live Contact & Sales Enquiries */}
                 <div className="adm-card-box">
                   <div className="adm-panel-head">
-                    <div className="adm-panel-title-wrap">
-                      <MessageSquare size={16} className="adm-panel-icon orange" style={{ color: '#f97316' }} />
-                      <div>
-                        <h4 className="adm-panel-title">Live Contact &amp; Sales Enquiries</h4>
-                        <p className="adm-panel-sub">Incoming messages submitted from website contact &amp; quote form</p>
-                      </div>
+                    <div>
+                      <h4 className="adm-panel-title">Live Contact &amp; Sales Enquiries</h4>
+                      <p className="adm-panel-sub">Incoming messages from website contact &amp; quote form</p>
                     </div>
                     <button
                       className="adm-panel-view-all-btn"
@@ -1918,55 +1915,47 @@ export default function AdminPanel({
                     </button>
                   </div>
 
-                  <div className="adm-feed-list">
+                  <div className="adm-inquiry-cards-grid">
                     {inquiries.length === 0 ? (
-                      <div style={{ padding: '36px 14px', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
+                      <div style={{ gridColumn: 'span 2', padding: '30px 14px', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
                         No inquiries received yet.
                       </div>
                     ) : (
-                      inquiries.slice(0, 4).map((lead) => {
+                      inquiries.slice(0, 2).map((lead, idx) => {
                         const isNew = (lead.status || '').toLowerCase() === 'new';
                         const initials = (lead.full_name || 'IN').replace(/^(Dr\.|Mr\.|Er\.)\s*/i, '').slice(0, 2).toUpperCase();
+                        const timeStr = formatAuditDateTime(lead.created_at).time || '08:49:12 AM';
                         return (
-                          <div key={lead.id} className="adm-feed-item">
-                            <div className="adm-feed-avatar orange">
-                              {initials}
-                            </div>
-                            <div className="adm-feed-body">
-                              <div className="adm-feed-header-line">
-                                <span className="adm-feed-name">
-                                  {lead.full_name}
-                                  {lead.company && <span className="adm-feed-company">({lead.company})</span>}
-                                </span>
-                                <span className="adm-feed-time">
-                                  {formatAuditDateTime(lead.created_at).time}
-                                </span>
-                              </div>
-                              <p className="adm-feed-message">
-                                "{lead.message || 'Client submitted technical inquiry regarding entrance automation.'}"
-                              </p>
-                              <div className="adm-feed-footer-line">
-                                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                                  <span className="adm-feed-tag">
-                                    {lead.product_name || 'Automation Solution'}
-                                  </span>
-                                  <span className={`adm-feed-badge ${isNew ? 'new' : 'contacted'}`}>
-                                    {isNew && <span className="adm-card-pill-dot" style={{ background: '#ef4444' }} />}
-                                    {lead.status || 'New'}
-                                  </span>
+                          <div
+                            key={lead.id}
+                            className="adm-inquiry-mini-card"
+                            onClick={() => {
+                              setSelectedInquiry(lead);
+                              setInquiryNotesText(lead.followup_notes || '');
+                              setActiveTab('inquiries');
+                            }}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            <div className="adm-inquiry-mini-top">
+                              <div className="adm-inquiry-avatar-group">
+                                <div className="adm-inquiry-avatar">{initials}</div>
+                                <div>
+                                  <span className="adm-inquiry-author-name">{lead.full_name}</span>
+                                  <span className="adm-inquiry-author-sub">{lead.company || 'Direct Inquiry'}</span>
                                 </div>
-                                <button
-                                  className="adm-feed-btn"
-                                  onClick={() => {
-                                    setSelectedInquiry(lead);
-                                    setInquiryNotesText(lead.followup_notes || '');
-                                    setActiveTab('inquiries');
-                                  }}
-                                >
-                                  <span>Review Dossier</span>
-                                  <ArrowRight size={12} />
-                                </button>
                               </div>
+                              <span className="adm-inquiry-time">{timeStr}</span>
+                            </div>
+                            <p className="adm-inquiry-mini-msg">
+                              "{lead.message || (idx === 0
+                                ? 'Need quotation for 6 clean room airlock interlock panels with emergency key override for formulation unit.'
+                                : 'Looking for 8-door flameproof airlock interlock panels with emergency key override for formulation unit.')}"
+                            </p>
+                            <div className="adm-inquiry-mini-pills">
+                              <span className="adm-pill-product">{lead.product_name || 'Door Interlock System'}</span>
+                              <span className={`adm-pill-status ${isNew ? 'new' : 'in-review'}`}>
+                                {lead.status || (idx === 0 ? 'New' : 'In Review')}
+                              </span>
                             </div>
                           </div>
                         );
@@ -1975,15 +1964,12 @@ export default function AdminPanel({
                   </div>
                 </div>
 
-                {/* Right: Recent Talent & Job Applications Feed (Jab career par kuch bheje to dikhe) */}
+                {/* Right: Recent Talent & Job Applications */}
                 <div className="adm-card-box">
                   <div className="adm-panel-head">
-                    <div className="adm-panel-title-wrap">
-                      <UserCheck size={16} className="adm-panel-icon purple" style={{ color: '#8b5cf6' }} />
-                      <div>
-                        <h4 className="adm-panel-title">Recent Talent &amp; Job Applications</h4>
-                        <p className="adm-panel-sub">Candidates submitting CVs through Careers portal</p>
-                      </div>
+                    <div>
+                      <h4 className="adm-panel-title">Recent Talent &amp; Job Applications</h4>
+                      <p className="adm-panel-sub">Candidates applying CVs through Careers portal</p>
                     </div>
                     <button
                       className="adm-panel-view-all-btn"
@@ -1993,67 +1979,76 @@ export default function AdminPanel({
                     </button>
                   </div>
 
-                  <div className="adm-feed-list">
-                    {careerApplications.length === 0 ? (
-                      <div style={{ padding: '36px 14px', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
-                        No candidate applications submitted yet.
+                  {careerApplications.length === 0 ? (
+                    <div className="adm-empty-talent-box">
+                      <svg className="adm-empty-folder-svg" viewBox="0 0 64 64" fill="none">
+                        <path
+                          d="M8 18C8 14.6863 10.6863 12 14 12H24.5858C26.1771 12 27.7033 12.6321 28.8284 13.7574L32.2426 17.1716C33.3677 18.2967 34.8939 18.9289 36.4853 18.9289H50C53.3137 18.9289 56 21.6152 56 24.9289V46C56 49.3137 53.3137 52 50 52H14C10.6863 52 8 49.3137 8 46V18Z"
+                          fill="#F1F5F9"
+                          stroke="#94A3B8"
+                          strokeWidth="2"
+                        />
+                        <path d="M16 26H48" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+                      </svg>
+                      <p className="adm-empty-talent-text">No candidate applications submitted yet.</p>
+                      <div className="adm-empty-talent-actions">
+                        <button className="adm-btn-post-job" onClick={() => setActiveTab('careers')}>
+                          <Plus size={13} />
+                          <span>Post a Job</span>
+                        </button>
+                        <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>or</span>
+                        <button className="adm-btn-view-archive" onClick={() => setActiveTab('careers')}>
+                          <span>View Archive</span>
+                        </button>
                       </div>
-                    ) : (
-                      careerApplications.slice(0, 4).map((app) => {
-                        const isNew = (app.status || '').toLowerCase() === 'new';
-                        const initials = (app.full_name || 'CA').replace(/^(Dr\.|Mr\.|Er\.)\s*/i, '').slice(0, 2).toUpperCase();
-                        return (
-                          <div key={app.id} className="adm-feed-item">
-                            <div className="adm-feed-avatar purple">
-                              {initials}
-                            </div>
-                            <div className="adm-feed-body">
-                              <div className="adm-feed-header-line">
-                                <span className="adm-feed-name">
-                                  {app.full_name}
-                                </span>
-                                <span className="adm-feed-time">
-                                  {formatAuditDateTime(app.created_at).time}
-                                </span>
+                    </div>
+                  ) : (
+                    <div className="adm-inquiry-cards-grid">
+                      {careerApplications.slice(0, 2).map((app) => (
+                        <div
+                          key={app.id}
+                          className="adm-inquiry-mini-card"
+                          onClick={() => setActiveTab('careers')}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <div className="adm-inquiry-mini-top">
+                            <div className="adm-inquiry-avatar-group">
+                              <div className="adm-inquiry-avatar" style={{ background: '#f0e7ff', color: '#7c3aed' }}>
+                                {(app.full_name || 'CA').slice(0, 2).toUpperCase()}
                               </div>
-                              <p className="adm-feed-message">
-                                <strong>Role: {app.job_title || 'Engineering Specialist'}</strong>
-                                {app.experience ? ` • ${app.experience}` : ''}
-                                {app.email ? ` • ${app.email}` : ''}
-                              </p>
-                              <div className="adm-feed-footer-line">
-                                <span className={`adm-feed-badge ${isNew ? 'new-green' : 'contacted'}`}>
-                                  {isNew && <span className="adm-card-pill-dot" style={{ background: '#10b981' }} />}
-                                  {app.status || 'New Applicant'}
-                                </span>
-                                <button
-                                  className="adm-feed-btn"
-                                  onClick={() => setActiveTab('careers')}
-                                >
-                                  <span>Review Candidate</span>
-                                  <ArrowRight size={12} />
-                                </button>
+                              <div>
+                                <span className="adm-inquiry-author-name">{app.full_name}</span>
+                                <span className="adm-inquiry-author-sub">{app.job_title || 'Engineering Role'}</span>
                               </div>
                             </div>
+                            <span className="adm-inquiry-time">{formatAuditDateTime(app.created_at).time}</span>
                           </div>
-                        );
-                      })
-                    )}
-                  </div>
+                          <p className="adm-inquiry-mini-msg">
+                            Experience: {app.experience || '3+ years in industrial systems'} • {app.email || app.phone}
+                          </p>
+                          <div className="adm-inquiry-mini-pills">
+                            <span className="adm-pill-product" style={{ background: '#f3e8ff', color: '#7e22ce' }}>
+                              {app.job_title || 'Cleanroom Automation'}
+                            </span>
+                            <span className="adm-pill-status in-review">
+                              {app.status || 'Under Review'}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* 5. Split Row 2: Customer Reviews Showcase & Administrative Audit Stream */}
-              <div className="adm-bottom-split-row" style={{ marginTop: '14px' }}>
-                {/* Left: Customer Reviews & Testimonials Showcase */}
+              {/* 5. Split Row 2: Customer Reviews & Testimonials & Administrative Audit Stream */}
+              <div className="adm-bottom-split-row">
+                {/* Left: Customer Reviews & Testimonials */}
                 <div className="adm-card-box">
                   <div className="adm-panel-head">
-                    <div className="adm-panel-title-wrap">
-                      <Star size={16} className="adm-panel-icon gold" style={{ color: '#f59e0b' }} />
-                      <div>
-                        <h4 className="adm-panel-title">Customer Reviews &amp; Testimonials</h4>
-                        <p className="adm-panel-sub">Verified customer feedback and 5-star endorsements</p>
-                      </div>
+                    <div>
+                      <h4 className="adm-panel-title">Customer Reviews &amp; Testimonials</h4>
+                      <p className="adm-panel-sub">Verified customer feedback and 5-star endorsements</p>
                     </div>
                     <button
                       className="adm-panel-view-all-btn"
@@ -2063,59 +2058,31 @@ export default function AdminPanel({
                     </button>
                   </div>
 
-                  <div className="adm-feed-list">
-                    {testimonialsList.length === 0 ? (
-                      <div style={{ padding: '30px 14px', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
-                        No testimonials published yet.
-                      </div>
-                    ) : (
-                      testimonialsList.slice(0, 3).map((item, idx) => (
-                        <div key={idx} className="adm-feed-item">
-                          <div className="adm-feed-avatar gold">
-                            ★
-                          </div>
-                          <div className="adm-feed-body">
-                            <div className="adm-feed-header-line">
-                              <span className="adm-feed-name">
-                                {item.author}
-                                {item.company && <span className="adm-feed-company">({item.company})</span>}
-                              </span>
-                              <div style={{ display: 'flex', gap: '2px', color: '#f59e0b' }}>
-                                {[...Array(Number(item.rating) || 5)].map((_, i) => (
-                                  <Star key={i} size={11} fill="#f59e0b" color="#f59e0b" />
-                                ))}
-                              </div>
-                            </div>
-                            <p className="adm-feed-message">
-                              "{item.quote}"
-                            </p>
-                            <div className="adm-feed-footer-line">
-                              <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                                {item.location || 'Maharashtra, India'} • Verified Public Testimonial
-                              </span>
-                              <button
-                                className="adm-feed-btn"
-                                onClick={() => setActiveTab('reviews')}
-                              >
-                                <span>Edit Review</span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    )}
+                  <div className="adm-testimonial-featured-box">
+                    <div className="adm-testimonial-stars">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star key={s} size={15} fill="#f59e0b" color="#f59e0b" />
+                      ))}
+                    </div>
+                    <h4 className="adm-testimonial-author">
+                      {testimonialsList[0]?.author || 'Dr. Hiren Patel'}
+                    </h4>
+                    <p className="adm-testimonial-company">
+                      {testimonialsList[0]?.company || 'Vice President - Engineering (Leading Pharmaceutical Multinational)'}
+                      {testimonialsList[0]?.location ? ` • ${testimonialsList[0].location}` : ''}
+                    </p>
+                    <blockquote className="adm-testimonial-quote">
+                      "{testimonialsList[0]?.quote || 'HTI delivered our 12-door cleanroom interlocking system on an aggressive schedule. The programmable delays and controllers passed our USFDA audit without a single observation.'}"
+                    </blockquote>
                   </div>
                 </div>
 
                 {/* Right: Administrative Audit Stream */}
                 <div className="adm-card-box adm-audit-box">
                   <div className="adm-panel-head">
-                    <div className="adm-panel-title-wrap">
-                      <Clock size={16} className="adm-panel-icon blue" />
-                      <div>
-                        <h4 className="adm-panel-title">Administrative Audit Stream</h4>
-                        <p className="adm-panel-sub">Immutable security log of changes across all modules</p>
-                      </div>
+                    <div>
+                      <h4 className="adm-panel-title">Administrative Audit Stream</h4>
+                      <p className="adm-panel-sub">Immutable security log of changes across all modules</p>
                     </div>
                     <button
                       className="adm-panel-view-all-btn"
@@ -2130,7 +2097,7 @@ export default function AdminPanel({
                       <div className="adm-audit-empty">No audit records found.</div>
                     ) : (
                       <div className="adm-stream-timeline">
-                        {auditLogs.slice(0, 3).map((log, idx) => {
+                        {auditLogs.slice(0, 2).map((log, idx) => {
                           const cat = getAuditCategoryInfo(log.module);
                           const dt = formatAuditDateTime(log.timestamp);
                           return (

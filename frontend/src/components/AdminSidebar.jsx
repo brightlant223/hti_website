@@ -135,7 +135,7 @@ export default function AdminSidebar({
         },
         {
           id: 'inquiries',
-          label: 'Contact & Enquiries',
+          label: 'Sales Enquiries',
           icon: MessageSquare,
           badge: newInquiriesCount > 0
             ? { text: `${newInquiriesCount} New`, isAttention: true }
@@ -143,7 +143,7 @@ export default function AdminSidebar({
         },
         {
           id: 'careers',
-          label: 'Careers & Talent',
+          label: 'Talent & Careers',
           icon: UserCheck,
           badge: newCareerCount > 0
             ? { text: `${newCareerCount} New`, isAttention: true }
@@ -151,7 +151,7 @@ export default function AdminSidebar({
         },
         {
           id: 'blogs',
-          label: 'Blogs & Articles',
+          label: 'Articles',
           icon: FileText,
           badge: blogs.length > 0 ? { text: `${blogs.length}` } : null
         },
@@ -163,31 +163,25 @@ export default function AdminSidebar({
         },
         {
           id: 'reviews',
-          label: 'Reviews & Feedback',
+          label: 'Reviews',
           icon: Star,
           badge: testimonialsCount > 0 ? { text: `${testimonialsCount}` } : null
-        }
-      ]
-    },
-    {
-      section: 'SYSTEM & SETTINGS',
-      items: [
-        {
-          id: 'content',
-          label: 'Website CMS',
-          icon: Globe,
-          badge: null
         },
         {
           id: 'users',
-          label: 'Users & Security',
+          label: 'Audit Logs',
           icon: ShieldCheck,
+          badge: null
+        },
+        {
+          id: 'settings',
+          label: 'Settings',
+          icon: HelpCircle,
           badge: null
         }
       ]
     }
   ];
-
   return (
     <>
       {/* Mobile/Tablet Backdrop (<1024px) */}
