@@ -24,7 +24,16 @@ from mysql_db import (
     fetch_career_applications,
     update_application_status,
     update_application_notes,
-    delete_career_application
+    delete_career_application,
+    init_inquiries_db,
+    get_inquiries_db_status,
+    insert_inquiry,
+    fetch_inquiries,
+    update_inquiry_status as update_mysql_inquiry_status,
+    update_inquiry_notes as update_mysql_inquiry_notes,
+    update_inquiry_assigned as update_mysql_inquiry_assigned,
+    update_inquiry_details as update_mysql_inquiry_details,
+    delete_inquiry as delete_mysql_inquiry
 )
 
 SERVER_START_TIME = time.time()
@@ -44,6 +53,7 @@ async def lifespan(app: FastAPI):
     init_db()
     seed_db()
     init_careers_db()
+    init_inquiries_db()
     yield
 
 app = FastAPI(
@@ -279,22 +289,24 @@ def format_partner_row(row: sqlite3.Row) -> Dict[str, Any]:
         "is_authorized": bool(row["is_authorized"]) if "is_authorized" in keys else True
     }
 
-def format_inquiry_row(row: sqlite3.Row) -> Dict[str, Any]:
-    keys = row.keys()
+def format_inquiry_row(row: Any) -> Dict[str, Any]:
+    if not row:
+        return {}
+    r = dict(row)
     return {
-        "id": row["id"],
-        "full_name": row["full_name"],
-        "email": row["email"],
-        "phone": row["phone"],
-        "company": row["company"] or "",
-        "category": row["category"] or "",
-        "product_name": row["product_name"] or "",
-        "message": row["message"],
-        "status": row["status"],
-        "assigned_to": row["assigned_to"] if "assigned_to" in keys and row["assigned_to"] else "Unassigned",
-        "followup_notes": row["followup_notes"] if "followup_notes" in keys and row["followup_notes"] else "",
-        "last_contacted_at": row["last_contacted_at"] if "last_contacted_at" in keys else "",
-        "created_at": row["created_at"]
+        "id": r.get("id"),
+        "full_name": r.get("full_name") or "",
+        "email": r.get("email") or "",
+        "phone": r.get("phone") or "",
+        "company": r.get("company") or "",
+        "category": r.get("category") or "",
+        "product_name": r.get("product_name") or "",
+        "message": r.get("message") or "",
+        "status": r.get("status") or "New",
+        "assigned_to": r.get("assigned_to") or "Unassigned",
+        "followup_notes": r.get("followup_notes") or "",
+        "last_contacted_at": str(r.get("last_contacted_at") or ""),
+        "created_at": str(r.get("created_at") or "")
     }
 
 def format_project_row(row: sqlite3.Row) -> Dict[str, Any]:
@@ -1218,205 +1230,98 @@ def delete_partner(partner_id: int, admin_user: Optional[str] = Query("admin")):
     return {"success": True, "message": f"Partner '{name}' removed successfully"}
 
 # =========================================================================
-# ENQUIRIES & LEAD MANAGEMENT (Module 5)
+# ENQUIRIES & LEAD MANAGEMENT (Module 5 - MySQL Connected)
 # =========================================================================
+
+@app.get("/api/inquiries/db-status")
+def get_inquiry_database_status():
+    """Returns the live connection status of the MySQL database used for enquiries."""
+    return get_inquiries_db_status()
 
 @app.post("/api/inquiries", status_code=status.HTTP_201_CREATED)
 def create_inquiry(inquiry: InquiryCreate):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    INSERT INTO inquiries (full_name, email, phone, company, category, product_name, message, status, assigned_to, followup_notes)
-    VALUES (?, ?, ?, ?, ?, ?, ?, 'New', 'Unassigned', '')
-    """, (
-        inquiry.full_name,
-        inquiry.email,
-        inquiry.phone,
-        inquiry.company or "N/A",
-        inquiry.category or "General",
-        inquiry.product_name or "General Inquiry",
-        inquiry.message
-    ))
-
-    inquiry_id = cursor.lastrowid
-    conn.commit()
-
-    cursor.execute("SELECT * FROM inquiries WHERE id = ?", (inquiry_id,))
-    row = cursor.fetchone()
-    conn.close()
+    inquiry_data = inquiry.dict()
+    result = insert_inquiry(inquiry_data)
+    row = result.get("data")
 
     return {
         "success": True,
         "message": "Thank you for contacting HTI Automation & Security Systems. Our engineering team will review your inquiry shortly.",
-        "inquiry": format_inquiry_row(row)
+        "inquiry": format_inquiry_row(row) if row else {},
+        "engine": result.get("engine", "mysql")
     }
 
 @app.get("/api/inquiries")
-def get_inquiries(status_filter: Optional[str] = Query(None), search: Optional[str] = Query(None)):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    query = "SELECT * FROM inquiries WHERE 1=1"
-    params = []
-
-    if status_filter and status_filter.lower() != "all":
-        query += " AND LOWER(status) = LOWER(?)"
-        params.append(status_filter)
-
-    if search:
-        query += " AND (LOWER(full_name) LIKE ? OR LOWER(email) LIKE ? OR LOWER(company) LIKE ? OR LOWER(product_name) LIKE ? OR LOWER(phone) LIKE ?)"
-        like_term = f"%{search.lower()}%"
-        params.extend([like_term, like_term, like_term, like_term, like_term])
-
-    query += " ORDER BY id DESC"
-
-    cursor.execute(query, params)
-    rows = cursor.fetchall()
-    conn.close()
-
-    return [format_inquiry_row(r) for r in rows]
+def get_inquiries(status_filter: Optional[str] = Query(None), search: Optional[str] = Query(None), category: Optional[str] = Query(None)):
+    res = fetch_inquiries(status_filter=status_filter, search=search, category=category)
+    items = res.get("items", [])
+    return [format_inquiry_row(r) for r in items]
 
 @app.patch("/api/inquiries/{inquiry_id}/status")
 def update_inquiry_status(inquiry_id: int, payload: InquiryStatusUpdate, admin_user: Optional[str] = Query("admin")):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT id, full_name, company FROM inquiries WHERE id = ?", (inquiry_id,))
-    row = cursor.fetchone()
-    if not row:
-        conn.close()
-        raise HTTPException(status_code=404, detail="Inquiry not found")
-
-    now_iso = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    cursor.execute("UPDATE inquiries SET status = ?, updated_at = ? WHERE id = ?", (payload.status, now_iso, inquiry_id))
-    conn.commit()
-    conn.close()
-
-    add_audit_log(admin_user, "UPDATE_INQUIRY_STATUS", "Inquiries", f"Changed status of inquiry #{inquiry_id} ({row['full_name']}) to '{payload.status}'")
-
+    update_mysql_inquiry_status(inquiry_id, payload.status)
+    add_audit_log(admin_user, "UPDATE_INQUIRY_STATUS", "Inquiries", f"Changed status of inquiry #{inquiry_id} to '{payload.status}'")
     return {"success": True, "id": inquiry_id, "status": payload.status}
 
 @app.patch("/api/inquiries/{inquiry_id}/assign")
 def assign_inquiry(inquiry_id: int, payload: InquiryAssignUpdate, admin_user: Optional[str] = Query("admin")):
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id FROM inquiries WHERE id = ?", (inquiry_id,))
-    if not cursor.fetchone():
-        conn.close()
-        raise HTTPException(status_code=404, detail="Inquiry not found")
-
-    cursor.execute("UPDATE inquiries SET assigned_to = ? WHERE id = ?", (payload.assigned_to, inquiry_id))
-    conn.commit()
-    conn.close()
-
+    update_mysql_inquiry_assigned(inquiry_id, payload.assigned_to)
     add_audit_log(admin_user, "ASSIGN_INQUIRY", "Inquiries", f"Assigned inquiry #{inquiry_id} to '{payload.assigned_to}'")
-
     return {"success": True, "id": inquiry_id, "assigned_to": payload.assigned_to}
 
 @app.patch("/api/inquiries/{inquiry_id}/notes")
 def update_inquiry_notes(inquiry_id: int, payload: InquiryNotesUpdate, admin_user: Optional[str] = Query("admin")):
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id FROM inquiries WHERE id = ?", (inquiry_id,))
-    if not cursor.fetchone():
-        conn.close()
-        raise HTTPException(status_code=404, detail="Inquiry not found")
-
     now_iso = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    cursor.execute("UPDATE inquiries SET followup_notes = ?, last_contacted_at = ?, updated_at = ? WHERE id = ?", (payload.notes, now_iso, now_iso, inquiry_id))
-    conn.commit()
-    conn.close()
-
+    update_mysql_inquiry_notes(inquiry_id, payload.notes)
     add_audit_log(admin_user, "UPDATE_INQUIRY_NOTES", "Inquiries", f"Updated follow-up notes for inquiry #{inquiry_id}")
-
     return {"success": True, "id": inquiry_id, "followup_notes": payload.notes, "last_contacted_at": now_iso}
 
 @app.get("/api/inquiries/export")
 def export_inquiries_csv():
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM inquiries ORDER BY id DESC")
-    rows = cursor.fetchall()
-    conn.close()
+    res = fetch_inquiries()
+    rows = res.get("items", [])
 
     import csv
     import io
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(["ID", "Full Name", "Email", "Phone", "Company", "Category", "Product/Service", "Status", "Assigned To", "Follow-up Notes", "Received Date"])
+    writer.writerow(["ID", "Full Name", "Email", "Phone", "Company", "Area of Interest / Category", "Product/Solution", "Message / Project Details", "Status", "Assigned To", "Follow-up Notes", "Received Date"])
 
     for r in rows:
-        keys = r.keys()
         writer.writerow([
-            r["id"],
-            r["full_name"],
-            r["email"],
-            r["phone"],
-            r["company"] or "",
-            r["category"] or "",
-            r["product_name"] or "",
-            r["status"],
-            r["assigned_to"] if "assigned_to" in keys else "Unassigned",
-            r["followup_notes"] if "followup_notes" in keys else "",
-            r["created_at"]
+            r.get("id"),
+            r.get("full_name") or "",
+            r.get("email") or "",
+            r.get("phone") or "",
+            r.get("company") or "",
+            r.get("category") or "",
+            r.get("product_name") or "",
+            r.get("message") or "",
+            r.get("status") or "New",
+            r.get("assigned_to") or "Unassigned",
+            r.get("followup_notes") or "",
+            r.get("created_at") or ""
         ])
 
     csv_data = output.getvalue()
     return Response(
         content=csv_data,
         media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=HTI_Sales_Enquiries.csv"}
+        headers={"Content-Disposition": "attachment; filename=HTI_Contact_Sales_Enquiries.csv"}
     )
 
 @app.put("/api/inquiries/{inquiry_id}")
 def update_inquiry_full(inquiry_id: int, payload: InquiryFullUpdate, admin_user: Optional[str] = Query("admin")):
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, full_name FROM inquiries WHERE id = ?", (inquiry_id,))
-    row = cursor.fetchone()
-    if not row:
-        conn.close()
-        raise HTTPException(status_code=404, detail="Inquiry not found")
-
     data = payload.dict(exclude_unset=True)
-    if not data:
-        conn.close()
-        return {"success": True, "id": inquiry_id}
-
-    now_iso = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    fields = []
-    params = []
-    for k, v in data.items():
-        fields.append(f"{k} = ?")
-        params.append(v)
-    fields.append("updated_at = ?")
-    params.append(now_iso)
-    params.append(inquiry_id)
-
-    cursor.execute(f"UPDATE inquiries SET {', '.join(fields)} WHERE id = ?", params)
-    conn.commit()
-    conn.close()
-
-    add_audit_log(admin_user, "EDIT_INQUIRY", "Inquiries", f"Updated details for lead #{inquiry_id} ({row['full_name']})")
+    update_mysql_inquiry_details(inquiry_id, data)
+    add_audit_log(admin_user, "EDIT_INQUIRY", "Inquiries", f"Updated details for lead #{inquiry_id}")
     return {"success": True, "id": inquiry_id}
 
 @app.delete("/api/inquiries/{inquiry_id}")
-def delete_inquiry(inquiry_id: int, admin_user: Optional[str] = Query("admin")):
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id FROM inquiries WHERE id = ?", (inquiry_id,))
-    if not cursor.fetchone():
-        conn.close()
-        raise HTTPException(status_code=404, detail="Inquiry not found")
-
-    cursor.execute("DELETE FROM inquiries WHERE id = ?", (inquiry_id,))
-    conn.commit()
-    conn.close()
-
+def delete_inquiry_route(inquiry_id: int, admin_user: Optional[str] = Query("admin")):
+    delete_mysql_inquiry(inquiry_id)
     add_audit_log(admin_user, "DELETE_INQUIRY", "Inquiries", f"Deleted inquiry #{inquiry_id}")
-
-    return {"success": True, "message": f"Inquiry #{inquiry_id} removed"}
+    return {"success": True, "message": f"Inquiry #{inquiry_id} removed from database"}
 
 # =========================================================================
 # CAREERS & TALENT ACQUISITION (Module 5B - MySQL Connected)

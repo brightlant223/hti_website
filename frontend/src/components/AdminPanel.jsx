@@ -249,6 +249,7 @@ export default function AdminPanel({
   const [clients, setClients] = useState([]);
   const [partners, setPartners] = useState([]);
   const [inquiries, setInquiries] = useState([]);
+  const [inquiriesDbStatus, setInquiriesDbStatus] = useState(null);
   const [careerApplications, setCareerApplications] = useState([]);
   const [careerDbStatus, setCareerDbStatus] = useState(null);
   const [adminUsers, setAdminUsers] = useState([]);
@@ -401,12 +402,19 @@ export default function AdminPanel({
 
   const fetchInquiries = async () => {
     try {
-      const res = await fetch('/api/inquiries');
-      if (res.ok) {
-        const data = await res.json();
+      const [inqRes, dbRes] = await Promise.all([
+        fetch('/api/inquiries'),
+        fetch('/api/inquiries/db-status')
+      ]);
+      if (inqRes.ok) {
+        const data = await inqRes.json();
         setInquiries(data);
-        updateTimestamp();
       }
+      if (dbRes.ok) {
+        const dbData = await dbRes.json();
+        setInquiriesDbStatus(dbData);
+      }
+      updateTimestamp();
     } catch (err) {
       console.error('Failed to fetch inquiries:', err);
     }
@@ -1561,7 +1569,7 @@ export default function AdminPanel({
                   {activeTab === 'reviews' && 'Reviews & Verified Customer Feedback'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
                   {activeTab === 'clients_partners' && 'Enterprise Clients & Technology Partners Roster'}
-                  {activeTab === 'inquiries' && 'Commercial Enquiries & Lead Pipeline Management'}
+                  {activeTab === 'inquiries' && 'Contact Us Enquiries & Customer Leads Pipeline'}
                   {activeTab === 'careers' && 'Careers & Talent Acquisition Pipeline'}
                   {activeTab === 'content' && 'Live Website Content & Copy CMS'}
                   {activeTab === 'users' && 'Administrative Access Control & Audit Log'}
@@ -2726,21 +2734,24 @@ export default function AdminPanel({
           )}
 
           {/* =========================================================================
-              MODULE 5: ENQUIRIES & LEAD MANAGEMENT
+              MODULE 5: ENQUIRIES & LEAD MANAGEMENT (MySQL Dual-Engine)
               ========================================================================= */}
           {activeTab === 'inquiries' && (
             <div className="admin-body-content" style={{ padding: 0 }}>
-              <AdminEnquiriesManager
-                inquiries={inquiries}
-                onUpdateStatus={handleUpdateInquiryStatus}
-                onAssign={handleAssignInquiry}
-                onDelete={handleDeleteInquiry}
-                onSaveNotes={handleSaveInquiryNotes}
-                onExportCSV={handleExportInquiriesCSV}
-                onRefresh={fetchInquiries}
-                showFeedback={showFeedback}
-                currentUser={currentUser}
-              />
+              <AdminModuleErrorBoundary title="Contact Us & Sales Enquiries Module">
+                <AdminEnquiriesManager
+                  inquiries={inquiries}
+                  dbStatus={inquiriesDbStatus}
+                  onUpdateStatus={handleUpdateInquiryStatus}
+                  onAssign={handleAssignInquiry}
+                  onDelete={handleDeleteInquiry}
+                  onSaveNotes={handleSaveInquiryNotes}
+                  onExportCSV={handleExportInquiriesCSV}
+                  onRefresh={fetchInquiries}
+                  showFeedback={showFeedback}
+                  currentUser={currentUser}
+                />
+              </AdminModuleErrorBoundary>
             </div>
           )}
 
