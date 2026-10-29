@@ -2340,3 +2340,582 @@
 [data-theme="light"] .adm-enq-kpi-sub {
   color: #64748b !important;
 }
+
+
+/* ==========================================================================
+   USER FIXES: COMPACT 1-LINE KPI CARDS, 100% NO HORIZONTAL SCROLLBAR,
+   AND CLEAN SEARCH INPUT (ZERO EXTENSION/BG BLEED)
+   ========================================================================== */
+
+/* 1. Six KPI Cards in ONE SINGLE LINE (repeat(6, 1fr)) */
+.adm-enq-kpi-row {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin-bottom: 10px !important;
+  width: 100% !important;
+}
+
+.adm-enq-kpi-card {
+  padding: 8px 10px !important;
+  min-height: 72px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  transition: transform 0.18s, box-shadow 0.18s !important;
+  box-sizing: border-box !important;
+}
+
+.adm-enq-kpi-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+
+.adm-enq-kpi-icon-box {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 7px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.adm-enq-kpi-icon-box svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.adm-enq-kpi-body {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.adm-enq-kpi-title {
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.2 !important;
+}
+
+.adm-enq-kpi-number {
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  margin: 1px 0 !important;
+}
+
+.adm-enq-kpi-sub {
+  font-size: 0.65rem !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  margin-top: 0 !important;
+}
+
+.adm-enq-kpi-arrow {
+  display: none !important; /* Hide arrow on compact cards to preserve space */
+}
+
+/* 2. Toolbar & Clean Search Input (No repeated extension icons) */
+.adm-enq-toolbar {
+  padding: 8px 12px !important;
+  margin-bottom: 10px !important;
+  gap: 10px !important;
+  border-radius: 10px !important;
+}
+
+.adm-enq-search-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 1 !important;
+  min-width: 200px !important;
+}
+
+.adm-enq-search-icon {
+  flex-shrink: 0 !important;
+}
+
+.adm-enq-search-input {
+  background: transparent !important;
+  background-image: none !important;
+  background-repeat: no-repeat !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-size: 0.82rem !important;
+  padding: 4px 6px !important;
+  width: 100% !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.adm-enq-search-input::-webkit-search-decoration,
+.adm-enq-search-input::-webkit-search-cancel-button,
+.adm-enq-search-input::-webkit-search-results-button,
+.adm-enq-search-input::-webkit-search-results-decoration {
+  display: none !important;
+  -webkit-appearance: none !important;
+}
+
+.adm-enq-select-wrap {
+  padding: 5px 10px !important;
+  font-size: 0.78rem !important;
+  border-radius: 8px !important;
+}
+
+.adm-enq-select-wrap select {
+  font-size: 0.78rem !important;
+}
+
+.adm-enq-export-btn {
+  padding: 6px 12px !important;
+  font-size: 0.78rem !important;
+  border-radius: 8px !important;
+  white-space: nowrap !important;
+}
+
+/* 3. TABLE: STRICTLY ZERO HORIZONTAL SCROLLBAR ON DESKTOP / LAPTOP */
+.adm-enq-page {
+  padding: 12px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.adm-enq-table-card {
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.adm-enq-table-responsive {
+  width: 100% !important;
+  overflow-x: hidden !important; /* Eliminate horizontal bar */
+}
+
+@media (max-width: 1024px) {
+  .adm-enq-table-responsive {
+    overflow-x: auto !important; /* Only fallback on tablets/mobile */
+  }
+}
+
+.adm-enq-table {
+  width: 100% !important;
+  min-width: 100% !important;
+  table-layout: fixed !important; /* Guarantees all columns strictly sum to 100% */
+  border-collapse: collapse !important;
+}
+
+/* Precise Column Width Percentages for 100% fit without horizontal scroll */
+.adm-enq-table th.col-cb,
+.adm-enq-table td.col-cb {
+  width: 32px !important;
+  max-width: 32px !important;
+  text-align: center !important;
+  padding: 8px 4px !important;
+}
+
+.adm-enq-table th.col-id,
+.adm-enq-table td.col-id {
+  width: 44px !important;
+  max-width: 44px !important;
+  padding: 8px 6px !important;
+}
+
+.adm-enq-table th.col-contact,
+.adm-enq-table td.col-contact {
+  width: 25% !important;
+  min-width: 0 !important;
+  padding: 8px 8px !important;
+}
+
+.adm-enq-table th.col-product,
+.adm-enq-table td.col-product {
+  width: 20% !important;
+  min-width: 0 !important;
+  padding: 8px 8px !important;
+}
+
+.adm-enq-table th.col-status,
+.adm-enq-table td.col-status {
+  width: 115px !important;
+  max-width: 115px !important;
+  padding: 8px 6px !important;
+}
+
+.adm-enq-table th.col-assigned,
+.adm-enq-table td.col-assigned {
+  width: 145px !important;
+  max-width: 145px !important;
+  padding: 8px 6px !important;
+}
+
+.adm-enq-table th.col-date,
+.adm-enq-table td.col-date {
+  width: 115px !important;
+  max-width: 115px !important;
+  padding: 8px 6px !important;
+}
+
+.adm-enq-table th.col-actions,
+.adm-enq-table td.col-actions {
+  width: 90px !important;
+  max-width: 90px !important;
+  text-align: right !important;
+  padding: 8px 10px 8px 4px !important;
+}
+
+.adm-enq-table th {
+  padding: 8px 8px !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  white-space: nowrap !important;
+}
+
+.adm-enq-table td {
+  padding: 8px 8px !important;
+  font-size: 0.78rem !important;
+  vertical-align: middle !important;
+}
+
+/* Contact Cell Compact */
+.adm-enq-contact-cell {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+
+.adm-enq-avatar {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  border-radius: 50% !important;
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  flex-shrink: 0 !important;
+}
+
+.adm-enq-contact-info {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.adm-enq-client-name {
+  font-size: 0.80rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.2 !important;
+}
+
+.adm-enq-client-company {
+  font-size: 0.70rem !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.2 !important;
+}
+
+.adm-enq-client-email,
+.adm-enq-client-phone {
+  font-size: 0.66rem !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.2 !important;
+}
+
+/* Product Cell Compact */
+.adm-enq-product-cell {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.adm-enq-product-name {
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.2 !important;
+}
+
+.adm-enq-category-badge {
+  font-size: 0.65rem !important;
+  padding: 1px 6px !important;
+  border-radius: 12px !important;
+  margin-top: 2px !important;
+  align-self: flex-start !important;
+  white-space: nowrap !important;
+}
+
+/* Status & Assigned Pills Compact */
+.adm-enq-status-select-wrap {
+  padding: 3px 6px !important;
+  font-size: 0.72rem !important;
+  border-radius: 6px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.adm-enq-status-select-wrap select {
+  font-size: 0.72rem !important;
+  padding-right: 14px !important;
+}
+
+.adm-enq-assign-select-wrap {
+  padding: 3px 6px !important;
+  font-size: 0.72rem !important;
+  border-radius: 6px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.adm-enq-assign-select-wrap select {
+  font-size: 0.70rem !important;
+  max-width: 105px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  padding-right: 14px !important;
+}
+
+/* Date Cell Compact */
+.adm-enq-date-cell {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  min-width: 0 !important;
+}
+
+.adm-enq-date-icon {
+  width: 12px !important;
+  height: 12px !important;
+  flex-shrink: 0 !important;
+}
+
+.adm-enq-date-info {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+.adm-enq-date-str {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+
+.adm-enq-date-rel {
+  font-size: 0.66rem !important;
+  white-space: nowrap !important;
+}
+
+/* Actions Cell Compact */
+.adm-enq-actions-cell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 3px !important;
+}
+
+.adm-enq-btn-action {
+  width: 25px !important;
+  height: 25px !important;
+  min-width: 25px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 5px !important;
+}
+
+.adm-enq-btn-action svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* ==========================================================================
+   DARK MODE PERFECTION FOR COMMERCIAL ENQUIRIES: ZERO LIGHT BLEED
+   ========================================================================== */
+html.dark .adm-enq-page,
+body.dark .adm-enq-page,
+[data-theme="dark"] .adm-enq-page {
+  background: #070b14 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .adm-enq-kpi-card,
+body.dark .adm-enq-kpi-card,
+[data-theme="dark"] .adm-enq-kpi-card {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+}
+
+html.dark .adm-enq-kpi-card.card-all,
+[data-theme="dark"] .adm-enq-kpi-card.card-all {
+  background: rgba(2, 132, 199, 0.08) !important;
+  border-color: rgba(2, 132, 199, 0.25) !important;
+}
+
+html.dark .adm-enq-kpi-card.card-new,
+[data-theme="dark"] .adm-enq-kpi-card.card-new {
+  background: rgba(244, 63, 94, 0.08) !important;
+  border-color: rgba(244, 63, 94, 0.25) !important;
+}
+
+html.dark .adm-enq-kpi-card.card-contacted,
+[data-theme="dark"] .adm-enq-kpi-card.card-contacted {
+  background: rgba(245, 158, 11, 0.08) !important;
+  border-color: rgba(245, 158, 11, 0.25) !important;
+}
+
+html.dark .adm-enq-kpi-card.card-qualified,
+[data-theme="dark"] .adm-enq-kpi-card.card-qualified {
+  background: rgba(147, 51, 234, 0.08) !important;
+  border-color: rgba(147, 51, 234, 0.25) !important;
+}
+
+html.dark .adm-enq-kpi-card.card-converted,
+[data-theme="dark"] .adm-enq-kpi-card.card-converted {
+  background: rgba(16, 185, 129, 0.08) !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+
+html.dark .adm-enq-kpi-card.card-closed,
+[data-theme="dark"] .adm-enq-kpi-card.card-closed {
+  background: rgba(100, 116, 139, 0.08) !important;
+  border-color: rgba(100, 116, 139, 0.25) !important;
+}
+
+html.dark .adm-enq-toolbar,
+body.dark .adm-enq-toolbar,
+[data-theme="dark"] .adm-enq-toolbar {
+  background: #0d121f !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .adm-enq-select-wrap,
+body.dark .adm-enq-select-wrap,
+[data-theme="dark"] .adm-enq-select-wrap {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+}
+
+html.dark .adm-enq-select-wrap select,
+[data-theme="dark"] .adm-enq-select-wrap select {
+  color: #f8fafc !important;
+}
+
+html.dark .adm-enq-select-wrap select option,
+[data-theme="dark"] .adm-enq-select-wrap select option {
+  background: #0d121f !important;
+  color: #f8fafc !important;
+}
+
+html.dark .adm-enq-table-card,
+body.dark .adm-enq-table-card,
+[data-theme="dark"] .adm-enq-table-card {
+  background: #0d121f !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .adm-enq-table thead th,
+body.dark .adm-enq-table thead th,
+[data-theme="dark"] .adm-enq-table thead th {
+  background: #0a0f1d !important;
+  color: #94a3b8 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .adm-enq-table tbody tr,
+body.dark .adm-enq-table tbody tr,
+[data-theme="dark"] .adm-enq-table tbody tr {
+  background: #0d121f !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .adm-enq-table tbody tr:hover,
+body.dark .adm-enq-table tbody tr:hover,
+[data-theme="dark"] .adm-enq-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+html.dark .adm-enq-client-name,
+[data-theme="dark"] .adm-enq-client-name {
+  color: #f8fafc !important;
+}
+
+html.dark .adm-enq-client-company,
+[data-theme="dark"] .adm-enq-client-company {
+  color: #94a3b8 !important;
+}
+
+html.dark .adm-enq-client-email,
+html.dark .adm-enq-client-phone,
+[data-theme="dark"] .adm-enq-client-email,
+[data-theme="dark"] .adm-enq-client-phone {
+  color: #64748b !important;
+}
+
+html.dark .adm-enq-product-name,
+[data-theme="dark"] .adm-enq-product-name {
+  color: #f8fafc !important;
+}
+
+html.dark .adm-enq-date-str,
+[data-theme="dark"] .adm-enq-date-str {
+  color: #e2e8f0 !important;
+}
+
+html.dark .adm-enq-date-rel,
+[data-theme="dark"] .adm-enq-date-rel {
+  color: #64748b !important;
+}
+
+html.dark .adm-enq-assign-select-wrap,
+[data-theme="dark"] .adm-enq-assign-select-wrap {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+}
+
+html.dark .adm-enq-assign-select-wrap select,
+[data-theme="dark"] .adm-enq-assign-select-wrap select {
+  color: #f8fafc !important;
+}
+
+html.dark .adm-enq-assign-select-wrap select option,
+[data-theme="dark"] .adm-enq-assign-select-wrap select option {
+  background: #0d121f !important;
+  color: #f8fafc !important;
+}
+
+html.dark .adm-enq-btn-action,
+[data-theme="dark"] .adm-enq-btn-action {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #94a3b8 !important;
+}
+
+html.dark .adm-enq-btn-action:hover,
+[data-theme="dark"] .adm-enq-btn-action:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}

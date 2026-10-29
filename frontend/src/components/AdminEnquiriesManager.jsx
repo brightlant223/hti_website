@@ -458,7 +458,15 @@ export default function AdminEnquiriesManager({
         <div className="adm-enq-search-wrap">
           <Search size={18} className="adm-enq-search-icon" />
           <input
-            type="text"
+            type="search"
+            name="admin_lead_query"
+            id="admin_lead_query"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
+            data-lpignore="true"
+            data-form-type="other"
             className="adm-enq-search-input"
             placeholder="Search by client, company, email, phone or product..."
             value={search}
