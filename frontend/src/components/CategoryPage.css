@@ -369,3 +369,38 @@
   }
 }
 
+
+
+/* ==========================================================================
+   CATEGORY DEDICATED PAGE - DARK MODE OVERRIDES
+   ========================================================================== */
+
+[data-theme="dark"] .category-dedicated-page,
+html.dark .category-dedicated-page,
+.dark .category-dedicated-page {
+  background: #070b14 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .category-overview-title,
+html.dark .category-overview-title,
+.dark .category-overview-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .category-overview-text,
+html.dark .category-overview-text,
+.dark .category-overview-text {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .category-card,
+[data-theme="dark"] .cat-product-card,
+html.dark .category-card,
+html.dark .cat-product-card,
+.dark .category-card,
+.dark .cat-product-card {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f8fafc !important;
+}

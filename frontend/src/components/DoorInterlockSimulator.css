@@ -26,3 +26,88 @@
 .interlock-why-section .metric-icon-wrap.text-blue {
   color: #2563eb;
 }
+
+
+/* ==========================================================================
+   HTI DOOR INTERLOCK SIMULATOR - DARK MODE STYLES
+   ========================================================================== */
+
+[data-theme="dark"] .interlock-why-section,
+html.dark .interlock-why-section,
+.dark .interlock-why-section {
+  background: transparent !important;
+}
+
+[data-theme="dark"] .interlock-column-card,
+html.dark .interlock-column-card,
+.dark .interlock-column-card {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .interlock-subtitle,
+html.dark .interlock-subtitle,
+.dark .interlock-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .door-module-box,
+html.dark .door-module-box,
+.dark .door-module-box {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .door-module-name,
+html.dark .door-module-name,
+.dark .door-module-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .door-graphic-frame,
+html.dark .door-graphic-frame,
+.dark .door-graphic-frame {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+  border-color: #334155 !important;
+  box-shadow: inset 0 0 0 4px #0f172a, 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .door-graphic-leaf::before,
+html.dark .door-graphic-leaf::before,
+.dark .door-graphic-leaf::before {
+  background: linear-gradient(115deg, #1e293b 0%, #0f172a 100%) !important;
+  border-color: #475569 !important;
+}
+
+[data-theme="dark"] .door-status-pill,
+html.dark .door-status-pill,
+.dark .door-status-pill {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .why-choose-column-card,
+html.dark .why-choose-column-card,
+.dark .why-choose-column-card {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .why-item-card,
+html.dark .why-item-card,
+.dark .why-item-card {
+  background: #162032 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="dark"] .why-item-title,
+html.dark .why-item-title,
+.dark .why-item-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .why-item-desc,
+html.dark .why-item-desc,
+.dark .why-item-desc {
+  color: #94a3b8 !important;
+}

@@ -3178,3 +3178,51 @@
     height: 24px;
   }
 }
+
+/* ==========================================================================
+   TOUCHLESS ENTRY SOLUTIONS - DARK MODE OVERRIDES
+   ========================================================================== */
+
+[data-theme="dark"] .touchless-page-root,
+html.dark .touchless-page-root,
+.dark .touchless-page-root {
+  background-color: #070b14 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .touchless-hero-section,
+html.dark .touchless-hero-section,
+.dark .touchless-hero-section {
+  background-color: #070b14 !important;
+  color: #f8fafc !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .touchless-hero-title,
+html.dark .touchless-hero-title,
+.dark .touchless-hero-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .touchless-hero-description,
+html.dark .touchless-hero-description,
+.dark .touchless-hero-description {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .touchless-card,
+[data-theme="dark"] .touchless-spec-card,
+[data-theme="dark"] .touchless-feature-box,
+[data-theme="dark"] .touchless-pillar-card,
+html.dark .touchless-card,
+html.dark .touchless-spec-card,
+html.dark .touchless-feature-box,
+html.dark .touchless-pillar-card,
+.dark .touchless-card,
+.dark .touchless-spec-card,
+.dark .touchless-feature-box,
+.dark .touchless-pillar-card {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f8fafc !important;
+}

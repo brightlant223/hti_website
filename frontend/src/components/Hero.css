@@ -1588,3 +1588,277 @@
     font-size: 0.65rem;
   }
 }
+
+/* ==========================================================================
+   HTI HERO SECTION - DARK MODE STYLES
+   Triggered via [data-theme="dark"], html.dark, .dark, or .theme-dark
+   ========================================================================== */
+
+/* Section background in dark mode */
+[data-theme="dark"] .hero-modern-section,
+html.dark .hero-modern-section,
+.dark .hero-modern-section,
+.theme-dark .hero-modern-section {
+  background: #070b14 !important;
+  background: radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+              radial-gradient(circle at 85% 60%, rgba(239, 68, 68, 0.05) 0%, transparent 45%),
+              #070b14 !important;
+  color: #f8fafc !important;
+}
+
+/* Ambient glow & dot grid in dark mode */
+[data-theme="dark"] .hero-ambient-glow-coral,
+html.dark .hero-ambient-glow-coral,
+.dark .hero-ambient-glow-coral {
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.14) 0%, rgba(220, 38, 38, 0.03) 50%, transparent 70%) !important;
+}
+
+[data-theme="dark"] .hero-ambient-glow-soft,
+html.dark .hero-ambient-glow-soft,
+.dark .hero-ambient-glow-soft {
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.14) 0%, rgba(2, 132, 199, 0.03) 50%, transparent 70%) !important;
+}
+
+[data-theme="dark"] .hero-dot-grid,
+html.dark .hero-dot-grid,
+.dark .hero-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.6px, transparent 1.6px) !important;
+  opacity: 0.4 !important;
+}
+
+/* Since 2014 Tag */
+[data-theme="dark"] .hero-since-dash,
+html.dark .hero-since-dash,
+.dark .hero-since-dash {
+  background: #ef4444 !important;
+}
+
+[data-theme="dark"] .hero-since-text,
+html.dark .hero-since-text,
+.dark .hero-since-text {
+  color: #94a3b8 !important;
+}
+
+/* Headline in dark mode */
+[data-theme="dark"] .hero-modern-title,
+html.dark .hero-modern-title,
+.dark .hero-modern-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hero-title-dark,
+html.dark .hero-title-dark,
+.dark .hero-title-dark {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hero-title-red,
+html.dark .hero-title-red,
+.dark .hero-title-red {
+  color: #f87171 !important;
+  text-shadow: 0 0 35px rgba(239, 68, 68, 0.22) !important;
+}
+
+/* Subtitle description */
+[data-theme="dark"] .hero-modern-description,
+html.dark .hero-modern-description,
+.dark .hero-modern-description {
+  color: #94a3b8 !important;
+}
+
+/* CTAs in dark mode */
+[data-theme="dark"] .btn-hero-explore,
+html.dark .btn-hero-explore,
+.dark .btn-hero-explore {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.35) !important;
+}
+
+[data-theme="dark"] .btn-hero-explore:hover,
+html.dark .btn-hero-explore:hover,
+.dark .btn-hero-explore:hover {
+  background: #b91c1c !important;
+  box-shadow: 0 12px 28px rgba(220, 38, 38, 0.45) !important;
+}
+
+[data-theme="dark"] .btn-hero-video-play,
+html.dark .btn-hero-video-play,
+.dark .btn-hero-video-play {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .btn-hero-video-play:hover,
+html.dark .btn-hero-video-play:hover,
+.dark .btn-hero-video-play:hover {
+  background: rgba(56, 189, 248, 0.12) !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.15) !important;
+}
+
+/* 3 Bottom Feature Pillars in dark mode */
+[data-theme="dark"] .hero-pillar-item,
+html.dark .hero-pillar-item,
+.dark .hero-pillar-item {
+  background: rgba(17, 26, 46, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .hero-pillar-item:hover,
+html.dark .hero-pillar-item:hover,
+.dark .hero-pillar-item:hover {
+  background: rgba(23, 35, 61, 0.95) !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .pillar-label,
+html.dark .pillar-label,
+.dark .pillar-label {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pillar-desc,
+html.dark .pillar-desc,
+.dark .pillar-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .pillar-icon-red,
+html.dark .pillar-icon-red,
+.dark .pillar-icon-red {
+  background: rgba(220, 38, 38, 0.18) !important;
+  color: #f87171 !important;
+}
+
+[data-theme="dark"] .pillar-icon-blue,
+html.dark .pillar-icon-blue,
+.dark .pillar-icon-blue {
+  background: rgba(2, 132, 199, 0.18) !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .pillar-icon-green,
+html.dark .pillar-icon-green,
+.dark .pillar-icon-green {
+  background: rgba(22, 163, 74, 0.18) !important;
+  color: #4ade80 !important;
+}
+
+/* Right Architectural Building Visual in dark mode */
+[data-theme="dark"] .hero-building-frame,
+html.dark .hero-building-frame,
+.dark .hero-building-frame {
+  border: 3.5px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.65), 0 0 35px rgba(56, 189, 248, 0.08) !important;
+  background: #0b1426 !important;
+}
+
+/* 3 Floating Service Cards in dark mode */
+[data-theme="dark"] .hero-service-card,
+html.dark .hero-service-card,
+.dark .hero-service-card {
+  border: 3px solid rgba(255, 255, 255, 0.12) !important;
+  background: #111a2e !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .hero-service-card:hover,
+html.dark .hero-service-card:hover,
+.dark .hero-service-card:hover {
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.55), 0 0 20px rgba(56, 189, 248, 0.12) !important;
+}
+
+[data-theme="dark"] .service-card-pill,
+[data-theme="dark"] .service-card-pill.pill-dark,
+html.dark .service-card-pill,
+html.dark .service-card-pill.pill-dark,
+.dark .service-card-pill,
+.dark .service-card-pill.pill-dark {
+  background: rgba(11, 18, 33, 0.90) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(14px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .pill-text,
+html.dark .pill-text,
+.dark .pill-text {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pill-arrow-btn,
+html.dark .pill-arrow-btn,
+.dark .pill-arrow-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .hero-service-card:hover .pill-arrow-btn,
+html.dark .hero-service-card:hover .pill-arrow-btn,
+.dark .hero-service-card:hover .pill-arrow-btn {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .hero-right-backdrop-shape svg path:first-child,
+html.dark .hero-right-backdrop-shape svg path:first-child,
+.dark .hero-right-backdrop-shape svg path:first-child {
+  opacity: 0.25 !important;
+}
+
+/* Metrics Banner in dark mode */
+[data-theme="dark"] .hero-metrics-wave-top svg path,
+html.dark .hero-metrics-wave-top svg path,
+.dark .hero-metrics-wave-top svg path {
+  fill: #030712 !important;
+}
+
+[data-theme="dark"] .hero-metrics-banner,
+html.dark .hero-metrics-banner,
+.dark .hero-metrics-banner {
+  background: #030712 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .hero-metric-item:hover,
+html.dark .hero-metric-item:hover,
+.dark .hero-metric-item:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="dark"] .metric-loop-number,
+html.dark .metric-loop-number,
+.dark .metric-loop-number {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .metric-loop-label,
+html.dark .metric-loop-label,
+.dark .metric-loop-label {
+  color: #94a3b8 !important;
+}
+
+/* Video modal in dark mode */
+[data-theme="dark"] .hero-video-modal-card,
+html.dark .hero-video-modal-card,
+.dark .hero-video-modal-card {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="dark"] .hero-video-close-btn,
+html.dark .hero-video-close-btn,
+.dark .hero-video-close-btn {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}

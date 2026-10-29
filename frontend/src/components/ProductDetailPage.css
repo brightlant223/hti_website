@@ -1056,3 +1056,87 @@
 .auto-doors-page-container .auto-doors-video-content {
   min-width: 0;
 }
+
+
+/* ==========================================================================
+   PRODUCT DETAIL PAGE - DARK MODE OVERRIDES
+   ========================================================================== */
+
+[data-theme="dark"] .auto-doors-page-container,
+html.dark .auto-doors-page-container,
+.dark .auto-doors-page-container {
+  background: #070b14 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auto-breadcrumb-curr,
+html.dark .auto-breadcrumb-curr,
+.dark .auto-breadcrumb-curr {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auto-breadcrumb-btn,
+html.dark .auto-breadcrumb-btn,
+.dark .auto-breadcrumb-btn {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auto-doors-hero-card,
+[data-theme="dark"] .auto-doors-gallery-card,
+[data-theme="dark"] .auto-doors-spec-table,
+[data-theme="dark"] .auto-doors-spec-card,
+[data-theme="dark"] .auto-doors-quote-card,
+[data-theme="dark"] .auto-doors-feature-card,
+html.dark .auto-doors-hero-card,
+html.dark .auto-doors-gallery-card,
+html.dark .auto-doors-spec-table,
+html.dark .auto-doors-spec-card,
+html.dark .auto-doors-quote-card,
+html.dark .auto-doors-feature-card,
+.dark .auto-doors-hero-card,
+.dark .auto-doors-gallery-card,
+.dark .auto-doors-spec-table,
+.dark .auto-doors-spec-card,
+.dark .auto-doors-quote-card,
+.dark .auto-doors-feature-card {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auto-doors-spec-table tr,
+html.dark .auto-doors-spec-table tr,
+.dark .auto-doors-spec-table tr {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="dark"] .auto-doors-spec-table th,
+html.dark .auto-doors-spec-table th,
+.dark .auto-doors-spec-table th {
+  background: #1e293b !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auto-doors-spec-table td,
+html.dark .auto-doors-spec-table td,
+.dark .auto-doors-spec-table td {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auto-doors-title,
+html.dark .auto-doors-title,
+.dark .auto-doors-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auto-doors-desc,
+html.dark .auto-doors-desc,
+.dark .auto-doors-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auto-doors-gallery-thumb,
+html.dark .auto-doors-gallery-thumb,
+.dark .auto-doors-gallery-thumb {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
