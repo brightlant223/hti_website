@@ -1,0 +1,211 @@
+/* =========================================================================
+   HTI ADMIN PANEL — CONTACT US USER ENQUIRIES TABLE STYLES
+   ========================================================================= */
+
+/* Table wrapper ensuring responsive horizontal scroll if viewport is narrower than min-width */
+.adm-enq-table-responsive.adm-user-enq-table-wrap,
+.adm-user-enq-table-wrap {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  position: relative !important;
+}
+
+/* Master User Enquiries Table */
+table.adm-enq-table.adm-user-enq-table,
+.adm-user-enq-table {
+  width: 100% !important;
+  min-width: 1320px !important; /* Guarantees generous spacing so no columns ever collide */
+  border-collapse: collapse !important;
+  table-layout: auto !important;
+  text-align: left !important;
+}
+
+/* Table Header Row */
+table.adm-enq-table.adm-user-enq-table thead,
+.adm-user-enq-table thead {
+  background: #f8fafc !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+
+[data-theme="dark"] table.adm-enq-table.adm-user-enq-table thead,
+html.dark table.adm-enq-table.adm-user-enq-table thead,
+[data-theme="dark"] .adm-user-enq-table thead,
+html.dark .adm-user-enq-table thead {
+  background: #1e293b !important;
+  border-bottom: 2px solid #334155 !important;
+}
+
+/* Table Header Cells: crisp, fully visible, nowrap, generous padding */
+table.adm-enq-table.adm-user-enq-table th,
+.adm-user-enq-table th {
+  padding: 13px 14px !important;
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  user-select: none !important;
+  vertical-align: middle !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+[data-theme="dark"] table.adm-enq-table.adm-user-enq-table th,
+html.dark table.adm-enq-table.adm-user-enq-table th,
+[data-theme="dark"] .adm-user-enq-table th,
+html.dark .adm-user-enq-table th {
+  color: #94a3b8 !important;
+}
+
+/* =========================================================================
+   EXPLICIT, PROPORTIONATE COLUMN SIZING (No overlap, clean alignment)
+   ========================================================================= */
+
+/* 1. Checkbox: Compact & Centered */
+table.adm-enq-table.adm-user-enq-table th.col-cb,
+table.adm-enq-table.adm-user-enq-table td.col-cb,
+.adm-user-enq-table th.col-cb,
+.adm-user-enq-table td.col-cb {
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  text-align: center !important;
+  padding: 12px 6px !important;
+}
+
+/* 2. Enquiry ID */
+table.adm-enq-table.adm-user-enq-table th.col-id,
+table.adm-enq-table.adm-user-enq-table td.col-id,
+.adm-user-enq-table th.col-id,
+.adm-user-enq-table td.col-id {
+  width: 58px !important;
+  min-width: 58px !important;
+  max-width: 65px !important;
+  padding: 12px 8px !important;
+}
+
+/* 3. User / Client Dossier */
+table.adm-enq-table.adm-user-enq-table th.col-user,
+table.adm-enq-table.adm-user-enq-table td.col-user,
+.adm-user-enq-table th.col-user,
+.adm-user-enq-table td.col-user {
+  width: 220px !important;
+  min-width: 210px !important;
+  max-width: none !important;
+  padding: 12px 14px !important;
+}
+
+/* 4. Company / Org */
+table.adm-enq-table.adm-user-enq-table th.col-company,
+table.adm-enq-table.adm-user-enq-table td.col-company,
+.adm-user-enq-table th.col-company,
+.adm-user-enq-table td.col-company {
+  width: 175px !important;
+  min-width: 160px !important;
+  max-width: none !important;
+  padding: 12px 14px !important;
+}
+
+/* 5. Area of Interest */
+table.adm-enq-table.adm-user-enq-table th.col-area,
+table.adm-enq-table.adm-user-enq-table td.col-area,
+.adm-user-enq-table th.col-area,
+.adm-user-enq-table td.col-area {
+  width: 180px !important;
+  min-width: 165px !important;
+  max-width: none !important;
+  padding: 12px 14px !important;
+}
+
+/* 6. Project Details & Requirements: Generous width, cleanly formatted */
+table.adm-enq-table.adm-user-enq-table th.col-details,
+table.adm-enq-table.adm-user-enq-table td.col-details,
+.adm-user-enq-table th.col-details,
+.adm-user-enq-table td.col-details {
+  width: 280px !important;
+  min-width: 260px !important;
+  max-width: none !important;
+  padding: 12px 16px !important;
+}
+
+/* 7. Status Pipeline: Overrides 115px limit from AdminEnquiries */
+table.adm-enq-table.adm-user-enq-table th.col-status,
+table.adm-enq-table.adm-user-enq-table td.col-status,
+.adm-user-enq-table th.col-status,
+.adm-user-enq-table td.col-status {
+  width: 165px !important;
+  min-width: 160px !important;
+  max-width: none !important;
+  padding: 12px 12px !important;
+}
+
+/* 8. Submission Date: Overrides 115px limit from AdminEnquiries */
+table.adm-enq-table.adm-user-enq-table th.col-date,
+table.adm-enq-table.adm-user-enq-table td.col-date,
+.adm-user-enq-table th.col-date,
+.adm-user-enq-table td.col-date {
+  width: 150px !important;
+  min-width: 145px !important;
+  max-width: none !important;
+  padding: 12px 12px !important;
+}
+
+/* 9. Actions Column: Overrides 90px limit from AdminEnquiries */
+table.adm-enq-table.adm-user-enq-table th.col-actions,
+table.adm-enq-table.adm-user-enq-table td.col-actions,
+.adm-user-enq-table th.col-actions,
+.adm-user-enq-table td.col-actions {
+  width: 110px !important;
+  min-width: 105px !important;
+  max-width: none !important;
+  text-align: center !important;
+  padding: 12px 10px !important;
+}
+
+/* Row hover and selection styles */
+table.adm-enq-table.adm-user-enq-table tbody tr,
+.adm-user-enq-table tbody tr {
+  border-bottom: 1px solid #edf2f7 !important;
+  transition: background-color 0.15s ease !important;
+  background: #ffffff !important;
+}
+
+[data-theme="dark"] table.adm-enq-table.adm-user-enq-table tbody tr,
+html.dark table.adm-enq-table.adm-user-enq-table tbody tr,
+[data-theme="dark"] .adm-user-enq-table tbody tr,
+html.dark .adm-user-enq-table tbody tr {
+  background: #0f172a !important;
+  border-bottom: 1px solid #1e293b !important;
+}
+
+table.adm-enq-table.adm-user-enq-table tbody tr:hover,
+.adm-user-enq-table tbody tr:hover {
+  background: #f8faff !important;
+}
+
+[data-theme="dark"] table.adm-enq-table.adm-user-enq-table tbody tr:hover,
+html.dark table.adm-enq-table.adm-user-enq-table tbody tr:hover,
+[data-theme="dark"] .adm-user-enq-table tbody tr:hover,
+html.dark .adm-user-enq-table tbody tr:hover {
+  background: #1e293b !important;
+}
+
+table.adm-enq-table.adm-user-enq-table tbody tr.row-selected,
+.adm-user-enq-table tbody tr.row-selected {
+  background: #eff6ff !important;
+}
+
+[data-theme="dark"] table.adm-enq-table.adm-user-enq-table tbody tr.row-selected,
+html.dark table.adm-enq-table.adm-user-enq-table tbody tr.row-selected,
+[data-theme="dark"] .adm-user-enq-table tbody tr.row-selected,
+html.dark .adm-user-enq-table tbody tr.row-selected {
+  background: #1e3a5f !important;
+}
+
+table.adm-enq-table.adm-user-enq-table td,
+.adm-user-enq-table td {
+  vertical-align: middle !important;
+  font-size: 0.86rem !important;
+}

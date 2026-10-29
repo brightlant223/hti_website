@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import './AdminCareersManager.css';
 import './AdminEnquiries.css';
+import './AdminUserEnquiriesManager.css';
 import AdminDropdown from './AdminDropdown';
 import {
   MessageSquare,
@@ -537,8 +538,8 @@ export default function AdminUserEnquiriesManager({
           3. USER ENQUIRIES TABLE
           ===================================================================== */}
       <div className="adm-enq-table-card">
-        <div className="adm-enq-table-responsive">
-          <table className="adm-enq-table">
+        <div className="adm-enq-table-responsive adm-user-enq-table-wrap">
+          <table className="adm-enq-table adm-user-enq-table">
             <thead>
               <tr>
                 <th className="col-cb">
@@ -551,10 +552,10 @@ export default function AdminUserEnquiriesManager({
                   />
                 </th>
                 <th className="col-id">ID</th>
-                <th className="col-contact">USER / CLIENT</th>
-                <th className="col-product">COMPANY / ORG</th>
-                <th>AREA OF INTEREST</th>
-                <th style={{ minWidth: '220px' }}>PROJECT DETAILS &amp; REQUIREMENTS</th>
+                <th className="col-user">USER / CLIENT</th>
+                <th className="col-company">COMPANY / ORG</th>
+                <th className="col-area">AREA OF INTEREST</th>
+                <th className="col-details">PROJECT DETAILS &amp; REQUIREMENTS</th>
                 <th className="col-status">STATUS PIPELINE</th>
                 <th className="col-date">SUBMISSION DATE</th>
                 <th className="col-actions">ACTIONS</th>
@@ -602,7 +603,7 @@ export default function AdminUserEnquiriesManager({
                       </td>
 
                       {/* Contact Dossier */}
-                      <td className="col-contact">
+                      <td className="col-user">
                         <div className="adm-enq-contact-cell">
                           <div className={`adm-enq-avatar ${avatarColor}`}>{initials}</div>
                           <div className="adm-enq-contact-info">
@@ -614,7 +615,7 @@ export default function AdminUserEnquiriesManager({
                       </td>
 
                       {/* Company */}
-                      <td className="col-product">
+                      <td className="col-company">
                         <div className="adm-enq-product-cell">
                           <span className="adm-enq-product-name" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                             <Building2 size={13} style={{ color: '#0284c7', flexShrink: 0 }} />
@@ -625,7 +626,7 @@ export default function AdminUserEnquiriesManager({
                       </td>
 
                       {/* Area of Interest */}
-                      <td>
+                      <td className="col-area">
                         <span
                           style={{
                             display: 'inline-flex',
@@ -646,13 +647,13 @@ export default function AdminUserEnquiriesManager({
                       </td>
 
                       {/* Project Details Preview */}
-                      <td>
+                      <td className="col-details">
                         <div
                           style={{
                             fontSize: '0.82rem',
                             color: '#334155',
                             lineHeight: 1.45,
-                            maxWidth: '300px',
+                            maxWidth: '100%',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             display: '-webkit-box',
