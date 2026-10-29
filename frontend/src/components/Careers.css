@@ -3885,13 +3885,85 @@
   box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.6), 0 0 16px rgba(56, 189, 248, 0.1);
 }
 
-[data-theme="dark"] .card-title {
+[data-theme="dark"] .card-title,
+html.dark .card-title,
+.dark .card-title {
   color: #f8fafc;
 }
 
-[data-theme="dark"] .card-desc {
+[data-theme="dark"] .card-desc,
+html.dark .card-desc,
+.dark .card-desc {
   color: #94a3b8;
 }
+
+[data-theme="dark"] .card-action-row,
+html.dark .card-action-row,
+.dark .card-action-row {
+  border-top-color: #1e293b !important;
+}
+
+/* Job Role Card Apply Button (Dark Theme) */
+[data-theme="dark"] .card-apply-btn,
+html.dark .card-apply-btn,
+.dark .card-apply-btn {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .card-apply-btn .card-apply-arrow,
+html.dark .card-apply-btn .card-apply-arrow,
+.dark .card-apply-btn .card-apply-arrow {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .card-apply-btn:hover,
+html.dark .card-apply-btn:hover,
+.dark .card-apply-btn:hover,
+[data-theme="dark"] .why-benefit-card:hover .card-apply-btn,
+html.dark .why-benefit-card:hover .card-apply-btn,
+.dark .why-benefit-card:hover .card-apply-btn {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4) !important;
+}
+
+[data-theme="dark"] .card-apply-btn:hover .card-apply-arrow,
+html.dark .card-apply-btn:hover .card-apply-arrow,
+.dark .card-apply-btn:hover .card-apply-arrow,
+[data-theme="dark"] .why-benefit-card:hover .card-apply-arrow,
+html.dark .why-benefit-card:hover .card-apply-arrow,
+.dark .why-benefit-card:hover .card-apply-arrow {
+  color: #ffffff !important;
+}
+
+/* Category Tags on Job Cards */
+[data-theme="dark"] .card-role-category-tag,
+html.dark .card-role-category-tag,
+.dark .card-role-category-tag {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .why-benefit-card:hover .card-role-category-tag,
+html.dark .why-benefit-card:hover .card-role-category-tag,
+.dark .why-benefit-card:hover .card-role-category-tag {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  color: #f8fafc !important;
+}
+
+/* Translucent Icon Shells in Dark Mode */
+[data-theme="dark"] .shell-color-cyan, html.dark .shell-color-cyan, .dark .shell-color-cyan { background: rgba(2, 132, 199, 0.2) !important; color: #38bdf8 !important; }
+[data-theme="dark"] .shell-color-blue, html.dark .shell-color-blue, .dark .shell-color-blue { background: rgba(37, 99, 235, 0.2) !important; color: #60a5fa !important; }
+[data-theme="dark"] .shell-color-amber, html.dark .shell-color-amber, .dark .shell-color-amber { background: rgba(217, 119, 6, 0.2) !important; color: #fbbf24 !important; }
+[data-theme="dark"] .shell-color-red, html.dark .shell-color-red, .dark .shell-color-red { background: rgba(220, 38, 38, 0.2) !important; color: #f87171 !important; }
+[data-theme="dark"] .shell-color-rose, html.dark .shell-color-rose, .dark .shell-color-rose { background: rgba(225, 29, 72, 0.2) !important; color: #fb7185 !important; }
+[data-theme="dark"] .shell-color-emerald, html.dark .shell-color-emerald, .dark .shell-color-emerald { background: rgba(5, 150, 105, 0.2) !important; color: #34d399 !important; }
 
 [data-theme="dark"] .card-footer-pill {
   background: #111a2e;
@@ -4892,4 +4964,229 @@
   .job-row-card {
     opacity: 1 !important;
   }
+}
+
+/* ==========================================================================
+   CAREERS SECTION - COMPREHENSIVE DARK THEME BUTTON OVERRIDES
+   ========================================================================== */
+
+/* 1. Job Role Card Apply Button (Cards 01-06 in horizontal slider & lists) */
+[data-theme="dark"] .card-apply-btn,
+html.dark .card-apply-btn,
+.dark .card-apply-btn {
+  background: #111a2e !important;
+  border: 1px solid #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .card-apply-btn span,
+html.dark .card-apply-btn span,
+.dark .card-apply-btn span {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .card-apply-btn .card-apply-arrow,
+html.dark .card-apply-btn .card-apply-arrow,
+.dark .card-apply-btn .card-apply-arrow {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .card-apply-btn:hover,
+html.dark .card-apply-btn:hover,
+.dark .card-apply-btn:hover,
+[data-theme="dark"] .why-benefit-card:hover .card-apply-btn,
+html.dark .why-benefit-card:hover .card-apply-btn,
+.dark .why-benefit-card:hover .card-apply-btn {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4) !important;
+}
+
+[data-theme="dark"] .card-apply-btn:hover span,
+html.dark .card-apply-btn:hover span,
+.dark .card-apply-btn:hover span,
+[data-theme="dark"] .why-benefit-card:hover .card-apply-btn span,
+html.dark .why-benefit-card:hover .card-apply-btn span,
+.dark .why-benefit-card:hover .card-apply-btn span {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .card-apply-btn:hover .card-apply-arrow,
+html.dark .card-apply-btn:hover .card-apply-arrow,
+.dark .card-apply-btn:hover .card-apply-arrow,
+[data-theme="dark"] .why-benefit-card:hover .card-apply-arrow,
+html.dark .why-benefit-card:hover .card-apply-arrow,
+.dark .why-benefit-card:hover .card-apply-arrow {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .card-action-row,
+html.dark .card-action-row,
+.dark .card-action-row {
+  border-top-color: #1e293b !important;
+}
+
+/* 2. Job Card Category Tags & Shells */
+[data-theme="dark"] .card-role-category-tag,
+html.dark .card-role-category-tag,
+.dark .card-role-category-tag {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .why-benefit-card:hover .card-role-category-tag,
+html.dark .why-benefit-card:hover .card-role-category-tag,
+.dark .why-benefit-card:hover .card-role-category-tag {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  color: #f8fafc !important;
+}
+
+/* 3. Slider Navigation Arrow Buttons (< & >) */
+[data-theme="dark"] .why-nav-btn,
+html.dark .why-nav-btn,
+.dark .why-nav-btn {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .why-nav-btn:hover:not(:disabled),
+html.dark .why-nav-btn:hover:not(:disabled),
+.dark .why-nav-btn:hover:not(:disabled) {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+/* 4. Open Roles Filter Tabs */
+[data-theme="dark"] .positions-filter-tab,
+html.dark .positions-filter-tab,
+.dark .positions-filter-tab {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .positions-filter-tab:hover,
+html.dark .positions-filter-tab:hover,
+.dark .positions-filter-tab:hover {
+  background: #17233d !important;
+  color: #f8fafc !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .positions-filter-tab.filter-active,
+html.dark .positions-filter-tab.filter-active,
+.dark .positions-filter-tab.filter-active {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+}
+
+/* 5. Job Row Details Button */
+[data-theme="dark"] .job-view-btn,
+html.dark .job-view-btn,
+.dark .job-view-btn {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .job-view-btn .job-view-arrow,
+html.dark .job-view-btn .job-view-arrow,
+.dark .job-view-btn .job-view-arrow {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .job-row-card:hover .job-view-btn,
+[data-theme="dark"] .job-view-btn:hover,
+html.dark .job-view-btn:hover,
+.dark .job-view-btn:hover {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .job-row-card:hover .job-view-arrow,
+[data-theme="dark"] .job-view-btn:hover .job-view-arrow,
+html.dark .job-view-btn:hover .job-view-arrow,
+.dark .job-view-btn:hover .job-view-arrow {
+  color: #ffffff !important;
+}
+
+/* 6. Role Details Modal Buttons */
+[data-theme="dark"] .role-modal-close-btn,
+html.dark .role-modal-close-btn,
+.dark .role-modal-close-btn {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .role-modal-close-btn:hover,
+html.dark .role-modal-close-btn:hover,
+.dark .role-modal-close-btn:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .modal-inquire-btn,
+html.dark .modal-inquire-btn,
+.dark .modal-inquire-btn {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .modal-inquire-btn:hover,
+html.dark .modal-inquire-btn:hover,
+.dark .modal-inquire-btn:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+/* 7. Breadcrumb Back Button & Secondary Hero CTA */
+[data-theme="dark"] .careers-back-btn,
+html.dark .careers-back-btn,
+.dark .careers-back-btn {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .careers-back-btn:hover,
+html.dark .careers-back-btn:hover,
+.dark .careers-back-btn:hover {
+  background: rgba(2, 132, 199, 0.2) !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .hero-btn-secondary,
+[data-theme="dark"] .careers-cta-secondary,
+html.dark .hero-btn-secondary,
+html.dark .careers-cta-secondary,
+.dark .hero-btn-secondary,
+.dark .careers-cta-secondary {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .hero-btn-secondary:hover,
+[data-theme="dark"] .careers-cta-secondary:hover,
+html.dark .hero-btn-secondary:hover,
+html.dark .careers-cta-secondary:hover,
+.dark .hero-btn-secondary:hover,
+.dark .careers-cta-secondary:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
 }

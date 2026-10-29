@@ -638,7 +638,7 @@ export default function AboutPage({ onNavigate }) {
               </div>
               <div className="solution-card-body">
                 <div className="solution-tag-pill-row">
-                  <div className="segment-name-badge badge-green">
+                  <div className="segment-name-badge">
                     <Leaf size={12} />
                     <span>HYGIENE</span>
                   </div>

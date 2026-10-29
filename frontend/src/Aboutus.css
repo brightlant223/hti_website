@@ -778,8 +778,8 @@
 }
 
 .segment-name-badge.badge-green {
-  background-color: #dcfce7;
-  color: #16a34a;
+  background-color: #e0f2fe;
+  color: #0284c7;
 }
 
 .solution-arrow-btn {
@@ -1984,8 +1984,8 @@ html.dark .segment-name-badge,
 [data-theme="dark"] .segment-name-badge.badge-green,
 html.dark .segment-name-badge.badge-green,
 .dark .segment-name-badge.badge-green {
-  background-color: rgba(22, 163, 74, 0.2) !important;
-  color: #4ade80 !important;
+  background-color: rgba(2, 132, 199, 0.2) !important;
+  color: #38bdf8 !important;
 }
 
 [data-theme="dark"] .solution-arrow-btn,
