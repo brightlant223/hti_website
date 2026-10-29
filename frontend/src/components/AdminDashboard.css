@@ -4642,3 +4642,132 @@
   background: #0f172a !important;
   border-color: #38bdf8 !important;
 }
+
+
+/* ============================================================
+   OVERRIDE: LEAD DOSSIER & ADMIN MODALS — DARK MODE
+   ============================================================ */
+
+/* Modal overlay */
+.theme-dark .admin-modal-overlay,
+[data-theme="dark"] .admin-modal-overlay {
+  background: rgba(0,0,0,0.75) !important;
+}
+
+/* Modal container */
+.theme-dark .admin-modal-container,
+[data-theme="dark"] .admin-modal-container {
+  background: #0f172a !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  color: #f8fafc !important;
+}
+
+/* Modal header */
+.theme-dark .admin-modal-header,
+[data-theme="dark"] .admin-modal-header {
+  background: #090d16 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+.theme-dark .admin-modal-title,
+[data-theme="dark"] .admin-modal-title {
+  color: #f8fafc !important;
+}
+
+/* Modal body */
+.theme-dark .admin-modal-body,
+[data-theme="dark"] .admin-modal-body {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* Modal footer */
+.theme-dark .admin-modal-footer,
+[data-theme="dark"] .admin-modal-footer {
+  background: #090d16 !important;
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* Topbar close btn */
+.theme-dark .topbar-close-btn,
+[data-theme="dark"] .topbar-close-btn {
+  background: rgba(255,255,255,0.08) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  color: #94a3b8 !important;
+}
+
+/* Lead Dossier inner content boxes — white backgrounds → dark glass */
+.theme-dark .admin-modal-container div[style*="background: rgb(255"],
+.theme-dark .admin-modal-container div[style*="background: white"],
+.theme-dark .admin-modal-container div[style*="background: #fff"],
+.theme-dark .admin-modal-container div[style*="background: #FFF"],
+[data-theme="dark"] .admin-modal-container div[style*="background: rgb(255"],
+[data-theme="dark"] .admin-modal-container div[style*="background: white"],
+[data-theme="dark"] .admin-modal-container div[style*="background: #fff"],
+[data-theme="dark"] .admin-modal-container div[style*="background: #FFF"] {
+  background: rgba(255,255,255,0.05) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  color: #f8fafc !important;
+}
+
+/* Contact button area */
+.theme-dark .admin-modal-container a,
+[data-theme="dark"] .admin-modal-container a {
+  color: #38bdf8 !important;
+}
+
+/* Form elements in modals */
+.theme-dark .admin-label,
+[data-theme="dark"] .admin-label {
+  color: #cbd5e1 !important;
+}
+.theme-dark .admin-input,
+.theme-dark .admin-select,
+.theme-dark .admin-textarea,
+[data-theme="dark"] .admin-input,
+[data-theme="dark"] .admin-select,
+[data-theme="dark"] .admin-textarea {
+  background: #1e293b !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: #f8fafc !important;
+}
+.theme-dark .admin-input:focus,
+.theme-dark .admin-select:focus,
+.theme-dark .admin-textarea:focus,
+[data-theme="dark"] .admin-input:focus,
+[data-theme="dark"] .admin-select:focus,
+[data-theme="dark"] .admin-textarea:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56,189,248,0.15) !important;
+}
+
+/* admin-form-group labels */
+.theme-dark .admin-form-group label,
+[data-theme="dark"] .admin-form-group label {
+  color: #cbd5e1 !important;
+}
+
+/* Inline styled boxes in Lead Dossier (rgba dark glass) */
+.theme-dark .admin-modal-container div[style*="background: rgba(255,255,255,0.04)"],
+.theme-dark .admin-modal-container div[style*="background: rgba(255,255,255,0.06)"],
+.theme-dark .admin-modal-container div[style*="background: rgba(255,255,255,0.08)"],
+[data-theme="dark"] .admin-modal-container div[style*="background: rgba(255,255,255,0.04)"],
+[data-theme="dark"] .admin-modal-container div[style*="background: rgba(255,255,255,0.06)"],
+[data-theme="dark"] .admin-modal-container div[style*="background: rgba(255,255,255,0.08)"] {
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Dashboard summary cards dark mode fix */
+.theme-dark .dash-stat-card,
+[data-theme="dark"] .dash-stat-card {
+  background: #0f172a !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #f8fafc !important;
+}
+.theme-dark .dash-stat-card h4,
+.theme-dark .dash-stat-card p,
+.theme-dark .dash-stat-card span,
+[data-theme="dark"] .dash-stat-card h4,
+[data-theme="dark"] .dash-stat-card p,
+[data-theme="dark"] .dash-stat-card span {
+  color: #f8fafc !important;
+}

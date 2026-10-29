@@ -1864,3 +1864,237 @@
 [data-theme="dark"] .adm-enq-checkbox {
   border-color: rgba(255,255,255,0.2) !important;
 }
+
+
+/* ============================================================
+   OVERRIDE: KPI CARDS — 3x2 COMPACT GRID (3 per row, 2 rows)
+   ============================================================ */
+
+.adm-enq-kpi-row {
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin-bottom: 14px !important;
+}
+
+.adm-enq-kpi-card {
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+  min-height: unset !important;
+  border-width: 1.5px !important;
+}
+
+.adm-enq-kpi-icon-box {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 9px !important;
+  flex-shrink: 0 !important;
+}
+
+.adm-enq-kpi-number {
+  font-size: 1.3rem !important;
+  line-height: 1.1 !important;
+  font-weight: 700 !important;
+}
+
+.adm-enq-kpi-title {
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.adm-enq-kpi-sub {
+  font-size: 0.68rem !important;
+  margin-top: 1px !important;
+}
+
+/* ============================================================
+   OVERRIDE: KPI CARD COLORS — EXECUTIVE / PROFESSIONAL THEME
+   ============================================================ */
+
+/* All Leads — Blue */
+.adm-enq-kpi-card:nth-child(1) {
+  background: #ffffff !important;
+  border-color: #0284c7 !important;
+  border-top: 3px solid #0284c7 !important;
+}
+.adm-enq-kpi-card:nth-child(1) .adm-enq-kpi-icon-box {
+  background: rgba(2,132,199,0.12) !important;
+  color: #0284c7 !important;
+}
+.adm-enq-kpi-card:nth-child(1) .adm-enq-kpi-number { color: #0284c7 !important; }
+
+/* New — Rose */
+.adm-enq-kpi-card:nth-child(2) {
+  background: #ffffff !important;
+  border-color: #e11d48 !important;
+  border-top: 3px solid #e11d48 !important;
+}
+.adm-enq-kpi-card:nth-child(2) .adm-enq-kpi-icon-box {
+  background: rgba(225,29,72,0.10) !important;
+  color: #e11d48 !important;
+}
+.adm-enq-kpi-card:nth-child(2) .adm-enq-kpi-number { color: #e11d48 !important; }
+
+/* Contacted — Amber */
+.adm-enq-kpi-card:nth-child(3) {
+  background: #ffffff !important;
+  border-color: #d97706 !important;
+  border-top: 3px solid #d97706 !important;
+}
+.adm-enq-kpi-card:nth-child(3) .adm-enq-kpi-icon-box {
+  background: rgba(217,119,6,0.10) !important;
+  color: #d97706 !important;
+}
+.adm-enq-kpi-card:nth-child(3) .adm-enq-kpi-number { color: #d97706 !important; }
+
+/* Qualified — Purple */
+.adm-enq-kpi-card:nth-child(4) {
+  background: #ffffff !important;
+  border-color: #7c3aed !important;
+  border-top: 3px solid #7c3aed !important;
+}
+.adm-enq-kpi-card:nth-child(4) .adm-enq-kpi-icon-box {
+  background: rgba(124,58,237,0.10) !important;
+  color: #7c3aed !important;
+}
+.adm-enq-kpi-card:nth-child(4) .adm-enq-kpi-number { color: #7c3aed !important; }
+
+/* Converted — Emerald */
+.adm-enq-kpi-card:nth-child(5) {
+  background: #ffffff !important;
+  border-color: #059669 !important;
+  border-top: 3px solid #059669 !important;
+}
+.adm-enq-kpi-card:nth-child(5) .adm-enq-kpi-icon-box {
+  background: rgba(5,150,105,0.10) !important;
+  color: #059669 !important;
+}
+.adm-enq-kpi-card:nth-child(5) .adm-enq-kpi-number { color: #059669 !important; }
+
+/* Closed — Slate */
+.adm-enq-kpi-card:nth-child(6) {
+  background: #ffffff !important;
+  border-color: #475569 !important;
+  border-top: 3px solid #475569 !important;
+}
+.adm-enq-kpi-card:nth-child(6) .adm-enq-kpi-icon-box {
+  background: rgba(71,85,105,0.10) !important;
+  color: #475569 !important;
+}
+.adm-enq-kpi-card:nth-child(6) .adm-enq-kpi-number { color: #475569 !important; }
+
+/* ============================================================
+   DARK MODE: KPI CARD OVERRIDES (3+3 grid)
+   ============================================================ */
+
+/* All Leads dark */
+.theme-dark .adm-enq-kpi-card:nth-child(1),
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(1) {
+  background: #0f172a !important;
+  border-color: #0284c7 !important;
+  border-top: 3px solid #0284c7 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(1) .adm-enq-kpi-icon-box,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(1) .adm-enq-kpi-icon-box {
+  background: rgba(2,132,199,0.18) !important;
+  color: #38bdf8 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(1) .adm-enq-kpi-number,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(1) .adm-enq-kpi-number { color: #38bdf8 !important; }
+
+/* New dark */
+.theme-dark .adm-enq-kpi-card:nth-child(2),
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(2) {
+  background: #0f172a !important;
+  border-color: #e11d48 !important;
+  border-top: 3px solid #e11d48 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(2) .adm-enq-kpi-icon-box,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(2) .adm-enq-kpi-icon-box {
+  background: rgba(225,29,72,0.16) !important;
+  color: #fb7185 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(2) .adm-enq-kpi-number,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(2) .adm-enq-kpi-number { color: #fb7185 !important; }
+
+/* Contacted dark */
+.theme-dark .adm-enq-kpi-card:nth-child(3),
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(3) {
+  background: #0f172a !important;
+  border-color: #d97706 !important;
+  border-top: 3px solid #d97706 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(3) .adm-enq-kpi-icon-box,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(3) .adm-enq-kpi-icon-box {
+  background: rgba(217,119,6,0.16) !important;
+  color: #fbbf24 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(3) .adm-enq-kpi-number,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(3) .adm-enq-kpi-number { color: #fbbf24 !important; }
+
+/* Qualified dark */
+.theme-dark .adm-enq-kpi-card:nth-child(4),
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(4) {
+  background: #0f172a !important;
+  border-color: #7c3aed !important;
+  border-top: 3px solid #7c3aed !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(4) .adm-enq-kpi-icon-box,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(4) .adm-enq-kpi-icon-box {
+  background: rgba(124,58,237,0.16) !important;
+  color: #a78bfa !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(4) .adm-enq-kpi-number,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(4) .adm-enq-kpi-number { color: #a78bfa !important; }
+
+/* Converted dark */
+.theme-dark .adm-enq-kpi-card:nth-child(5),
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(5) {
+  background: #0f172a !important;
+  border-color: #059669 !important;
+  border-top: 3px solid #059669 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(5) .adm-enq-kpi-icon-box,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(5) .adm-enq-kpi-icon-box {
+  background: rgba(5,150,105,0.16) !important;
+  color: #34d399 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(5) .adm-enq-kpi-number,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(5) .adm-enq-kpi-number { color: #34d399 !important; }
+
+/* Closed dark */
+.theme-dark .adm-enq-kpi-card:nth-child(6),
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(6) {
+  background: #0f172a !important;
+  border-color: #475569 !important;
+  border-top: 3px solid #475569 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(6) .adm-enq-kpi-icon-box,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(6) .adm-enq-kpi-icon-box {
+  background: rgba(71,85,105,0.16) !important;
+  color: #94a3b8 !important;
+}
+.theme-dark .adm-enq-kpi-card:nth-child(6) .adm-enq-kpi-number,
+[data-theme="dark"] .adm-enq-kpi-card:nth-child(6) .adm-enq-kpi-number { color: #94a3b8 !important; }
+
+/* KPI title/sub dark */
+.theme-dark .adm-enq-kpi-title,
+[data-theme="dark"] .adm-enq-kpi-title {
+  color: #cbd5e1 !important;
+}
+.theme-dark .adm-enq-kpi-sub,
+[data-theme="dark"] .adm-enq-kpi-sub {
+  color: #64748b !important;
+}
+
+/* Responsive: 2 cols on tablet */
+@media (max-width: 900px) {
+  .adm-enq-kpi-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 480px) {
+  .adm-enq-kpi-row {
+    grid-template-columns: 1fr !important;
+  }
+}
