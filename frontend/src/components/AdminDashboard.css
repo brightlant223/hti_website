@@ -4771,3 +4771,97 @@
 [data-theme="dark"] .dash-stat-card span {
   color: #f8fafc !important;
 }
+
+
+/* ============================================================
+   EXPLICIT LIGHT MODE OVERRIDES FOR ADMIN DASHBOARD
+   Guarantees light mode turns 100% white/light when switched
+   ============================================================ */
+
+.adm-dashboard-container.theme-light,
+[data-theme="light"] .adm-dashboard-container,
+.adm-dashboard-container[data-theme="light"] {
+  --adm-bg-surface: #ffffff !important;
+  --adm-bg-canvas: #f5f9fe !important;
+  --adm-bg-card: #ffffff !important;
+  --adm-bg-card-subtle: #f8fafc !important;
+  --adm-border: #dce8f7 !important;
+  background: #f5f9fe !important;
+  color: #0f172a !important;
+}
+
+.theme-light .adm-dashboard-view,
+[data-theme="light"] .adm-dashboard-view {
+  background: #f5f9fe !important;
+  color: #0f172a !important;
+}
+
+.theme-light .dash-stat-card,
+[data-theme="light"] .dash-stat-card {
+  background: #ffffff !important;
+  border-color: #dce8f7 !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 4px rgba(16, 38, 79, 0.05) !important;
+}
+
+.theme-light .dash-stat-card h4,
+.theme-light .dash-stat-card p,
+.theme-light .dash-stat-card span,
+[data-theme="light"] .dash-stat-card h4,
+[data-theme="light"] .dash-stat-card p,
+[data-theme="light"] .dash-stat-card span {
+  color: #0f172a !important;
+}
+
+.theme-light .adm-topbar,
+[data-theme="light"] .adm-topbar {
+  background: #ffffff !important;
+  border-bottom-color: #dce8f7 !important;
+  color: #0f172a !important;
+}
+
+.theme-light .adm-topbar-title,
+[data-theme="light"] .adm-topbar-title {
+  color: #0f172a !important;
+}
+
+.theme-light .adm-topbar-sub,
+[data-theme="light"] .adm-topbar-sub {
+  color: #64748b !important;
+}
+
+.theme-light .adm-sidebar,
+[data-theme="light"] .adm-sidebar {
+  background: #ffffff !important;
+  border-right-color: #dce8f7 !important;
+}
+
+.theme-light .admin-modal-container,
+[data-theme="light"] .admin-modal-container {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.theme-light .admin-modal-header,
+[data-theme="light"] .admin-modal-header {
+  background: #f8fafc !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+.theme-light .admin-modal-title,
+[data-theme="light"] .admin-modal-title {
+  color: #0f172a !important;
+}
+
+.theme-light .admin-modal-body,
+[data-theme="light"] .admin-modal-body {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.theme-light .admin-modal-footer,
+[data-theme="light"] .admin-modal-footer {
+  background: #f8fafc !important;
+  border-top-color: #e2e8f0 !important;
+}

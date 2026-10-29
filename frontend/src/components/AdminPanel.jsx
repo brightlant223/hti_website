@@ -119,7 +119,9 @@ export default function AdminPanel({
   // Active navigation tab
   // 'dashboard' | 'products' | 'blogs' | 'clients_partners' | 'inquiries' | 'projects' | 'content' | 'users' | 'settings'
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [adminTheme, setAdminTheme] = useState(() => localStorage.getItem('hti_admin_theme') || 'light');
+  const [adminTheme, setAdminTheme] = useState(() => {
+    return localStorage.getItem('hti_theme') || localStorage.getItem('hti_admin_theme') || 'light';
+  });
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
@@ -129,11 +131,28 @@ export default function AdminPanel({
     const next = adminTheme === 'light' ? 'dark' : 'light';
     setAdminTheme(next);
     localStorage.setItem('hti_admin_theme', next);
+    localStorage.setItem('hti_theme', next);
+    document.documentElement.setAttribute('data-theme', next);
+    document.body.setAttribute('data-theme', next);
+    if (next === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+    }
   };
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', adminTheme);
     document.body.setAttribute('data-theme', adminTheme);
+    if (adminTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+    }
   }, [adminTheme]);
 
   // Close mobile drawer on desktop resize (>=1024px) or tab switch

@@ -431,12 +431,16 @@ export default function App() {
       }
       setResolvedTheme(resolved);
       document.documentElement.setAttribute('data-theme', resolved);
+      document.body.setAttribute('data-theme', resolved);
       if (resolved === 'dark') {
         document.documentElement.classList.add('dark');
+        document.body.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
+        document.body.classList.remove('dark');
       }
       localStorage.setItem('hti_theme', themeName);
+      localStorage.setItem('hti_admin_theme', themeName);
     };
 
     applyTheme(theme);

@@ -2271,3 +2271,72 @@
 [data-theme="dark"] .adm-enq-lead-id {
   color: #38bdf8 !important;
 }
+
+
+/* ============================================================
+   EXPLICIT LIGHT MODE OVERRIDES FOR ADMIN ENQUIRIES
+   Guarantees light mode turns 100% white/light when switched
+   ============================================================ */
+
+.theme-light .adm-enq-page,
+[data-theme="light"] .adm-enq-page {
+  background: #f5f9fe !important;
+  color: #10264f !important;
+}
+
+.theme-light .adm-enq-table-card,
+[data-theme="light"] .adm-enq-table-card {
+  background: #ffffff !important;
+  border-color: #dce7f5 !important;
+}
+
+.theme-light .adm-enq-table thead th,
+[data-theme="light"] .adm-enq-table thead th {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.theme-light .adm-enq-table tbody tr,
+[data-theme="light"] .adm-enq-table tbody tr {
+  background: #ffffff !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  color: #10264f !important;
+}
+
+.theme-light .adm-enq-table tbody tr:hover,
+[data-theme="light"] .adm-enq-table tbody tr:hover {
+  background: #f8fafd !important;
+}
+
+.theme-light .adm-enq-client-name,
+[data-theme="light"] .adm-enq-client-name {
+  color: #10264f !important;
+}
+
+.theme-light .adm-enq-product-name,
+[data-theme="light"] .adm-enq-product-name {
+  color: #10264f !important;
+}
+
+.theme-light .adm-enq-search-input,
+[data-theme="light"] .adm-enq-search-input {
+  background: #ffffff !important;
+  border-color: #dce7f5 !important;
+  color: #10264f !important;
+}
+
+.theme-light .adm-enq-kpi-card,
+[data-theme="light"] .adm-enq-kpi-card {
+  background: #ffffff !important;
+}
+
+.theme-light .adm-enq-kpi-title,
+[data-theme="light"] .adm-enq-kpi-title {
+  color: #334155 !important;
+}
+
+.theme-light .adm-enq-kpi-sub,
+[data-theme="light"] .adm-enq-kpi-sub {
+  color: #64748b !important;
+}

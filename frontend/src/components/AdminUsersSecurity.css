@@ -1854,3 +1854,78 @@
     grid-template-columns: 1fr 1fr !important;
   }
 }
+
+
+/* ============================================================
+   EXPLICIT LIGHT MODE OVERRIDES FOR USERS & SECURITY
+   Guarantees light mode turns 100% white/light when switched
+   ============================================================ */
+
+.theme-light .adm-sec-page,
+[data-theme="light"] .adm-sec-page {
+  background: #f8fafc !important;
+  color: #10264f !important;
+}
+
+.theme-light .adm-sec-summary-card,
+[data-theme="light"] .adm-sec-summary-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.theme-light .adm-sec-summary-title,
+[data-theme="light"] .adm-sec-summary-title {
+  color: #334155 !important;
+}
+
+.theme-light .adm-sec-summary-sub,
+[data-theme="light"] .adm-sec-summary-sub {
+  color: #94a3b8 !important;
+}
+
+.theme-light .adm-sec-table-card,
+[data-theme="light"] .adm-sec-table-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.theme-light .adm-sec-table thead th,
+[data-theme="light"] .adm-sec-table thead th {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.theme-light .adm-sec-table tbody tr,
+[data-theme="light"] .adm-sec-table tbody tr {
+  background: #ffffff !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  color: #10264f !important;
+}
+
+.theme-light .adm-sec-table tbody tr:hover,
+[data-theme="light"] .adm-sec-table tbody tr:hover {
+  background: #f8fafd !important;
+}
+
+.theme-light .adm-sec-username-text,
+[data-theme="light"] .adm-sec-username-text {
+  color: #0284c7 !important;
+}
+
+.theme-light .adm-sec-fullname-text,
+[data-theme="light"] .adm-sec-fullname-text {
+  color: #10264f !important;
+}
+
+.theme-light .adm-sec-email-text,
+[data-theme="light"] .adm-sec-email-text {
+  color: #64748b !important;
+}
+
+.theme-light .adm-sec-search-input,
+[data-theme="light"] .adm-sec-search-input {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #10264f !important;
+}
