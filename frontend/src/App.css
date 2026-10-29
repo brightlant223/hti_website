@@ -13537,6 +13537,139 @@
 }
 
 /* Filter Bar */
+/* Breadcrumbs */
+.catalog-breadcrumb {
+  margin-bottom: 20px;
+}
+
+.catalog-breadcrumb-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.catalog-breadcrumb-home {
+  background: none;
+  border: none;
+  color: #0284c7;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.catalog-breadcrumb-home:hover {
+  text-decoration: underline;
+}
+
+.catalog-breadcrumb-sep {
+  color: #94a3b8;
+}
+
+.catalog-breadcrumb-current {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Search Bar */
+.catalog-controls-bar {
+  margin-bottom: 28px;
+}
+
+.catalog-search-wrap {
+  position: relative;
+  margin-bottom: 16px;
+  max-width: 540px;
+}
+
+.catalog-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.catalog-search-input {
+  width: 100%;
+  padding: 11px 40px 11px 42px;
+  border-radius: 9999px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  font-size: 0.9rem;
+  color: #0f172a;
+  outline: none;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.catalog-search-input:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.catalog-search-clear-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.catalog-search-clear-btn:hover {
+  color: #0f172a;
+}
+
+/* Status Line */
+.catalog-status-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.catalog-status-line strong {
+  color: #0f172a;
+}
+
+.btn-catalog-reset {
+  background: none;
+  border: none;
+  color: #0284c7;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.82rem;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.btn-catalog-reset:hover {
+  color: #0369a1;
+}
+
+.filter-pill-count {
+  font-size: 0.72rem;
+  opacity: 0.65;
+  margin-left: 2px;
+}
+
+.filter-pill-btn.pill-active .filter-pill-count {
+  opacity: 0.95;
+}
+
 .catalog-filter-bar {
   display: flex;
   gap: 8px;
@@ -13712,6 +13845,118 @@
   width: 100%;
   cursor: pointer;
 }
+
+/* Catalog Pagination */
+.catalog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 44px;
+  flex-wrap: wrap;
+}
+
+.catalog-pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.catalog-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.catalog-page-num {
+  width: 38px;
+  height: 38px;
+}
+
+.catalog-page-nav {
+  padding: 8px 16px;
+  height: 38px;
+}
+
+.catalog-page-btn:hover:not(:disabled) {
+  border-color: #0284c7;
+  color: #0284c7;
+  background: #f0f9ff;
+}
+
+.catalog-page-btn.active {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+}
+
+.catalog-page-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+/* Empty State */
+.catalog-empty-state {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 56px 24px;
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.catalog-empty-icon {
+  color: #94a3b8;
+  margin: 0 auto 14px;
+}
+
+.catalog-empty-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.catalog-empty-desc {
+  color: #64748b;
+  font-size: 0.92rem;
+  max-width: 440px;
+  margin: 0 auto 20px;
+}
+
+.btn-catalog-empty-reset {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-catalog-empty-reset:hover {
+  background: #0369a1;
+}
+
+.catalog-cta-desc {
+  margin: 4px 0 0;
+  font-size: 0.88rem;
+  color: #475569;
+}
+
 
 /* CTA Banner */
 .catalog-cta-banner {
@@ -18144,78 +18389,272 @@ html.dark .chat-input::placeholder,
   color: #38bdf8;
 }
 
-/* 5. Products Catalog in Dark Mode */
-[data-theme="dark"] .catalog-section {
-  background: transparent;
+/* 5. Products Catalog in Dark Mode (High Contrast, Deep Dark & Crisp Accents) */
+[data-theme="dark"] .dedicated-catalog-page-wrapper,
+html.dark .dedicated-catalog-page-wrapper,
+[data-theme="dark"] .catalog-section,
+html.dark .catalog-section {
+  background: #070b14 !important;
+  color: #f8fafc !important;
 }
 
-[data-theme="dark"] .catalog-subtitle {
-  color: #94a3b8;
+[data-theme="dark"] .catalog-breadcrumb-home,
+html.dark .catalog-breadcrumb-home {
+  color: #38bdf8 !important;
 }
 
-[data-theme="dark"] .btn-view-all-products {
-  background: #111a2e;
-  border-color: #1e293b;
-  color: #cbd5e1;
+[data-theme="dark"] .catalog-breadcrumb-sep,
+html.dark .catalog-breadcrumb-sep {
+  color: #475569 !important;
 }
 
-[data-theme="dark"] .btn-view-all-products:hover {
-  border-color: #38bdf8;
-  color: #ffffff;
-  background: #162444;
+[data-theme="dark"] .catalog-breadcrumb-current,
+html.dark .catalog-breadcrumb-current {
+  color: #f8fafc !important;
 }
 
-[data-theme="dark"] .filter-pill-btn {
-  background: #111a2e;
-  border-color: #1e293b;
-  color: #94a3b8;
+[data-theme="dark"] .pill-badge-catalog,
+html.dark .pill-badge-catalog {
+  background: rgba(56, 189, 248, 0.12) !important;
+  border-color: rgba(56, 189, 248, 0.25) !important;
+  color: #38bdf8 !important;
 }
 
-[data-theme="dark"] .filter-pill-btn:hover {
-  border-color: #38bdf8;
-  color: #ffffff;
+[data-theme="dark"] .catalog-section-title,
+html.dark .catalog-section-title {
+  color: #f8fafc !important;
 }
 
-[data-theme="dark"] .filter-pill-btn.pill-active {
-  background: #0284c7;
-  border-color: #0284c7;
-  color: #ffffff;
+[data-theme="dark"] .catalog-subtitle,
+html.dark .catalog-subtitle {
+  color: #94a3b8 !important;
 }
 
-[data-theme="dark"] .catalog-product-card {
-  background: #111a2e;
-  border-color: #1e293b;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+[data-theme="dark"] .btn-view-all-products,
+html.dark .btn-view-all-products {
+  background: #111a2e !important;
+  border-color: #0284c7 !important;
+  color: #38bdf8 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
 }
 
-[data-theme="dark"] .catalog-product-card:hover {
-  border-color: #38bdf8;
-  box-shadow: 0 10px 28px rgba(56, 189, 248, 0.12);
+[data-theme="dark"] .btn-view-all-products:hover,
+html.dark .btn-view-all-products:hover {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.4) !important;
 }
 
-[data-theme="dark"] .product-card-name {
-  color: #ffffff;
+/* Search Bar Dark Mode */
+[data-theme="dark"] .catalog-search-input,
+[data-theme="dark"] #catalog-search-input,
+html.dark .catalog-search-input,
+html.dark #catalog-search-input {
+  background: #0f172a !important;
+  border: 1px solid #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45) !important;
 }
 
-[data-theme="dark"] .product-bullet-item {
-  color: #cbd5e1;
+[data-theme="dark"] .catalog-search-input:focus,
+[data-theme="dark"] #catalog-search-input:focus,
+html.dark .catalog-search-input:focus,
+html.dark #catalog-search-input:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
 }
 
-[data-theme="dark"] .bullet-check-circle {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
+[data-theme="dark"] .catalog-search-icon,
+html.dark .catalog-search-icon {
+  color: #64748b !important;
 }
 
-[data-theme="dark"] .btn-product-details {
-  background: #16233f;
-  border-color: #1e293b;
-  color: #38bdf8;
+[data-theme="dark"] .catalog-search-clear-btn,
+html.dark .catalog-search-clear-btn {
+  color: #94a3b8 !important;
 }
 
-[data-theme="dark"] .btn-product-details:hover {
-  background: #0284c7;
-  border-color: #0284c7;
-  color: #ffffff;
+[data-theme="dark"] .catalog-search-clear-btn:hover,
+html.dark .catalog-search-clear-btn:hover {
+  color: #f8fafc !important;
+}
+
+/* Filter Pills Dark Mode */
+[data-theme="dark"] .filter-pill-btn,
+html.dark .filter-pill-btn {
+  background: #111a2e !important;
+  border-color: #1e293b !important;
+  color: #94a3b8 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .filter-pill-btn:hover,
+html.dark .filter-pill-btn:hover {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .filter-pill-btn.pill-active,
+html.dark .filter-pill-btn.pill-active {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45) !important;
+}
+
+/* Status Line Dark Mode */
+[data-theme="dark"] .catalog-status-line,
+html.dark .catalog-status-line {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .catalog-status-line strong,
+html.dark .catalog-status-line strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-catalog-reset,
+html.dark .btn-catalog-reset {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .btn-catalog-reset:hover,
+html.dark .btn-catalog-reset:hover {
+  color: #7dd3fc !important;
+}
+
+/* Product Cards Dark Mode */
+[data-theme="dark"] .catalog-product-card,
+html.dark .catalog-product-card {
+  background: #111a2e !important;
+  border: 1px solid #1e293b !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .catalog-product-card:hover,
+html.dark .catalog-product-card:hover {
+  background: #15223c !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(56, 189, 248, 0.3) !important;
+}
+
+[data-theme="dark"] .product-thumb-wrap,
+html.dark .product-thumb-wrap {
+  background: #0a1120 !important;
+}
+
+[data-theme="dark"] .product-card-name,
+html.dark .product-card-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .catalog-product-card:hover .product-card-name,
+html.dark .catalog-product-card:hover .product-card-name {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .product-card-desc,
+html.dark .product-card-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .product-bullet-item,
+html.dark .product-bullet-item {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .bullet-check-icon,
+html.dark .bullet-check-icon {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .btn-product-details,
+html.dark .btn-product-details {
+  background: #0f172a !important;
+  border: 1px solid #1e293b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-product-details:hover,
+html.dark .btn-product-details:hover {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45) !important;
+}
+
+/* Pagination Dark Mode */
+[data-theme="dark"] .catalog-page-btn,
+html.dark .catalog-page-btn {
+  background: #111a2e !important;
+  border: 1px solid #1e293b !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .catalog-page-btn:hover:not(:disabled),
+html.dark .catalog-page-btn:hover:not(:disabled) {
+  background: #17233d !important;
+  border-color: #38bdf8 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .catalog-page-btn.active,
+html.dark .catalog-page-btn.active {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4) !important;
+}
+
+[data-theme="dark"] .catalog-page-btn:disabled,
+html.dark .catalog-page-btn:disabled {
+  opacity: 0.3 !important;
+  border-color: #1e293b !important;
+  color: #475569 !important;
+}
+
+/* Empty State Dark Mode */
+[data-theme="dark"] .catalog-empty-state,
+html.dark .catalog-empty-state {
+  background: #111a2e !important;
+  border: 1px solid #1e293b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .catalog-empty-title,
+html.dark .catalog-empty-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .catalog-empty-desc,
+html.dark .catalog-empty-desc {
+  color: #94a3b8 !important;
+}
+
+/* Turnkey CTA Banner Dark Mode */
+[data-theme="dark"] .catalog-cta-banner,
+html.dark .catalog-cta-banner {
+  background: linear-gradient(135deg, #0d1a2f, #141a38) !important;
+  border: 1px solid #1e293b !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .catalog-cta-label,
+html.dark .catalog-cta-label {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .catalog-cta-title,
+html.dark .catalog-cta-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .catalog-cta-desc,
+html.dark .catalog-cta-desc {
+  color: #94a3b8 !important;
 }
 
 /* 6. Door Interlock Logic Simulator in Dark Mode */

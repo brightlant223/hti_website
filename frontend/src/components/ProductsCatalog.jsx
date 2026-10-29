@@ -10,7 +10,9 @@ import {
   Lock, 
   Flame, 
   Activity,
-  CheckCircle2
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { getAllProducts, TOTAL_PRODUCT_COUNT } from '../data/productCatalogueData';
 
@@ -51,6 +53,7 @@ const normalizeDbProduct = (db) => {
     isFeatured: Boolean(db.is_featured),
     image: db.image_url || '/products/automatic-doors.jpg',
     image_url: db.image_url || '/products/automatic-doors.jpg',
+    heroImage: db.image_url || '/products/automatic-doors.jpg',
     keyFeatures: feats,
     features: feats,
     specs: db.specs || {},
@@ -79,10 +82,16 @@ export default function ProductsCatalog({
 
   const [activeCategory, setActiveCategory] = useState(normalizeCategory(initialCategory));
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 12;
 
   useEffect(() => {
     setActiveCategory(normalizeCategory(initialCategory));
   }, [initialCategory]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, searchQuery]);
 
   const allProducts = useMemo(() => {
     const staticItems = getAllProducts();
@@ -121,6 +130,18 @@ export default function ProductsCatalog({
     return combined;
   }, [dbProducts]);
 
+  // Dynamic count calculation per category
+  const categoryCounts = useMemo(() => {
+    const counts = { all: allProducts.length };
+    allProducts.forEach(p => {
+      const cat = p.categorySlug;
+      if (cat) {
+        counts[cat] = (counts[cat] || 0) + 1;
+      }
+    });
+    return counts;
+  }, [allProducts]);
+
   // Filter products by selected category and search query
   const filteredProducts = useMemo(() => {
     let result = allProducts;
@@ -144,6 +165,16 @@ export default function ProductsCatalog({
 
     return result;
   }, [allProducts, activeCategory, searchQuery]);
+
+  // Pagination calculation
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+
+  const startItem = filteredProducts.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const endItem = Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length);
 
   const handleCardClick = (slug) => {
     if (onSelectProduct) {
@@ -171,16 +202,16 @@ export default function ProductsCatalog({
 
         {/* Breadcrumb if viewed as dedicated catalog page */}
         {isDedicatedPage && (
-          <nav aria-label="Breadcrumb" style={{ marginBottom: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: '#64748b' }}>
+          <nav aria-label="Breadcrumb" className="catalog-breadcrumb">
+            <div className="catalog-breadcrumb-inner">
               <button 
                 onClick={() => onNavigate && onNavigate('home')}
-                style={{ background: 'none', border: 'none', color: '#0284c7', fontWeight: 600, cursor: 'pointer', padding: 0 }}
+                className="catalog-breadcrumb-home"
               >
                 Home
               </button>
-              <span>/</span>
-              <span style={{ color: 'var(--text-main, #0f172a)', fontWeight: 700 }}>Official Product Catalogue ({TOTAL_PRODUCT_COUNT} Systems)</span>
+              <span className="catalog-breadcrumb-sep">/</span>
+              <span className="catalog-breadcrumb-current">Official Product Catalogue ({allProducts.length} Systems)</span>
             </div>
           </nav>
         )}
@@ -211,58 +242,26 @@ export default function ProductsCatalog({
         </div>
 
         {/* Search Bar & Category Controls Container */}
-        <div className="catalog-controls-bar" style={{ marginBottom: '24px' }}>
+        <div className="catalog-controls-bar">
           
           {/* Live Search Input */}
-          <div className="catalog-search-wrap" style={{
-            position: 'relative',
-            marginBottom: '16px',
-            maxWidth: '520px'
-          }}>
-            <Search size={17} style={{
-              position: 'absolute',
-              left: '14px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: '#94a3b8',
-              pointerEvents: 'none'
-            }} />
+          <div className="catalog-search-wrap">
+            <Search size={17} className="catalog-search-icon" />
             <label className="sr-only" htmlFor="catalog-search-input">
-              Search all {TOTAL_PRODUCT_COUNT} systems
+              Search all {allProducts.length} systems
             </label>
             <input
               id="catalog-search-input"
+              className="catalog-search-input"
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Search ${TOTAL_PRODUCT_COUNT} systems (e.g. boom barrier, interlock, 4K CCTV, cleanroom door)...`}
-              style={{
-                width: '100%',
-                padding: '11px 40px 11px 42px',
-                borderRadius: '9999px',
-                border: '1px solid #cbd5e1',
-                background: '#ffffff',
-                fontSize: '0.9rem',
-                color: '#0f172a',
-                outline: 'none',
-                boxShadow: '0 1px 4px rgba(15, 23, 42, 0.05)',
-                transition: 'border-color 0.2s, box-shadow 0.2s'
-              }}
+              placeholder={`Search ${allProducts.length} systems (e.g. boom barrier, interlock, 4K CCTV, cleanroom door)...`}
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                style={{
-                  position: 'absolute',
-                  right: '12px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'none',
-                  border: 'none',
-                  color: '#94a3b8',
-                  cursor: 'pointer',
-                  padding: '4px'
-                }}
+                className="catalog-search-clear-btn"
                 title="Clear search"
                 aria-label="Clear search"
               >
@@ -276,25 +275,17 @@ export default function ProductsCatalog({
             {CATEGORY_TABS.map((tab) => {
               const IconComp = tab.icon;
               const isActive = activeCategory === tab.id;
+              const count = categoryCounts[tab.id] || tab.count || 0;
               return (
                 <button
                   key={tab.id}
                   className={`filter-pill-btn ${isActive ? 'pill-active' : ''}`}
                   onClick={() => setActiveCategory(tab.id)}
-                  style={isActive ? {
-                    background: '#0284c7',
-                    borderColor: '#0284c7',
-                    color: '#ffffff'
-                  } : {}}
                 >
                   <IconComp size={14} />
                   <span>{tab.label}</span>
-                  <span style={{
-                    fontSize: '0.72rem',
-                    opacity: isActive ? 0.9 : 0.65,
-                    marginLeft: '2px'
-                  }}>
-                    ({tab.count})
+                  <span className="filter-pill-count">
+                    ({count})
                   </span>
                 </button>
               );
@@ -302,17 +293,11 @@ export default function ProductsCatalog({
           </div>
 
           {/* Results Status Line */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: '0.82rem',
-            color: '#64748b',
-            marginBottom: '18px'
-          }}>
+          <div className="catalog-status-line">
             <span>
-              Showing <strong>{filteredProducts.length}</strong> of {allProducts.length} industrial systems
+              Showing <strong>{filteredProducts.length === 0 ? 0 : `${startItem}–${endItem}`}</strong> of {filteredProducts.length} industrial systems
               {searchQuery && ` matching "${searchQuery}"`}
+              {filteredProducts.length < allProducts.length && ` (filtered from ${allProducts.length} total)`}
             </span>
             {(activeCategory !== 'all' || searchQuery) && (
               <button
@@ -320,15 +305,7 @@ export default function ProductsCatalog({
                   setActiveCategory('all');
                   setSearchQuery('');
                 }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#0284c7',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  fontSize: '0.82rem',
-                  textDecoration: 'underline'
-                }}
+                className="btn-catalog-reset"
               >
                 Reset All Filters
               </button>
@@ -336,240 +313,146 @@ export default function ProductsCatalog({
           </div>
         </div>
 
-        {/* Product Cards Grid (3 Columns on Desktop, 2 on Tablet, 1 on Mobile) */}
+        {/* Product Cards Grid */}
         {filteredProducts.length > 0 ? (
-          <div 
-            className="catalog-products-grid"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-              gap: '24px',
-              marginBottom: '44px'
-            }}
-          >
-            {filteredProducts.map((p) => {
-              // Extract 3 bullet points from trust indicators or overview highlights
-              const bullets = p.trustIndicators && p.trustIndicators.length > 0
-                ? p.trustIndicators.slice(0, 3).map(t => t.text)
-                : (p.overview?.highlights || []).slice(0, 3);
+          <>
+            <div className="catalog-products-grid">
+              {paginatedProducts.map((p) => {
+                // Extract 3 bullet points from trust indicators or overview highlights
+                const bullets = p.trustIndicators && p.trustIndicators.length > 0
+                  ? p.trustIndicators.slice(0, 3).map(t => t.text)
+                  : (p.overview?.highlights || []).slice(0, 3);
 
-              const hasVideo = p.video?.hasVideoFile;
+                const hasVideo = p.video?.hasVideoFile || p.hasVideo;
 
-              return (
-                <div
-                  key={p.slug}
-                  className="catalog-product-card"
-                  onClick={() => handleCardClick(p.slug)}
-                  style={{
-                    background: '#ffffff',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '16px',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    boxShadow: '0 2px 10px rgba(15, 23, 42, 0.05)',
-                    transition: 'transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {/* Thumbnail Wrap */}
-                  <div 
-                    className="product-thumb-wrap"
-                    style={{
-                      position: 'relative',
-                      width: '100%',
-                      aspectRatio: '16 / 10',
-                      height: 'auto',
-                      overflow: 'hidden',
-                      background: '#f1f5f9'
-                    }}
+                return (
+                  <div
+                    key={p.slug}
+                    className="catalog-product-card"
+                    onClick={() => handleCardClick(p.slug)}
                   >
-                    <img
-                      src={p.heroImage}
-                      alt={p.name}
-                      className="product-thumb-img"
-                      loading="lazy"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block'
-                      }}
-                    />
-
-                    {/* Category Overlay Tag */}
-                    <span 
-                      className="product-category-badge"
-                      style={{
-                        position: 'absolute',
-                        top: '12px',
-                        left: '12px',
-                        background: 'rgba(15, 23, 42, 0.85)',
-                        backdropFilter: 'blur(6px)',
-                        color: '#ffffff',
-                        fontSize: '0.7rem',
-                        fontWeight: 700,
-                        letterSpacing: '0.04em',
-                        padding: '4px 10px',
-                        borderRadius: '9999px',
-                        border: '1px solid rgba(255, 255, 255, 0.15)'
-                      }}
-                    >
-                      {p.category}
-                    </span>
-
-                    {/* Video Badge (if applicable) */}
-                    {hasVideo && (
-                      <span
-                        style={{
-                          position: 'absolute',
-                          bottom: '12px',
-                          right: '12px',
-                          background: 'rgba(2, 132, 199, 0.9)',
-                          backdropFilter: 'blur(6px)',
-                          color: '#ffffff',
-                          fontSize: '0.68rem',
-                          fontWeight: 700,
-                          padding: '3px 8px',
-                          borderRadius: '6px',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '4px'
+                    {/* Thumbnail Wrap */}
+                    <div className="product-thumb-wrap">
+                      <img
+                        src={p.heroImage || p.image || p.image_url || '/products/automatic-doors.jpg'}
+                        alt={p.name}
+                        className="product-thumb-img"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = '/products/automatic-doors.jpg';
                         }}
-                      >
-                        <PlayCircle size={12} />
-                        <span>VIDEO</span>
+                      />
+
+                      {/* Category Overlay Tag */}
+                      <span className="product-category-badge">
+                        {p.category}
                       </span>
-                    )}
-                  </div>
 
-                  {/* Card Content Body */}
-                  <div 
-                    className="product-card-body"
-                    style={{
-                      padding: '20px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      flex: 1
-                    }}
-                  >
-                    <h2
-                      className="product-card-name"
-                      style={{
-                        fontSize: '1.08rem',
-                        fontWeight: 800,
-                        color: '#0f172a',
-                        lineHeight: 1.3,
-                        marginBottom: '8px'
-                      }}
-                    >
-                      {p.name}
-                    </h2>
+                      {/* Video Badge (if applicable) */}
+                      {hasVideo && (
+                        <span className="product-video-badge">
+                          <PlayCircle size={12} />
+                          <span>VIDEO</span>
+                        </span>
+                      )}
+                    </div>
 
-                    <p 
-                      style={{
-                        fontSize: '0.85rem',
-                        color: '#64748b',
-                        lineHeight: 1.5,
-                        margin: '0 0 14px 0',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}
-                    >
-                      {p.tagline || p.heroDescription}
-                    </p>
+                    {/* Card Content Body */}
+                    <div className="product-card-body">
+                      <h2 className="product-card-name">
+                        {p.name}
+                      </h2>
 
-                    {/* 3 Key Engineering Feature Bullets */}
-                    {bullets && bullets.length > 0 && (
-                      <ul 
-                        className="product-card-bullets"
-                        style={{
-                          listStyle: 'none',
-                          padding: 0,
-                          margin: '0 0 18px 0',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '6px',
-                          flex: 1
+                      <p className="product-card-desc">
+                        {p.tagline || p.heroDescription}
+                      </p>
+
+                      {/* 3 Key Engineering Feature Bullets */}
+                      {bullets && bullets.length > 0 && (
+                        <ul className="product-card-bullets">
+                          {bullets.map((b, idx) => (
+                            <li key={idx} className="product-bullet-item">
+                              <CheckCircle2 size={13} className="bullet-check-icon" />
+                              <span>{b}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {/* Action Button: View Product */}
+                      <button
+                        className="btn-product-details"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCardClick(p.slug);
                         }}
                       >
-                        {bullets.map((b, idx) => (
-                          <li 
-                            key={idx}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                              gap: '6px',
-                              fontSize: '0.78rem',
-                              color: '#334155',
-                              lineHeight: 1.4
-                            }}
-                          >
-                            <CheckCircle2 size={13} style={{ color: '#0284c7', flexShrink: 0, marginTop: '2px' }} />
-                            <span>{b}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-
-                    {/* Action Button: View Product */}
-                    <button
-                      className="btn-product-details"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCardClick(p.slug);
-                      }}
-                      style={{
-                        background: '#f8fafc',
-                        border: '1px solid #cbd5e1',
-                        borderRadius: '8px',
-                        padding: '10px 16px',
-                        fontSize: '0.85rem',
-                        fontWeight: 700,
-                        color: '#0f172a',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        width: '100%',
-                        cursor: 'pointer',
-                        transition: 'all 0.18s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#0284c7';
-                        e.currentTarget.style.borderColor = '#0284c7';
-                        e.currentTarget.style.color = '#ffffff';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = '#f8fafc';
-                        e.currentTarget.style.borderColor = '#cbd5e1';
-                        e.currentTarget.style.color = '#0f172a';
-                      }}
-                    >
-                      <span>View Product</span>
-                      <ArrowRight size={14} />
-                    </button>
+                        <span>View Product</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
                   </div>
+                );
+              })}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <nav className="catalog-pagination" aria-label="Catalog pages">
+                <button
+                  className="catalog-page-btn catalog-page-nav"
+                  onClick={() => {
+                    setCurrentPage(prev => Math.max(1, prev - 1));
+                    document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  disabled={currentPage === 1}
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft size={16} />
+                  <span>Previous</span>
+                </button>
+
+                <div className="catalog-pagination-pages">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      className={`catalog-page-btn catalog-page-num ${currentPage === pageNum ? 'active' : ''}`}
+                      onClick={() => {
+                        setCurrentPage(pageNum);
+                        document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      aria-label={`Go to page ${pageNum}`}
+                      aria-current={currentPage === pageNum ? 'page' : undefined}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
                 </div>
-              );
-            })}
-          </div>
+
+                <button
+                  className="catalog-page-btn catalog-page-nav"
+                  onClick={() => {
+                    setCurrentPage(prev => Math.min(totalPages, prev + 1));
+                    document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  disabled={currentPage === totalPages}
+                  aria-label="Next page"
+                >
+                  <span>Next</span>
+                  <ChevronRight size={16} />
+                </button>
+              </nav>
+            )}
+          </>
         ) : (
           /* Empty Search Results State */
-          <div style={{
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: '16px',
-            padding: '56px 24px',
-            textAlign: 'center',
-            marginBottom: '44px'
-          }}>
-            <Search size={36} style={{ color: '#94a3b8', margin: '0 auto 14px' }} />
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
+          <div className="catalog-empty-state">
+            <Search size={36} className="catalog-empty-icon" />
+            <h2 className="catalog-empty-title">
               No Industrial Systems Found
             </h2>
-            <p style={{ color: '#64748b', fontSize: '0.92rem', maxWidth: '440px', margin: '0 auto 20px' }}>
+            <p className="catalog-empty-desc">
               No systems match "{searchQuery}" in the selected category. Try searching for broader terms like "door", "barrier", "camera", or "interlock".
             </p>
             <button
@@ -577,18 +460,9 @@ export default function ProductsCatalog({
                 setActiveCategory('all');
                 setSearchQuery('');
               }}
-              style={{
-                background: '#0284c7',
-                color: '#ffffff',
-                border: 'none',
-                padding: '10px 22px',
-                borderRadius: '8px',
-                fontWeight: 700,
-                fontSize: '0.88rem',
-                cursor: 'pointer'
-              }}
+              className="btn-catalog-empty-reset"
             >
-              Reset Filters &amp; View All {TOTAL_PRODUCT_COUNT} Systems
+              Reset Filters &amp; View All {allProducts.length} Systems
             </button>
           </div>
         )}
@@ -600,7 +474,7 @@ export default function ProductsCatalog({
             <h2 className="catalog-cta-title">
               Need Custom Technical Sizing or Project BOQ?
             </h2>
-            <p style={{ margin: '4px 0 0', fontSize: '0.88rem', color: '#475569' }}>
+            <p className="catalog-cta-desc">
               Our engineering office at Turbhe MIDC, Navi Mumbai provides CAD drawings, FAT compliance, and Pan-India site commissioning.
             </p>
           </div>
