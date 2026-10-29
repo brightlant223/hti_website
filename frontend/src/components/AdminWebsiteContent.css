@@ -649,3 +649,83 @@
     gap: 12px !important;
   }
 }
+
+
+/* ==========================================================================
+   EXACT DARK MODE STYLING FOR WEBSITE CONTENT FORM CONTROLS
+   ========================================================================== */
+.theme-dark .adm-wc-card,
+[data-theme="dark"] .adm-wc-card {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.theme-dark .adm-wc-input-box,
+[data-theme="dark"] .adm-wc-input-box {
+  background: #1e293b !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.theme-dark .adm-wc-input-box:focus-within,
+[data-theme="dark"] .adm-wc-input-box:focus-within {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+}
+
+.theme-dark .adm-wc-input-control,
+.theme-dark .adm-wc-textarea-control,
+[data-theme="dark"] .adm-wc-input-control,
+[data-theme="dark"] .adm-wc-textarea-control {
+  background: transparent !important;
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-wc-input-icon,
+[data-theme="dark"] .adm-wc-input-icon {
+  background: #0f172a !important;
+  color: #38bdf8 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.theme-dark .adm-wc-helper,
+[data-theme="dark"] .adm-wc-helper {
+  color: #64748b !important;
+}
+
+.theme-dark .adm-wc-testimonial-card,
+[data-theme="dark"] .adm-wc-testimonial-card {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.theme-dark .adm-wc-testimonial-author,
+[data-theme="dark"] .adm-wc-testimonial-author {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-wc-testimonial-company,
+.theme-dark .adm-wc-testimonial-loc,
+[data-theme="dark"] .adm-wc-testimonial-company,
+[data-theme="dark"] .adm-wc-testimonial-loc {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-wc-testimonial-quote,
+[data-theme="dark"] .adm-wc-testimonial-quote {
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-wc-icon-btn,
+[data-theme="dark"] .adm-wc-icon-btn {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-wc-icon-btn:hover,
+[data-theme="dark"] .adm-wc-icon-btn:hover {
+  background: #334155 !important;
+  color: #38bdf8 !important;
+}

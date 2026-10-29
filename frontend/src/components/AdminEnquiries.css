@@ -1300,3 +1300,35 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* ==========================================================================
+   EXACT DARK MODE STYLING FOR ENQUIRIES KPI TITLE, NUMBER & SUB
+   ========================================================================== */
+.theme-dark .adm-enq-kpi-title,
+[data-theme="dark"] .adm-enq-kpi-title {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-enq-kpi-number,
+[data-theme="dark"] .adm-enq-kpi-number {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-enq-kpi-sub,
+[data-theme="dark"] .adm-enq-kpi-sub {
+  color: #64748b !important;
+}
+
+.theme-dark .adm-enq-kpi-icon-box,
+[data-theme="dark"] .adm-enq-kpi-icon-box {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.theme-dark .adm-enq-cat-tag,
+[data-theme="dark"] .adm-enq-cat-tag {
+  background: rgba(2, 132, 199, 0.18) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(2, 132, 199, 0.3) !important;
+}

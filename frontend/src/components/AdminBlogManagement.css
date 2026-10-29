@@ -1130,3 +1130,177 @@
     height: 180px !important;
   }
 }
+
+
+/* ==========================================================================
+   EXACT DARK MODE STYLING FOR BLOG CARDS, CHIPS & CONTROLS
+   ========================================================================== */
+.theme-dark .adm-article-card-horizontal,
+.theme-dark .adm-article-card-grid,
+[data-theme="dark"] .adm-article-card-horizontal,
+[data-theme="dark"] .adm-article-card-grid {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-article-card-horizontal:hover,
+.theme-dark .adm-article-card-grid:hover,
+[data-theme="dark"] .adm-article-card-horizontal:hover,
+[data-theme="dark"] .adm-article-card-grid:hover {
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.7), 0 0 16px rgba(56, 189, 248, 0.1) !important;
+}
+
+.theme-dark .adm-article-title,
+[data-theme="dark"] .adm-article-title {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-article-title:hover,
+[data-theme="dark"] .adm-article-title:hover {
+  color: #38bdf8 !important;
+}
+
+.theme-dark .adm-article-excerpt,
+[data-theme="dark"] .adm-article-excerpt {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-article-author-name,
+[data-theme="dark"] .adm-article-author-name {
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-article-author-avatar,
+[data-theme="dark"] .adm-article-author-avatar {
+  background: #1e293b !important;
+  color: #38bdf8 !important;
+}
+
+.theme-dark .adm-article-meta-item,
+[data-theme="dark"] .adm-article-meta-item {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-article-thumb-wrap,
+[data-theme="dark"] .adm-article-thumb-wrap {
+  background: #1e293b !important;
+}
+
+.theme-dark .adm-article-thumb-fallback,
+[data-theme="dark"] .adm-article-thumb-fallback {
+  background: #1e293b !important;
+  color: #64748b !important;
+}
+
+.theme-dark .adm-article-action-btn,
+[data-theme="dark"] .adm-article-action-btn {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-article-action-btn:hover,
+[data-theme="dark"] .adm-article-action-btn:hover {
+  background: #334155 !important;
+  color: #38bdf8 !important;
+  border-color: #38bdf8 !important;
+}
+
+.theme-dark .adm-article-action-btn.delete:hover,
+[data-theme="dark"] .adm-article-action-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+  border-color: #ef4444 !important;
+}
+
+.theme-dark .adm-article-dropdown-menu,
+[data-theme="dark"] .adm-article-dropdown-menu {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+.theme-dark .adm-article-menu-item,
+[data-theme="dark"] .adm-article-menu-item {
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-article-menu-item:hover,
+[data-theme="dark"] .adm-article-menu-item:hover {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+/* Category Filter Chips in Dark Mode */
+.theme-dark .adm-category-chip,
+[data-theme="dark"] .adm-category-chip {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .adm-category-chip:hover,
+[data-theme="dark"] .adm-category-chip:hover {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.theme-dark .adm-category-chip.active,
+[data-theme="dark"] .adm-category-chip.active {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+}
+
+/* View Toggle (Grid / List) in Dark Mode */
+.theme-dark .adm-blogs-view-toggle,
+[data-theme="dark"] .adm-blogs-view-toggle {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.theme-dark .adm-blogs-view-btn,
+[data-theme="dark"] .adm-blogs-view-btn {
+  background: transparent !important;
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-blogs-view-btn.active,
+[data-theme="dark"] .adm-blogs-view-btn.active {
+  background: #1e293b !important;
+  color: #38bdf8 !important;
+}
+
+/* Article Category Badges inside Card */
+.theme-dark .adm-article-category-badge.hygiene,
+[data-theme="dark"] .adm-article-category-badge.hygiene {
+  background: rgba(139, 92, 246, 0.16) !important;
+  color: #c084fc !important;
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
+}
+
+.theme-dark .adm-article-category-badge.fire,
+[data-theme="dark"] .adm-article-category-badge.fire {
+  background: rgba(239, 68, 68, 0.16) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+.theme-dark .adm-article-category-badge.cleanroom,
+[data-theme="dark"] .adm-article-category-badge.cleanroom {
+  background: rgba(20, 184, 166, 0.16) !important;
+  color: #5eead4 !important;
+  border: 1px solid rgba(20, 184, 166, 0.3) !important;
+}
+
+.theme-dark .adm-article-category-badge.default,
+[data-theme="dark"] .adm-article-category-badge.default {
+  background: rgba(2, 132, 199, 0.16) !important;
+  color: #7dd3fc !important;
+  border: 1px solid rgba(2, 132, 199, 0.3) !important;
+}

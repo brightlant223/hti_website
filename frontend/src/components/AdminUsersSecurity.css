@@ -1487,3 +1487,42 @@
     min-width: 640px !important;
   }
 }
+
+
+/* ==========================================================================
+   EXACT DARK MODE STYLING FOR USERS & SECURITY SUMMARY TITLE, NUMBER & SUB
+   ========================================================================== */
+.theme-dark .adm-sec-summary-title,
+[data-theme="dark"] .adm-sec-summary-title {
+  color: #94a3b8 !important;
+}
+
+.theme-dark .adm-sec-summary-number,
+[data-theme="dark"] .adm-sec-summary-number {
+  color: #f8fafc !important;
+}
+
+.theme-dark .adm-sec-summary-sub,
+[data-theme="dark"] .adm-sec-summary-sub {
+  color: #64748b !important;
+}
+
+.theme-dark .adm-sec-summary-icon-box,
+[data-theme="dark"] .adm-sec-summary-icon-box {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.theme-dark .adm-sec-header-icon-box,
+[data-theme="dark"] .adm-sec-header-icon-box {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #38bdf8 !important;
+}
+
+.theme-dark .adm-sec-crypto-chip,
+[data-theme="dark"] .adm-sec-crypto-chip {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #38bdf8 !important;
+}
