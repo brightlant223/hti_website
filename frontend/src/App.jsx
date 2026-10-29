@@ -209,7 +209,7 @@ const parseUrlRoute = () => {
   }
 
   // Check dedicated product catalogue route (/catalog or /products)
-  if (path === '/catalog' || path === '/catalog/' || path === '/catalogue' || path === '/products' || path === '/products/' || hash === '#/catalog' || hash === '#catalog') {
+  if (path === '/catalog' || path === '/catalog/' || path === '/catalogue' || path === '/products' || path === '/products/' || path === '/products-services' || path === '/products-and-services' || hash === '#/catalog' || hash === '#catalog') {
     return { page: 'catalog', param: null };
   }
 

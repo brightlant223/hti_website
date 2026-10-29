@@ -47,7 +47,7 @@ import {
 } from 'lucide-react';
 import { TOTAL_PRODUCT_COUNT } from '../data/productCatalogueData';
 
-// Custom precision SVG for Traffic & Perimeter Barrier matching uploaded reference image
+// Custom precision SVG for Traffic & Perimeter Barrier matching reference aesthetic
 function TrafficBarrierIcon({ size = 22, className = '' }) {
   return (
     <svg
@@ -72,7 +72,7 @@ function TrafficBarrierIcon({ size = 22, className = '' }) {
   );
 }
 
-// Custom precision SVG for Surveillance Camera matching uploaded reference image
+// Custom precision SVG for Surveillance Camera matching reference aesthetic
 function SurveillanceCameraIcon({ size = 22, className = '' }) {
   return (
     <svg
@@ -109,17 +109,15 @@ export default function Navbar({
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openMenu, setOpenMenu] = useState(null); // 'services' | 'products' | 'company' | null
+  const [openMenu, setOpenMenu] = useState(null); // 'products-services' | 'company' | null
   const activeDropdown = openMenu;
   const setActiveDropdown = setOpenMenu;
   // Tracks whether the open panel was opened by a click. A hover-opened panel
   // must NOT be closed by the subsequent click of the same nav button.
   const [openedByClick, setOpenedByClick] = useState(false);
-  const [selectedServiceGroup, setSelectedServiceGroup] = useState(0);
-  const [selectedProductGroup, setSelectedProductGroup] = useState(0);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [mobileAccordion, setMobileAccordion] = useState(null);
-  const [mobileServiceGroup, setMobileServiceGroup] = useState(null);
-  const [mobileProductGroup, setMobileProductGroup] = useState(null);
+  const [mobileCategoryGroup, setMobileCategoryGroup] = useState(null);
   const [dropdownPos, setDropdownPos] = useState({ left: 160, caretX: 180 });
 
   const navRef = useRef(null);
@@ -127,17 +125,16 @@ export default function Navbar({
   const mobileToggleRef = useRef(null);
   const mobileDrawerRef = useRef(null);
   const navBarRef = useRef(null);
-  const servicesTriggerRef = useRef(null);
-  const productsTriggerRef = useRef(null);
+  const productsServicesTriggerRef = useRef(null);
   const companyTriggerRef = useRef(null);
   const justClosedByEscRef = useRef(false);
 
   // Dynamically position dropdown panel and its pointer caret aligned with active trigger button
   useEffect(() => {
-    if (!activeDropdown || (activeDropdown !== 'services' && activeDropdown !== 'products')) return;
+    if (!activeDropdown || activeDropdown !== 'products-services') return;
 
     const updatePosition = () => {
-      const triggerEl = activeDropdown === 'services' ? servicesTriggerRef.current : productsTriggerRef.current;
+      const triggerEl = productsServicesTriggerRef.current;
       const navEl = navBarRef.current;
       if (!triggerEl || !navEl) return;
 
@@ -145,9 +142,8 @@ export default function Navbar({
       const navRect = navEl.getBoundingClientRect();
       const triggerCenterX = triggerRect.left + triggerRect.width / 2;
 
-      const panelWidth = Math.min(800, window.innerWidth - 32);
-      // In reference screenshot, the dropdown starts roughly under the HTI logo's right half, so triggerCenter is ~175px from panel left
-      let left = triggerCenterX - 175;
+      const panelWidth = Math.min(880, window.innerWidth - 32);
+      let left = triggerCenterX - 180;
       if (left < 16) left = 16;
       if (left + panelWidth > window.innerWidth - 16) {
         left = window.innerWidth - panelWidth - 16;
@@ -195,6 +191,10 @@ export default function Navbar({
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
     }
+    if (name === 'products-services') {
+      // Default to Pharma Cleanroom (index 0) if not set
+      setSelectedCategoryIndex((prev) => (prev >= 0 && prev < 5 ? prev : 0));
+    }
     setActiveDropdown((prev) => {
       if (prev !== name) setOpenedByClick(false);
       return name;
@@ -217,6 +217,9 @@ export default function Navbar({
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
     }
+    if (name === 'products-services') {
+      setSelectedCategoryIndex((prev) => (prev >= 0 && prev < 5 ? prev : 0));
+    }
     setActiveDropdown(name);
     setOpenedByClick(false);
   };
@@ -236,7 +239,6 @@ export default function Navbar({
     setMobileMenuOpen(false);
   }, [currentPage]);
 
-  // STEP 2: ONE SHARED EFFECT for openMenu !== null
   // DESKTOP (>1024px): close on scroll > 10px from where menu opened, click outside, focus outside
   useEffect(() => {
     if (!openMenu) return;
@@ -293,10 +295,8 @@ export default function Navbar({
           justClosedByEscRef.current = true;
           setOpenMenu(null);
           setOpenedByClick(false);
-          if (menuToClose === 'services' && servicesTriggerRef.current) {
-            servicesTriggerRef.current.focus();
-          } else if (menuToClose === 'products' && productsTriggerRef.current) {
-            productsTriggerRef.current.focus();
+          if (menuToClose === 'products-services' && productsServicesTriggerRef.current) {
+            productsServicesTriggerRef.current.focus();
           } else if (menuToClose === 'company' && companyTriggerRef.current) {
             companyTriggerRef.current.focus();
           }
@@ -361,14 +361,16 @@ export default function Navbar({
     }
   }, [mobileMenuOpen]);
 
-  // Which top-level section the current route belongs to. App.jsx already
-  // passes `currentPage`, but it was never used, so the navigation never
-  // showed where the visitor currently is.
+  // Which top-level section the current route belongs to
   const activeSection = (() => {
     const p = (currentPage || '').toLowerCase();
-    if (['automation', 'security-systems', 'cleanroom-interlocks',
-      'perimeter-defense', 'fire-protection', 'hygiene'].includes(p)) return 'services';
-    if (['catalog', 'product'].includes(p)) return 'products';
+    if ([
+      'automation', 'access-automation', 'security-systems', 'cleanroom-interlocks',
+      'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring',
+      'catalog', 'product',
+      'touchless-entry', 'perimeter-gate', 'trackless-gate', 'rapid-airlock',
+      'logistics-bridge', 'heavy-security'
+    ].includes(p)) return 'products-services';
     if (['about', 'clients', 'partners', 'blogs', 'careers', 'contact'].includes(p)) return 'company';
     return null;
   })();
@@ -393,18 +395,17 @@ export default function Navbar({
     }
   };
 
-  const handleCategoryClick = (categoryName) => {
+  const handleCategoryNavigation = (pageKey) => {
     setActiveDropdown(null);
     setOpenedByClick(false);
     setMobileMenuOpen(false);
-    if (onSelectCategory) {
-      onSelectCategory(categoryName);
-    } else {
-      handleNavClick('home', 'catalog');
+    if (!pageKey) return;
+    if (onNavigate) {
+      onNavigate(pageKey);
     }
   };
 
-  // Keyboard activation for elements rendered as `role="button"`
+  // Keyboard activation for elements rendered as `role="button"` or `role="tab"`
   const handleKeyActivate = (e, callback) => {
     if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
       e.preventDefault();
@@ -412,47 +413,34 @@ export default function Navbar({
     }
   };
 
-  const handleServiceClick = (slug) => {
+  const handleSubProductClick = (item) => {
     setActiveDropdown(null);
     setOpenedByClick(false);
     setMobileMenuOpen(false);
-    if (!slug) return;
-    if (slug === 'touchless-entry' || slug === 'touchless-entry-solutions') {
-      if (onNavigate) onNavigate('touchless-entry');
-      return;
-    }
-    if (slug === 'perimeter-gate') {
-      if (onNavigate) onNavigate('perimeter-gate');
-      return;
-    }
-    if (slug === 'trackless-gate') {
-      if (onNavigate) onNavigate('trackless-gate');
-      return;
-    }
-    if (slug === 'rapid-airlock') {
-      if (onNavigate) onNavigate('rapid-airlock');
-      return;
-    }
-    if (slug === 'logistics-bridge') {
-      if (onNavigate) onNavigate('logistics-bridge');
-      return;
-    }
-    if (slug === 'heavy-security') {
-      if (onNavigate) onNavigate('heavy-security');
-      return;
-    }
-    if (onNavigate) {
-      onNavigate(slug);
-    }
-  };
+    if (!item || !item.slug) return;
 
-  const handleProductClick = (slug) => {
-    setActiveDropdown(null);
-    setOpenedByClick(false);
-    setMobileMenuOpen(false);
-    if (!slug) return;
+    // Dedicated special pages check
+    const dedicatedSpecialPages = [
+      'touchless-entry',
+      'perimeter-gate',
+      'trackless-gate',
+      'rapid-airlock',
+      'logistics-bridge',
+      'heavy-security'
+    ];
+
+    if (dedicatedSpecialPages.includes(item.slug)) {
+      if (onNavigate) onNavigate(item.slug);
+      return;
+    }
+
+    if (item.routeType === 'service') {
+      if (onNavigate) onNavigate(item.slug);
+      return;
+    }
+
     if (onNavigate) {
-      onNavigate('product', slug);
+      onNavigate('product', item.slug);
     }
   };
 
@@ -460,8 +448,9 @@ export default function Navbar({
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
     }
-    // Clicking the button of an already-hover-opened panel must keep it open
-    // (the user is trying to reach the panel, not dismiss it).
+    if (name === 'products-services') {
+      setSelectedCategoryIndex((prev) => (prev >= 0 && prev < 5 ? prev : 0));
+    }
     if (activeDropdown === name && openedByClick) {
       setActiveDropdown(null);
       setOpenedByClick(false);
@@ -471,111 +460,187 @@ export default function Navbar({
     }
   };
 
-  // 6 Services categories matching reference design exactly
-  const serviceGroups = [
+  // =========================================================================
+  // EXACT FIVE MAIN CATEGORIES IN REQUESTED ORDER WITH ALL EXISTING SUB-PRODUCTS
+  // 1. Pharma Cleanroom
+  // 2. Fire and Life Safety
+  // 3. Access Automation
+  // 4. Traffic & Perimeter
+  // 5. Surveillance & Alerts
+  // =========================================================================
+  const productsServicesCategories = [
     {
-      id: 'automation',
-      title: 'Industrial Access Automation',
-      icon: Settings,
-      page: 'automation',
-      subservices: [
-        { title: 'Automatic Sliding Doors', slug: 'touchless-entry' },
-        { title: 'Automatic Swing Doors', slug: 'touchless-entry' },
-        { title: 'High Speed Doors', slug: 'rapid-airlock' },
-        { title: 'Roll Up Doors', slug: 'heavy-security' },
-        { title: 'Dock Levellers', slug: 'logistics-bridge' },
-        { title: 'Turnstiles & Entrance Solutions', slug: 'perimeter-gate' },
-        { title: 'Access Control Systems', slug: 'biometric-access-control' }
-      ]
-    },
-    {
-      id: 'perimeter',
-      title: 'Traffic & Perimeter',
-      icon: TrafficBarrierIcon,
-      page: 'perimeter-defense',
-      subservices: [
-        { title: 'Boom Barriers', slug: 'boom-barriers' },
-        { title: 'Optical Turnstiles', slug: 'turnstiles-flap-barriers-speed-gates' },
-        { title: 'Tyre Killers & Bollards', slug: 'crash-bollards-tyre-killers' },
-        { title: 'Car Lift Systems', slug: 'car-lift-systems' },
-        { title: 'Parking Management', slug: 'parking-management-systems' },
-        { title: 'Visitor Management', slug: 'visitor-management-system' }
-      ]
-    },
-    {
-      id: 'interlocks',
+      id: 'pharma-cleanroom',
       title: 'Pharma Cleanroom',
       icon: FlaskConical,
       page: 'cleanroom-interlocks',
-      subservices: [
-        { title: 'Door Interlock (2-8 Door)', slug: 'door-interlock-system' },
-        { title: 'Pass Box Systems', slug: 'pass-box-systems' },
-        { title: 'Digital Clocks', slug: 'digital-clocks' },
-        { title: 'Chiller & Cleanroom Doors', slug: 'chiller-cleanroom-doors' },
-        { title: 'Acoustic Sound Doors', slug: 'acoustic-sound-doors' },
-        { title: 'Safety Override Buzzers', slug: 'safety-override-buzzers' }
+      tagline: 'USFDA 21 CFR Part 11 compliant sterile airlock logic & cleanroom doors',
+      items: [
+        {
+          title: 'Door Interlock System (2-8 Door)',
+          slug: 'door-interlock-systems',
+          routeType: 'product',
+          desc: 'USFDA 21 CFR Part 11 compliant 2–8 door airlock logic',
+          image: '/products/cleanroom-interlocks.jpg'
+        },
+        {
+          title: 'Dynamic & Static Pass Boxes',
+          slug: 'pass-box-systems',
+          routeType: 'product',
+          desc: 'Contamination-free material transfer with UV-C sterilization',
+          image: '/products/pass-box-system.jpg'
+        },
+        {
+          title: 'Digital Master GPS Slave Clocks',
+          slug: 'digital-gps-clocks',
+          routeType: 'product',
+          desc: 'GPS master-slave pharma batch time synchronization',
+          image: '/products/digital-clock-hero.jpg'
+        },
+        {
+          title: 'Cold Storage & Chiller Doors',
+          slug: 'chiller-clean-room-doors',
+          routeType: 'product',
+          desc: 'Hermetically sealed insulated doors for cold rooms',
+          image: '/products/chiller-door-hero.jpg'
+        },
+        {
+          title: 'Hermetically Sealed Cleanroom Doors',
+          slug: 'hermetic-cleanroom-doors',
+          routeType: 'product',
+          desc: 'Flush doors maintaining differential pressure cascades',
+          image: '/products/cleanroom-door-pharma.jpg'
+        },
+        {
+          title: 'Acoustic Sound Doors',
+          slug: 'acoustic-sound-doors',
+          routeType: 'service',
+          desc: 'Certified noise transmission loss up to 52 dB',
+          image: '/services/service-acoustic-sound-doors.jpg'
+        },
+        {
+          title: 'Safety Override Buzzers',
+          slug: 'safety-override-buzzers',
+          routeType: 'service',
+          desc: 'Instant lock release & high-visibility alerts on fire trip',
+          image: '/services/service-safety-override-buzzers.jpg'
+        }
       ]
     },
     {
-      id: 'fire',
-      title: 'Fire & Life Safety',
+      id: 'fire-life-safety',
+      title: 'Fire and Life Safety',
       icon: Flame,
       page: 'fire-protection',
-      subservices: [
-        { title: 'Addressable Fire Alarms', slug: 'addressable-fire-alarms' },
-        { title: 'Hydrant & Sprinkler Arrays', slug: 'hydrant-sprinkler-arrays' },
-        { title: 'Fire Rated Doors & Shutters', slug: 'fire-rated-doors-shutters' },
-        { title: 'Public Address (PA)', slug: 'public-address-system' },
-        { title: 'Gas Leak Detection', slug: 'gas-leak-detection' },
-        { title: 'Emergency Auto Trip', slug: 'emergency-auto-trip' }
+      tagline: 'Multi-loop addressable fire alarms, turnkey sprinkler networks & certified fire doors',
+      items: [
+        {
+          title: 'Addressable Fire Alarm Systems',
+          slug: 'addressable-fire-alarms',
+          routeType: 'service',
+          desc: 'Multi-loop addressable smoke & thermal sensor networks',
+          image: '/products/fire-alarm-system.jpg'
+        },
+        {
+          title: 'Industrial Fire Hydrant & Sprinklers',
+          slug: 'hydrant-sprinkler-arrays',
+          routeType: 'service',
+          desc: 'High-pressure hydrant valves, sprinkler grids & pump skids',
+          image: '/case-studies/case-fire-hydrant.jpg'
+        },
+        {
+          title: 'Fire Rated Steel Doors & Shutters',
+          slug: 'fire-rated-doors-shutters',
+          routeType: 'service',
+          desc: 'Certified 120/240 minute fire containment barriers',
+          image: '/products/fire-rated-steel-doors.jpg'
+        },
+        {
+          title: 'Public Address & Voice Evacuation',
+          slug: 'public-address-system',
+          routeType: 'service',
+          desc: 'EN 54-16 zoned audio broadcast & emergency paging',
+          image: '/products/public-address-evac.jpg'
+        },
+        {
+          title: 'Gas Leak Detection Systems',
+          slug: 'gas-leak-detection',
+          routeType: 'service',
+          desc: 'Flameproof transmitters for toxic, combustible & VOC gases',
+          image: '/services/service-gas-leak-detector.jpg'
+        },
+        {
+          title: 'Clean Agent Gas Suppression',
+          slug: 'clean-agent-gas-suppression',
+          routeType: 'service',
+          desc: 'Total flooding clean agent protection for server rooms',
+          image: '/services/service-gas-leak-detector.jpg'
+        },
+        {
+          title: 'Emergency Auto Trip & Interlocks',
+          slug: 'emergency-auto-trip',
+          routeType: 'service',
+          desc: 'Fail-safe relay integration releasing doors on fire trip',
+          image: '/services/service-emergency-trip.jpg'
+        }
       ]
     },
-    {
-      id: 'security',
-      title: 'Surveillance & Alerts',
-      icon: SurveillanceCameraIcon,
-      page: 'security-systems',
-      subservices: [
-        { title: '4K AI CCTV Systems', slug: 'cctv-surveillance-systems' },
-        { title: 'Biometric Access', slug: 'biometric-access-control' },
-        { title: 'Video Door Phones', slug: 'video-door-phones' },
-        { title: 'Central VMS Command', slug: 'central-vms-command' },
-        { title: 'Thermal & Perimeter Beams', slug: 'thermal-perimeter-beams' },
-        { title: 'Intrusion Detection Alarms', slug: 'intrusion-detection-alarms' }
-      ]
-    },
-    {
-      id: 'monitoring',
-      title: 'Server Room & Monitoring',
-      icon: Server,
-      page: 'server-room-monitoring',
-      subservices: [
-        { title: 'Server Room EMS', slug: 'server-room-environment-monitoring' },
-        { title: 'Underfloor Water Leak Detection', slug: 'water-leak-detection-systems' },
-        { title: 'Hazardous Gas Arrays', slug: 'hazardous-gas-detection-arrays' },
-        { title: 'Microprocessor Annunciators', slug: 'alarm-annunciators' },
-        { title: 'Differential Pressure Monitors', slug: 'differential-pressure-monitors' },
-        { title: 'Ultrasonic Rodent Repellent', slug: 'rodent-repellent-systems' }
-      ]
-    }
-  ];
-
-  const currentGroup = serviceGroups[selectedServiceGroup] || serviceGroups[0];
-
-  // 5 Specialized Engineering Product Divisions (Matching Reference Architecture)
-  const productGroups = [
     {
       id: 'access-automation',
       title: 'Access Automation',
-      icon: Settings,
+      icon: Cpu,
       page: 'automation',
-      categoryId: 'access-automation',
-      products: [
-        { title: 'Automatic Sliding & Swing Doors', slug: 'automatic-sliding-swing-doors' },
-        { title: 'Automatic Sliding & Swing Gates', slug: 'automatic-sliding-swing-gates' },
-        { title: 'Telescopic & Cantilever Gates', slug: 'telescopic-cantilever-gates' },
-        { title: 'Motorized Rolling Shutters', slug: 'motorized-industrial-rolling-shutters' },
-        { title: 'PVC High Speed Roll Up Doors', slug: 'high-speed-roll-up-doors' }
+      tagline: 'Touchless pedestrian entry, motorized security gates & high-speed barriers',
+      items: [
+        {
+          title: 'Automatic Sliding & Swing Doors',
+          slug: 'automatic-sliding-swing-doors',
+          routeType: 'product',
+          desc: 'Touchless microwave radar entry for commercial lobbies',
+          image: '/products/automatic-doors.jpg'
+        },
+        {
+          title: 'Automatic Sliding & Swing Gates',
+          slug: 'automatic-sliding-swing-gates',
+          routeType: 'product',
+          desc: 'Rugged motorized perimeter security entrance gates',
+          image: '/services/services-perimeter-gate.jpg'
+        },
+        {
+          title: 'Telescopic & Cantilever Gates',
+          slug: 'telescopic-cantilever-gates',
+          routeType: 'product',
+          desc: 'Trackless and space-saving gates for wide openings',
+          image: '/services/services-trackless-gate.jpg'
+        },
+        {
+          title: 'PVC High Speed Roll Up Doors',
+          slug: 'high-speed-roll-up-doors',
+          routeType: 'product',
+          desc: 'Fast-action flexible curtains preserving conditioned air',
+          image: '/products/rapid-doors.jpg'
+        },
+        {
+          title: 'Motorized Industrial Rolling Shutters',
+          slug: 'motorized-industrial-rolling-shutters',
+          routeType: 'product',
+          desc: 'Heavy-gauge galvanized steel security bay protection',
+          image: '/services/services-heavy-security.jpg'
+        },
+        {
+          title: 'Sectional Overhead Doors',
+          slug: 'sectional-overhead-doors',
+          routeType: 'product',
+          desc: 'Double-walled insulated panels maximizing dock space',
+          image: '/services/service-sectional-doors.jpg'
+        },
+        {
+          title: 'Dock Levellers & Shelters',
+          slug: 'dock-levellers-dock-shelters',
+          routeType: 'product',
+          desc: 'Electro-hydraulic loading bridges for logistics warehouses',
+          image: '/services/services-logistics-bridge.jpg'
+        }
       ]
     },
     {
@@ -583,41 +648,50 @@ export default function Navbar({
       title: 'Traffic & Perimeter',
       icon: TrafficBarrierIcon,
       page: 'perimeter-defense',
-      categoryId: 'traffic-perimeter',
-      products: [
-        { title: 'Electro-Hydraulic Boom Barriers', slug: 'boom-barriers' },
-        { title: 'Hydraulic Dock Levellers & Shelters', slug: 'dock-levellers-dock-shelters' },
-        { title: 'Optical Speed Flap Turnstiles', slug: 'optical-flap-turnstiles' },
-        { title: 'Anti-Ram Hydraulic Crash Bollards', slug: 'hydraulic-crash-bollards' },
-        { title: 'Tyre Killers & Road Blockers', slug: 'tyre-killers-road-blockers' }
-      ]
-    },
-    {
-      id: 'pharma-cleanroom',
-      title: 'Pharma Cleanroom',
-      icon: FlaskConical,
-      page: 'cleanroom-interlocks',
-      categoryId: 'pharma-cleanroom',
-      products: [
-        { title: 'Door Interlock System (2-8 Door)', slug: 'door-interlock-systems' },
-        { title: 'Dynamic & Static Pass Boxes', slug: 'dynamic-static-pass-boxes' },
-        { title: 'Digital Master GPS Slave Clocks', slug: 'digital-gps-clocks' },
-        { title: 'Cold Storage & Chiller Doors', slug: 'chiller-clean-room-doors' },
-        { title: 'Hermetically Sealed Cleanroom Doors', slug: 'hermetic-cleanroom-doors' }
-      ]
-    },
-    {
-      id: 'fire-life-safety',
-      title: 'Fire & Life Safety',
-      icon: Flame,
-      page: 'fire-protection',
-      categoryId: 'fire-life-safety',
-      products: [
-        { title: 'Addressable Fire Alarm Systems', slug: 'addressable-fire-alarm-system' },
-        { title: 'Industrial Fire Hydrant & Sprinklers', slug: 'fire-hydrant-sprinkler-systems' },
-        { title: 'Fire Rated Steel Doors (120/240 Min)', slug: 'fire-rated-steel-doors' },
-        { title: 'Clean Agent Gas Suppression', slug: 'gas-suppression-systems' },
-        { title: 'Public Address & Voice Evacuation', slug: 'public-address-system' }
+      tagline: 'Electro-hydraulic boom barriers, optical turnstiles & anti-ram bollards',
+      items: [
+        {
+          title: 'Electro-Hydraulic Boom Barriers',
+          slug: 'boom-barriers',
+          routeType: 'product',
+          desc: 'High-frequency corporate parking & toll plaza barriers',
+          image: '/products/boom-barriers.jpg'
+        },
+        {
+          title: 'Optical Speed Flap Turnstiles',
+          slug: 'optical-flap-turnstiles',
+          routeType: 'product',
+          desc: 'High-throughput pedestrian speed gates with biometric sync',
+          image: '/hero-glass-atrium.jpg'
+        },
+        {
+          title: 'Anti-Ram Crash Bollards & Tyre Killers',
+          slug: 'hydraulic-crash-bollards',
+          routeType: 'product',
+          desc: 'K4/K8/K12 rising hydraulic bollards & tyre spike barriers',
+          image: '/services/service-bollards-blockers.jpg'
+        },
+        {
+          title: 'Hydraulic Car Lift Systems',
+          slug: 'car-lift-systems',
+          routeType: 'service',
+          desc: 'Heavy hydraulic multi-tier scissor vehicle elevators',
+          image: '/services/service-car-lift-systems.jpg'
+        },
+        {
+          title: 'Parking Management Systems',
+          slug: 'parking-management-systems',
+          routeType: 'service',
+          desc: 'Automated FASTag guidance, ticket billing & bay sensors',
+          image: '/services/service-parking-management.jpg'
+        },
+        {
+          title: 'Visitor Management Systems',
+          slug: 'visitor-management-system',
+          routeType: 'service',
+          desc: 'Digital touchless visitor screening & thermal QR badge print',
+          image: '/services/service-visitor-management.jpg'
+        }
       ]
     },
     {
@@ -625,18 +699,76 @@ export default function Navbar({
       title: 'Surveillance & Alerts',
       icon: SurveillanceCameraIcon,
       page: 'security-systems',
-      categoryId: 'surveillance-alerts',
-      products: [
-        { title: 'CCTV Surveillance (Analogue & IP 4K)', slug: 'cctv-surveillance-system' },
-        { title: 'Biometric Attendance & Access Terminals', slug: 'biometric-access-attendance' },
-        { title: 'Server Room Environment Telemetry', slug: 'server-room-monitoring' },
-        { title: 'Microprocessor Alarm Annunciators', slug: 'alarm-annunciators' },
-        { title: 'Wireless Intrusion Detection Systems', slug: 'wireless-intrusion-detection' }
+      tagline: '4K AI IP surveillance, biometric face access & server room telemetry',
+      items: [
+        {
+          title: 'CCTV Surveillance (Analogue & IP 4K)',
+          slug: 'cctv-surveillance-system',
+          routeType: 'product',
+          desc: 'Ultra-HD AI analytics, Starlight color optics & PTZ domes',
+          image: '/products/cctv-ip-4k-surveillance.jpg'
+        },
+        {
+          title: 'Biometric Attendance & Access Terminals',
+          slug: 'biometric-access-attendance',
+          routeType: 'product',
+          desc: 'Contactless face verification, optical fingerprint & RFID',
+          image: '/cctv-featured-biometric.jpg'
+        },
+        {
+          title: 'IP Video Door Phones & Intercom',
+          slug: 'video-door-phones',
+          routeType: 'service',
+          desc: 'Full HD door stations with capacitive color touchscreens',
+          image: '/services/service-video-door-phones.jpg'
+        },
+        {
+          title: 'Central VMS Command & Video Walls',
+          slug: 'central-vms-command',
+          routeType: 'service',
+          desc: 'Enterprise VMS command with multi-site wall decoders',
+          image: '/hero-security-command-center.jpg'
+        },
+        {
+          title: 'Server Room Environment Telemetry',
+          slug: 'server-room-monitoring',
+          routeType: 'product',
+          desc: '24/7 tracking of rack temperatures, humidity & power health',
+          image: '/products/server-room-telemetry.jpg'
+        },
+        {
+          title: 'Microprocessor Alarm Annunciators',
+          slug: 'alarm-annunciators',
+          routeType: 'product',
+          desc: 'ISA-18.1 LED window annunciators for industrial machinery',
+          image: '/products/alarm-annunciators-panel.jpg'
+        },
+        {
+          title: 'Thermal Imaging & Perimeter Beams',
+          slug: 'thermal-perimeter-beams',
+          routeType: 'service',
+          desc: 'Active infrared multi-beam perimeter fence sensors',
+          image: '/cctv-featured-barrier.jpg'
+        },
+        {
+          title: 'Wireless Intrusion Detection Systems',
+          slug: 'wireless-intrusion-detection',
+          routeType: 'product',
+          desc: 'Multi-zone burglar alarm panels & outdoor deterrent sirens',
+          image: '/products/wireless-intrusion-detection.jpg'
+        },
+        {
+          title: 'Underfloor Water Leak Detection',
+          slug: 'water-leak-detection-systems',
+          routeType: 'service',
+          desc: 'Conductive sensor ropes with meter-accurate location',
+          image: '/services/service-water-leak-detection.jpg'
+        }
       ]
     }
   ];
 
-  const currentProductGroup = productGroups[selectedProductGroup] || productGroups[0];
+  const currentCategory = productsServicesCategories[selectedCategoryIndex] || productsServicesCategories[0];
 
   const handleDownloadBrochure = (e) => {
     e.preventDefault();
@@ -682,7 +814,7 @@ export default function Navbar({
       <nav className={`bright-main-nav ${isScrolled ? 'nav-scrolled' : ''}`} aria-label="Main navigation" ref={navBarRef}>
         {/* Full-bleed veil behind an open mega panel so page content never
             peeks out from behind it. Sits below the nav bar (z-index 10001). */}
-        {(activeDropdown === 'services' || activeDropdown === 'products') && (
+        {activeDropdown === 'products-services' && (
           <div
             className="mega-panel-veil"
             onClick={() => { setActiveDropdown(null); setOpenedByClick(false); }}
@@ -691,7 +823,7 @@ export default function Navbar({
         )}
 
         <div className="bright-container main-nav-inner">
-          {/* Logo Section with User's Uploaded HTI Logo */}
+          {/* Logo Section with HTI Brand Identity */}
           <a
             href="/"
             className="bright-brand"
@@ -715,7 +847,7 @@ export default function Navbar({
                 <span className="brand-word-bold">AUTOMATION</span>
               </div>
               <div className="bright-brand-sub">
-                <span>& SECURITY SYSTEMS</span>
+                <span>&amp; SECURITY SYSTEMS</span>
                 <span className="brand-badge-pill">PVT. LTD.</span>
               </div>
             </div>
@@ -723,47 +855,27 @@ export default function Navbar({
 
           {/* Desktop Nav Items */}
           <div className="bright-nav-links desktop-only">
-            {/* Services Pill / Dropdown */}
+            {/* Unified Products & Services Mega Menu Trigger */}
             <div
               className="nav-item-dropdown"
-              onMouseEnter={() => handleMouseEnterDropdown('services')}
+              onMouseEnter={() => handleMouseEnterDropdown('products-services')}
               onMouseLeave={handleMouseLeaveDropdown}
-              onFocus={() => handleFocusDropdown('services')}
+              onFocus={() => handleFocusDropdown('products-services')}
             >
               <button
-                ref={servicesTriggerRef}
-                className={`bright-nav-btn ${activeDropdown === 'services' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'services' && activeDropdown !== 'products' && activeDropdown !== 'company' ? 'is-active-section' : ''}`}
-                onClick={() => toggleDropdown('services')}
-                aria-expanded={activeDropdown === 'services'}
+                ref={productsServicesTriggerRef}
+                className={`bright-nav-btn ${activeDropdown === 'products-services' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'products-services' && activeDropdown !== 'company' ? 'is-active-section' : ''}`}
+                onClick={() => toggleDropdown('products-services')}
+                aria-expanded={activeDropdown === 'products-services'}
                 aria-haspopup="true"
-                aria-current={activeSection === 'services' ? 'page' : undefined}
+                aria-current={activeSection === 'products-services' ? 'page' : undefined}
               >
-                <span>Services</span>
-                <ChevronDown size={15} className={activeDropdown === 'services' ? 'pill-chevron' : 'dropdown-arrow'} />
+                <span>Products &amp; Services</span>
+                <ChevronDown size={15} className={activeDropdown === 'products-services' ? 'pill-chevron' : 'dropdown-arrow'} />
               </button>
             </div>
 
-            {/* Products Dropdown */}
-            <div
-              className="nav-item-dropdown"
-              onMouseEnter={() => handleMouseEnterDropdown('products')}
-              onMouseLeave={handleMouseLeaveDropdown}
-              onFocus={() => handleFocusDropdown('products')}
-            >
-              <button
-                ref={productsTriggerRef}
-                className={`bright-nav-btn ${activeDropdown === 'products' ? 'services-pill-btn is-active-pill' : ''} ${activeSection === 'products' && activeDropdown !== 'services' && activeDropdown !== 'company' ? 'is-active-section' : ''}`}
-                onClick={() => toggleDropdown('products')}
-                aria-expanded={activeDropdown === 'products'}
-                aria-haspopup="true"
-                aria-current={activeSection === 'products' ? 'page' : undefined}
-              >
-                <span>Products</span>
-                <ChevronDown size={15} className={activeDropdown === 'products' ? 'pill-chevron' : 'dropdown-arrow'} />
-              </button>
-            </div>
-
-            {/* Company Dropdown (Horizontal - exactly like Brightlant screenshot) */}
+            {/* Company Dropdown (Horizontal - exactly like Brightlant design) */}
             <div
               className="nav-item-dropdown"
               onMouseEnter={() => handleMouseEnterDropdown('company')}
@@ -802,7 +914,7 @@ export default function Navbar({
             <button
               className="bright-nav-quote-btn"
               onClick={() => handleNavClick('contact')}
-              title="Request a Technical Proposal & Quote"
+              title="Request a Technical Proposal &amp; Quote"
               type="button"
               id="nav-get-a-quote-btn"
             >
@@ -810,12 +922,12 @@ export default function Navbar({
               <ArrowRight size={14} className="nav-quote-arrow-icon" />
             </button>
 
-            {/* Search Icon Button matching Reference Image */}
+            {/* Search Icon Button */}
             <button
               className="bright-nav-search-btn"
               onClick={() => handleNavClick('catalog', 'all')}
-              title="Search Products & Systems"
-              aria-label="Search Products & Systems"
+              title="Search Products &amp; Systems"
+              aria-label="Search Products &amp; Systems"
               type="button"
             >
               <Search size={19} />
@@ -840,14 +952,14 @@ export default function Navbar({
             <button
               className={`bright-admin-icon-btn ${isAdminOpen ? 'admin-active' : ''}`}
               onClick={onOpenAdmin}
-              title="Open Admin Portal (CMS & Inquiries)"
+              title="Open Admin Portal (CMS &amp; Inquiries)"
               aria-label="Admin Portal"
             >
               <User size={18} />
             </button>
           </div>
 
-          {/* Mobile Actions: Theme Toggle Pill + Circular Menu/Close Toggle (Brightlant Style) */}
+          {/* Mobile Actions: Theme Toggle Pill + Circular Menu/Close Toggle */}
           <div className="bright-mobile-actions mobile-only">
             <button
               type="button"
@@ -876,217 +988,110 @@ export default function Navbar({
               ref={mobileToggleRef}
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-
             </button>
           </div>
         </div>
 
         {/* =========================================================================
-            TWO-COLUMN DROPDOWNS (Exact Match to Uploaded Reference Image)
+            PRODUCTS & SERVICES MEGA MENU (Exact 5 Categories with Right Sub-Products)
             ========================================================================= */}
-
-        {/* 1. SERVICES DROPDOWN (Reference-Matched Design) */}
-        {activeDropdown === 'services' && (
+        {activeDropdown === 'products-services' && (
           <div
             className="hti-dropdown-wrapper"
             style={{ left: `${dropdownPos.left}px` }}
-            onMouseEnter={() => handleMouseEnterDropdown('services')}
+            onMouseEnter={() => handleMouseEnterDropdown('products-services')}
             onMouseLeave={handleMouseLeaveDropdown}
           >
-            {/* Pointer triangle caret pointing to the Services button */}
+            {/* Pointer triangle caret pointing to the Products & Services button */}
             <div className="hti-dropdown-caret" style={{ left: `${dropdownPos.caretX}px` }} />
 
             <div className="hti-dropdown-panel">
-              {/* LEFT COLUMN: EXPLORE SERVICES */}
+              {/* LEFT COLUMN: 5 MAIN CATEGORIES IN EXACT ORDER */}
               <div className="hti-dropdown-left-col">
                 <div className="hti-dropdown-col-header">
-                  <span className="hti-dropdown-col-title">EXPLORE SERVICES</span>
+                  <span className="hti-dropdown-col-title">MAIN CATEGORIES</span>
                   <div className="hti-dropdown-blue-line" />
                 </div>
 
-                <div className="hti-category-list">
-                  {serviceGroups.map((group, index) => {
+                <div className="hti-category-list" role="tablist" aria-label="Product and Service Categories">
+                  {productsServicesCategories.map((group, index) => {
                     const Icon = group.icon;
-                    const isSelected = selectedServiceGroup === index;
+                    const isSelected = selectedCategoryIndex === index;
                     return (
                       <div
                         key={group.id}
                         className={`hti-category-row ${isSelected ? 'is-active' : ''}`}
-                        onMouseEnter={() => setSelectedServiceGroup(index)}
-                        onClick={() => {
-                          if (group.page) {
-                            handleNavClick(group.page);
-                          } else if (group.section) {
-                            handleNavClick('home', group.section);
-                          } else if (group.category) {
-                            handleCategoryClick(group.category);
-                          }
-                        }}
-                        onKeyDown={(e) => handleKeyActivate(e, () => {
-                          if (group.page) {
-                            handleNavClick(group.page);
-                          } else if (group.section) {
-                            handleNavClick('home', group.section);
-                          } else if (group.category) {
-                            handleCategoryClick(group.category);
-                          }
-                        })}
-                        role="button"
+                        onMouseEnter={() => setSelectedCategoryIndex(index)}
+                        onClick={() => handleCategoryNavigation(group.page)}
+                        onKeyDown={(e) => handleKeyActivate(e, () => handleCategoryNavigation(group.page))}
+                        role="tab"
+                        aria-selected={isSelected}
                         tabIndex={0}
                         aria-label={group.title}
                       >
                         <div className="hti-category-row-left">
                           <div className="hti-category-icon-wrap">
-                            <Icon size={22} className="hti-category-icon" />
+                            <Icon size={20} className="hti-category-icon" />
                           </div>
                           <span className="hti-category-name">{group.title}</span>
                         </div>
-                        <ChevronRight size={17} className="hti-category-chevron" />
+                        <ChevronRight size={16} className="hti-category-chevron" />
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              {/* RIGHT COLUMN: CATEGORY SUBSERVICES */}
-              <div className="hti-dropdown-right-col">
-                <div className="hti-dropdown-col-header">
-                  <span className="hti-dropdown-col-title">{currentGroup.title.toUpperCase()}</span>
-                  <div className="hti-dropdown-blue-line" />
+              {/* RIGHT COLUMN: DYNAMIC EXISTING SUB-PRODUCTS */}
+              <div className="hti-dropdown-right-col" role="tabpanel" aria-label={`${currentCategory.title} sub-products`}>
+                <div className="hti-dropdown-header-row">
+                  <div className="hti-dropdown-col-header" style={{ marginBottom: 0 }}>
+                    <span className="hti-dropdown-col-title">{currentCategory.title.toUpperCase()}</span>
+                    <div className="hti-dropdown-blue-line" />
+                  </div>
+
+                  <button
+                    type="button"
+                    className="hti-explore-category-link"
+                    onClick={() => handleCategoryNavigation(currentCategory.page)}
+                    title={`View dedicated ${currentCategory.title} page`}
+                  >
+                    <span>View Division Overview</span>
+                    <ArrowRight size={13} />
+                  </button>
                 </div>
 
-                <div className="hti-subservices-list">
-                  {currentGroup.subservices.map((sub, sIdx) => (
+                <div className="hti-subproducts-grid">
+                  {currentCategory.items.map((item, pIdx) => (
                     <div
-                      key={sIdx}
-                      className="hti-subservice-row"
-                      onClick={() => {
-                        if (sub.slug) {
-                          handleServiceClick(sub.slug);
-                        } else if (sub.page) {
-                          handleNavClick(sub.page);
-                        } else if (currentGroup.page) {
-                          handleNavClick(currentGroup.page);
-                        }
-                      }}
-                      onKeyDown={(e) => handleKeyActivate(e, () => {
-                        if (sub.slug) {
-                          handleServiceClick(sub.slug);
-                        } else if (sub.page) {
-                          handleNavClick(sub.page);
-                        } else if (currentGroup.page) {
-                          handleNavClick(currentGroup.page);
-                        }
-                      })}
+                      key={item.slug || pIdx}
+                      className="hti-subproduct-card"
+                      onClick={() => handleSubProductClick(item)}
+                      onKeyDown={(e) => handleKeyActivate(e, () => handleSubProductClick(item))}
                       role="button"
                       tabIndex={0}
-                      aria-label={sub.title}
+                      aria-label={item.title}
                     >
-                      <span className="hti-subservice-name">{sub.title}</span>
-                      <ChevronRight size={17} className="hti-subservice-chevron" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 2. PRODUCTS DROPDOWN (Reference-Matched Design) */}
-        {activeDropdown === 'products' && (
-          <div
-            className="hti-dropdown-wrapper"
-            style={{ left: `${dropdownPos.left}px` }}
-            onMouseEnter={() => handleMouseEnterDropdown('products')}
-            onMouseLeave={handleMouseLeaveDropdown}
-          >
-            {/* Pointer triangle caret pointing to the Products button */}
-            <div className="hti-dropdown-caret" style={{ left: `${dropdownPos.caretX}px` }} />
-
-            <div className="hti-dropdown-panel">
-              {/* LEFT COLUMN: EXPLORE PRODUCTS */}
-              <div className="hti-dropdown-left-col">
-                <div className="hti-dropdown-col-header">
-                  <span className="hti-dropdown-col-title">EXPLORE PRODUCTS</span>
-                  <div className="hti-dropdown-blue-line" />
-                </div>
-
-                <div className="hti-category-list">
-                  {productGroups.map((group, index) => {
-                    const Icon = group.icon;
-                    const isSelected = selectedProductGroup === index;
-                    return (
-                      <div
-                        key={group.id}
-                        className={`hti-category-row ${isSelected ? 'is-active' : ''}`}
-                        onMouseEnter={() => setSelectedProductGroup(index)}
-                        onClick={() => {
-                          setActiveDropdown(null);
-                          if (group.page && onNavigate) {
-                            handleNavClick(group.page);
-                          } else if (onNavigate) {
-                            handleNavClick('catalog', group.categoryId);
-                          }
-                        }}
-                        onKeyDown={(e) => handleKeyActivate(e, () => {
-                          setActiveDropdown(null);
-                          if (group.page && onNavigate) {
-                            handleNavClick(group.page);
-                          } else if (onNavigate) {
-                            handleNavClick('catalog', group.categoryId);
-                          }
-                        })}
-                        role="button"
-                        tabIndex={0}
-                        aria-label={group.title}
-                      >
-                        <div className="hti-category-row-left">
-                          <div className="hti-category-icon-wrap">
-                            <Icon size={22} className="hti-category-icon" />
-                          </div>
-                          <span className="hti-category-name">{group.title}</span>
+                      {item.image && (
+                        <div className="hti-subproduct-thumb-wrap">
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="hti-subproduct-thumb"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
                         </div>
-                        <ChevronRight size={17} className="hti-category-chevron" />
+                      )}
+                      <div className="hti-subproduct-text">
+                        <span className="hti-subproduct-title">{item.title}</span>
+                        {item.desc && (
+                          <span className="hti-subproduct-desc">{item.desc}</span>
+                        )}
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* RIGHT COLUMN: CATEGORY SUBPRODUCTS */}
-              <div className="hti-dropdown-right-col">
-                <div className="hti-dropdown-col-header">
-                  <span className="hti-dropdown-col-title">{currentProductGroup.title.toUpperCase()}</span>
-                  <div className="hti-dropdown-blue-line" />
-                </div>
-
-                <div className="hti-subservices-list">
-                  {currentProductGroup.products.map((prod, pIdx) => (
-                    <div
-                      key={pIdx}
-                      className="hti-subservice-row"
-                      onClick={() => {
-                        setActiveDropdown(null);
-                        if (prod.slug) {
-                          handleProductClick(prod.slug);
-                        } else if (currentProductGroup.page) {
-                          handleNavClick(currentProductGroup.page);
-                        }
-                      }}
-                      onKeyDown={(e) => handleKeyActivate(e, () => {
-                        setActiveDropdown(null);
-                        if (prod.slug) {
-                          handleProductClick(prod.slug);
-                        } else if (currentProductGroup.page) {
-                          handleNavClick(currentProductGroup.page);
-                        }
-                      })}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={prod.title}
-                    >
-                      <span className="hti-subservice-name">{prod.title}</span>
-                      <ChevronRight size={17} className="hti-subservice-chevron" />
+                      <ChevronRight size={15} className="hti-subproduct-arrow" />
                     </div>
                   ))}
                 </div>
@@ -1189,155 +1194,62 @@ export default function Navbar({
             aria-modal="true"
             aria-label="Mobile Navigation Menu"
           >
-            {/* Accordion Item: Services */}
+            {/* Accordion Item: Products & Services */}
             <div className="mobile-accordion-group">
               <button
-                className={`mobile-accordion-header ${activeSection === 'services' ? 'is-active-section' : ''}`}
-                onClick={() => setMobileAccordion(mobileAccordion === 'services' ? null : 'services')}
-                aria-expanded={mobileAccordion === 'services'}
-                aria-current={activeSection === 'services' ? 'page' : undefined}
+                className={`mobile-accordion-header ${activeSection === 'products-services' ? 'is-active-section' : ''}`}
+                onClick={() => setMobileAccordion(mobileAccordion === 'products-services' ? null : 'products-services')}
+                aria-expanded={mobileAccordion === 'products-services'}
+                aria-current={activeSection === 'products-services' ? 'page' : undefined}
               >
                 <span className="mobile-accordion-heading">
-                  <span className="mobile-accordion-title">Services</span>
-                  <span className="mobile-accordion-count" aria-hidden="true">{serviceGroups.length}</span>
+                  <span className="mobile-accordion-title">Products &amp; Services</span>
+                  <span className="mobile-accordion-count" aria-hidden="true">{productsServicesCategories.length}</span>
                 </span>
-                {mobileAccordion === 'services' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                {mobileAccordion === 'products-services' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
               </button>
 
-              {mobileAccordion === 'services' && (
+              {mobileAccordion === 'products-services' && (
                 <div className="mobile-accordion-body">
-                  {serviceGroups.map((g) => {
-                    const GroupIcon = g.icon;
-                    const isGroupExpanded = mobileServiceGroup === g.id;
+                  {productsServicesCategories.map((cat) => {
+                    const CatIcon = cat.icon;
+                    const isCatExpanded = mobileCategoryGroup === cat.id;
                     return (
-                      <div key={g.id} className={`mobile-product-group-block ${isGroupExpanded ? 'is-expanded' : ''}`}>
+                      <div key={cat.id} className={`mobile-product-group-block ${isCatExpanded ? 'is-expanded' : ''}`}>
                         <button
                           className="mobile-product-group-header"
-                          onClick={() => setMobileServiceGroup(isGroupExpanded ? null : g.id)}
-                          aria-expanded={isGroupExpanded}
+                          onClick={() => setMobileCategoryGroup(isCatExpanded ? null : cat.id)}
+                          aria-expanded={isCatExpanded}
                         >
                           <div className="mobile-product-group-info">
                             <div className="mobile-product-group-icon">
-                              <GroupIcon size={16} />
+                              <CatIcon size={16} />
                             </div>
-                            <span className="mobile-clean-title">{g.title}</span>
+                            <span className="mobile-clean-title">{cat.title}</span>
                           </div>
-                          {isGroupExpanded ? <ChevronUp size={16} className="mobile-clean-arrow" /> : <ChevronDown size={16} className="mobile-clean-arrow" />}
+                          {isCatExpanded ? <ChevronUp size={16} className="mobile-clean-arrow" /> : <ChevronDown size={16} className="mobile-clean-arrow" />}
                         </button>
 
-                        {isGroupExpanded && (
+                        {isCatExpanded && (
                           <div className="mobile-product-sublist">
                             <button
                               className="mobile-product-overview-btn"
                               onClick={() => {
                                 setMobileMenuOpen(false);
-                                if (g.page) handleNavClick(g.page);
+                                handleCategoryNavigation(cat.page);
                               }}
                             >
-                              <span>Explore: {g.title}</span>
+                              <span>Explore All: {cat.title}</span>
                               <ArrowRight size={13} />
                             </button>
 
-                            {g.subservices.map((sub, sIdx) => (
+                            {cat.items.map((sub, sIdx) => (
                               <button
                                 key={sIdx}
                                 className="mobile-clean-sublink"
-                                onClick={() => {
-                                  setMobileMenuOpen(false);
-                                  if (sub.slug) handleServiceClick(sub.slug);
-                                  else if (g.page) handleNavClick(g.page);
-                                }}
+                                onClick={() => handleSubProductClick(sub)}
                               >
                                 <span className="mobile-clean-title">{sub.title}</span>
-                                <ChevronRight size={15} className="mobile-clean-arrow" />
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                  <button
-                    className="mobile-clean-sublink mobile-clean-all"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      handleNavClick('automation');
-                    }}
-                  >
-                    <span className="mobile-clean-title">View All Services</span>
-                    <ArrowRight size={16} className="mobile-clean-arrow" />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Accordion Item: Products */}
-            <div className="mobile-accordion-group">
-              <button
-                className={`mobile-accordion-header ${activeSection === 'products' ? 'is-active-section' : ''}`}
-                onClick={() => setMobileAccordion(mobileAccordion === 'products' ? null : 'products')}
-                aria-expanded={mobileAccordion === 'products'}
-                aria-current={activeSection === 'products' ? 'page' : undefined}
-              >
-                <span className="mobile-accordion-heading">
-                  <span className="mobile-accordion-title">Products</span>
-                  <span className="mobile-accordion-count" aria-hidden="true">{productGroups.length}</span>
-                </span>
-                {mobileAccordion === 'products' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-              </button>
-
-              {mobileAccordion === 'products' && (
-                <div className="mobile-accordion-body">
-                  {productGroups.map((group) => {
-                    const GroupIcon = group.icon;
-                    const isGroupExpanded = mobileProductGroup === group.id;
-                    return (
-                      <div key={group.id} className={`mobile-product-group-block ${isGroupExpanded ? 'is-expanded' : ''}`}>
-                        <button
-                          className="mobile-product-group-header"
-                          onClick={() => setMobileProductGroup(isGroupExpanded ? null : group.id)}
-                          aria-expanded={isGroupExpanded}
-                        >
-                          <div className="mobile-product-group-info">
-                            <div className="mobile-product-group-icon">
-                              <GroupIcon size={16} />
-                            </div>
-                            <span className="mobile-clean-title">{group.title}</span>
-                          </div>
-                          {isGroupExpanded ? <ChevronUp size={16} className="mobile-clean-arrow" /> : <ChevronDown size={16} className="mobile-clean-arrow" />}
-                        </button>
-
-                        {isGroupExpanded && (
-                          <div className="mobile-product-sublist">
-                            <button
-                              className="mobile-product-overview-btn"
-                              onClick={() => {
-                                setMobileMenuOpen(false);
-                                if (group.page && onNavigate) {
-                                  onNavigate(group.page);
-                                } else if (onNavigate) {
-                                  onNavigate('catalog', group.categoryId);
-                                }
-                              }}
-                            >
-                              <span>Explore: {group.title}</span>
-                              <ArrowRight size={13} />
-                            </button>
-
-                            {group.products.map((prod, pIdx) => (
-                              <button
-                                key={pIdx}
-                                className="mobile-clean-sublink"
-                                onClick={() => {
-                                  setMobileMenuOpen(false);
-                                  if (prod.slug) {
-                                    handleProductClick(prod.slug);
-                                  } else {
-                                    if (onNavigate) onNavigate('catalog', group.categoryId);
-                                  }
-                                }}
-                              >
-                                <span className="mobile-clean-title">{prod.title}</span>
                                 <ChevronRight size={15} className="mobile-clean-arrow" />
                               </button>
                             ))}
@@ -1353,7 +1265,7 @@ export default function Navbar({
                       if (onNavigate) onNavigate('catalog', 'all');
                     }}
                   >
-                    <span className="mobile-clean-title">View All Products</span>
+                    <span className="mobile-clean-title">View All Products Catalog</span>
                     <ArrowRight size={16} className="mobile-clean-arrow" />
                   </button>
                 </div>
@@ -1455,12 +1367,9 @@ export default function Navbar({
               )}
             </div>
 
-            {/* Mobile Action Area - kept pinned to the bottom of the drawer so
-                  the brochure, the quote CTA and the consultation link are
-                  always one tap away, whatever the accordion content length. */}
+            {/* Mobile Action Area - pinned to bottom */}
             <div className="mobile-drawer-footer">
-
-              {/* Compact Brochure Row - one line instead of a tall card */}
+              {/* Compact Brochure Row */}
               <button
                 className="mobile-brochure-row"
                 onClick={(e) => {
