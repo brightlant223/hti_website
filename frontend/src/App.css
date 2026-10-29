@@ -255,12 +255,34 @@
   background: rgba(2, 132, 199, 0.08);
 }
 
+.bright-nav-btn.is-active-section {
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.08);
+  font-weight: 650;
+}
+
+[data-theme="dark"] .bright-nav-btn.is-active-section {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+}
+
 .dropdown-arrow {
   color: #64748b;
   transition: transform 0.2s ease;
 }
 
-.bright-nav-btn:hover .dropdown-arrow {
+.bright-nav-btn:hover .bright-nav-btn.is-active-section {
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.08);
+  font-weight: 650;
+}
+
+[data-theme="dark"] .bright-nav-btn.is-active-section {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.dropdown-arrow {
   color: #0284c7;
 }
 
@@ -954,7 +976,7 @@
 /* 5 Columns Horizontal Grid (Compact, Content-driven Sizing) */
 .horizontal-columns-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
   padding: 16px 0 18px;
   height: auto;
@@ -2524,6 +2546,60 @@
 
 .mobile-clean-all .mobile-clean-arrow {
   color: #0284c7;
+}
+
+/* Mobile Standalone Link (About Us) */
+.mobile-standalone-link {
+  margin-bottom: 10px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.mobile-standalone-link:hover,
+.mobile-standalone-link.is-active-section {
+  background: #f0f9ff;
+  border-color: #0284c7;
+}
+
+.mobile-standalone-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-standalone-icon {
+  color: #0284c7;
+  flex-shrink: 0;
+}
+
+.mobile-standalone-link.is-active-section .mobile-clean-title {
+  color: #0284c7;
+  font-weight: 650;
+}
+
+.mobile-standalone-link.is-active-section .mobile-clean-arrow {
+  color: #0284c7;
+}
+
+[data-theme="dark"] .mobile-standalone-link {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .mobile-standalone-link:hover,
+[data-theme="dark"] .mobile-standalone-link.is-active-section {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .mobile-standalone-icon {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .mobile-standalone-link.is-active-section .mobile-clean-title,
+[data-theme="dark"] .mobile-standalone-link.is-active-section .mobile-clean-arrow {
+  color: #38bdf8;
 }
 
 .mobile-clean-all:hover,

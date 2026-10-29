@@ -192,7 +192,6 @@ export default function Navbar({
       clearTimeout(dropdownTimeoutRef.current);
     }
     if (name === 'products-services') {
-      // Default to Pharma Cleanroom (index 0) if not set
       setSelectedCategoryIndex((prev) => (prev >= 0 && prev < 5 ? prev : 0));
     }
     setActiveDropdown((prev) => {
@@ -364,6 +363,7 @@ export default function Navbar({
   // Which top-level section the current route belongs to
   const activeSection = (() => {
     const p = (currentPage || '').toLowerCase();
+    if (p === 'about') return 'about';
     if ([
       'automation', 'access-automation', 'security-systems', 'cleanroom-interlocks',
       'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring',
@@ -371,7 +371,7 @@ export default function Navbar({
       'touchless-entry', 'perimeter-gate', 'trackless-gate', 'rapid-airlock',
       'logistics-bridge', 'heavy-security'
     ].includes(p)) return 'products-services';
-    if (['about', 'clients', 'partners', 'blogs', 'careers', 'contact'].includes(p)) return 'company';
+    if (['clients', 'partners', 'careers', 'blogs', 'contact'].includes(p)) return 'company';
     return null;
   })();
 
@@ -853,8 +853,19 @@ export default function Navbar({
             </div>
           </a>
 
-          {/* Desktop Nav Items */}
+          {/* Desktop Nav Items in exact order:
+              About Us -> Products & Services -> Company -> Brochure */}
           <div className="bright-nav-links desktop-only">
+            {/* Standalone About Us Navigation Link */}
+            <button
+              type="button"
+              className={`bright-nav-btn ${activeSection === 'about' && !activeDropdown ? 'is-active-section' : ''}`}
+              onClick={(e) => handleNavClick('about', null, e)}
+              aria-current={activeSection === 'about' ? 'page' : undefined}
+            >
+              <span>About Us</span>
+            </button>
+
             {/* Unified Products & Services Mega Menu Trigger */}
             <div
               className="nav-item-dropdown"
@@ -1100,7 +1111,7 @@ export default function Navbar({
           </div>
         )}
 
-        {/* 3. COMPANY HORIZONTAL DROPDOWN (Dedicated Separate Pages) */}
+        {/* 3. COMPANY HORIZONTAL DROPDOWN (Our Clients, Careers, Blogs, Contact Us) */}
         {activeDropdown === 'company' && (
           <div
             className="bright-horizontal-dropdown desktop-only"
@@ -1108,21 +1119,7 @@ export default function Navbar({
             onMouseLeave={handleMouseLeaveDropdown}
           >
             <div className="bright-container">
-              <div className="horizontal-columns-grid">
-                <button
-                  type="button"
-                  className="horiz-col-item"
-                  onClick={(e) => handleNavClick('about', null, e)}
-                >
-                  <div className="horiz-col-icon-box">
-                    <Building2 size={18} />
-                  </div>
-                  <div className="horiz-col-text">
-                    <div className="horiz-col-title">About Us</div>
-                    <div className="horiz-col-desc">Our story, values &amp; engineering ethos since 2014</div>
-                  </div>
-                </button>
-
+              <div className="horizontal-columns-grid company-four-cols-grid">
                 <button
                   type="button"
                   className="horiz-col-item"
@@ -1194,6 +1191,19 @@ export default function Navbar({
             aria-modal="true"
             aria-label="Mobile Navigation Menu"
           >
+            {/* Standalone Link: About Us */}
+            <button
+              type="button"
+              className={`mobile-clean-sublink mobile-standalone-link ${currentPage === 'about' ? 'is-active-section' : ''}`}
+              onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}
+            >
+              <div className="mobile-standalone-info">
+                <Building2 size={18} className="mobile-standalone-icon" />
+                <span className="mobile-clean-title">About Us</span>
+              </div>
+              <ChevronRight size={16} className="mobile-clean-arrow" />
+            </button>
+
             {/* Accordion Item: Products & Services */}
             <div className="mobile-accordion-group">
               <button
@@ -1272,7 +1282,7 @@ export default function Navbar({
               )}
             </div>
 
-            {/* Accordion Item: Company */}
+            {/* Accordion Item: Company (4 items: Clients, Careers, Blogs, Contact) */}
             <div className="mobile-accordion-group">
               <button
                 className={`mobile-accordion-header ${activeSection === 'company' ? 'is-active-section' : ''}`}
@@ -1282,28 +1292,13 @@ export default function Navbar({
               >
                 <span className="mobile-accordion-heading">
                   <span className="mobile-accordion-title">Company</span>
-                  <span className="mobile-accordion-count" aria-hidden="true">5</span>
+                  <span className="mobile-accordion-count" aria-hidden="true">4</span>
                 </span>
                 {mobileAccordion === 'company' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
               </button>
 
               {mobileAccordion === 'company' && (
                 <div className="mobile-accordion-body mobile-company-cards-body">
-                  <button
-                    type="button"
-                    className={`mobile-company-card ${currentPage === 'about' ? 'is-active' : ''}`}
-                    onClick={() => { setMobileMenuOpen(false); handleNavClick('about'); }}
-                  >
-                    <div className="mobile-company-card-icon">
-                      <Building2 size={18} />
-                    </div>
-                    <div className="mobile-company-card-content">
-                      <div className="mobile-company-card-title">About Us</div>
-                      <div className="mobile-company-card-desc">Our story, values &amp; engineering ethos since 2014</div>
-                    </div>
-                    <ChevronRight size={16} className="mobile-company-card-arrow" />
-                  </button>
-
                   <button
                     type="button"
                     className={`mobile-company-card ${currentPage === 'clients' ? 'is-active' : ''}`}
