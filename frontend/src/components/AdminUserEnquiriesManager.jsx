@@ -552,8 +552,8 @@ export default function AdminUserEnquiriesManager({
                   />
                 </th>
                 <th className="col-id">ID</th>
-                <th className="col-user">USER / CLIENT</th>
-                <th className="col-company">COMPANY / ORG</th>
+                <th className="col-contact">USER / CLIENT</th>
+                <th className="col-product">COMPANY / ORG</th>
                 <th className="col-area">AREA OF INTEREST</th>
                 <th className="col-details">PROJECT DETAILS &amp; REQUIREMENTS</th>
                 <th className="col-status">STATUS PIPELINE</th>
@@ -603,7 +603,7 @@ export default function AdminUserEnquiriesManager({
                       </td>
 
                       {/* Contact Dossier */}
-                      <td className="col-user">
+                      <td className="col-contact">
                         <div className="adm-enq-contact-cell">
                           <div className={`adm-enq-avatar ${avatarColor}`}>{initials}</div>
                           <div className="adm-enq-contact-info">
@@ -615,7 +615,7 @@ export default function AdminUserEnquiriesManager({
                       </td>
 
                       {/* Company */}
-                      <td className="col-company">
+                      <td className="col-product">
                         <div className="adm-enq-product-cell">
                           <span className="adm-enq-product-name" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                             <Building2 size={13} style={{ color: '#0284c7', flexShrink: 0 }} />
@@ -627,44 +627,22 @@ export default function AdminUserEnquiriesManager({
 
                       {/* Area of Interest */}
                       <td className="col-area">
-                        <span
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 5,
-                            padding: '4px 10px',
-                            borderRadius: '16px',
-                            background: '#f1f5f9',
-                            color: '#1e293b',
-                            fontSize: '0.8rem',
-                            fontWeight: 600,
-                            border: '1px solid #cbd5e1'
-                          }}
-                        >
-                          <Tag size={12} style={{ color: '#64748b' }} />
-                          {item.area_of_interest || 'General Enquiry'}
-                        </span>
+                        <div className="adm-exp-notice-cell">
+                          <span className="adm-exp-val">{item.area_of_interest || 'General Enquiry'}</span>
+                          <span className="adm-notice-val">Service Category</span>
+                        </div>
                       </td>
 
                       {/* Project Details Preview */}
                       <td className="col-details">
                         <div
-                          style={{
-                            fontSize: '0.82rem',
-                            color: '#334155',
-                            lineHeight: 1.45,
-                            maxWidth: '100%',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            cursor: 'pointer'
-                          }}
+                          className="adm-enq-req-cell"
                           onClick={() => handleOpenDetails(item)}
                           title="Click to view full message"
                         >
-                          {item.project_details}
+                          <span className="adm-enq-req-text">
+                            {item.project_details || 'No additional requirements specified.'}
+                          </span>
                         </div>
                       </td>
 
@@ -674,70 +652,55 @@ export default function AdminUserEnquiriesManager({
                           value={item.status || 'New'}
                           onChange={(e) => handleStatusChange(item.id, e.target.value)}
                           options={STATUS_OPTIONS_WITH_COLORS}
-                          prefixIcon={
-                            <span
-                              style={{
-                                display: 'inline-block',
-                                width: 8,
-                                height: 8,
-                                borderRadius: '50%',
-                                background: statusTheme.text
-                              }}
-                            />
-                          }
-                          style={{
-                            background: statusTheme.bg,
-                            color: statusTheme.text,
-                            borderColor: statusTheme.border,
-                            fontWeight: 700,
-                            minWidth: 125
-                          }}
-                          className="adm-enq-table-status-dd"
+                          size="sm"
+                          isPill={true}
+                          customColorTheme={statusTheme}
+                          className="adm-careers-table-dropdown"
                         />
                       </td>
 
                       {/* Submission Date */}
                       <td className="col-date">
                         <div className="adm-enq-date-cell">
-                          <span className="adm-enq-date-primary">
-                            <Calendar size={13} style={{ color: '#64748b', marginRight: 4, verticalAlign: -1 }} />
-                            {formatEnquiryDate(item.created_at)}
-                          </span>
-                          <span className="adm-enq-date-secondary">{formatEnquiryTime(item.created_at)}</span>
+                          <Calendar size={13} className="adm-enq-date-icon" />
+                          <div className="adm-enq-date-info">
+                            <span className="adm-enq-date-str">{formatEnquiryDate(item.created_at)}</span>
+                            <span className="adm-enq-date-rel">{formatEnquiryTime(item.created_at) || 'Recent'}</span>
+                          </div>
                         </div>
                       </td>
 
                       {/* Actions */}
                       <td className="col-actions">
-                        <div className="adm-enq-actions-row">
+                        <div className="adm-enq-actions-cell">
                           <button
                             type="button"
-                            className="adm-enq-action-btn view-btn"
+                            className="adm-enq-btn-action btn-view"
                             onClick={() => handleOpenDetails(item)}
-                            title="View Complete Contact Us Enquiry"
+                            title="View Full Contact Enquiry"
                             aria-label="View Enquiry"
                           >
-                            <Eye size={15} />
+                            <Eye size={14} />
                           </button>
 
                           <button
                             type="button"
-                            className="adm-enq-action-btn edit-btn"
+                            className="adm-enq-btn-action btn-edit"
                             onClick={() => handleOpenDetails(item)}
-                            title="Add or Edit Internal Follow-up Notes"
+                            title="Edit Notes & Details"
                             aria-label="Edit Notes"
                           >
-                            <Pencil size={15} />
+                            <Pencil size={14} />
                           </button>
 
                           <button
                             type="button"
-                            className="adm-enq-action-btn delete-btn"
+                            className="adm-enq-btn-action btn-delete"
                             onClick={() => setEnquiryToDelete(item)}
-                            title="Delete Enquiry from MySQL"
+                            title="Delete Enquiry"
                             aria-label="Delete Enquiry"
                           >
-                            <Trash2 size={15} />
+                            <Trash2 size={14} />
                           </button>
                         </div>
                       </td>
