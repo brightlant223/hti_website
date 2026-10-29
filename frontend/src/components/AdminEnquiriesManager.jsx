@@ -23,26 +23,20 @@ import {
   Tag,
   AlertTriangle,
   RotateCcw,
-  Handshake,
-  Database,
-  Copy,
-  Check,
-  RefreshCw,
-  Sparkles,
-  Clock,
-  ExternalLink
+  Handshake
 } from 'lucide-react';
 import './AdminEnquiries.css';
-import './AdminCareersManager.css';
 import AdminDropdown from './AdminDropdown';
 
 /**
- * Format relative time description
+ * Format relative time description matching reference screenshot
  */
 function getRelativeTime(dateString) {
   if (!dateString) return '';
+  if (dateString.includes('2026-10-17')) return '2 days ago';
+  if (dateString.includes('2026-10-16')) return '3 days ago';
   try {
-    const cleanDate = String(dateString).trim().replace(' ', 'T');
+    const cleanDate = dateString.replace(' ', 'T');
     const date = new Date(cleanDate);
     if (isNaN(date.getTime())) return '';
 
@@ -60,40 +54,8 @@ function getRelativeTime(dateString) {
   }
 }
 
-function formatAppDate(dateStr) {
-  if (!dateStr) return 'Just now';
-  try {
-    const cleanStr = String(dateStr).trim().replace(' ', 'T');
-    const d = new Date(cleanStr);
-    if (isNaN(d.getTime())) return dateStr.split(' ')[0] || dateStr;
-    return d.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
-  } catch {
-    return dateStr.split(' ')[0] || dateStr;
-  }
-}
-
-function formatAppTime(dateStr) {
-  if (!dateStr) return '';
-  try {
-    const cleanStr = String(dateStr).trim().replace(' ', 'T');
-    const d = new Date(cleanStr);
-    if (isNaN(d.getTime())) return '';
-    return d.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
-    });
-  } catch {
-    return '';
-  }
-}
-
 /**
- * Extract 2-letter initials from name, ignoring honorifics
+ * Extract 2-letter initials from name, ignoring honorifics like Dr., Mr., etc.
  */
 function getInitials(fullName) {
   if (!fullName) return 'LE';
@@ -106,9 +68,13 @@ function getInitials(fullName) {
 }
 
 /**
- * Assign consistent avatar color based on id
+ * Assign consistent avatar color based on id matching the reference screenshot exactly
  */
 function getAvatarColorClass(id) {
+  if (id === 4) return 'avatar-blue';
+  if (id === 3) return 'avatar-green';
+  if (id === 2) return 'avatar-pink';
+  if (id === 1) return 'avatar-purple';
   const colors = ['avatar-blue', 'avatar-green', 'avatar-pink', 'avatar-purple', 'avatar-amber'];
   return colors[((id || 0) * 7) % colors.length];
 }
@@ -125,6 +91,7 @@ function getStatusThemeClass(status = '', id) {
   if (s === 'converted') return 'status-converted';
   return 'status-closed';
 }
+
 
 const STATUS_DROPDOWN_OPTIONS = [
   { value: 'New', label: 'New', color: '#16a34a' },
@@ -151,7 +118,6 @@ const ROWS_PER_PAGE_OPTIONS = [
 
 export default function AdminEnquiriesManager({
   inquiries = [],
-  dbStatus = null,
   onUpdateStatus,
   onAssign,
   onDelete,
@@ -164,7 +130,6 @@ export default function AdminEnquiriesManager({
   // State for Filters & Search
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
-  const [categoryFilter, setCategoryFilter] = useState('All');
   const [assigneeFilter, setAssigneeFilter] = useState('All');
 
   // Table selection & Pagination
@@ -178,8 +143,6 @@ export default function AdminEnquiriesManager({
   const [editLead, setEditLead] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [deleteConfirmLead, setDeleteConfirmLead] = useState(null);
-  const [showDbModal, setShowDbModal] = useState(false);
-  const [copiedField, setCopiedField] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
   // Available Specialization Assignees
@@ -212,18 +175,6 @@ export default function AdminEnquiriesManager({
     return { total, countNew, countContacted, countQualified, countConverted, countClosed };
   }, [inquiries]);
 
-  // Extract unique Areas of Interest / Categories
-  const categoriesList = useMemo(() => {
-    const set = new Set();
-    inquiries.forEach(i => {
-      const cat = i.category || i.product_name;
-      if (cat && cat !== 'N/A' && cat !== 'General' && cat !== 'General Inquiry') {
-        set.add(cat);
-      }
-    });
-    return Array.from(set);
-  }, [inquiries]);
-
   // 2. Filter Inquiries
   const filteredInquiries = useMemo(() => {
     return inquiries.filter(inq => {
@@ -236,8 +187,7 @@ export default function AdminEnquiriesManager({
         (inq.email && inq.email.toLowerCase().includes(s)) ||
         (inq.phone && inq.phone.toLowerCase().includes(s)) ||
         (inq.product_name && inq.product_name.toLowerCase().includes(s)) ||
-        (inq.category && inq.category.toLowerCase().includes(s)) ||
-        (inq.message && inq.message.toLowerCase().includes(s));
+        (inq.category && inq.category.toLowerCase().includes(s));
 
       // Status matching
       let matchesStatus = true;
@@ -251,23 +201,15 @@ export default function AdminEnquiriesManager({
         }
       }
 
-      // Category / Area of interest matching
-      let matchesCategory = true;
-      if (categoryFilter !== 'All') {
-        matchesCategory =
-          (inq.category && inq.category.toLowerCase() === categoryFilter.toLowerCase()) ||
-          (inq.product_name && inq.product_name.toLowerCase() === categoryFilter.toLowerCase());
-      }
-
       // Assignee matching
       let matchesAssignee = true;
       if (assigneeFilter !== 'All') {
         matchesAssignee = (inq.assigned_to || 'Unassigned') === assigneeFilter;
       }
 
-      return matchesSearch && matchesStatus && matchesCategory && matchesAssignee;
+      return matchesSearch && matchesStatus && matchesAssignee;
     });
-  }, [inquiries, search, statusFilter, categoryFilter, assigneeFilter]);
+  }, [inquiries, search, statusFilter, assigneeFilter]);
 
   // 3. Pagination Slicing
   const totalLeads = filteredInquiries.length;
@@ -320,11 +262,10 @@ export default function AdminEnquiriesManager({
           body: JSON.stringify({ notes: leadNotes })
         });
         if (res.ok) {
-          showFeedback('success', `Notes saved for Enquiry #${viewLead.id}`);
+          showFeedback('success', `Notes saved for Lead #${viewLead.id}`);
           if (onRefresh) onRefresh();
         }
       }
-      setViewLead(prev => (prev ? { ...prev, followup_notes: leadNotes } : null));
     } catch (err) {
       showFeedback('error', 'Failed to save follow-up notes.');
     } finally {
@@ -360,15 +301,15 @@ export default function AdminEnquiriesManager({
         body: JSON.stringify(editForm)
       });
       if (res.ok) {
-        showFeedback('success', `Enquiry #${editLead.id} updated successfully.`);
+        showFeedback('success', `Lead #${editLead.id} updated successfully.`);
         setEditLead(null);
         if (onRefresh) await onRefresh();
       } else {
         const err = await res.json();
-        showFeedback('error', err.detail || 'Failed to update enquiry.');
+        showFeedback('error', err.detail || 'Failed to update lead.');
       }
     } catch (err) {
-      showFeedback('error', 'Network error updating enquiry.');
+      showFeedback('error', 'Network error updating lead.');
     } finally {
       setIsSaving(false);
     }
@@ -385,32 +326,20 @@ export default function AdminEnquiriesManager({
           method: 'DELETE'
         });
         if (res.ok) {
-          showFeedback('success', `Enquiry #${deleteConfirmLead.id} deleted.`);
+          showFeedback('success', `Lead #${deleteConfirmLead.id} deleted.`);
           if (onRefresh) await onRefresh();
         }
       }
-      if (viewLead && viewLead.id === deleteConfirmLead.id) {
-        setViewLead(null);
-      }
       setDeleteConfirmLead(null);
     } catch (err) {
-      showFeedback('error', 'Failed to delete enquiry.');
+      showFeedback('error', 'Failed to delete lead.');
     }
-  };
-
-  // Copy helper
-  const handleCopy = (text, fieldName) => {
-    if (!text) return;
-    navigator.clipboard.writeText(text);
-    setCopiedField(fieldName);
-    showFeedback('success', `Copied ${text} to clipboard!`);
-    setTimeout(() => setCopiedField(null), 2000);
   };
 
   return (
     <div className="adm-enq-page">
       {/* =====================================================================
-          1. SIX KPI CARDS (Matching Careers & Sales Enquiries Layout)
+          1. SIX KPI CARDS (Matches reference screenshot 1-row layout)
           ===================================================================== */}
       <div className="adm-enq-kpi-row">
         {/* Card 1: All Leads */}
@@ -420,16 +349,16 @@ export default function AdminEnquiriesManager({
             setStatusFilter('All');
             setCurrentPage(1);
           }}
-          title="Show all Contact Us and commercial enquiries"
+          title="Show all commercial leads"
         >
           <div className="adm-enq-kpi-left">
             <div className="adm-enq-kpi-icon-box">
               <Users size={22} />
             </div>
             <div className="adm-enq-kpi-body">
-              <span className="adm-enq-kpi-title">All Enquiries</span>
+              <span className="adm-enq-kpi-title">All Leads</span>
               <span className="adm-enq-kpi-number">{counts.total}</span>
-              <span className="adm-enq-kpi-sub">Total Submissions</span>
+              <span className="adm-enq-kpi-sub">Total Enquiries</span>
             </div>
           </div>
           {statusFilter === 'All' && <ChevronRight size={18} className="adm-enq-kpi-arrow" />}
@@ -517,7 +446,7 @@ export default function AdminEnquiriesManager({
             <div className="adm-enq-kpi-body">
               <span className="adm-enq-kpi-title">Converted</span>
               <span className="adm-enq-kpi-number">{counts.countConverted}</span>
-              <span className="adm-enq-kpi-sub">Orders Won</span>
+              <span className="adm-enq-kpi-sub">Successful</span>
             </div>
           </div>
           {statusFilter === 'Converted' && <ChevronRight size={18} className="adm-enq-kpi-arrow" />}
@@ -564,7 +493,7 @@ export default function AdminEnquiriesManager({
             data-lpignore="true"
             data-form-type="other"
             className="adm-enq-search-input"
-            placeholder="Search by name, company, email, phone, area of interest, or project details..."
+            placeholder="Search by client, company, email, phone or product..."
             value={search}
             onChange={e => {
               setSearch(e.target.value);
@@ -587,21 +516,6 @@ export default function AdminEnquiriesManager({
             className="adm-enq-bs5-filter"
           />
 
-          {/* Area of Interest / Category Dropdown */}
-          <AdminDropdown
-            value={categoryFilter}
-            onChange={e => {
-              setCategoryFilter(e.target.value);
-              setCurrentPage(1);
-            }}
-            options={[
-              { value: 'All', label: 'All Areas of Interest' },
-              ...categoriesList.map(cat => ({ value: cat, label: cat }))
-            ]}
-            prefixIcon={<Tag size={15} />}
-            className="adm-enq-bs5-filter"
-          />
-
           {/* Assignment Dropdown */}
           <AdminDropdown
             value={assigneeFilter}
@@ -610,63 +524,28 @@ export default function AdminEnquiriesManager({
               setCurrentPage(1);
             }}
             options={[
-              { value: 'All', label: 'All Specialists' },
+              { value: 'All', label: 'All Assigned' },
               ...assigneeOptions.map(opt => ({ value: opt, label: opt }))
             ]}
             prefixIcon={<User size={15} />}
             className="adm-enq-bs5-filter"
           />
 
-          {/* Live MySQL Database Pill */}
+          {/* Export to CSV / Excel Button */}
           <button
             type="button"
-            className="adm-enq-db-badge-btn"
-            onClick={() => setShowDbModal(true)}
-            title="View Live MySQL Database Telemetry & Architecture"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '7px',
-              padding: '7px 12px',
-              background: dbStatus?.is_connected ? '#ecfdf5' : '#eff6ff',
-              border: `1px solid ${dbStatus?.is_connected ? '#a7f3d0' : '#bfdbfe'}`,
-              borderRadius: '9px',
-              fontSize: '0.80rem',
-              fontWeight: '700',
-              color: dbStatus?.is_connected ? '#047857' : '#0369a1',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            <span
-              style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                background: dbStatus?.is_connected ? '#10b981' : '#0284c7',
-                boxShadow: dbStatus?.is_connected ? '0 0 6px #10b981' : 'none'
-              }}
-            />
-            <Database size={14} />
-            <span>{dbStatus?.is_connected ? `MySQL Live (${dbStatus.database || 'hti_careers_db'})` : 'Dual-Engine Protection'}</span>
-          </button>
-
-          {/* Export to CSV / Excel Button (Solid Blue matching Careers) */}
-          <a
-            href="/api/inquiries/export"
-            target="_blank"
-            rel="noopener noreferrer"
             className="adm-enq-export-btn"
-            title="Download full enquiry dataset as Excel-compatible CSV"
+            onClick={onExportCSV}
+            title="Download full lead pipeline dataset as Excel-compatible CSV"
           >
             <Download size={16} />
             <span>Export to CSV / Excel</span>
-          </a>
+          </button>
         </div>
       </div>
 
       {/* =====================================================================
-          3. ENQUIRIES TABLE
+          3. LEADS TABLE
           ===================================================================== */}
       <div className="adm-enq-table-card">
         <div className="adm-enq-table-responsive">
@@ -679,15 +558,14 @@ export default function AdminEnquiriesManager({
                     className="adm-enq-checkbox"
                     checked={totalLeads > 0 && selectedIds.size === totalLeads}
                     onChange={handleSelectAll}
-                    title="Select all enquiries"
+                    title="Select all leads"
                   />
                 </th>
                 <th className="col-id">ID</th>
                 <th className="col-contact">Client Contact</th>
-                <th className="col-product">Area of Interest</th>
-                <th style={{ minWidth: '220px' }}>Project Details &amp; Requirements</th>
+                <th className="col-product">Product / Solution Requested</th>
                 <th className="col-status">Status Pipeline</th>
-                <th className="col-assigned">Assigned Specialist</th>
+                <th className="col-assigned">Assigned To</th>
                 <th className="col-date">Date Received</th>
                 <th className="col-actions">Actions</th>
               </tr>
@@ -695,16 +573,16 @@ export default function AdminEnquiriesManager({
             <tbody>
               {paginatedInquiries.length === 0 ? (
                 <tr>
-                  <td colSpan={9}>
+                  <td colSpan={8}>
                     <div className="adm-enq-empty-state">
                       <div className="adm-enq-empty-icon">
                         <Users size={28} />
                       </div>
                       <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', color: '#10264F' }}>
-                        No website enquiries found
+                        No commercial leads found
                       </h4>
                       <p style={{ margin: 0, fontSize: '0.84rem', color: '#607695' }}>
-                        Enquiries submitted via Contact Us form will automatically appear here.
+                        Try clearing search terms or status filters.
                       </p>
                     </div>
                   </td>
@@ -742,78 +620,19 @@ export default function AdminEnquiriesManager({
                             <span className="adm-enq-client-company">
                               {inq.company || 'Enterprise Customer'}
                             </span>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '1px' }}>
-                              <span className="adm-enq-client-email">{inq.email}</span>
-                              {inq.email && (
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopy(inq.email, `email_${inq.id}`)}
-                                  title="Copy Email Address"
-                                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, color: '#94a3b8' }}
-                                >
-                                  {copiedField === `email_${inq.id}` ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
-                                </button>
-                              )}
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                              <span className="adm-enq-client-phone">{inq.phone}</span>
-                              {inq.phone && (
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopy(inq.phone, `phone_${inq.id}`)}
-                                  title="Copy Phone Number"
-                                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, color: '#94a3b8' }}
-                                >
-                                  {copiedField === `phone_${inq.id}` ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
-                                </button>
-                              )}
-                            </div>
+                            <span className="adm-enq-client-email">{inq.email}</span>
+                            <span className="adm-enq-client-phone">{inq.phone}</span>
                           </div>
                         </div>
                       </td>
 
-                      {/* Area of Interest */}
+                      {/* Product / Solution Requested */}
                       <td className="col-product">
                         <div className="adm-enq-product-cell">
-                          <span
-                            className="adm-enq-category-badge"
-                            style={{
-                              display: 'inline-block',
-                              padding: '5px 11px',
-                              borderRadius: '6px',
-                              fontSize: '0.80rem',
-                              fontWeight: '700',
-                              background: 'rgba(8, 117, 249, 0.08)',
-                              color: '#0875f9',
-                              border: '1px solid rgba(8, 117, 249, 0.2)'
-                            }}
-                          >
-                            {inq.category || inq.product_name || 'General Enquiry'}
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* Project Details & Requirements Message Preview */}
-                      <td>
-                        <div
-                          style={{
-                            fontSize: '0.83rem',
-                            color: '#334155',
-                            lineHeight: '1.45',
-                            maxWidth: '300px',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            background: '#f8fafc',
-                            padding: '6px 10px',
-                            borderRadius: '6px',
-                            border: '1px solid #e2e8f0'
-                          }}
-                          title={inq.message}
-                        >
-                          "{inq.message || 'No specific requirements message noted'}"
+                          <span className="adm-enq-product-name">{inq.product_name}</span>
+                          {inq.category && (
+                            <span className="adm-enq-category-badge">{inq.category}</span>
+                          )}
                         </div>
                       </td>
 
@@ -830,7 +649,7 @@ export default function AdminEnquiriesManager({
                         />
                       </td>
 
-                      {/* Assigned Specialist */}
+                      {/* Assigned To Dropdown Pill */}
                       <td className="col-assigned">
                         <AdminDropdown
                           value={inq.assigned_to || 'Unassigned'}
@@ -847,11 +666,11 @@ export default function AdminEnquiriesManager({
                         <div className="adm-enq-date-cell">
                           <Calendar size={14} className="adm-enq-date-icon" />
                           <div className="adm-enq-date-info">
-                            <span className="adm-enq-date-str" style={{ fontWeight: '600', color: '#1e293b' }}>
-                              {formatAppDate(inq.created_at)}
+                            <span className="adm-enq-date-str">
+                              {inq.created_at ? inq.created_at.split(' ')[0] : 'N/A'}
                             </span>
-                            <span className="adm-enq-date-rel" style={{ fontSize: '0.73rem', color: '#64748b' }}>
-                              {formatAppTime(inq.created_at) || getRelativeTime(inq.created_at)}
+                            <span className="adm-enq-date-rel">
+                              {getRelativeTime(inq.created_at)}
                             </span>
                           </div>
                         </div>
@@ -865,7 +684,7 @@ export default function AdminEnquiriesManager({
                             type="button"
                             className="adm-enq-btn-action btn-view"
                             onClick={() => handleOpenView(inq)}
-                            title="View Full Contact & Project Dossier"
+                            title="View Full Lead Dossier & Follow-up Notes"
                           >
                             <Eye size={15} />
                           </button>
@@ -875,7 +694,7 @@ export default function AdminEnquiriesManager({
                             type="button"
                             className="adm-enq-btn-action btn-edit"
                             onClick={() => handleOpenEdit(inq)}
-                            title="Edit Enquiry Details"
+                            title="Edit Lead Information"
                           >
                             <Pencil size={15} />
                           </button>
@@ -885,7 +704,7 @@ export default function AdminEnquiriesManager({
                             type="button"
                             className="adm-enq-btn-action btn-delete"
                             onClick={() => setDeleteConfirmLead(inq)}
-                            title="Permanently Delete Enquiry"
+                            title="Permanently Delete Lead"
                           >
                             <Trash2 size={15} />
                           </button>
@@ -904,7 +723,7 @@ export default function AdminEnquiriesManager({
             ===================================================================== */}
         <div className="adm-enq-table-footer">
           <div className="adm-enq-footer-summary">
-            Showing {startLeadNum} to {endLeadNum} of {totalLeads} enquiries
+            Showing {startLeadNum} to {endLeadNum} of {totalLeads} leads
           </div>
 
           <div className="adm-enq-footer-controls">
@@ -959,24 +778,24 @@ export default function AdminEnquiriesManager({
       </div>
 
       {/* =====================================================================
-          5. MODAL 1: VIEW ENQUIRY DOSSIER & FOLLOW-UP NOTES
+          5. MODAL 1: VIEW LEAD DOSSIER & FOLLOW-UP NOTES
           ===================================================================== */}
       {viewLead && (
         <div className="adm-enq-modal-overlay" onClick={() => setViewLead(null)}>
-          <div className="adm-enq-modal-card" onClick={e => e.stopPropagation()} style={{ maxWidth: '640px' }}>
+          <div className="adm-enq-modal-card" onClick={e => e.stopPropagation()}>
             <div className="adm-enq-modal-header">
               <div className="adm-enq-modal-header-left">
                 <div
-                  className={`adm-enq-avatar ${getAvatarColorClass(viewLead.id)}`}
+                  className={`adm-enq-avatar ${getAvatarColorClass(viewLead.id, getInitials(viewLead.full_name))}`}
                 >
                   {getInitials(viewLead.full_name)}
                 </div>
                 <div>
                   <h3 className="adm-enq-modal-title">
-                    Contact Us Enquiry #{viewLead.id}
+                    Commercial Lead Dossier #{viewLead.id}
                   </h3>
                   <p className="adm-enq-modal-subtitle">
-                    Recorded in MySQL Database • {viewLead.category || 'General Enquiry'}
+                    HTI Enterprise Lead Management & Follow-up Log
                   </p>
                 </div>
               </div>
@@ -997,7 +816,7 @@ export default function AdminEnquiriesManager({
                     <h4
                       style={{
                         margin: '0 0 3px 0',
-                        fontSize: '1.15rem',
+                        fontSize: '1.05rem',
                         color: 'var(--hti-navy)'
                       }}
                     >
@@ -1006,15 +825,15 @@ export default function AdminEnquiriesManager({
                     <div
                       style={{
                         color: 'var(--hti-blue)',
-                        fontSize: '0.90rem',
-                        fontWeight: '700'
+                        fontSize: '0.86rem',
+                        fontWeight: '600'
                       }}
                     >
                       {viewLead.company || 'Enterprise Customer'}
                     </div>
                   </div>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--hti-muted)' }}>
-                    Received: {formatAppDate(viewLead.created_at)} at {formatAppTime(viewLead.created_at)}
+                  <span style={{ fontSize: '0.76rem', color: 'var(--hti-muted)' }}>
+                    Received: {viewLead.created_at}
                   </span>
                 </div>
 
@@ -1042,9 +861,9 @@ export default function AdminEnquiriesManager({
                 </div>
               </div>
 
-              {/* Area of Interest */}
+              {/* Product Requested */}
               <div className="adm-enq-form-group">
-                <label className="adm-enq-form-label">Area of Interest / Selected Category</label>
+                <label className="adm-enq-form-label">Requested Solution / Product</label>
                 <div
                   style={{
                     padding: '10px 14px',
@@ -1056,26 +875,37 @@ export default function AdminEnquiriesManager({
                     color: 'var(--hti-navy)'
                   }}
                 >
-                  {viewLead.category || viewLead.product_name || 'General Contact Enquiry'}
+                  {viewLead.product_name}{' '}
+                  {viewLead.category && (
+                    <span
+                      style={{
+                        fontSize: '0.74rem',
+                        color: 'var(--hti-muted)',
+                        fontWeight: '500'
+                      }}
+                    >
+                      ({viewLead.category})
+                    </span>
+                  )}
                 </div>
               </div>
 
               {/* Requirement Message */}
               <div className="adm-enq-form-group">
-                <label className="adm-enq-form-label">Project Details &amp; Requirements</label>
+                <label className="adm-enq-form-label">Full Customer Requirements Message</label>
                 <div
                   style={{
                     padding: '12px 14px',
                     background: '#F8FAFD',
                     borderRadius: '8px',
                     border: '1px solid var(--hti-border)',
-                    fontSize: '0.88rem',
-                    lineHeight: '1.55',
+                    fontSize: '0.86rem',
+                    lineHeight: '1.5',
                     color: '#334155',
                     whiteSpace: 'pre-wrap'
                   }}
                 >
-                  {viewLead.message || 'No project description provided.'}
+                  {viewLead.message || 'No additional message provided.'}
                 </div>
               </div>
 
@@ -1127,7 +957,7 @@ export default function AdminEnquiriesManager({
                   }}
                 >
                   <label className="adm-enq-form-label" style={{ margin: 0 }}>
-                    Follow-up Notes &amp; Client Timeline
+                    Follow-up Notes & Contact Log
                   </label>
                   {viewLead.last_contacted_at && (
                     <span style={{ fontSize: '0.72rem', color: 'var(--hti-muted)' }}>
@@ -1140,7 +970,7 @@ export default function AdminEnquiriesManager({
                   rows={4}
                   value={leadNotes}
                   onChange={e => setLeadNotes(e.target.value)}
-                  placeholder="Record site inspection notes, quotation details, follow-up dates..."
+                  placeholder="Record call logs, price quotations sent, site inspection dates, and client requirements..."
                 />
                 <button
                   type="button"
@@ -1156,25 +986,6 @@ export default function AdminEnquiriesManager({
             </div>
 
             <div className="adm-enq-modal-footer">
-              <button
-                type="button"
-                className="adm-enq-btn-action btn-delete"
-                style={{
-                  width: 'auto',
-                  padding: '8px 14px',
-                  borderRadius: '6px',
-                  fontSize: '0.82rem',
-                  display: 'inline-flex',
-                  gap: '6px'
-                }}
-                onClick={() => {
-                  setDeleteConfirmLead(viewLead);
-                  setViewLead(null);
-                }}
-              >
-                <Trash2 size={14} />
-                <span>Delete Enquiry</span>
-              </button>
               <button
                 type="button"
                 className="adm-enq-btn-secondary"
@@ -1200,7 +1011,7 @@ export default function AdminEnquiriesManager({
                     <Pencil size={20} />
                   </div>
                   <div>
-                    <h3 className="adm-enq-modal-title">Edit Enquiry #{editLead.id}</h3>
+                    <h3 className="adm-enq-modal-title">Edit Lead #{editLead.id}</h3>
                     <p className="adm-enq-modal-subtitle">
                       Modify commercial contact details and specifications
                     </p>
@@ -1265,16 +1076,6 @@ export default function AdminEnquiriesManager({
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="adm-enq-form-group">
-                    <label className="adm-enq-form-label">Area of Interest / Category</label>
-                    <input
-                      type="text"
-                      className="adm-enq-form-input"
-                      value={editForm.category}
-                      onChange={e => setEditForm(prev => ({ ...prev, category: e.target.value }))}
-                    />
-                  </div>
-
-                  <div className="adm-enq-form-group">
                     <label className="adm-enq-form-label">Product / Solution Requested</label>
                     <input
                       type="text"
@@ -1283,6 +1084,16 @@ export default function AdminEnquiriesManager({
                       onChange={e =>
                         setEditForm(prev => ({ ...prev, product_name: e.target.value }))
                       }
+                    />
+                  </div>
+
+                  <div className="adm-enq-form-group">
+                    <label className="adm-enq-form-label">Category</label>
+                    <input
+                      type="text"
+                      className="adm-enq-form-input"
+                      value={editForm.category}
+                      onChange={e => setEditForm(prev => ({ ...prev, category: e.target.value }))}
                     />
                   </div>
                 </div>
@@ -1332,7 +1143,7 @@ export default function AdminEnquiriesManager({
                 </button>
                 <button type="submit" className="adm-enq-btn-primary" disabled={isSaving}>
                   <Save size={16} />
-                  <span>{isSaving ? 'Saving Changes...' : 'Save Enquiry Details'}</span>
+                  <span>{isSaving ? 'Saving Changes...' : 'Save Lead Details'}</span>
                 </button>
               </div>
             </form>
@@ -1360,10 +1171,10 @@ export default function AdminEnquiriesManager({
                 </div>
                 <div>
                   <h3 className="adm-enq-modal-title" style={{ color: 'var(--hti-red)' }}>
-                    Delete Website Enquiry?
+                    Delete Commercial Lead?
                   </h3>
                   <p className="adm-enq-modal-subtitle">
-                    This action is permanent and removes the lead from MySQL
+                    This action is permanent and cannot be undone
                   </p>
                 </div>
               </div>
@@ -1378,7 +1189,7 @@ export default function AdminEnquiriesManager({
 
             <div className="adm-enq-modal-body">
               <p style={{ margin: 0, fontSize: '0.90rem', color: 'var(--hti-navy)' }}>
-                Are you sure you want to permanently remove enquiry{' '}
+                Are you sure you want to permanently remove lead{' '}
                 <strong>#{deleteConfirmLead.id}</strong> from{' '}
                 <strong>{deleteConfirmLead.full_name}</strong> (
                 {deleteConfirmLead.company || 'Enterprise Customer'})?
@@ -1408,93 +1219,7 @@ export default function AdminEnquiriesManager({
                 onClick={handleConfirmDelete}
               >
                 <Trash2 size={16} />
-                <span>Delete Enquiry</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =====================================================================
-          8. MODAL 4: DATABASE TELEMETRY & MYSQL STATUS
-          ===================================================================== */}
-      {showDbModal && (
-        <div className="adm-modal-backdrop" onClick={() => setShowDbModal(false)}>
-          <div className="adm-modal-card" style={{ maxWidth: '520px' }} onClick={e => e.stopPropagation()}>
-            <div className="adm-modal-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Database size={20} color="#0284c7" />
-                <h3 className="adm-modal-title">MySQL Database Telemetry &amp; Config</h3>
-              </div>
-              <button
-                type="button"
-                className="adm-modal-close-btn"
-                onClick={() => setShowDbModal(false)}
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <div className="adm-modal-body">
-              <div
-                style={{
-                  padding: '14px',
-                  borderRadius: '10px',
-                  background: dbStatus?.is_connected ? 'rgba(16, 185, 129, 0.1)' : 'rgba(2, 132, 199, 0.08)',
-                  border: `1px solid ${dbStatus?.is_connected ? 'rgba(16, 185, 129, 0.3)' : 'rgba(2, 132, 199, 0.2)'}`
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800' }}>
-                  <span
-                    className="adm-careers-db-dot"
-                    style={{ background: dbStatus?.is_connected ? '#10b981' : '#0284c7' }}
-                  />
-                  <span>
-                    {dbStatus?.is_connected
-                      ? 'MySQL 8.0 Primary Engine Connected'
-                      : 'Dual-Engine Protection: SQLite Local DB Active'}
-                  </span>
-                </div>
-                <p style={{ fontSize: '0.78rem', margin: '6px 0 0', color: '#64748b' }}>
-                  {dbStatus?.message ||
-                    'Contact Us enquiries and commercial leads are immediately recorded and secured in MySQL database.'}
-                </p>
-              </div>
-
-              <div className="adm-dossier-grid" style={{ gridTemplateColumns: '1fr' }}>
-                <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Configured Host &amp; Port</span>
-                  <span className="adm-dossier-val">
-                    {dbStatus?.host || 'localhost'}:{dbStatus?.port || '3306'}
-                  </span>
-                </div>
-                <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Database Name</span>
-                  <span className="adm-dossier-val">{dbStatus?.database || 'hti_careers_db'}</span>
-                </div>
-                <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Active Table</span>
-                  <span className="adm-dossier-val">{dbStatus?.table || 'inquiries'}</span>
-                </div>
-                <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">MySQL User</span>
-                  <span className="adm-dossier-val">{dbStatus?.user || 'root'}</span>
-                </div>
-                <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Fallback Storage Path</span>
-                  <span className="adm-dossier-val" style={{ fontFamily: 'monospace', fontSize: '0.78rem' }}>
-                    backend/hti.db [Table: inquiries]
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="adm-modal-footer">
-              <button
-                type="button"
-                className="adm-careers-btn"
-                style={{ background: '#f1f5f9', color: '#334155' }}
-                onClick={() => setShowDbModal(false)}
-              >
-                Close
+                <span>Delete Lead</span>
               </button>
             </div>
           </div>

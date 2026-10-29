@@ -13,7 +13,8 @@ import {
   UserCheck,
   X,
   HelpCircle,
-  Star
+  Star,
+  Inbox
 } from 'lucide-react';
 
 export default function AdminSidebar({
@@ -29,6 +30,7 @@ export default function AdminSidebar({
   unansweredInquiries = [],
   adminUsers = [],
   careerApplications = [],
+  userEnquiries = [],
   testimonials = [],
   isMobileNavOpen = false,
   onCloseMobileNav = () => {},
@@ -115,6 +117,7 @@ export default function AdminSidebar({
   };
 
   const totalClientsAndPartners = clients.length + partners.length;
+  const newUserEnquiriesCount = userEnquiries.filter(e => (e.status || '').toLowerCase() === 'new').length;
   const newInquiriesCount = unansweredInquiries.length > 0
     ? unansweredInquiries.length
     : inquiries.filter(i => (i.status || '').toLowerCase() === 'new').length;
@@ -134,8 +137,16 @@ export default function AdminSidebar({
           badge: null
         },
         {
+          id: 'user_enquiries',
+          label: 'User Enquiries',
+          icon: Inbox,
+          badge: newUserEnquiriesCount > 0
+            ? { text: `${newUserEnquiriesCount} New`, isAttention: true }
+            : null
+        },
+        {
           id: 'inquiries',
-          label: 'Contact & Enquiries',
+          label: 'Sales Enquiries',
           icon: MessageSquare,
           badge: newInquiriesCount > 0
             ? { text: `${newInquiriesCount} New`, isAttention: true }

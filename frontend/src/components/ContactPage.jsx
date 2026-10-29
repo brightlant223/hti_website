@@ -73,6 +73,18 @@ export default function ContactPage({ onNavigate, onInquirySubmitted }) {
 
     setLoading(true);
     try {
+      await fetch('/api/user-enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: formData.fullName,
+          company: formData.company || 'Not Specified',
+          email: formData.email,
+          phone: formData.phone,
+          area_of_interest: formData.areaOfInterest || 'General Enquiry',
+          project_details: formData.message || 'Contact Us Project Enquiry'
+        })
+      });
       await fetch('/api/inquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

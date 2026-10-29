@@ -6,6 +6,7 @@ import AdminWebsiteContentManager from './AdminWebsiteContentManager';
 import AdminEnquiriesManager from './AdminEnquiriesManager';
 import AdminUsersSecurityManager from './AdminUsersSecurityManager';
 import AdminCareersManager from './AdminCareersManager';
+import AdminUserEnquiriesManager from './AdminUserEnquiriesManager';
 import AdminSidebar from './AdminSidebar';
 import AdminReviewsManager from './AdminReviewsManager';
 import {
@@ -249,9 +250,10 @@ export default function AdminPanel({
   const [clients, setClients] = useState([]);
   const [partners, setPartners] = useState([]);
   const [inquiries, setInquiries] = useState([]);
-  const [inquiriesDbStatus, setInquiriesDbStatus] = useState(null);
   const [careerApplications, setCareerApplications] = useState([]);
   const [careerDbStatus, setCareerDbStatus] = useState(null);
+  const [userEnquiries, setUserEnquiries] = useState([]);
+  const [userEnquiriesDbStatus, setUserEnquiriesDbStatus] = useState(null);
   const [adminUsers, setAdminUsers] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [systemHealth, setSystemHealth] = useState(null);
@@ -402,19 +404,12 @@ export default function AdminPanel({
 
   const fetchInquiries = async () => {
     try {
-      const [inqRes, dbRes] = await Promise.all([
-        fetch('/api/inquiries'),
-        fetch('/api/inquiries/db-status')
-      ]);
-      if (inqRes.ok) {
-        const data = await inqRes.json();
+      const res = await fetch('/api/inquiries');
+      if (res.ok) {
+        const data = await res.json();
         setInquiries(data);
+        updateTimestamp();
       }
-      if (dbRes.ok) {
-        const dbData = await dbRes.json();
-        setInquiriesDbStatus(dbData);
-      }
-      updateTimestamp();
     } catch (err) {
       console.error('Failed to fetch inquiries:', err);
     }
@@ -531,12 +526,86 @@ export default function AdminPanel({
     }
   };
 
+  const fetchUserEnquiries = async () => {
+    try {
+      const [enqRes, dbRes] = await Promise.all([
+        fetch('/api/user-enquiries'),
+        fetch('/api/user-enquiries/db-status')
+      ]);
+      if (enqRes.ok) {
+        const data = await enqRes.json();
+        setUserEnquiries(Array.isArray(data) ? data : []);
+      }
+      if (dbRes.ok) {
+        const dbData = await dbRes.json();
+        setUserEnquiriesDbStatus(dbData);
+      }
+      updateTimestamp();
+    } catch (err) {
+      console.error('Failed to fetch user enquiries or db status:', err);
+    }
+  };
+
+  const handleUpdateUserEnquiryStatus = async (enquiryId, newStatus) => {
+    try {
+      const res = await fetch(`/api/user-enquiries/${enquiryId}/status?admin_user=${encodeURIComponent(currentUser)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (res.ok) {
+        setUserEnquiries((prev) =>
+          prev.map((item) => (item.id === enquiryId ? { ...item, status: newStatus } : item))
+        );
+        fetchUsersAndAudit();
+      }
+    } catch (err) {
+      console.error('Failed to update user enquiry status:', err);
+      throw err;
+    }
+  };
+
+  const handleSaveUserEnquiryNotes = async (enquiryId, notes) => {
+    try {
+      const res = await fetch(`/api/user-enquiries/${enquiryId}/notes?admin_user=${encodeURIComponent(currentUser)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes })
+      });
+      if (res.ok) {
+        setUserEnquiries((prev) =>
+          prev.map((item) => (item.id === enquiryId ? { ...item, notes } : item))
+        );
+        fetchUsersAndAudit();
+      }
+    } catch (err) {
+      console.error('Failed to save user enquiry notes:', err);
+      throw err;
+    }
+  };
+
+  const handleDeleteUserEnquiry = async (enquiryId) => {
+    try {
+      const res = await fetch(`/api/user-enquiries/${enquiryId}?admin_user=${encodeURIComponent(currentUser)}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setUserEnquiries((prev) => prev.filter((item) => item.id !== enquiryId));
+        fetchUsersAndAudit();
+      }
+    } catch (err) {
+      console.error('Failed to delete user enquiry:', err);
+      throw err;
+    }
+  };
+
   const refreshAllData = () => {
     fetchSystemHealth();
     fetchBlogs();
     fetchClientsAndPartners();
     fetchInquiries();
     fetchCareerApplications();
+    fetchUserEnquiries();
     fetchWebsiteContent();
     fetchUsersAndAudit();
     fetchSettingsAndBackups();
@@ -1538,6 +1607,7 @@ export default function AdminPanel({
           unansweredInquiries={unansweredInquiries}
           adminUsers={adminUsers}
           careerApplications={careerApplications}
+          userEnquiries={userEnquiries}
           isMobileNavOpen={mobileNavOpen}
           onCloseMobileNav={() => setMobileNavOpen(false)}
           onCloseConsole={onClose}
@@ -1566,10 +1636,11 @@ export default function AdminPanel({
               <div className="adm-topbar-headings" style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                 <h2 className="admin-topbar-title adm-topbar-title" style={{ margin: 0, fontSize: '1.22rem', fontWeight: 800 }}>
                   {activeTab === 'dashboard' && 'Executive Dashboard'}
+                  {activeTab === 'user_enquiries' && 'Contact Us User Enquiries & Project Leads (MySQL Live)'}
                   {activeTab === 'reviews' && 'Reviews & Verified Customer Feedback'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
                   {activeTab === 'clients_partners' && 'Enterprise Clients & Technology Partners Roster'}
-                  {activeTab === 'inquiries' && 'Contact Us Enquiries & Customer Leads Pipeline'}
+                  {activeTab === 'inquiries' && 'Commercial Enquiries & Lead Pipeline Management'}
                   {activeTab === 'careers' && 'Careers & Talent Acquisition Pipeline'}
                   {activeTab === 'content' && 'Live Website Content & Copy CMS'}
                   {activeTab === 'users' && 'Administrative Access Control & Audit Log'}
@@ -2734,20 +2805,37 @@ export default function AdminPanel({
           )}
 
           {/* =========================================================================
-              MODULE 5: ENQUIRIES & LEAD MANAGEMENT (MySQL Dual-Engine)
+              MODULE 5: ENQUIRIES & LEAD MANAGEMENT
               ========================================================================= */}
           {activeTab === 'inquiries' && (
             <div className="admin-body-content" style={{ padding: 0 }}>
-              <AdminModuleErrorBoundary title="Contact Us & Sales Enquiries Module">
-                <AdminEnquiriesManager
-                  inquiries={inquiries}
-                  dbStatus={inquiriesDbStatus}
-                  onUpdateStatus={handleUpdateInquiryStatus}
-                  onAssign={handleAssignInquiry}
-                  onDelete={handleDeleteInquiry}
-                  onSaveNotes={handleSaveInquiryNotes}
-                  onExportCSV={handleExportInquiriesCSV}
-                  onRefresh={fetchInquiries}
+              <AdminEnquiriesManager
+                inquiries={inquiries}
+                onUpdateStatus={handleUpdateInquiryStatus}
+                onAssign={handleAssignInquiry}
+                onDelete={handleDeleteInquiry}
+                onSaveNotes={handleSaveInquiryNotes}
+                onExportCSV={handleExportInquiriesCSV}
+                onRefresh={fetchInquiries}
+                showFeedback={showFeedback}
+                currentUser={currentUser}
+              />
+            </div>
+          )}
+
+          {/* =========================================================================
+              MODULE 5C: USER ENQUIRIES - CONTACT US FORM (MySQL Powered)
+              ========================================================================= */}
+          {activeTab === 'user_enquiries' && (
+            <div className="admin-body-content" style={{ padding: 0 }}>
+              <AdminModuleErrorBoundary title="User Enquiries Module">
+                <AdminUserEnquiriesManager
+                  enquiries={userEnquiries}
+                  dbStatus={userEnquiriesDbStatus}
+                  onUpdateStatus={handleUpdateUserEnquiryStatus}
+                  onSaveNotes={handleSaveUserEnquiryNotes}
+                  onDelete={handleDeleteUserEnquiry}
+                  onRefresh={fetchUserEnquiries}
                   showFeedback={showFeedback}
                   currentUser={currentUser}
                 />
