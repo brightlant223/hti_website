@@ -7,6 +7,7 @@ import AdminEnquiriesManager from './AdminEnquiriesManager';
 import AdminUsersSecurityManager from './AdminUsersSecurityManager';
 import AdminCareersManager from './AdminCareersManager';
 import AdminSidebar from './AdminSidebar';
+import AdminReviewsManager from './AdminReviewsManager';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
   FileText, Package, MessageSquare, Search, AlertCircle,
@@ -196,6 +197,11 @@ export default function AdminPanel({
     backup_status: ''
   });
   const [websiteContent, setWebsiteContent] = useState({});
+
+  const testimonialsList = useMemo(() => {
+    const raw = websiteContent?.testimonials?.data;
+    return Array.isArray(raw) ? raw : [];
+  }, [websiteContent]);
 
   // Search & filter states
 
@@ -1459,6 +1465,7 @@ export default function AdminPanel({
               <div className="adm-topbar-headings" style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                 <h2 className="admin-topbar-title adm-topbar-title" style={{ margin: 0, fontSize: '1.22rem', fontWeight: 800 }}>
                   {activeTab === 'dashboard' && 'Executive Dashboard'}
+                  {activeTab === 'reviews' && 'Reviews & Verified Customer Feedback'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
                   {activeTab === 'clients_partners' && 'Enterprise Clients & Technology Partners Roster'}
                   {activeTab === 'inquiries' && 'Commercial Enquiries & Lead Pipeline Management'}
@@ -2523,6 +2530,20 @@ export default function AdminPanel({
           {/* =========================================================================
               MODULE 7: WEBSITE CONTENT MANAGEMENT (Live CMS)
               ========================================================================= */}
+          {/* =========================================================================
+              MODULE: REVIEWS & TESTIMONIALS
+              ========================================================================= */}
+          {activeTab === 'reviews' && (
+            <div className="admin-body-content">
+              <AdminReviewsManager
+                websiteContent={websiteContent}
+                onSaveContent={handleSaveContentSection}
+                showFeedback={showFeedback}
+                currentUser={currentUser}
+              />
+            </div>
+          )}
+
           {activeTab === 'content' && (
             <div className="admin-body-content">
               <AdminWebsiteContentManager

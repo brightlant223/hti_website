@@ -12,7 +12,8 @@ import {
   LogOut,
   UserCheck,
   X,
-  HelpCircle
+  HelpCircle,
+  Star
 } from 'lucide-react';
 
 export default function AdminSidebar({
@@ -28,6 +29,7 @@ export default function AdminSidebar({
   unansweredInquiries = [],
   adminUsers = [],
   careerApplications = [],
+  testimonials = [],
   isMobileNavOpen = false,
   onCloseMobileNav = () => {},
   onCloseConsole,
@@ -117,12 +119,13 @@ export default function AdminSidebar({
     ? unansweredInquiries.length
     : inquiries.filter(i => (i.status || '').toLowerCase() === 'new').length;
   const newCareerCount = careerApplications.filter(a => (a.status || '').toLowerCase() === 'new').length;
+  const testimonialsCount = Array.isArray(testimonials) ? testimonials.length : 0;
 
   const avatarInitials = (currentUser || 'AD').slice(0, 2).toUpperCase();
 
   const navigationSections = [
     {
-      section: 'EXECUTIVE NEXUS',
+      section: 'MAIN WORKSPACE',
       items: [
         {
           id: 'dashboard',
@@ -131,31 +134,8 @@ export default function AdminSidebar({
           badge: null
         },
         {
-          id: 'blogs',
-          label: 'Blogs',
-          icon: FileText,
-          badge: null
-        },
-        {
-          id: 'clients_partners',
-          label: 'Clients & Partners',
-          icon: Users,
-          badge: null
-        },
-        {
-          id: 'content',
-          label: 'Website Content',
-          icon: Globe,
-          badge: null
-        }
-      ]
-    },
-    {
-      section: 'OPERATIONS & CONTROL',
-      items: [
-        {
           id: 'inquiries',
-          label: 'Enquiries & Leads',
+          label: 'Contact & Enquiries',
           icon: MessageSquare,
           badge: newInquiriesCount > 0
             ? { text: `${newInquiriesCount} New`, isAttention: true }
@@ -168,6 +148,35 @@ export default function AdminSidebar({
           badge: newCareerCount > 0
             ? { text: `${newCareerCount} New`, isAttention: true }
             : null
+        },
+        {
+          id: 'blogs',
+          label: 'Blogs & Articles',
+          icon: FileText,
+          badge: blogs.length > 0 ? { text: `${blogs.length}` } : null
+        },
+        {
+          id: 'clients_partners',
+          label: 'Clients & Partners',
+          icon: Users,
+          badge: totalClientsAndPartners > 0 ? { text: `${totalClientsAndPartners}` } : null
+        },
+        {
+          id: 'reviews',
+          label: 'Reviews & Feedback',
+          icon: Star,
+          badge: testimonialsCount > 0 ? { text: `${testimonialsCount}` } : null
+        }
+      ]
+    },
+    {
+      section: 'SYSTEM & SETTINGS',
+      items: [
+        {
+          id: 'content',
+          label: 'Website CMS',
+          icon: Globe,
+          badge: null
         },
         {
           id: 'users',
