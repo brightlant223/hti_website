@@ -126,6 +126,7 @@ export default function AdminPanel({
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
+  const [loginPopup, setLoginPopup] = useState(null); // { show: boolean, user: string, role: string }
   const [lastSyncedTime, setLastSyncedTime] = useState('Just now');
 
   const toggleAdminTheme = () => {
@@ -532,6 +533,12 @@ export default function AdminPanel({
         setIsAuthenticated(true);
         setLoginForm({ username: '', password: '' });
         showFeedback('success', `Authenticated successfully as ${data.full_name || data.username} (${data.role || 'Admin'}).`);
+        setLoginPopup({
+          user: data.full_name || data.username || 'Chief Administrator',
+          role: data.role || 'Administrator',
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+        setTimeout(() => setLoginPopup(null), 5000);
       } else {
         const err = await res.json();
         setLoginError(err.detail || 'Invalid username or password.');
@@ -547,6 +554,12 @@ export default function AdminPanel({
         setIsAuthenticated(true);
         setLoginForm({ username: '', password: '' });
         showFeedback('success', 'Authenticated with Chief Administrator credentials.');
+        setLoginPopup({
+          user: 'Chief Administrator',
+          role: 'Administrator',
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+        setTimeout(() => setLoginPopup(null), 5000);
       } else {
         setLoginError('Authentication failed. Check your security credentials.');
       }
@@ -1540,6 +1553,91 @@ export default function AdminPanel({
             </div>
           </div>
 
+          {/* Login Success Popup Notification */}
+          {loginPopup && (
+            <div
+              className="adm-login-popup-modal"
+              role="alert"
+              style={{
+                position: 'fixed',
+                top: '24px',
+                right: '24px',
+                zIndex: 99999,
+                background: 'rgba(15, 23, 42, 0.95)',
+                border: '1px solid rgba(16, 185, 129, 0.5)',
+                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.4), 0 0 20px rgba(16, 185, 129, 0.25)',
+                borderRadius: '14px',
+                padding: '16px 20px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '14px',
+                backdropFilter: 'blur(16px)',
+                animation: 'slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                maxWidth: '420px',
+                color: '#ffffff'
+              }}
+            >
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#ffffff',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)',
+                  flexShrink: 0
+                }}
+              >
+                <CheckCircle size={22} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h4 style={{ margin: 0, fontSize: '0.94rem', fontWeight: 800, color: '#f8fafc' }}>
+                    Login Successful
+                  </h4>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      background: 'rgba(16, 185, 129, 0.18)',
+                      color: '#34d49a',
+                      padding: '2px 8px',
+                      borderRadius: '6px',
+                      border: '1px solid rgba(16, 185, 129, 0.3)'
+                    }}
+                  >
+                    Online
+                  </span>
+                </div>
+                <p style={{ margin: '3px 0 0 0', fontSize: '0.82rem', color: '#cbd5e1' }}>
+                  Welcome back, <strong>{loginPopup.user}</strong> ({loginPopup.role})!
+                </p>
+                <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                  Authenticated via Zero-Trust RBAC • {loginPopup.time}
+                </span>
+              </div>
+              <button
+                onClick={() => setLoginPopup(null)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94a3b8',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Dismiss"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          )}
+
           {/* Global Toast Feedback */}
           {feedback.message && (
             <div className={`admin-toast ${feedback.type === 'error' ? 'toast-error' : 'toast-success'}`}>
@@ -1634,7 +1732,7 @@ export default function AdminPanel({
                   <div className="adm-card-top-row">
                     <div className="adm-card-title-group">
                       <div className="adm-card-icon-box purple">
-                        <Users size={15} />
+                        <UserCheck size={15} />
                       </div>
                       <span className="adm-card-label">Talent & Careers</span>
                     </div>
@@ -1722,151 +1820,290 @@ export default function AdminPanel({
                     </span>
                   </div>
                 </div>
-              </div>
 
-              {/* 3. Middle Row: Executive Quick Actions & System Status Side by Side */}
-              <div className="adm-middle-split-row">
-                {/* Executive Quick Actions */}
-                <div className="adm-card-box adm-quick-actions-box">
-                  <div className="adm-quick-actions-header">
-                    <Zap size={17} className="adm-quick-actions-bolt" />
-                    <div>
-                      <h3 className="adm-quick-actions-title">Executive Quick Actions</h3>
-                      <p className="adm-quick-actions-sub">Fast-track common administrative tasks with 1-click workflows</p>
+                {/* Card 5: Customer Reviews */}
+                <div
+                  className="adm-summary-card card-amber"
+                  onClick={() => setActiveTab('reviews')}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter') setActiveTab('reviews'); }}
+                >
+                  <div className="adm-card-top-row">
+                    <div className="adm-card-title-group">
+                      <div className="adm-card-icon-box gold" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' }}>
+                        <Star size={15} />
+                      </div>
+                      <span className="adm-card-label">Customer Reviews</span>
+                    </div>
+                    <div className="adm-card-arrow-wrap gold" style={{ color: '#f59e0b' }}>
+                      <ChevronRight size={15} />
                     </div>
                   </div>
-
-                  <div className="adm-quick-actions-row">
-                    <button className="adm-btn-action primary-blue" onClick={() => { setActiveTab('blogs'); handleOpenAddBlog(); }}>
-                      <FileText size={14} />
-                      <span>Publish Article</span>
-                    </button>
-
-                    <button className="adm-btn-action neutral-white" onClick={() => { setActiveTab('clients_partners'); handleOpenAddClient(); }}>
-                      <Users size={14} />
-                      <span>Add Client / Partner</span>
-                    </button>
-
-                    <button className="adm-btn-action neutral-white" onClick={() => setActiveTab('careers')}>
-                      <UserCheck size={14} />
-                      <span>Review Candidates</span>
-                    </button>
-
-                    <button className="adm-btn-action neutral-white" onClick={handleExportInquiriesCSV}>
-                      <Download size={14} />
-                      <span>Export Leads (CSV)</span>
-                    </button>
+                  <div className="adm-card-count">
+                    <AnimatedNumber value={testimonialsList.length} />
                   </div>
-                </div>
-
-                {/* System Status Card */}
-                <div className="adm-card-box adm-system-status-box">
-                  <div className="adm-panel-head">
-                    <div className="adm-panel-title-wrap">
-                      <Activity size={16} className="adm-panel-icon green" />
-                      <h4 className="adm-panel-title">System Status</h4>
-                    </div>
-                    <button
-                      className="adm-panel-view-all-btn"
-                      onClick={() => setActiveTab('settings')}
-                    >
-                      View All
-                    </button>
-                  </div>
-
-                  <div className="adm-system-status-body">
-                    <div className="adm-status-live-row">
-                      <span className="adm-live-pulse-dot">
-                        <span className="adm-live-pulse-inner" />
-                      </span>
-                      <span className="adm-status-headline">
-                        {systemHealth?.status === 'healthy' || systemHealth?.status === 'operational' || !systemHealth?.status
-                          ? 'All Systems Operational'
-                          : 'Systems Degraded'}
-                      </span>
-                    </div>
-
-                    {/* Decorative pale green wave graphic at bottom */}
-                    <div className="adm-status-wave-container" aria-hidden="true">
-                      <svg className="adm-status-wave-svg" viewBox="0 0 500 80" preserveAspectRatio="none">
-                        <path
-                          d="M0,50 C90,20 160,65 250,42 C340,20 420,55 500,32 L500,80 L0,80 Z"
-                          fill="rgba(16, 185, 129, 0.12)"
-                        />
-                        <path
-                          d="M0,58 C80,32 170,68 260,48 C350,28 430,62 500,38 L500,80 L0,80 Z"
-                          fill="rgba(16, 185, 129, 0.18)"
-                        />
-                      </svg>
-                    </div>
+                  <div className="adm-card-pills-row">
+                    <span className="adm-card-pill pill-green">
+                      <span className="adm-card-pill-dot" />
+                      5.0 ★ Rating
+                    </span>
+                    <span className="adm-card-pill pill-neutral">
+                      {testimonialsList.length} Verified
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* 4. Bottom Row: Measured System Telemetry & Administrative Audit Stream Side by Side */}
-              <div className="adm-bottom-split-row">
-                {/* Left: Measured System Telemetry */}
-                <div className="adm-card-box adm-telemetry-box">
+              {/* 3. Executive Quick Actions Row */}
+              <div className="adm-card-box adm-quick-actions-box" style={{ marginTop: '14px' }}>
+                <div className="adm-quick-actions-header">
+                  <Zap size={17} className="adm-quick-actions-bolt" />
+                  <div>
+                    <h3 className="adm-quick-actions-title">Executive Quick Actions</h3>
+                    <p className="adm-quick-actions-sub">Fast-track key administrative tasks across your core modules</p>
+                  </div>
+                </div>
+
+                <div className="adm-quick-actions-row" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))' }}>
+                  <button className="adm-btn-action primary-blue" onClick={() => setActiveTab('inquiries')}>
+                    <MessageSquare size={14} />
+                    <span>Review Leads ({unansweredInquiries.length})</span>
+                  </button>
+
+                  <button className="adm-btn-action neutral-white" onClick={() => setActiveTab('careers')}>
+                    <UserCheck size={14} />
+                    <span>Review Candidates ({careerApplications.filter(a => (a.status || '').toLowerCase() === 'new').length})</span>
+                  </button>
+
+                  <button className="adm-btn-action neutral-white" onClick={() => { setActiveTab('blogs'); handleOpenAddBlog(); }}>
+                    <FileText size={14} />
+                    <span>Publish Article</span>
+                  </button>
+
+                  <button className="adm-btn-action neutral-white" onClick={() => { setActiveTab('clients_partners'); handleOpenAddClient(); }}>
+                    <Users size={14} />
+                    <span>Add Client / Partner</span>
+                  </button>
+
+                  <button className="adm-btn-action neutral-white" onClick={() => setActiveTab('reviews')}>
+                    <Star size={14} />
+                    <span>Manage Reviews ({testimonialsList.length})</span>
+                  </button>
+
+                  <button className="adm-btn-action neutral-white" onClick={handleExportInquiriesCSV}>
+                    <Download size={14} />
+                    <span>Export Leads (CSV)</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* 4. Split Row 1: Live Contact Enquiries Feed & Recent Talent Applications Feed */}
+              <div className="adm-bottom-split-row" style={{ marginTop: '14px' }}>
+                {/* Left: Live Contact & Sales Enquiries Feed (Jab contact par kuch bheje to dikhe) */}
+                <div className="adm-card-box">
                   <div className="adm-panel-head">
                     <div className="adm-panel-title-wrap">
-                      <Database size={16} className="adm-panel-icon blue" />
+                      <MessageSquare size={16} className="adm-panel-icon orange" style={{ color: '#f97316' }} />
                       <div>
-                        <h4 className="adm-panel-title">Measured System Telemetry</h4>
-                        <p className="adm-panel-sub">Live measured metrics verified directly from SQLite &amp; host OS</p>
+                        <h4 className="adm-panel-title">Live Contact &amp; Sales Enquiries</h4>
+                        <p className="adm-panel-sub">Incoming messages submitted from website contact &amp; quote form</p>
                       </div>
                     </div>
                     <button
                       className="adm-panel-view-all-btn"
-                      onClick={() => setActiveTab('settings')}
+                      onClick={() => setActiveTab('inquiries')}
                     >
-                      View All
+                      View All ({inquiries.length})
                     </button>
                   </div>
 
-                  <div className="adm-telemetry-card-content">
-                    <div className="adm-telemetry-inner-panel">
-                      {/* Host Label with Green Status Indicator */}
-                      <div className="adm-disk-host-row">
-                        <span className="adm-status-indicator-dot green" />
-                        <span className="adm-disk-host-label">
-                          DISK STORAGE (HOST {systemHealth?.database?.path?.match(/^([A-Za-z]):/)?.[1]?.toUpperCase() || 'D'}:)
-                        </span>
+                  <div className="adm-feed-list">
+                    {inquiries.length === 0 ? (
+                      <div style={{ padding: '36px 14px', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
+                        No inquiries received yet.
                       </div>
+                    ) : (
+                      inquiries.slice(0, 4).map((lead) => {
+                        const isNew = (lead.status || '').toLowerCase() === 'new';
+                        const initials = (lead.full_name || 'IN').replace(/^(Dr\.|Mr\.|Er\.)\s*/i, '').slice(0, 2).toUpperCase();
+                        return (
+                          <div key={lead.id} className="adm-feed-item">
+                            <div className="adm-feed-avatar orange">
+                              {initials}
+                            </div>
+                            <div className="adm-feed-body">
+                              <div className="adm-feed-header-line">
+                                <span className="adm-feed-name">
+                                  {lead.full_name}
+                                  {lead.company && <span className="adm-feed-company">({lead.company})</span>}
+                                </span>
+                                <span className="adm-feed-time">
+                                  {formatAuditDateTime(lead.created_at).time}
+                                </span>
+                              </div>
+                              <p className="adm-feed-message">
+                                "{lead.message || 'Client submitted technical inquiry regarding entrance automation.'}"
+                              </p>
+                              <div className="adm-feed-footer-line">
+                                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                  <span className="adm-feed-tag">
+                                    {lead.product_name || 'Automation Solution'}
+                                  </span>
+                                  <span className={`adm-feed-badge ${isNew ? 'new' : 'contacted'}`}>
+                                    {isNew && <span className="adm-card-pill-dot" style={{ background: '#ef4444' }} />}
+                                    {lead.status || 'New'}
+                                  </span>
+                                </div>
+                                <button
+                                  className="adm-feed-btn"
+                                  onClick={() => {
+                                    setSelectedInquiry(lead);
+                                    setInquiryNotesText(lead.followup_notes || '');
+                                    setActiveTab('inquiries');
+                                  }}
+                                >
+                                  <span>Review Dossier</span>
+                                  <ArrowRight size={12} />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
 
-                      {/* Main Metric Numbers */}
-                      <div className="adm-disk-numbers-row">
-                        <span className="adm-disk-gb-strong">
-                          {diskMetrics
-                            ? `${diskMetrics.free.toFixed(2)} GB Free of ${diskMetrics.total.toFixed(2)} GB`
-                            : '260.53 GB Free of 475.69 GB'}
-                        </span>
-                        <span className="adm-disk-free-pct">
-                          {diskMetrics ? `${diskMetrics.freePct}% Free` : '55% Free'}
-                        </span>
-                      </div>
-
-                      {/* Horizontal Storage Progress Bar */}
-                      <div className="adm-disk-bar-container">
-                        <div
-                          className="adm-disk-bar-fill"
-                          style={{
-                            width: `${diskMetrics ? diskMetrics.usedPct : 45}%`
-                          }}
-                        />
-                      </div>
-
-                      {/* Legend Row */}
-                      <div className="adm-disk-legend-row">
-                        <div className="adm-legend-item">
-                          <span className="adm-legend-dot blue" />
-                          <span>Used {diskMetrics ? `${diskMetrics.used.toFixed(2)} GB` : '215.16 GB'}</span>
-                        </div>
-                        <div className="adm-legend-item">
-                          <span className="adm-legend-dot slate" />
-                          <span>Free {diskMetrics ? `${diskMetrics.free.toFixed(2)} GB` : '260.53 GB'}</span>
-                        </div>
+                {/* Right: Recent Talent & Job Applications Feed (Jab career par kuch bheje to dikhe) */}
+                <div className="adm-card-box">
+                  <div className="adm-panel-head">
+                    <div className="adm-panel-title-wrap">
+                      <UserCheck size={16} className="adm-panel-icon purple" style={{ color: '#8b5cf6' }} />
+                      <div>
+                        <h4 className="adm-panel-title">Recent Talent &amp; Job Applications</h4>
+                        <p className="adm-panel-sub">Candidates submitting CVs through Careers portal</p>
                       </div>
                     </div>
+                    <button
+                      className="adm-panel-view-all-btn"
+                      onClick={() => setActiveTab('careers')}
+                    >
+                      View All ({careerApplications.length})
+                    </button>
+                  </div>
+
+                  <div className="adm-feed-list">
+                    {careerApplications.length === 0 ? (
+                      <div style={{ padding: '36px 14px', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
+                        No candidate applications submitted yet.
+                      </div>
+                    ) : (
+                      careerApplications.slice(0, 4).map((app) => {
+                        const isNew = (app.status || '').toLowerCase() === 'new';
+                        const initials = (app.full_name || 'CA').replace(/^(Dr\.|Mr\.|Er\.)\s*/i, '').slice(0, 2).toUpperCase();
+                        return (
+                          <div key={app.id} className="adm-feed-item">
+                            <div className="adm-feed-avatar purple">
+                              {initials}
+                            </div>
+                            <div className="adm-feed-body">
+                              <div className="adm-feed-header-line">
+                                <span className="adm-feed-name">
+                                  {app.full_name}
+                                </span>
+                                <span className="adm-feed-time">
+                                  {formatAuditDateTime(app.created_at).time}
+                                </span>
+                              </div>
+                              <p className="adm-feed-message">
+                                <strong>Role: {app.job_title || 'Engineering Specialist'}</strong>
+                                {app.experience ? ` • ${app.experience}` : ''}
+                                {app.email ? ` • ${app.email}` : ''}
+                              </p>
+                              <div className="adm-feed-footer-line">
+                                <span className={`adm-feed-badge ${isNew ? 'new-green' : 'contacted'}`}>
+                                  {isNew && <span className="adm-card-pill-dot" style={{ background: '#10b981' }} />}
+                                  {app.status || 'New Applicant'}
+                                </span>
+                                <button
+                                  className="adm-feed-btn"
+                                  onClick={() => setActiveTab('careers')}
+                                >
+                                  <span>Review Candidate</span>
+                                  <ArrowRight size={12} />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* 5. Split Row 2: Customer Reviews Showcase & Administrative Audit Stream */}
+              <div className="adm-bottom-split-row" style={{ marginTop: '14px' }}>
+                {/* Left: Customer Reviews & Testimonials Showcase */}
+                <div className="adm-card-box">
+                  <div className="adm-panel-head">
+                    <div className="adm-panel-title-wrap">
+                      <Star size={16} className="adm-panel-icon gold" style={{ color: '#f59e0b' }} />
+                      <div>
+                        <h4 className="adm-panel-title">Customer Reviews &amp; Testimonials</h4>
+                        <p className="adm-panel-sub">Verified customer feedback and 5-star endorsements</p>
+                      </div>
+                    </div>
+                    <button
+                      className="adm-panel-view-all-btn"
+                      onClick={() => setActiveTab('reviews')}
+                    >
+                      Manage Reviews ({testimonialsList.length})
+                    </button>
+                  </div>
+
+                  <div className="adm-feed-list">
+                    {testimonialsList.length === 0 ? (
+                      <div style={{ padding: '30px 14px', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
+                        No testimonials published yet.
+                      </div>
+                    ) : (
+                      testimonialsList.slice(0, 3).map((item, idx) => (
+                        <div key={idx} className="adm-feed-item">
+                          <div className="adm-feed-avatar gold">
+                            ★
+                          </div>
+                          <div className="adm-feed-body">
+                            <div className="adm-feed-header-line">
+                              <span className="adm-feed-name">
+                                {item.author}
+                                {item.company && <span className="adm-feed-company">({item.company})</span>}
+                              </span>
+                              <div style={{ display: 'flex', gap: '2px', color: '#f59e0b' }}>
+                                {[...Array(Number(item.rating) || 5)].map((_, i) => (
+                                  <Star key={i} size={11} fill="#f59e0b" color="#f59e0b" />
+                                ))}
+                              </div>
+                            </div>
+                            <p className="adm-feed-message">
+                              "{item.quote}"
+                            </p>
+                            <div className="adm-feed-footer-line">
+                              <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                                {item.location || 'Maharashtra, India'} • Verified Public Testimonial
+                              </span>
+                              <button
+                                className="adm-feed-btn"
+                                onClick={() => setActiveTab('reviews')}
+                              >
+                                <span>Edit Review</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
 
@@ -1874,10 +2111,10 @@ export default function AdminPanel({
                 <div className="adm-card-box adm-audit-box">
                   <div className="adm-panel-head">
                     <div className="adm-panel-title-wrap">
-                      <Clock size={20} className="adm-panel-icon blue" />
+                      <Clock size={16} className="adm-panel-icon blue" />
                       <div>
                         <h4 className="adm-panel-title">Administrative Audit Stream</h4>
-                        <p className="adm-panel-sub">Immutable record of changes across all modules</p>
+                        <p className="adm-panel-sub">Immutable security log of changes across all modules</p>
                       </div>
                     </div>
                     <button
@@ -1893,15 +2130,12 @@ export default function AdminPanel({
                       <div className="adm-audit-empty">No audit records found.</div>
                     ) : (
                       <div className="adm-stream-timeline">
-                        {auditLogs.slice(0, 2).map((log, idx) => {
+                        {auditLogs.slice(0, 3).map((log, idx) => {
                           const cat = getAuditCategoryInfo(log.module);
                           const dt = formatAuditDateTime(log.timestamp);
                           return (
                             <div key={log.id || idx} className="adm-stream-item">
-                              {/* Continuous connecting line */}
                               <div className="adm-stream-line" />
-
-                              {/* Colored circular marker */}
                               <div className={`adm-stream-marker ${cat.color}`}>
                                 <span className="adm-stream-dot" />
                               </div>
@@ -1929,8 +2163,6 @@ export default function AdminPanel({
               </div>
             </div>
           )}
-
-
 
           {/* =========================================================================
               MODULE 3: BLOGS & TECHNICAL ARTICLES
