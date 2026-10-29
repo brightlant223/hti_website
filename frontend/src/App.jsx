@@ -947,17 +947,13 @@ export default function App() {
           onThemeChange={setTheme}
           onClose={() => {
             setIsAdminOpen(false);
-            if (
-              window.location.pathname === '/admin' ||
-              window.location.pathname === '/admin/' ||
-              window.location.pathname === '/admin-login' ||
-              window.location.pathname === '/login' ||
-              window.location.hash.includes('admin') ||
-              window.location.hash.includes('login')
-            ) {
+            setRouteState({ page: 'home', param: null, openAdmin: false });
+            if (window.location.pathname !== '/' || window.location.hash) {
               window.history.pushState({}, '', '/');
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
+          onNavigate={navigateTo}
           onProductsChanged={handleRefreshProducts}
           onBlogsChanged={handleRefreshBlogs}
           onClientsChanged={handleRefreshClients}

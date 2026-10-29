@@ -149,6 +149,7 @@ export default function AdminPanel({
   onClose,
   theme,
   onThemeChange,
+  onNavigate,
   onBlogsChanged,
   onClientsChanged,
   onContentChanged
@@ -680,7 +681,19 @@ export default function AdminPanel({
     localStorage.removeItem('hti_admin_role');
     setIsAuthenticated(false);
     setActiveTab('dashboard');
-    showFeedback('success', 'Logged out safely.');
+    showFeedback('success', 'Logged out safely. Returning to home page...');
+
+    // Directly close admin console and render the home page
+    if (onNavigate) {
+      onNavigate('home');
+    }
+    if (onClose) {
+      onClose();
+    }
+    if (window.location.pathname !== '/' || window.location.hash) {
+      window.history.pushState({}, '', '/');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // ===================== BLOG CRUD ACTIONS =====================
@@ -1608,8 +1621,8 @@ export default function AdminPanel({
               <button
                 className="adm-mobile-logout-btn"
                 onClick={handleLogout}
-                title="Log Out Safely"
-                aria-label="Log Out"
+                title="Exit to Home Page"
+                aria-label="Exit to Home Page"
               >
                 <LogOut size={16} />
               </button>

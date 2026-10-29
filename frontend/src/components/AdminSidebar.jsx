@@ -308,8 +308,8 @@ export default function AdminSidebar({
             type="button"
             className="adm-logout-btn"
             onClick={handleLogout}
-            title="Log out"
-            aria-label="Log out"
+            title="Exit to Home Page"
+            aria-label="Exit to Home Page"
           >
             <LogOut size={16} />
           </button>
