@@ -559,3 +559,96 @@
   }
 }
 
+
+/* Status pill (Published vs Hidden) and Client association */
+.adm-rev-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  line-height: 1.2;
+}
+
+.adm-rev-status-pill.published {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.adm-rev-status-pill.published:hover {
+  background: rgba(16, 185, 129, 0.22);
+}
+
+.adm-rev-status-pill.hidden {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.adm-rev-status-pill.hidden:hover {
+  background: rgba(245, 158, 11, 0.22);
+}
+
+.adm-rev-card.is-hidden-card {
+  opacity: 0.75;
+  border-style: dashed;
+}
+
+.adm-rev-client-badge-row {
+  margin-top: 10px;
+}
+
+.adm-rev-client-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(2, 132, 199, 0.1);
+  color: #0284c7;
+  border: 1px solid rgba(2, 132, 199, 0.25);
+}
+
+[data-theme="dark"] .adm-rev-client-pill {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.adm-rev-checkbox-group {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+[data-theme="light"] .adm-rev-checkbox-group {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.adm-rev-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: inherit;
+}
+
+.adm-rev-checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #0284c7;
+}

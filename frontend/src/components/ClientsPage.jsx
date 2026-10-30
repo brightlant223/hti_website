@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './ClientsPage.css';
 import {
   Users,
@@ -15,7 +15,8 @@ import {
   PhoneCall,
   Clock,
   Layers,
-  Award
+  Award,
+  Star
 } from 'lucide-react';
 import { clientsData } from '../data/clientsData';
 
@@ -31,6 +32,41 @@ const categories = [
 export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog }) {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+
+  // Fetch verified published reviews from backend API
+  useEffect(() => {
+    let isMounted = true;
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch('/api/reviews');
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && Array.isArray(data)) {
+            setReviews(data.filter(r => r.is_published !== false));
+          }
+        } else {
+          // Fallback to /api/content/testimonials
+          const fallbackRes = await fetch('/api/content/testimonials');
+          if (fallbackRes.ok) {
+            const fbData = await fallbackRes.json();
+            const list = fbData?.data;
+            if (isMounted && Array.isArray(list)) {
+              setReviews(list.filter(r => r.is_published !== false));
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Note: Could not load client reviews', err);
+      } finally {
+        if (isMounted) setReviewsLoading(false);
+      }
+    };
+
+    fetchReviews();
+    return () => { isMounted = false; };
+  }, []);
 
   const handleQuoteClick = () => {
     if (onQuoteClick) {
@@ -277,6 +313,81 @@ export default function ClientsPage({ onNavigate, onQuoteClick, onExploreCatalog
           )}
         </div>
       </section>
+
+      {/* 4.5 What Our Clients Say (Verified Customer Reviews) */}
+      {reviews.length > 0 && (
+        <section className="clients-reviews-section" id="client-reviews" aria-label="What Our Clients Say">
+          <div className="container">
+            <div className="clients-reviews-header">
+              <div className="clients-reviews-badge">
+                <Star size={13} className="badge-star-icon" />
+                <span>VERIFIED ENDORSEMENTS</span>
+              </div>
+              <h2 className="clients-reviews-title">
+                What Our <span className="title-gradient-accent">Clients Say</span>
+              </h2>
+              <p className="clients-reviews-subtitle">
+                Feedback from engineering heads, plant managers, and facilities directors who trust HTI systems across India.
+              </p>
+            </div>
+
+            <div className="clients-reviews-grid">
+              {reviews.map((rev, idx) => {
+                const ratingNum = Math.min(5, Math.max(1, Number(rev.rating) || 5));
+                const authorInitial = (rev.author || 'C').replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Er\.)\s*/i, '').trim().charAt(0).toUpperCase() || 'C';
+                return (
+                  <div key={idx} className="clients-review-card">
+                    {/* Top Row: Star Rating & Verified Pill */}
+                    <div className="clients-review-top">
+                      <div className="clients-review-stars" aria-label={`${ratingNum} out of 5 stars`}>
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star
+                            key={s}
+                            size={16}
+                            fill={s <= ratingNum ? '#f59e0b' : 'transparent'}
+                            color={s <= ratingNum ? '#f59e0b' : '#64748b'}
+                          />
+                        ))}
+                      </div>
+                      <span className="clients-review-verified">
+                        <CheckCircle2 size={12} />
+                        <span>Verified</span>
+                      </span>
+                    </div>
+
+                    {/* Testimonial Quote */}
+                    <blockquote className="clients-review-quote">
+                      "{rev.quote}"
+                    </blockquote>
+
+                    {/* Associated Enterprise Client Badge (if linked) */}
+                    {rev.client_name && (
+                      <div className="clients-review-linked-client">
+                        <Building2 size={12} className="linked-client-icon" />
+                        <span>Partner: {rev.client_name}</span>
+                      </div>
+                    )}
+
+                    {/* Author / Reviewer Info */}
+                    <div className="clients-review-footer">
+                      <div className="clients-review-avatar">
+                        {authorInitial}
+                      </div>
+                      <div className="clients-review-author-meta">
+                        <div className="clients-review-author-name">{rev.author || 'Corporate Client'}</div>
+                        <div className="clients-review-author-company">
+                          {rev.company}
+                          {rev.location ? ` • ${rev.location}` : ''}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 5. Why Leaders Trust HTI Strip */}
       <section className="clients-trust-section">

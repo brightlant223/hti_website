@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union
 import json
 import re
 import os
@@ -214,7 +214,7 @@ class AdminUserUpdate(BaseModel):
     password: Optional[str] = None
 
 class WebsiteContentUpdate(BaseModel):
-    data: Dict[str, Any]
+    data: Union[Dict[str, Any], List[Any]]
 
 class SystemSettingsUpdate(BaseModel):
     settings: Dict[str, str]
@@ -2028,6 +2028,27 @@ def update_website_content_section(section_key: str, payload: WebsiteContentUpda
         "section_key": section_key,
         "updated_at": now_iso
     }
+
+@app.get("/api/reviews")
+def get_public_reviews():
+    """
+    Public API endpoint returning published client reviews and testimonials.
+    Existing reviews without an explicit is_published flag default to True (visible).
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT data_json, updated_at FROM website_content WHERE section_key = 'testimonials'")
+    row = cursor.fetchone()
+    conn.close()
+    if not row:
+        return []
+    try:
+        data = json.loads(row["data_json"])
+        if isinstance(data, list):
+            return [r for r in data if r.get("is_published", True) is not False]
+        return []
+    except Exception:
+        return []
 
 # =========================================================================
 # ADMIN USERS, PERMISSIONS & AUDIT LOGS (Module 8)

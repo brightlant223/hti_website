@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './AdminReviewsManager.css';
 import {
   Star,
@@ -12,14 +12,20 @@ import {
   X,
   MessageSquare,
   Award,
-  Sparkles
+  Sparkles,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 export default function AdminReviewsManager({
   websiteContent = {},
   onSaveContent,
   showFeedback = () => {},
-  currentUser = 'admin'
+  currentUser = 'admin',
+  clients = [],
+  embedded = false,
+  externalModalOpen = false,
+  onCloseExternalModal = () => {}
 }) {
   const rawTestimonials = websiteContent?.testimonials?.data;
   const testimonialsList = useMemo(() => {
@@ -27,7 +33,7 @@ export default function AdminReviewsManager({
   }, [rawTestimonials]);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [ratingFilter, setRatingFilter] = useState('all');
+  const [filterMode, setFilterMode] = useState('all'); // 'all' | '5' | '4' | 'published' | 'hidden'
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
 
@@ -36,8 +42,19 @@ export default function AdminReviewsManager({
     company: '',
     location: '',
     rating: 5,
-    quote: ''
+    quote: '',
+    is_published: true,
+    client_id: '',
+    client_name: ''
   });
+
+  // External open trigger from parent tab toolbar
+  useEffect(() => {
+    if (externalModalOpen) {
+      handleOpenAdd();
+      if (onCloseExternalModal) onCloseExternalModal();
+    }
+  }, [externalModalOpen]);
 
   // Calculate metrics
   const totalReviews = testimonialsList.length;
@@ -45,6 +62,8 @@ export default function AdminReviewsManager({
     ? (testimonialsList.reduce((acc, curr) => acc + (Number(curr.rating) || 5), 0) / totalReviews).toFixed(1)
     : '5.0';
   const fiveStarCount = testimonialsList.filter((item) => Number(item.rating || 5) === 5).length;
+  const publishedCount = testimonialsList.filter((item) => item.is_published !== false).length;
+  const hiddenCount = testimonialsList.filter((item) => item.is_published === false).length;
 
   // Filtered reviews
   const filteredList = useMemo(() => {
@@ -55,15 +74,21 @@ export default function AdminReviewsManager({
         (item.author || '').toLowerCase().includes(q) ||
         (item.company || '').toLowerCase().includes(q) ||
         (item.location || '').toLowerCase().includes(q) ||
-        (item.quote || '').toLowerCase().includes(q);
+        (item.quote || '').toLowerCase().includes(q) ||
+        (item.client_name || '').toLowerCase().includes(q);
 
-      const matchesRating =
-        ratingFilter === 'all' ||
-        String(item.rating || 5) === String(ratingFilter);
+      let matchesFilter = true;
+      if (filterMode === '5' || filterMode === '4') {
+        matchesFilter = String(item.rating || 5) === filterMode;
+      } else if (filterMode === 'published') {
+        matchesFilter = item.is_published !== false;
+      } else if (filterMode === 'hidden') {
+        matchesFilter = item.is_published === false;
+      }
 
-      return matchesSearch && matchesRating;
+      return matchesSearch && matchesFilter;
     });
-  }, [testimonialsList, searchQuery, ratingFilter]);
+  }, [testimonialsList, searchQuery, filterMode]);
 
   const handleOpenAdd = () => {
     setEditingIndex(null);
@@ -72,7 +97,10 @@ export default function AdminReviewsManager({
       company: '',
       location: '',
       rating: 5,
-      quote: ''
+      quote: '',
+      is_published: true,
+      client_id: '',
+      client_name: ''
     });
     setModalOpen(true);
   };
@@ -84,9 +112,32 @@ export default function AdminReviewsManager({
       company: item.company || '',
       location: item.location || '',
       rating: Number(item.rating) || 5,
-      quote: item.quote || ''
+      quote: item.quote || '',
+      is_published: item.is_published !== false,
+      client_id: item.client_id || '',
+      client_name: item.client_name || ''
     });
     setModalOpen(true);
+  };
+
+  const handleTogglePublished = async (indexToToggle) => {
+    const updatedList = [...testimonialsList];
+    const current = updatedList[indexToToggle];
+    const newStatus = current.is_published === false ? true : false;
+    updatedList[indexToToggle] = {
+      ...current,
+      is_published: newStatus
+    };
+    try {
+      if (onSaveContent) {
+        const ok = await onSaveContent('testimonials', updatedList);
+        if (ok !== false) {
+          showFeedback('success', newStatus ? 'Review published live on website!' : 'Review hidden from public website.');
+        }
+      }
+    } catch (err) {
+      showFeedback('error', 'Failed to update review visibility: ' + (err.message || 'Unknown error'));
+    }
   };
 
   const handleSaveModal = async (e) => {
@@ -102,7 +153,10 @@ export default function AdminReviewsManager({
       company: formData.company.trim(),
       location: formData.location.trim(),
       rating: Number(formData.rating) || 5,
-      quote: formData.quote.trim()
+      quote: formData.quote.trim(),
+      is_published: formData.is_published !== false,
+      client_id: formData.client_id ? String(formData.client_id) : undefined,
+      client_name: formData.client_name ? String(formData.client_name).trim() : undefined
     };
 
     if (editingIndex !== null) {
@@ -113,10 +167,12 @@ export default function AdminReviewsManager({
 
     try {
       if (onSaveContent) {
-        await onSaveContent('testimonials', updatedList);
+        const ok = await onSaveContent('testimonials', updatedList);
+        if (ok !== false) {
+          showFeedback('success', editingIndex !== null ? 'Review updated successfully!' : 'New review added live to website!');
+          setModalOpen(false);
+        }
       }
-      showFeedback('success', editingIndex !== null ? 'Review updated successfully!' : 'New review added live to website!');
-      setModalOpen(false);
     } catch (err) {
       showFeedback('error', 'Failed to save review: ' + (err.message || 'Unknown error'));
     }
@@ -149,72 +205,76 @@ export default function AdminReviewsManager({
 
   return (
     <div className="adm-rev-container">
-      {/* Header Banner */}
-      <div className="adm-rev-header">
-        <div className="adm-rev-title-group">
-          <div className="adm-rev-title-icon">
-            <Star size={24} />
+      {/* 1. Header Banner (Only shown if not embedded in unified module) */}
+      {!embedded && (
+        <div className="adm-rev-header">
+          <div className="adm-rev-title-group">
+            <div className="adm-rev-title-icon">
+              <Star size={24} />
+            </div>
+            <div>
+              <h2 className="adm-rev-title">Reviews &amp; Customer Testimonials</h2>
+              <p className="adm-rev-subtitle">
+                Manage client endorsements, 5-star feedback, and verified recommendations shown across HTI website.
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 className="adm-rev-title">Reviews & Customer Testimonials</h2>
-            <p className="adm-rev-subtitle">
-              Manage client endorsements, 5-star feedback, and verified recommendations shown across HTI website.
-            </p>
+          <button className="adm-rev-btn-add" onClick={handleOpenAdd}>
+            <Plus size={16} />
+            <span>Add New Review</span>
+          </button>
+        </div>
+      )}
+
+      {/* 2. Top 4 KPI Metrics (Only shown if not embedded) */}
+      {!embedded && (
+        <div className="adm-rev-kpi-grid">
+          <div className="adm-rev-kpi-card">
+            <span className="adm-rev-kpi-label">
+              <MessageSquare size={14} className="text-amber-400" />
+              Total Reviews
+            </span>
+            <span className="adm-rev-kpi-value">{totalReviews}</span>
+            <span className="adm-rev-kpi-sub">Verified customer submissions</span>
+          </div>
+
+          <div className="adm-rev-kpi-card">
+            <span className="adm-rev-kpi-label">
+              <Star size={14} className="text-amber-400" />
+              Average Rating
+            </span>
+            <span className="adm-rev-kpi-value">{avgRating} ★</span>
+            <span className="adm-rev-kpi-sub">Out of 5.0 satisfaction score</span>
+          </div>
+
+          <div className="adm-rev-kpi-card">
+            <span className="adm-rev-kpi-label">
+              <Award size={14} className="text-amber-400" />
+              5-Star Endorsements
+            </span>
+            <span className="adm-rev-kpi-value">{fiveStarCount}</span>
+            <span className="adm-rev-kpi-sub">{totalReviews > 0 ? Math.round((fiveStarCount / totalReviews) * 100) : 100}% top ratings</span>
+          </div>
+
+          <div className="adm-rev-kpi-card">
+            <span className="adm-rev-kpi-label">
+              <Sparkles size={14} className="text-emerald-400" />
+              Public Web Status
+            </span>
+            <span className="adm-rev-kpi-value" style={{ color: '#10b981' }}>Live</span>
+            <span className="adm-rev-kpi-sub">Synced with SQLite content store</span>
           </div>
         </div>
-        <button className="adm-rev-btn-add" onClick={handleOpenAdd}>
-          <Plus size={16} />
-          <span>Add New Review</span>
-        </button>
-      </div>
+      )}
 
-      {/* Top 4 KPI Metrics */}
-      <div className="adm-rev-kpi-grid">
-        <div className="adm-rev-kpi-card">
-          <span className="adm-rev-kpi-label">
-            <MessageSquare size={14} className="text-amber-400" />
-            Total Reviews
-          </span>
-          <span className="adm-rev-kpi-value">{totalReviews}</span>
-          <span className="adm-rev-kpi-sub">Verified customer submissions</span>
-        </div>
-
-        <div className="adm-rev-kpi-card">
-          <span className="adm-rev-kpi-label">
-            <Star size={14} className="text-amber-400" />
-            Average Rating
-          </span>
-          <span className="adm-rev-kpi-value">{avgRating} ★</span>
-          <span className="adm-rev-kpi-sub">Out of 5.0 satisfaction score</span>
-        </div>
-
-        <div className="adm-rev-kpi-card">
-          <span className="adm-rev-kpi-label">
-            <Award size={14} className="text-amber-400" />
-            5-Star Endorsements
-          </span>
-          <span className="adm-rev-kpi-value">{fiveStarCount}</span>
-          <span className="adm-rev-kpi-sub">{totalReviews > 0 ? Math.round((fiveStarCount / totalReviews) * 100) : 100}% top ratings</span>
-        </div>
-
-        <div className="adm-rev-kpi-card">
-          <span className="adm-rev-kpi-label">
-            <Sparkles size={14} className="text-emerald-400" />
-            Public Web Status
-          </span>
-          <span className="adm-rev-kpi-value" style={{ color: '#10b981' }}>Live</span>
-          <span className="adm-rev-kpi-sub">Synced with SQLite content store</span>
-        </div>
-      </div>
-
-      {/* Toolbar / Search & Filter */}
+      {/* 3. Toolbar / Search & Filter */}
       <div className="adm-rev-toolbar">
         <div className="adm-rev-search-wrap">
           <Search size={16} className="adm-rev-search-icon" />
           <input
             type="text"
             className="adm-rev-search-input"
-            placeholder="Search by client name, company, location or quote..."
+            placeholder="Search by reviewer, organization, location, quote or client..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -222,46 +282,69 @@ export default function AdminReviewsManager({
 
         <div className="adm-rev-filter-group">
           <button
-            className={`adm-rev-filter-btn ${ratingFilter === 'all' ? 'active' : ''}`}
-            onClick={() => setRatingFilter('all')}
+            type="button"
+            className={`adm-rev-filter-btn ${filterMode === 'all' ? 'active' : ''}`}
+            onClick={() => setFilterMode('all')}
           >
-            All Ratings ({testimonialsList.length})
+            All ({testimonialsList.length})
           </button>
           <button
-            className={`adm-rev-filter-btn ${ratingFilter === '5' ? 'active' : ''}`}
-            onClick={() => setRatingFilter('5')}
+            type="button"
+            className={`adm-rev-filter-btn ${filterMode === 'published' ? 'active' : ''}`}
+            onClick={() => setFilterMode('published')}
+          >
+            Published ({publishedCount})
+          </button>
+          <button
+            type="button"
+            className={`adm-rev-filter-btn ${filterMode === 'hidden' ? 'active' : ''}`}
+            onClick={() => setFilterMode('hidden')}
+          >
+            Hidden ({hiddenCount})
+          </button>
+          <button
+            type="button"
+            className={`adm-rev-filter-btn ${filterMode === '5' ? 'active' : ''}`}
+            onClick={() => setFilterMode('5')}
           >
             5 Stars ({fiveStarCount})
           </button>
           <button
-            className={`adm-rev-filter-btn ${ratingFilter === '4' ? 'active' : ''}`}
-            onClick={() => setRatingFilter('4')}
+            type="button"
+            className={`adm-rev-filter-btn ${filterMode === '4' ? 'active' : ''}`}
+            onClick={() => setFilterMode('4')}
           >
             4 Stars ({testimonialsList.filter(t => Number(t.rating) === 4).length})
           </button>
         </div>
+
+        <button type="button" className="adm-rev-btn-add" onClick={handleOpenAdd}>
+          <Plus size={16} />
+          <span>Add Review</span>
+        </button>
       </div>
 
-      {/* Reviews Cards Grid */}
+      {/* 4. Reviews Cards Grid */}
       {filteredList.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 20px', background: 'rgba(15,23,42,0.4)', borderRadius: '12px' }}>
           <Star size={40} style={{ margin: '0 auto 12px', color: '#64748b' }} />
           <h4 style={{ color: '#94a3b8', margin: '0 0 6px' }}>No reviews found</h4>
           <p style={{ color: '#64748b', fontSize: '0.85rem', margin: '0 0 16px' }}>
-            {searchQuery ? 'Try matching another search term.' : 'Click "Add New Review" to publish your first customer testimonial.'}
+            {searchQuery || filterMode !== 'all' ? 'Try adjusting your search query or filter mode.' : 'Click "Add Review" to publish your first verified customer review.'}
           </p>
-          <button className="adm-rev-btn-add" onClick={handleOpenAdd}>
+          <button type="button" className="adm-rev-btn-add" onClick={handleOpenAdd}>
             <Plus size={16} />
             <span>Add Review Now</span>
           </button>
         </div>
       ) : (
         <div className="adm-rev-cards-grid">
-          {filteredList.map((item, idx) => {
+          {filteredList.map((item) => {
             const actualIndex = testimonialsList.indexOf(item);
             const ratingNum = Math.min(5, Math.max(1, Number(item.rating) || 5));
+            const isPub = item.is_published !== false;
             return (
-              <div key={actualIndex} className="adm-rev-card">
+              <div key={actualIndex} className={`adm-rev-card ${!isPub ? 'is-hidden-card' : ''}`}>
                 <div>
                   <div className="adm-rev-card-top">
                     <div className="adm-rev-stars">
@@ -274,13 +357,33 @@ export default function AdminReviewsManager({
                         />
                       ))}
                     </div>
-                    <span className="adm-rev-verified-pill">
-                      <CheckCircle size={11} />
-                      Verified
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <button
+                        type="button"
+                        className={`adm-rev-status-pill ${isPub ? 'published' : 'hidden'}`}
+                        onClick={() => handleTogglePublished(actualIndex)}
+                        title={isPub ? 'Click to unpublish from website' : 'Click to publish on website'}
+                      >
+                        {isPub ? <Eye size={11} /> : <EyeOff size={11} />}
+                        <span>{isPub ? 'Live on Web' : 'Hidden'}</span>
+                      </button>
+                      <span className="adm-rev-verified-pill">
+                        <CheckCircle size={11} />
+                        Verified
+                      </span>
+                    </div>
                   </div>
 
                   <p className="adm-rev-quote-text">"{item.quote}"</p>
+
+                  {item.client_name && (
+                    <div className="adm-rev-client-badge-row">
+                      <span className="adm-rev-client-pill" title={`Associated with client: ${item.client_name}`}>
+                        <Building size={11} />
+                        <span>Client: {item.client_name}</span>
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -295,16 +398,20 @@ export default function AdminReviewsManager({
                     </div>
                     <div className="adm-rev-card-actions">
                       <button
+                        type="button"
                         className="adm-rev-icon-btn"
                         onClick={() => handleOpenEdit(item, actualIndex)}
                         title="Edit Review"
+                        aria-label="Edit review"
                       >
                         <Edit2 size={14} />
                       </button>
                       <button
+                        type="button"
                         className="adm-rev-icon-btn danger"
                         onClick={() => handleDelete(actualIndex)}
                         title="Delete Review"
+                        aria-label="Delete review"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -317,7 +424,7 @@ export default function AdminReviewsManager({
         </div>
       )}
 
-      {/* Add / Edit Modal */}
+      {/* 5. Add / Edit Modal */}
       {modalOpen && (
         <div className="adm-rev-modal-backdrop" onClick={() => setModalOpen(false)}>
           <div className="adm-rev-modal-box" onClick={(e) => e.stopPropagation()}>
@@ -325,7 +432,7 @@ export default function AdminReviewsManager({
               <h3 className="adm-rev-modal-title">
                 {editingIndex !== null ? 'Edit Customer Review' : 'Add New Customer Review'}
               </h3>
-              <button className="adm-rev-modal-close" onClick={() => setModalOpen(false)}>
+              <button type="button" className="adm-rev-modal-close" onClick={() => setModalOpen(false)}>
                 <X size={18} />
               </button>
             </div>
@@ -354,6 +461,34 @@ export default function AdminReviewsManager({
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                   />
                 </div>
+
+                {/* Optional Link to Enterprise Client */}
+                {clients.length > 0 && (
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Link to Enterprise Client (Optional)</label>
+                    <select
+                      className="adm-rev-input"
+                      value={formData.client_id || ''}
+                      onChange={(e) => {
+                        const selId = e.target.value;
+                        const matched = clients.find(c => String(c.id) === String(selId));
+                        setFormData({
+                          ...formData,
+                          client_id: selId,
+                          client_name: matched ? matched.name : '',
+                          company: matched && !formData.company ? matched.name : formData.company
+                        });
+                      }}
+                    >
+                      <option value="">-- No linked client (General testimonial) --</option>
+                      {clients.map(c => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} {c.sector ? `(${c.sector})` : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
                 <div className="adm-rev-form-group">
                   <label className="adm-rev-label">City / Location</label>
@@ -399,6 +534,18 @@ export default function AdminReviewsManager({
                     required
                   />
                 </div>
+
+                {/* Visibility Toggle */}
+                <div className="adm-rev-form-group adm-rev-checkbox-group">
+                  <label className="adm-rev-checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={formData.is_published !== false}
+                      onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
+                    />
+                    <span>Publish live on public website (Visible on public Clients page)</span>
+                  </label>
+                </div>
               </div>
 
               <div className="adm-rev-modal-footer">
@@ -421,4 +568,3 @@ export default function AdminReviewsManager({
     </div>
   );
 }
-

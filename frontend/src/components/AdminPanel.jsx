@@ -241,7 +241,19 @@ export default function AdminPanel({
   }, [activeTab]);
 
   // Sub-tabs
-  const [clientPartnerSubTab, setClientPartnerSubTab] = useState('clients'); // 'clients' | 'partners'
+  const [clientPartnerSubTab, setClientPartnerSubTab] = useState('clients'); // 'clients' | 'partners' | 'reviews'
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+
+  // Automatically alias legacy tab IDs ('reviews' and 'clients_partners') to 'clients_reviews'
+  useEffect(() => {
+    if (activeTab === 'reviews') {
+      setActiveTab('clients_reviews');
+      setClientPartnerSubTab('reviews');
+    } else if (activeTab === 'clients_partners') {
+      setActiveTab('clients_reviews');
+      setClientPartnerSubTab('clients');
+    }
+  }, [activeTab]);
   const [userSubTab, setUserSubTab] = useState('users'); // 'users' | 'audit_logs'
   const [contentSubTab, setContentSubTab] = useState('homepage_hero'); // 'homepage_hero' | 'company_profile' | 'contact_details' | 'testimonials'
 
@@ -1150,11 +1162,15 @@ export default function AdminPanel({
         showFeedback('success', `Content for section '${sectionKey}' published live!`);
         await fetchWebsiteContent();
         if (onContentChanged) onContentChanged();
+        return true;
       } else {
-        showFeedback('error', 'Failed to publish website content.');
+        const err = await res.json().catch(() => null);
+        showFeedback('error', err?.detail || 'Failed to publish website content.');
+        return false;
       }
     } catch (err) {
       showFeedback('error', 'Network error saving content.');
+      return false;
     }
   };
 
@@ -1616,6 +1632,7 @@ export default function AdminPanel({
           adminUsers={adminUsers}
           careerApplications={careerApplications}
           userEnquiries={userEnquiries}
+          testimonials={testimonialsList}
           isMobileNavOpen={mobileNavOpen}
           onCloseMobileNav={() => setMobileNavOpen(false)}
           onCloseConsole={onClose}
@@ -1645,9 +1662,8 @@ export default function AdminPanel({
                 <h2 className="admin-topbar-title adm-topbar-title" style={{ margin: 0, fontSize: '1.22rem', fontWeight: 800 }}>
                   {activeTab === 'dashboard' && 'Executive Dashboard'}
                   {activeTab === 'user_enquiries' && 'Contact Us User Enquiries & Project Leads (MySQL Live)'}
-                  {activeTab === 'reviews' && 'Reviews & Verified Customer Feedback'}
+                  {(activeTab === 'clients_reviews' || activeTab === 'clients_partners' || activeTab === 'reviews') && 'Enterprise Clients, Technology Partners & Client Reviews'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
-                  {activeTab === 'clients_partners' && 'Enterprise Clients & Technology Partners Roster'}
                   {activeTab === 'inquiries' && 'Commercial Enquiries & Lead Pipeline Management'}
                   {activeTab === 'careers' && 'Careers & Talent Acquisition Pipeline'}
                   {activeTab === 'content' && 'Live Website Content & Copy CMS'}
@@ -2289,9 +2305,9 @@ export default function AdminPanel({
           )}
 
           {/* =========================================================================
-              MODULE 4: CLIENTS & TECHNOLOGY PARTNERS
+              MODULE 4: CLIENTS & REVIEWS (Unified Directory & Feedback)
               ========================================================================= */}
-          {activeTab === 'clients_partners' && (
+          {(activeTab === 'clients_reviews' || activeTab === 'clients_partners' || activeTab === 'reviews') && (
             <div className="admin-body-content">
               <div className="adm-cp-module">
                 {/* 1. Page Header with Live Telemetry & Quick Metrics */}
@@ -2300,11 +2316,11 @@ export default function AdminPanel({
                     <div className="adm-cp-title-wrap">
                       <div className="adm-cp-eyebrow">
                         <ShieldCheck size={13} />
-                        <span>Enterprise Directory &amp; Partnerships</span>
+                        <span>Enterprise Directory, Partnerships &amp; Client Feedback</span>
                       </div>
-                      <h2 className="adm-cp-title">Clients &amp; Partners</h2>
+                      <h2 className="adm-cp-title">Clients &amp; Reviews</h2>
                       <p className="adm-cp-subtitle">
-                        Manage approved enterprise clients and technology partnerships.
+                        Manage enterprise clients, technology partners and client reviews.
                       </p>
                     </div>
 
@@ -2325,8 +2341,8 @@ export default function AdminPanel({
                     </div>
                   </div>
 
-                  {/* Summary Metric Cards */}
-                  <div className="adm-cp-stats-grid">
+                  {/* Summary Metric Cards: 4 Cards */}
+                  <div className="adm-cp-stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))' }}>
                     <div className="adm-cp-stat-card">
                       <div className="adm-cp-stat-icon-box">
                         <Building2 size={18} />
@@ -2358,23 +2374,38 @@ export default function AdminPanel({
                     </div>
 
                     <div className="adm-cp-stat-card">
+                      <div className="adm-cp-stat-icon-box amber" style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#f59e0b' }}>
+                        <Star size={18} />
+                      </div>
+                      <div className="adm-cp-stat-content">
+                        <span className="adm-cp-stat-label">Client Reviews</span>
+                        <div className="adm-cp-stat-value">
+                          <AnimatedNumber value={testimonialsList.length} />
+                        </div>
+                        <span className="adm-cp-stat-sub">
+                          {testimonialsList.filter(t => t.is_published !== false).length} published · {testimonialsList.filter(t => t.is_published === false).length} pending
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="adm-cp-stat-card">
                       <div className="adm-cp-stat-icon-box purple">
                         <Database size={18} />
                       </div>
                       <div className="adm-cp-stat-content">
-                        <span className="adm-cp-stat-label">Total Directory Records</span>
+                        <span className="adm-cp-stat-label">Total Records</span>
                         <div className="adm-cp-stat-value">
-                          <AnimatedNumber value={clients.length + partners.length} />
+                          <AnimatedNumber value={clients.length + partners.length + testimonialsList.length} />
                         </div>
-                        <span className="adm-cp-stat-sub">Verified enterprise portfolio</span>
+                        <span className="adm-cp-stat-sub">Enterprise portfolio &amp; feedback</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* 2. Refined Segmented Navigation Tabs */}
+                {/* 2. Refined Segmented Navigation Tabs: 3 Tabs */}
                 <div className="adm-cp-tabs-container">
-                  <div className="adm-cp-segmented-nav" role="tablist" aria-label="Clients and Partners Tabs">
+                  <div className="adm-cp-segmented-nav" role="tablist" aria-label="Clients, Partners, and Reviews Tabs">
                     <button
                       className={`adm-cp-tab-btn ${clientPartnerSubTab === 'clients' ? 'active' : ''}`}
                       onClick={() => setClientPartnerSubTab('clients')}
@@ -2386,104 +2417,130 @@ export default function AdminPanel({
                       <span>Enterprise Clients</span>
                       <span className="adm-cp-tab-count">{clients.length}</span>
                     </button>
+
+                    <button
+                      className={`adm-cp-tab-btn ${clientPartnerSubTab === 'partners' ? 'active' : ''}`}
+                      onClick={() => setClientPartnerSubTab('partners')}
+                      role="tab"
+                      aria-selected={clientPartnerSubTab === 'partners'}
+                      tabIndex={0}
+                    >
+                      <HeartHandshake size={16} />
+                      <span>Technology Partners</span>
+                      <span className="adm-cp-tab-count">{partners.length}</span>
+                    </button>
+
+                    <button
+                      className={`adm-cp-tab-btn ${clientPartnerSubTab === 'reviews' ? 'active' : ''}`}
+                      onClick={() => setClientPartnerSubTab('reviews')}
+                      role="tab"
+                      aria-selected={clientPartnerSubTab === 'reviews'}
+                      tabIndex={0}
+                    >
+                      <Star size={16} />
+                      <span>Reviews</span>
+                      <span className="adm-cp-tab-count">{testimonialsList.length}</span>
+                    </button>
                   </div>
                 </div>
 
-                {/* 3. Search and Action Toolbar */}
-                <div className="adm-cp-toolbar">
-                  <div className="adm-cp-toolbar-left">
-                    <div className="adm-cp-search-wrap">
-                      <Search size={15} className="adm-cp-search-icon" />
-                      <input
-                        type="text"
-                        className="adm-cp-search-input"
-                        placeholder={
-                          clientPartnerSubTab === 'clients'
-                            ? 'Search clients by company name or sector...'
-                            : 'Search partners by brand name, category, or engineering scope...'
-                        }
-                        value={clientPartnerSubTab === 'clients' ? clientSearch : partnerSearch}
-                        onChange={e => {
-                          if (clientPartnerSubTab === 'clients') setClientSearch(e.target.value);
-                          else setPartnerSearch(e.target.value);
-                        }}
-                      />
-                      {(clientPartnerSubTab === 'clients' ? clientSearch : partnerSearch) && (
-                        <button
-                          type="button"
-                          className="adm-cp-search-clear"
-                          onClick={() => {
-                            if (clientPartnerSubTab === 'clients') setClientSearch('');
-                            else setPartnerSearch('');
+                {/* 3. Search and Action Toolbar (Per-tab search, filter chips, and dynamic Add button) */}
+                {clientPartnerSubTab !== 'reviews' ? (
+                  <div className="adm-cp-toolbar">
+                    <div className="adm-cp-toolbar-left">
+                      <div className="adm-cp-search-wrap">
+                        <Search size={15} className="adm-cp-search-icon" />
+                        <input
+                          type="text"
+                          className="adm-cp-search-input"
+                          placeholder={
+                            clientPartnerSubTab === 'clients'
+                              ? 'Search clients by company name or sector...'
+                              : 'Search partners by brand name, category, or engineering scope...'
+                          }
+                          value={clientPartnerSubTab === 'clients' ? clientSearch : partnerSearch}
+                          onChange={e => {
+                            if (clientPartnerSubTab === 'clients') setClientSearch(e.target.value);
+                            else setPartnerSearch(e.target.value);
                           }}
-                          title="Clear search"
-                          aria-label="Clear search"
-                        >
-                          <X size={14} />
-                        </button>
+                        />
+                        {(clientPartnerSubTab === 'clients' ? clientSearch : partnerSearch) && (
+                          <button
+                            type="button"
+                            className="adm-cp-search-clear"
+                            onClick={() => {
+                              if (clientPartnerSubTab === 'clients') setClientSearch('');
+                              else setPartnerSearch('');
+                            }}
+                            title="Clear search"
+                            aria-label="Clear search"
+                          >
+                            <X size={14} />
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Quick Filters */}
+                      {clientPartnerSubTab === 'clients' ? (
+                        <div className="adm-cp-filter-chips">
+                          <button
+                            className={`adm-cp-filter-chip ${clientFilterStatus === 'all' ? 'active' : ''}`}
+                            onClick={() => setClientFilterStatus('all')}
+                          >
+                            All ({clients.length})
+                          </button>
+                          <button
+                            className={`adm-cp-filter-chip ${clientFilterStatus === 'authorized' ? 'active' : ''}`}
+                            onClick={() => setClientFilterStatus('authorized')}
+                          >
+                            Authorized ({clients.filter(c => c.is_authorized).length})
+                          </button>
+                          <button
+                            className={`adm-cp-filter-chip ${clientFilterStatus === 'visible' ? 'active' : ''}`}
+                            onClick={() => setClientFilterStatus('visible')}
+                          >
+                            Visible on Web ({clients.filter(c => c.is_active).length})
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="adm-cp-filter-chips">
+                          <button
+                            className={`adm-cp-filter-chip ${partnerFilterStatus === 'all' ? 'active' : ''}`}
+                            onClick={() => setPartnerFilterStatus('all')}
+                          >
+                            All ({partners.length})
+                          </button>
+                          <button
+                            className={`adm-cp-filter-chip ${partnerFilterStatus === 'active' ? 'active' : ''}`}
+                            onClick={() => setPartnerFilterStatus('active')}
+                          >
+                            Active ({partners.filter(p => p.is_active).length})
+                          </button>
+                          <button
+                            className={`adm-cp-filter-chip ${partnerFilterStatus === 'hidden' ? 'active' : ''}`}
+                            onClick={() => setPartnerFilterStatus('hidden')}
+                          >
+                            Hidden ({partners.filter(p => !p.is_active).length})
+                          </button>
+                        </div>
                       )}
                     </div>
 
-                    {/* Quick Filters */}
-                    {clientPartnerSubTab === 'clients' ? (
-                      <div className="adm-cp-filter-chips">
-                        <button
-                          className={`adm-cp-filter-chip ${clientFilterStatus === 'all' ? 'active' : ''}`}
-                          onClick={() => setClientFilterStatus('all')}
-                        >
-                          All ({clients.length})
+                    <div className="adm-cp-toolbar-right">
+                      {clientPartnerSubTab === 'clients' ? (
+                        <button className="adm-cp-add-btn" onClick={handleOpenAddClient}>
+                          <Plus size={16} />
+                          <span>Add Approved Client</span>
                         </button>
-                        <button
-                          className={`adm-cp-filter-chip ${clientFilterStatus === 'authorized' ? 'active' : ''}`}
-                          onClick={() => setClientFilterStatus('authorized')}
-                        >
-                          Authorized ({clients.filter(c => c.is_authorized).length})
+                      ) : (
+                        <button className="adm-cp-add-btn" onClick={handleOpenAddPartner}>
+                          <Plus size={16} />
+                          <span>Add Tech Partner</span>
                         </button>
-                        <button
-                          className={`adm-cp-filter-chip ${clientFilterStatus === 'visible' ? 'active' : ''}`}
-                          onClick={() => setClientFilterStatus('visible')}
-                        >
-                          Visible on Web ({clients.filter(c => c.is_active).length})
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="adm-cp-filter-chips">
-                        <button
-                          className={`adm-cp-filter-chip ${partnerFilterStatus === 'all' ? 'active' : ''}`}
-                          onClick={() => setPartnerFilterStatus('all')}
-                        >
-                          All ({partners.length})
-                        </button>
-                        <button
-                          className={`adm-cp-filter-chip ${partnerFilterStatus === 'active' ? 'active' : ''}`}
-                          onClick={() => setPartnerFilterStatus('active')}
-                        >
-                          Active ({partners.filter(p => p.is_active).length})
-                        </button>
-                        <button
-                          className={`adm-cp-filter-chip ${partnerFilterStatus === 'hidden' ? 'active' : ''}`}
-                          onClick={() => setPartnerFilterStatus('hidden')}
-                        >
-                          Hidden ({partners.filter(p => !p.is_active).length})
-                        </button>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-
-                  <div className="adm-cp-toolbar-right">
-                    {clientPartnerSubTab === 'clients' ? (
-                      <button className="adm-cp-add-btn" onClick={handleOpenAddClient}>
-                        <Plus size={16} />
-                        <span>Add Approved Client</span>
-                      </button>
-                    ) : (
-                      <button className="adm-cp-add-btn" onClick={handleOpenAddPartner}>
-                        <Plus size={16} />
-                        <span>Add Tech Partner</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
+                ) : null}
 
                 {/* 4. Data Table: Enterprise Clients Subview */}
                 {clientPartnerSubTab === 'clients' && (
@@ -2808,6 +2865,22 @@ export default function AdminPanel({
                     )}
                   </div>
                 )}
+
+                {/* 5. Reviews Subview */}
+                {clientPartnerSubTab === 'reviews' && (
+                  <div className="adm-cp-reviews-subview" style={{ marginTop: 8 }}>
+                    <AdminReviewsManager
+                      websiteContent={websiteContent}
+                      onSaveContent={handleSaveContentSection}
+                      showFeedback={showFeedback}
+                      currentUser={currentUser}
+                      clients={clients}
+                      embedded={true}
+                      externalModalOpen={reviewModalOpen}
+                      onCloseExternalModal={() => setReviewModalOpen(false)}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -2874,19 +2947,7 @@ export default function AdminPanel({
           {/* =========================================================================
               MODULE 7: WEBSITE CONTENT MANAGEMENT (Live CMS)
               ========================================================================= */}
-          {/* =========================================================================
-              MODULE: REVIEWS & TESTIMONIALS
-              ========================================================================= */}
-          {activeTab === 'reviews' && (
-            <div className="admin-body-content">
-              <AdminReviewsManager
-                websiteContent={websiteContent}
-                onSaveContent={handleSaveContentSection}
-                showFeedback={showFeedback}
-                currentUser={currentUser}
-              />
-            </div>
-          )}
+
 
           {activeTab === 'content' && (
             <div className="admin-body-content">
