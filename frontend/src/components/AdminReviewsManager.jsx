@@ -449,43 +449,106 @@ export default function AdminReviewsManager({
         <div className="adm-rev-modal-backdrop" onClick={() => setModalOpen(false)}>
           <div className="adm-rev-modal-box" onClick={(e) => e.stopPropagation()}>
             <div className="adm-rev-modal-header">
-              <h3 className="adm-rev-modal-title">
-                {editingIndex !== null ? 'Edit Customer Review' : 'Add New Customer Review'}
-              </h3>
-              <button type="button" className="adm-rev-modal-close" onClick={() => setModalOpen(false)}>
+              <div className="adm-rev-modal-header-info">
+                <span className="adm-rev-modal-tag">
+                  <Star size={12} fill="#f59e0b" color="#f59e0b" />
+                  {editingIndex !== null ? 'EDIT MODE' : 'NEW TESTIMONIAL'}
+                </span>
+                <h3 className="adm-rev-modal-title">
+                  {editingIndex !== null ? 'Edit Customer Review' : 'Add New Customer Review'}
+                </h3>
+              </div>
+              <button
+                type="button"
+                className="adm-rev-modal-close"
+                onClick={() => setModalOpen(false)}
+                title="Close dialog"
+                aria-label="Close"
+              >
                 <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSaveModal}>
+            <form onSubmit={handleSaveModal} className="adm-rev-modal-form">
               <div className="adm-rev-modal-body">
-                <div className="adm-rev-form-group">
-                  <label className="adm-rev-label">Client Name / Designation *</label>
-                  <input
-                    type="text"
-                    className="adm-rev-input"
-                    placeholder="e.g. Dr. Hiren Patel (VP Engineering)"
-                    value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="adm-rev-form-group">
-                  <label className="adm-rev-label">Organization / Company Name</label>
-                  <input
-                    type="text"
-                    className="adm-rev-input"
-                    placeholder="e.g. Sun Pharma Cleanroom Division"
-                    value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  />
-                </div>
-
-                {/* Optional Link to Enterprise Client */}
-                {clients.length > 0 && (
+                {/* Row 1: Client Name & Company Name */}
+                <div className="adm-rev-form-row">
                   <div className="adm-rev-form-group">
-                    <label className="adm-rev-label">Link to Enterprise Client (Optional)</label>
+                    <label className="adm-rev-label">Client Name / Designation *</label>
+                    <input
+                      type="text"
+                      className="adm-rev-input"
+                      placeholder="e.g. Mr. Kunal Deshmukh (VP Engg)"
+                      value={formData.author}
+                      onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Organization / Company Name</label>
+                    <input
+                      type="text"
+                      className="adm-rev-input"
+                      placeholder="e.g. Cipla Ltd."
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                {/* Row 2: Location & Review Date */}
+                <div className="adm-rev-form-row">
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">City / Location</label>
+                    <input
+                      type="text"
+                      className="adm-rev-input"
+                      placeholder="e.g. Mumbai, Maharashtra"
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Review Date</label>
+                    <input
+                      type="text"
+                      className="adm-rev-input"
+                      placeholder="e.g. 10 Oct 2025"
+                      value={formData.date || ''}
+                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                {/* Row 3: Rating & Linked Client */}
+                <div className="adm-rev-form-row">
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Rating (1 to 5 Stars)</label>
+                    <div className="adm-rev-star-selector">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          className={`adm-rev-star-btn ${s <= formData.rating ? 'filled' : ''}`}
+                          onClick={() => setFormData({ ...formData, rating: s })}
+                        >
+                          <Star
+                            size={18}
+                            fill={s <= formData.rating ? '#f59e0b' : 'transparent'}
+                            color={s <= formData.rating ? '#f59e0b' : '#94a3b8'}
+                          />
+                        </button>
+                      ))}
+                      <span className="adm-rev-rating-label">
+                        {formData.rating} Stars
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Link to Client (Optional)</label>
                     <select
                       className="adm-rev-input"
                       value={formData.client_id || ''}
@@ -500,7 +563,7 @@ export default function AdminReviewsManager({
                         });
                       }}
                     >
-                      <option value="">-- No linked client (General testimonial) --</option>
+                      <option value="">-- No linked client --</option>
                       {clients.map(c => (
                         <option key={c.id} value={c.id}>
                           {c.name} {c.sector ? `(${c.sector})` : ''}
@@ -508,53 +571,9 @@ export default function AdminReviewsManager({
                       ))}
                     </select>
                   </div>
-                )}
-
-                <div className="adm-rev-form-group">
-                  <label className="adm-rev-label">City / Location</label>
-                  <input
-                    type="text"
-                    className="adm-rev-input"
-                    placeholder="e.g. Navi Mumbai, Maharashtra"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  />
                 </div>
 
-                <div className="adm-rev-form-group">
-                  <label className="adm-rev-label">Review Date</label>
-                  <input
-                    type="text"
-                    className="adm-rev-input"
-                    placeholder="e.g. Oct 24, 2026 or October 2026"
-                    value={formData.date || ''}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  />
-                </div>
-
-                <div className="adm-rev-form-group">
-                  <label className="adm-rev-label">Rating (1 to 5 Stars)</label>
-                  <div className="adm-rev-star-selector">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        className={`adm-rev-star-btn ${s <= formData.rating ? 'filled' : ''}`}
-                        onClick={() => setFormData({ ...formData, rating: s })}
-                      >
-                        <Star
-                          size={22}
-                          fill={s <= formData.rating ? '#f59e0b' : 'transparent'}
-                          color={s <= formData.rating ? '#f59e0b' : '#64748b'}
-                        />
-                      </button>
-                    ))}
-                    <span style={{ fontSize: '0.85rem', color: '#fbbf24', fontWeight: 600, marginLeft: '6px' }}>
-                      {formData.rating} Stars
-                    </span>
-                  </div>
-                </div>
-
+                {/* Row 4: Review Quote Content */}
                 <div className="adm-rev-form-group">
                   <label className="adm-rev-label">Review / Testimonial Quote *</label>
                   <textarea
@@ -562,23 +581,25 @@ export default function AdminReviewsManager({
                     placeholder="Enter the customer's verified feedback regarding HTI products or service..."
                     value={formData.quote}
                     onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
+                    rows={3}
                     required
                   />
                 </div>
 
-                {/* Visibility Toggle */}
-                <div className="adm-rev-form-group adm-rev-checkbox-group">
+                {/* Row 5: Visibility Toggle */}
+                <div className="adm-rev-checkbox-wrap">
                   <label className="adm-rev-checkbox-label">
                     <input
                       type="checkbox"
                       checked={formData.is_published !== false}
                       onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
                     />
-                    <span>Publish live on public website (Visible on public Clients page)</span>
+                    <span>Publish live on public website (Visible on Homepage & Clients page)</span>
                   </label>
                 </div>
               </div>
 
+              {/* Modal Footer with CLEAR, PROMINENT BUTTONS ALWAYS IN VIEW */}
               <div className="adm-rev-modal-footer">
                 <button
                   type="button"
@@ -587,7 +608,7 @@ export default function AdminReviewsManager({
                 >
                   Cancel
                 </button>
-                <button type="submit" className="adm-rev-btn-add">
+                <button type="submit" className="adm-rev-btn-publish">
                   <CheckCircle size={15} />
                   <span>{editingIndex !== null ? 'Save Changes' : 'Publish Review'}</span>
                 </button>
