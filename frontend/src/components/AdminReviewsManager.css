@@ -834,3 +834,115 @@ html.dark .adm-rev-btn-cancel:hover {
   cursor: pointer;
   accent-color: #0284c7;
 }
+
+
+/* ── PENDING REVIEWS & MODERATION ACTIONS ─────────────────────────────────── */
+.adm-rev-kpi-pending-card {
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  background: rgba(245, 158, 11, 0.08) !important;
+  transition: all 0.2s ease;
+}
+
+.adm-rev-kpi-pending-card:hover {
+  background: rgba(245, 158, 11, 0.15) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.2);
+}
+
+.adm-rev-filter-pending.has-pending {
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.14);
+}
+
+.adm-rev-card.is-pending-card {
+  border-color: rgba(245, 158, 11, 0.45);
+  background: linear-gradient(180deg, rgba(30, 27, 22, 0.8) 0%, rgba(15, 23, 42, 0.85) 100%);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.08);
+}
+
+.adm-rev-card.is-pending-card:hover {
+  border-color: rgba(245, 158, 11, 0.7);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
+}
+
+.adm-rev-status-pill.pending {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 3px 9px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 650;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.adm-rev-email-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  color: #7dd3fc;
+  background: rgba(14, 165, 233, 0.1);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.adm-rev-pending-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.adm-rev-btn-approve-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #10b981;
+  color: #ffffff;
+  border: 1px solid #10b981;
+  font-size: 0.82rem;
+  font-weight: 650;
+  padding: 7px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.28);
+}
+
+.adm-rev-btn-approve-action:hover {
+  background: #059669;
+  border-color: #059669;
+  transform: translateY(-1px);
+}
+
+.adm-rev-btn-reject-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(239, 68, 68, 0.14);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.adm-rev-btn-reject-action:hover {
+  background: rgba(239, 68, 68, 0.28);
+  color: #fca5a5;
+  border-color: #ef4444;
+}
