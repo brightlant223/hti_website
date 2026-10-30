@@ -567,6 +567,27 @@ export default function AdminJobModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formErrors, setFormErrors] = useState({});
 
+  const handleResetForm = () => {
+    setFormData({
+      title: '',
+      department: 'Administration',
+      job_category: 'Office & Administration',
+      employment_type: 'Full-time',
+      location: 'Navi Mumbai HQ',
+      openings: 1,
+      experience: 'Fresher',
+      salary_range: '',
+      skills: '',
+      description: '',
+      responsibilities: '',
+      qualifications: '',
+      additional_requirements: '',
+      deadline: '',
+      status: 'Published'
+    });
+    setFormErrors({});
+  };
+
   useEffect(() => {
     const jobSource = editingJob || initialData;
     if (jobSource) {
@@ -596,26 +617,7 @@ export default function AdminJobModal({
 
   if (!isOpen) return null;
 
-  const handleResetForm = () => {
-    setFormData({
-      title: '',
-      department: 'Administration',
-      job_category: 'Office & Administration',
-      employment_type: 'Full-time',
-      location: 'Navi Mumbai HQ',
-      openings: 1,
-      experience: 'Fresher',
-      salary_range: '',
-      skills: '',
-      description: '',
-      responsibilities: '',
-      qualifications: '',
-      additional_requirements: '',
-      deadline: '',
-      status: 'Published'
-    });
-    setFormErrors({});
-  };
+
 
   const handleApplyPresetRole = (preset) => {
     setFormData((prev) => ({
