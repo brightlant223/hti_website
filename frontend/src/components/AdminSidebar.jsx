@@ -136,7 +136,7 @@ export default function AdminSidebar({
         },
         {
           id: 'inquiries',
-          label: 'Sales Enquiries',
+          label: 'Contact Enquiries',
           icon: MessageSquare,
           badge: newInquiriesCount > 0
             ? { text: `${newInquiriesCount} New`, isAttention: true }

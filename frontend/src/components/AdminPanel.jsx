@@ -1672,7 +1672,7 @@ export default function AdminPanel({
                   {activeTab === 'user_enquiries' && 'Contact Us User Enquiries & Project Leads (MySQL Live)'}
                   {(activeTab === 'clients_reviews' || activeTab === 'clients_partners' || activeTab === 'reviews' || activeTab === 'partners') && 'Enterprise Clients & Client Reviews'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
-                  {activeTab === 'inquiries' && 'Commercial Enquiries & Lead Pipeline Management'}
+                  {activeTab === 'inquiries' && 'Contact Enquiries & Lead Pipeline Management'}
                   {activeTab === 'careers' && 'Careers & Talent Acquisition Pipeline'}
                   {activeTab === 'content' && 'Live Website Content & Copy CMS'}
                   {activeTab === 'users' && 'Administrative Access Control & Audit Log'}
