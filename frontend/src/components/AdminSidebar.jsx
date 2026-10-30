@@ -144,7 +144,7 @@ export default function AdminSidebar({
         },
         {
           id: 'careers',
-          label: 'Talent & Careers',
+          label: 'Career Enquiries',
           icon: UserCheck,
           badge: newCareerCount > 0
             ? { text: `${newCareerCount} New`, isAttention: true }

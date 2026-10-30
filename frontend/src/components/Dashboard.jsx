@@ -35,7 +35,7 @@ export default function Dashboard({ onNavigate = () => {} }) {
     },
     {
       id: 'careers',
-      title: 'Talent & Careers',
+      title: 'Career Enquiries',
       count: '3',
       icon: Users,
       iconColor: 'text-purple-600',

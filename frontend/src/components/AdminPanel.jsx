@@ -1673,7 +1673,7 @@ export default function AdminPanel({
                   {(activeTab === 'clients_reviews' || activeTab === 'clients_partners' || activeTab === 'reviews' || activeTab === 'partners') && 'Enterprise Clients & Client Reviews'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
                   {activeTab === 'inquiries' && 'Contact Enquiries & Lead Pipeline Management'}
-                  {activeTab === 'careers' && 'Careers & Talent Acquisition Pipeline'}
+                  {activeTab === 'careers' && 'Career Enquiries & Talent Acquisition Pipeline'}
                   {activeTab === 'content' && 'Live Website Content & Copy CMS'}
                   {activeTab === 'users' && 'Administrative Access Control & Audit Log'}
                   {activeTab === 'settings' && 'System Health, Tested Backups & Settings'}
@@ -1892,7 +1892,7 @@ export default function AdminPanel({
                       <div className="adm-card-icon-box purple">
                         <UserCheck size={15} />
                       </div>
-                      <span className="adm-card-label">Talent & Careers</span>
+                      <span className="adm-card-label">Career Enquiries</span>
                     </div>
                     <div className="adm-card-arrow-wrap purple">
                       <ChevronRight size={15} />
@@ -2715,7 +2715,7 @@ export default function AdminPanel({
               ========================================================================= */}
           {activeTab === 'careers' && (
             <div className="admin-body-content" style={{ padding: 0 }}>
-              <AdminModuleErrorBoundary title="Talent & Careers Module">
+              <AdminModuleErrorBoundary title="Career Enquiries Module">
                 <AdminCareersManager
                   applications={careerApplications}
                   dbStatus={careerDbStatus}
