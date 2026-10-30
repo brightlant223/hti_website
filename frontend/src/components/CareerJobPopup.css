@@ -1,0 +1,561 @@
+/* =========================================================================
+   HTI CAREER OPPORTUNITIES POPUP
+   "Build Your Future with HTI"
+   Corporate Light Blue, White & Navy Palette with Smooth Entrance Animation
+   ========================================================================= */
+
+.hti-job-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  background: rgba(10, 25, 47, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: htiPopupOverlayFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes htiPopupOverlayFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hti-job-popup-container {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  background: linear-gradient(155deg, #ffffff 0%, #f0f9ff 60%, #e0f2fe 100%);
+  border-radius: 24px;
+  border: 1.5px solid rgba(2, 132, 199, 0.25);
+  box-shadow: 0 25px 60px -12px rgba(2, 132, 199, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  overflow: hidden;
+  padding: 32px 32px 24px;
+  animation: htiPopupScaleUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes htiPopupScaleUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Glowing Decorative Orbs */
+.hti-job-popup-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(45px);
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+.hti-job-popup-glow-orb.orb-1 {
+  width: 220px;
+  height: 220px;
+  top: -80px;
+  right: -60px;
+  background: radial-gradient(circle, #38bdf8 0%, #0284c7 80%);
+}
+
+.hti-job-popup-glow-orb.orb-2 {
+  width: 180px;
+  height: 180px;
+  bottom: -60px;
+  left: -40px;
+  background: radial-gradient(circle, #0ea5e9 0%, #0369a1 80%);
+}
+
+/* Close Button */
+.hti-job-popup-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(2, 132, 199, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.22s ease;
+}
+
+.hti-job-popup-close:hover {
+  background: #ffffff;
+  color: #0f172a;
+  border-color: #0284c7;
+  transform: rotate(90deg) scale(1.05);
+}
+
+/* Hero Header */
+.hti-job-popup-hero {
+  position: relative;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.hti-job-popup-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  background: rgba(2, 132, 199, 0.1);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  font-size: 0.74rem;
+  font-weight: 750;
+  color: #0369a1;
+  letter-spacing: 0.6px;
+  margin-bottom: 10px;
+}
+
+.hti-job-pulse-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+}
+
+.pulse-core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #0284c7;
+}
+
+.pulse-ping {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: #38bdf8;
+  opacity: 0.75;
+  animation: htiPulsePing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes htiPulsePing {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  70%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.hti-job-popup-heading {
+  margin: 0;
+  font-size: 1.85rem;
+  font-weight: 850;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.hti-gradient-text {
+  background: linear-gradient(135deg, #0284c7 0%, #1e40af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hti-job-popup-subheading {
+  margin: 8px auto 0;
+  max-width: 520px;
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+/* Card Showcase */
+.hti-job-showcase-wrapper {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.hti-job-card-featured {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1.5px solid #bae6fd;
+  box-shadow: 0 10px 30px -8px rgba(2, 132, 199, 0.16);
+  padding: 22px 24px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hti-job-card-featured:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 16px 36px -8px rgba(2, 132, 199, 0.24);
+  transform: translateY(-2px);
+}
+
+.hti-job-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.hti-job-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hti-job-card-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+.hti-job-dept-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 750;
+  color: #0284c7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.hti-job-card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.hti-job-openings-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #047857;
+  white-space: nowrap;
+}
+
+/* Meta Chips */
+.hti-job-meta-grid {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.hti-job-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.hti-job-meta-chip .meta-icon {
+  color: #0284c7;
+}
+
+.hti-job-meta-chip.highlight-salary {
+  background: #fef3c7;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.hti-job-meta-chip.highlight-salary .meta-icon {
+  color: #d97706;
+}
+
+/* Description */
+.hti-job-card-desc {
+  margin: 0 0 14px;
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Skills */
+.hti-job-skills-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.skills-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.skills-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.skill-pill {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #0369a1;
+}
+
+.skill-pill.more {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+
+/* Action Bar */
+.hti-job-card-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+  gap: 16px;
+}
+
+.hti-job-pagination-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hti-job-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hti-job-nav-btn:hover {
+  background: #f1f5f9;
+  color: #0284c7;
+  border-color: #0284c7;
+}
+
+.hti-job-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hti-job-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #cbd5e1;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hti-job-dot.is-active {
+  width: 22px;
+  background: #0284c7;
+}
+
+.hti-job-apply-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 750;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hti-job-apply-primary-btn:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+}
+
+.hti-job-apply-primary-btn:hover .btn-arrow-icon {
+  transform: translateX(3px);
+}
+
+.btn-arrow-icon {
+  transition: transform 0.2s ease;
+}
+
+/* Footer Note */
+.hti-job-popup-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  font-size: 0.78rem;
+  color: #64748b;
+  border-top: 1px solid rgba(2, 132, 199, 0.15);
+}
+
+.hti-job-continue-link {
+  background: transparent;
+  border: none;
+  color: #0284c7;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.hti-job-continue-link:hover {
+  color: #0369a1;
+  text-decoration: underline;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .hti-job-popup-container {
+  background: linear-gradient(155deg, #0f172a 0%, #1e293b 60%, #0b1329 100%);
+  border-color: #334155;
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+[data-theme="dark"] .hti-job-popup-heading {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .hti-job-popup-subheading {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .hti-job-card-featured {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .hti-job-card-featured:hover {
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .hti-job-card-title {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .hti-job-card-desc {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .hti-job-meta-chip {
+  background: #0f172a;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .hti-job-meta-chip.highlight-salary {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .skill-pill {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #7dd3fc;
+}
+
+[data-theme="dark"] .hti-job-popup-close,
+[data-theme="dark"] .hti-job-nav-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .hti-job-popup-close:hover,
+[data-theme="dark"] .hti-job-nav-btn:hover {
+  background: #334155;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .hti-job-popup-footer {
+  color: #94a3b8;
+  border-top-color: #334155;
+}
+
+[data-theme="dark"] .hti-job-continue-link {
+  color: #38bdf8;
+}
+
+@media (max-width: 640px) {
+  .hti-job-popup-container {
+    padding: 24px 18px 18px;
+  }
+  .hti-job-popup-heading {
+    font-size: 1.5rem;
+  }
+  .hti-job-card-featured {
+    padding: 18px 16px;
+  }
+  .hti-job-card-action-bar {
+    flex-direction: column-reverse;
+  }
+  .hti-job-apply-primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .hti-job-popup-footer {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+

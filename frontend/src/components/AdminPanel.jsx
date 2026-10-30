@@ -6,6 +6,7 @@ import AdminWebsiteContentManager from './AdminWebsiteContentManager';
 import AdminEnquiriesManager from './AdminEnquiriesManager';
 import AdminUsersSecurityManager from './AdminUsersSecurityManager';
 import AdminCareersManager from './AdminCareersManager';
+import AdminJobModal from './AdminJobModal';
 import AdminUserEnquiriesManager from './AdminUserEnquiriesManager';
 import AdminSidebar from './AdminSidebar';
 import AdminReviewsManager from './AdminReviewsManager';
@@ -360,6 +361,11 @@ export default function AdminPanel({
 
   // Preview modals
 
+  // Job Postings management states
+  const [postedJobs, setPostedJobs] = useState([]);
+  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
+  const [editingJob, setEditingJob] = useState(null);
+
   // Backup in progress state
   const [isBackingUp, setIsBackingUp] = useState(false);
 
@@ -462,6 +468,102 @@ export default function AdminPanel({
       if (bRes.ok) setBackupsList(await bRes.json());
     } catch (err) {
       console.error('Failed to fetch settings or backups:', err);
+    }
+  };
+
+
+  const fetchPostedJobs = async () => {
+    try {
+      const res = await fetch('/api/jobs?include_drafts=true');
+      if (res.ok) {
+        const data = await res.json();
+        setPostedJobs(data.jobs || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch posted jobs:', err);
+    }
+  };
+
+  const handleOpenJobModal = (job = null) => {
+    setEditingJob(job);
+    setIsJobModalOpen(true);
+  };
+
+  const handleCloseJobModal = () => {
+    setIsJobModalOpen(false);
+    setEditingJob(null);
+  };
+
+  const handleSaveJob = async (jobData) => {
+    try {
+      const isEdit = Boolean(jobData.id);
+      const url = isEdit
+        ? `/api/jobs/${jobData.id}?admin_user=${encodeURIComponent(currentUser)}`
+        : `/api/jobs?admin_user=${encodeURIComponent(currentUser)}`;
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(jobData)
+      });
+
+      if (res.ok) {
+        showFeedback(
+          isEdit
+            ? `Job '${jobData.title}' updated successfully!`
+            : `Job '${jobData.title}' created and ${jobData.status === 'Draft' ? 'saved as Draft' : 'published live'}!`,
+          'success'
+        );
+        fetchPostedJobs();
+        fetchUsersAndAudit();
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        showFeedback(errData.detail || 'Failed to save job posting', 'error');
+        throw new Error(errData.detail || 'Failed to save');
+      }
+    } catch (err) {
+      console.error('Error saving job:', err);
+      throw err;
+    }
+  };
+
+  const handleToggleJobStatus = async (jobId, currentStatus) => {
+    const nextStatus = currentStatus === 'Published' ? 'Draft' : 'Published';
+    try {
+      const res = await fetch(`/api/jobs/${jobId}/status?admin_user=${encodeURIComponent(currentUser)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: nextStatus })
+      });
+      if (res.ok) {
+        showFeedback(`Job #${jobId} status updated to ${nextStatus}`, 'success');
+        fetchPostedJobs();
+        fetchUsersAndAudit();
+      } else {
+        showFeedback('Failed to update job status', 'error');
+      }
+    } catch (err) {
+      console.error('Error toggling job status:', err);
+      showFeedback('Failed to update job status', 'error');
+    }
+  };
+
+  const handleDeleteJob = async (jobId) => {
+    try {
+      const res = await fetch(`/api/jobs/${jobId}?admin_user=${encodeURIComponent(currentUser)}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        showFeedback(`Job #${jobId} deleted successfully`, 'info');
+        fetchPostedJobs();
+        fetchUsersAndAudit();
+      } else {
+        showFeedback('Failed to delete job', 'error');
+      }
+    } catch (err) {
+      console.error('Error deleting job:', err);
+      showFeedback('Failed to delete job', 'error');
     }
   };
 
@@ -617,6 +719,7 @@ export default function AdminPanel({
     fetchClientsAndPartners();
     fetchInquiries();
     fetchCareerApplications();
+    fetchPostedJobs();
     fetchUserEnquiries();
     fetchWebsiteContent();
     fetchUsersAndAudit();
@@ -1899,7 +2002,7 @@ export default function AdminPanel({
                       {careerApplications.filter(a => (a.status || '').toLowerCase() === 'new').length} New
                     </span>
                     <span className="adm-card-pill pill-neutral">
-                      {careerApplications.filter(a => ['interviewed', 'selected', 'active', 'reviewed'].includes((a.status || '').toLowerCase())).length} Active
+                      {postedJobs.filter(j => (j.status || '').toLowerCase() === 'published').length} Active Jobs
                     </span>
                   </div>
                 </div>
@@ -2142,7 +2245,7 @@ export default function AdminPanel({
                       </svg>
                       <p className="adm-empty-talent-text">No candidate applications submitted yet.</p>
                       <div className="adm-empty-talent-actions">
-                        <button className="adm-btn-post-job" onClick={() => setActiveTab('careers')}>
+                        <button className="adm-btn-post-job" onClick={() => handleOpenJobModal(null)}>
                           <Plus size={13} />
                           <span>Post a Job</span>
                         </button>
@@ -2933,12 +3036,16 @@ export default function AdminPanel({
                 <AdminCareersManager
                   applications={careerApplications}
                   dbStatus={careerDbStatus}
+                  jobs={postedJobs}
                   onUpdateStatus={handleUpdateCareerStatus}
                   onSaveNotes={handleSaveCareerNotes}
                   onDelete={handleDeleteCareerApplication}
-                  onRefresh={fetchCareerApplications}
+                  onRefresh={() => { fetchCareerApplications(); fetchPostedJobs(); }}
                   showFeedback={showFeedback}
                   currentUser={currentUser}
+                  onOpenJobModal={handleOpenJobModal}
+                  onToggleJobStatus={handleToggleJobStatus}
+                  onDeleteJob={handleDeleteJob}
                 />
               </AdminModuleErrorBoundary>
             </div>
@@ -3635,6 +3742,13 @@ export default function AdminPanel({
         </div>
       )}
 
+      {/* Job Creation & Editing Modal */}
+      <AdminJobModal
+        isOpen={isJobModalOpen}
+        onClose={handleCloseJobModal}
+        onSave={handleSaveJob}
+        editingJob={editingJob}
+      />
     </div>
   );
 }

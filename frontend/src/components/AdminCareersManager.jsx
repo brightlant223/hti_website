@@ -14,6 +14,7 @@ import {
   Pencil,
   Trash2,
   CheckCircle2,
+  Plus,
   AlertCircle,
   Clock,
   Calendar,
@@ -129,13 +130,22 @@ function formatDisplayName(name) {
 export default function AdminCareersManager({
   applications = [],
   dbStatus = null,
+  jobs = [],
   onUpdateStatus,
   onSaveNotes,
   onDelete,
   onRefresh,
   showFeedback,
-  currentUser = 'Admin'
+  currentUser = 'Admin',
+  onOpenJobModal,
+  onToggleJobStatus,
+  onDeleteJob
 }) {
+  const [subTab, setSubTab] = useState('applications'); // 'applications' | 'jobs'
+  const [jobSearchQuery, setJobSearchQuery] = useState('');
+  const [jobStatusFilter, setJobStatusFilter] = useState('All');
+  const [jobDeptFilter, setJobDeptFilter] = useState('All');
+  const [jobToDelete, setJobToDelete] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [selectedPosition, setSelectedPosition] = useState('All');
@@ -295,8 +305,82 @@ export default function AdminCareersManager({
     setTimeout(() => setCopiedField(null), 2000);
   };
 
+
+  // Job Postings Statistics & Filtering
+  const jobStats = useMemo(() => {
+    const total = jobs.length;
+    const published = jobs.filter((j) => (j.status || '').toLowerCase() === 'published').length;
+    const drafts = jobs.filter((j) => (j.status || '').toLowerCase() === 'draft').length;
+    const totalOpenings = jobs.reduce((acc, curr) => acc + (Number(curr.openings) || 1), 0);
+    return { total, published, drafts, totalOpenings };
+  }, [jobs]);
+
+  const uniqueDepartments = useMemo(() => {
+    const set = new Set();
+    jobs.forEach((j) => {
+      if (j.department) set.add(j.department);
+    });
+    return Array.from(set);
+  }, [jobs]);
+
+  const filteredJobs = useMemo(() => {
+    return jobs.filter((job) => {
+      const matchSearch =
+        !jobSearchQuery.trim() ||
+        (job.title || '').toLowerCase().includes(jobSearchQuery.toLowerCase()) ||
+        (job.department || '').toLowerCase().includes(jobSearchQuery.toLowerCase()) ||
+        (job.skills || '').toLowerCase().includes(jobSearchQuery.toLowerCase()) ||
+        (job.location || '').toLowerCase().includes(jobSearchQuery.toLowerCase());
+
+      const matchStatus =
+        jobStatusFilter === 'All' ||
+        (job.status || '').toLowerCase() === jobStatusFilter.toLowerCase();
+
+      const matchDept =
+        jobDeptFilter === 'All' || job.department === jobDeptFilter;
+
+      return matchSearch && matchStatus && matchDept;
+    });
+  }, [jobs, jobSearchQuery, jobStatusFilter, jobDeptFilter]);
+
   return (
     <div className="adm-enq-page">
+      {/* ── SUB-TABS NAVIGATION: Applications vs Job Vacancies ── */}
+      <div className="adm-careers-subtabs-bar">
+        <button
+          type="button"
+          className={`adm-careers-subtab-btn ${subTab === 'applications' ? 'is-active' : ''}`}
+          onClick={() => setSubTab('applications')}
+        >
+          <Users size={16} />
+          <span>Candidate Applications</span>
+          <span className="adm-careers-tab-count">{applications.length}</span>
+        </button>
+
+        <button
+          type="button"
+          className={`adm-careers-subtab-btn ${subTab === 'jobs' ? 'is-active' : ''}`}
+          onClick={() => setSubTab('jobs')}
+        >
+          <Briefcase size={16} />
+          <span>Posted Job Vacancies</span>
+          <span className="adm-careers-tab-count">{jobs.length}</span>
+        </button>
+
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            type="button"
+            className="adm-btn-post-job-primary"
+            onClick={() => onOpenJobModal && onOpenJobModal(null)}
+          >
+            <Plus size={15} />
+            <span>Post a Job</span>
+          </button>
+        </div>
+      </div>
+
+      {subTab === 'applications' && (
+        <>
       {/* =====================================================================
           1. SIX KPI CARDS (Exact match to Sales Enquiries)
           ===================================================================== */}
@@ -747,6 +831,8 @@ export default function AdminCareersManager({
           </div>
         </div>
       </div>
+        </>
+      )}
 
       {/* ── 5. CANDIDATE DOSSIER & NOTES MODAL ───────────────────────────── */}
       {selectedApplicant && (
@@ -1067,6 +1153,330 @@ export default function AdminCareersManager({
           </div>
         </div>
       )}
+
+      {/* =====================================================================
+          JOB VACANCY POSTINGS MANAGEMENT VIEW
+          ===================================================================== */}
+      {subTab === 'jobs' && (
+        <div className="adm-jobs-view-wrapper">
+          {/* 4 Job Stats KPI cards */}
+          <div className="adm-enq-kpi-row" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+            <div
+              className={`adm-enq-kpi-card card-all ${jobStatusFilter === 'All' ? 'selected' : ''}`}
+              onClick={() => setJobStatusFilter('All')}
+            >
+              <div className="adm-enq-kpi-left">
+                <div className="adm-enq-kpi-icon-box">
+                  <Briefcase size={22} />
+                </div>
+                <div className="adm-enq-kpi-body">
+                  <span className="adm-enq-kpi-title">All Positions</span>
+                  <span className="adm-enq-kpi-number">{jobStats.total}</span>
+                  <span className="adm-enq-kpi-sub">Total Job Postings</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={`adm-enq-kpi-card card-converted ${jobStatusFilter === 'Published' ? 'selected' : ''}`}
+              onClick={() => setJobStatusFilter('Published')}
+            >
+              <div className="adm-enq-kpi-left">
+                <div className="adm-enq-kpi-icon-box">
+                  <CheckCircle2 size={22} />
+                </div>
+                <div className="adm-enq-kpi-body">
+                  <span className="adm-enq-kpi-title">Published (Live)</span>
+                  <span className="adm-enq-kpi-number">{jobStats.published}</span>
+                  <span className="adm-enq-kpi-sub">Active on Careers Portal</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={`adm-enq-kpi-card card-contacted ${jobStatusFilter === 'Draft' ? 'selected' : ''}`}
+              onClick={() => setJobStatusFilter('Draft')}
+            >
+              <div className="adm-enq-kpi-left">
+                <div className="adm-enq-kpi-icon-box">
+                  <Clock size={22} />
+                </div>
+                <div className="adm-enq-kpi-body">
+                  <span className="adm-enq-kpi-title">Drafts</span>
+                  <span className="adm-enq-kpi-number">{jobStats.drafts}</span>
+                  <span className="adm-enq-kpi-sub">Internal / Unlisted</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="adm-enq-kpi-card card-qualified">
+              <div className="adm-enq-kpi-left">
+                <div className="adm-enq-kpi-icon-box">
+                  <Users size={22} />
+                </div>
+                <div className="adm-enq-kpi-body">
+                  <span className="adm-enq-kpi-title">Total Openings</span>
+                  <span className="adm-enq-kpi-number">{jobStats.totalOpenings}</span>
+                  <span className="adm-enq-kpi-sub">Cumulative Headcount</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Search & Filters Bar */}
+          <div className="adm-enq-controls-card" style={{ marginTop: '16px' }}>
+            <div className="adm-enq-search-box">
+              <Search size={18} className="adm-enq-search-icon" />
+              <input
+                type="text"
+                placeholder="Search jobs by title, department, skills, or location..."
+                value={jobSearchQuery}
+                onChange={(e) => setJobSearchQuery(e.target.value)}
+                className="adm-enq-search-input"
+              />
+              {jobSearchQuery && (
+                <button
+                  type="button"
+                  className="adm-enq-clear-search-btn"
+                  onClick={() => setJobSearchQuery('')}
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+
+            <div className="adm-enq-dropdowns-group">
+              {/* Department Filter */}
+              <div className="adm-enq-filter-item">
+                <span className="adm-enq-filter-label">Department:</span>
+                <select
+                  value={jobDeptFilter}
+                  onChange={(e) => setJobDeptFilter(e.target.value)}
+                  className="adm-enq-select"
+                >
+                  <option value="All">All Departments</option>
+                  {uniqueDepartments.map((dept) => (
+                    <option key={dept} value={dept}>
+                      {dept}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Status Filter */}
+              <div className="adm-enq-filter-item">
+                <span className="adm-enq-filter-label">Status:</span>
+                <select
+                  value={jobStatusFilter}
+                  onChange={(e) => setJobStatusFilter(e.target.value)}
+                  className="adm-enq-select"
+                >
+                  <option value="All">All Statuses</option>
+                  <option value="Published">Published</option>
+                  <option value="Draft">Draft</option>
+                  <option value="Expired">Expired</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Jobs Grid */}
+          {filteredJobs.length === 0 ? (
+            <div className="adm-empty-state" style={{ marginTop: '30px' }}>
+              <div className="adm-empty-icon">
+                <Briefcase size={28} />
+              </div>
+              <h4 style={{ margin: '4px 0', fontSize: '1.1rem', fontWeight: 700 }}>
+                No Job Vacancies Found
+              </h4>
+              <p style={{ margin: 0, fontSize: '0.86rem', color: '#64748b' }}>
+                {jobSearchQuery || jobStatusFilter !== 'All' || jobDeptFilter !== 'All'
+                  ? 'Try clearing your filters or search term to see more positions.'
+                  : 'Start by posting your first job vacancy to the HTI Careers portal.'}
+              </p>
+              <button
+                type="button"
+                className="adm-btn-post-job-primary"
+                style={{ marginTop: '12px' }}
+                onClick={() => onOpenJobModal && onOpenJobModal(null)}
+              >
+                <Plus size={15} />
+                <span>Post a Job Vacancy</span>
+              </button>
+            </div>
+          ) : (
+            <div className="adm-jobs-grid">
+              {filteredJobs.map((job) => {
+                const isPublished = (job.status || '').toLowerCase() === 'published';
+                const isDraft = (job.status || '').toLowerCase() === 'draft';
+                const statusClass = isPublished ? 'published' : isDraft ? 'draft' : 'expired';
+
+                return (
+                  <div key={job.id} className="adm-job-item-card">
+                    <div>
+                      <div className="adm-job-item-top">
+                        <div>
+                          <div className="adm-job-item-dept">{job.department}</div>
+                          <h4 className="adm-job-item-title">{job.title}</h4>
+                        </div>
+                        <span className={`adm-job-status-badge ${statusClass}`}>
+                          <span className="status-dot" />
+                          <span>{job.status}</span>
+                        </span>
+                      </div>
+
+                      {/* Meta Chips */}
+                      <div className="adm-job-chips-wrap">
+                        <span className="adm-job-chip">
+                          <MapPin size={12} />
+                          {job.location || 'Navi Mumbai HQ'}
+                        </span>
+                        <span className="adm-job-chip">
+                          <Clock size={12} />
+                          {job.experience || '1–3 Years'}
+                        </span>
+                        <span className="adm-job-chip">
+                          <Users size={12} />
+                          {job.openings || 1} {Number(job.openings) === 1 ? 'Opening' : 'Openings'}
+                        </span>
+                        {job.salary_range && (
+                          <span className="adm-job-chip salary">
+                            <IndianRupee size={12} />
+                            {job.salary_range}
+                          </span>
+                        )}
+                        {job.deadline && (
+                          <span className="adm-job-chip">
+                            <Calendar size={12} />
+                            Exp: {job.deadline}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Description */}
+                      <p className="adm-job-item-desc">{job.description}</p>
+
+                      {/* Skills Tags */}
+                      {job.skills && (
+                        <div className="adm-job-item-skills">
+                          {job.skills
+                            .split(',')
+                            .slice(0, 4)
+                            .map((s, idx) => (
+                              <span key={idx} className="adm-job-skill-pill">
+                                {s.trim()}
+                              </span>
+                            ))}
+                          {job.skills.split(',').length > 4 && (
+                            <span className="adm-job-skill-pill" style={{ opacity: 0.75 }}>
+                              +{job.skills.split(',').length - 4}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Footer Actions */}
+                    <div className="adm-job-item-footer">
+                      <button
+                        type="button"
+                        className="adm-job-applicant-link"
+                        onClick={() => {
+                          setSelectedPosition(job.title);
+                          setSubTab('applications');
+                        }}
+                        title="View candidates who applied for this position"
+                      >
+                        <Users size={13} />
+                        <span>{job.applications_count || 0} {Number(job.applications_count) === 1 ? 'Applicant' : 'Applicants'}</span>
+                      </button>
+
+                      <div className="adm-job-actions-group">
+                        <button
+                          type="button"
+                          className="adm-job-action-btn edit"
+                          onClick={() => onOpenJobModal && onOpenJobModal(job)}
+                          title="Edit Job Details"
+                        >
+                          <Pencil size={13} />
+                          <span>Edit</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          className="adm-job-action-btn toggle"
+                          onClick={() => onToggleJobStatus && onToggleJobStatus(job.id, job.status)}
+                          title={isPublished ? 'Unpublish to Draft' : 'Publish to live website'}
+                        >
+                          {isPublished ? 'Unpublish' : 'Publish'}
+                        </button>
+
+                        <button
+                          type="button"
+                          className="adm-job-action-btn delete"
+                          onClick={() => setJobToDelete(job)}
+                          title="Delete this job posting"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Job Delete Confirmation Modal */}
+      {jobToDelete && (
+        <div className="adm-modal-backdrop" onClick={() => setJobToDelete(null)}>
+          <div className="adm-modal-box" style={{ maxWidth: 440 }} onClick={(e) => e.stopPropagation()}>
+            <div className="adm-modal-header" style={{ background: '#fee2e2' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <AlertCircle size={22} color="#dc2626" />
+                <h4 style={{ margin: 0, color: '#991b1b', fontSize: '1.05rem', fontWeight: 800 }}>
+                  Confirm Delete Vacancy
+                </h4>
+              </div>
+              <button className="topbar-close-btn" onClick={() => setJobToDelete(null)}>
+                <X size={18} />
+              </button>
+            </div>
+            <div style={{ padding: '20px 24px' }}>
+              <p style={{ margin: 0, fontSize: '0.92rem', color: '#334155', lineHeight: 1.5 }}>
+                Are you sure you want to permanently delete the job vacancy{' '}
+                <strong>"{jobToDelete.title}"</strong> ({jobToDelete.department})?
+              </p>
+              <p style={{ margin: '8px 0 0', fontSize: '0.8rem', color: '#64748b' }}>
+                This job will immediately be removed from the public Career Page and Opportunities popup.
+              </p>
+            </div>
+            <div className="adm-modal-footer">
+              <button
+                type="button"
+                className="adm-careers-btn"
+                onClick={() => setJobToDelete(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="adm-careers-btn"
+                style={{ background: '#dc2626', color: '#fff', border: 'none' }}
+                onClick={() => {
+                  if (onDeleteJob) onDeleteJob(jobToDelete.id);
+                  setJobToDelete(null);
+                }}
+              >
+                Delete Job
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

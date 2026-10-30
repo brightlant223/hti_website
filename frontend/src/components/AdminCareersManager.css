@@ -1144,3 +1144,419 @@ html.dark .adm-modal-footer {
   justify-content: center;
   margin-bottom: 6px;
 }
+
+
+/* =========================================================================
+   CAREERS SUBTABS & JOB POSTINGS MANAGEMENT
+   ========================================================================= */
+
+.adm-careers-subtabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(248, 250, 252, 0.85);
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .adm-careers-subtabs-bar,
+html.dark .adm-careers-subtabs-bar {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: #334155;
+}
+
+.adm-careers-subtab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.adm-careers-subtab-btn:hover {
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.06);
+}
+
+.adm-careers-subtab-btn.is-active {
+  background: #ffffff;
+  color: #0284c7;
+  border-color: #bae6fd;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+}
+
+[data-theme="dark"] .adm-careers-subtab-btn.is-active,
+html.dark .adm-careers-subtab-btn.is-active {
+  background: #1e293b;
+  color: #38bdf8;
+  border-color: #0284c7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.adm-careers-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.adm-careers-subtab-btn.is-active .adm-careers-tab-count {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.adm-btn-post-job-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 750;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.adm-btn-post-job-primary:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.4);
+}
+
+/* Job Cards Grid */
+.adm-jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.adm-job-item-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.adm-job-item-card:hover {
+  border-color: #7dd3fc;
+  box-shadow: 0 10px 24px -4px rgba(2, 132, 199, 0.15);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .adm-job-item-card,
+html.dark .adm-job-item-card {
+  background: #0f172a;
+  border-color: #1e293b;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .adm-job-item-card:hover,
+html.dark .adm-job-item-card:hover {
+  border-color: #0284c7;
+  box-shadow: 0 10px 28px -4px rgba(2, 132, 199, 0.2);
+}
+
+.adm-job-item-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.adm-job-item-dept {
+  font-size: 0.72rem;
+  font-weight: 750;
+  color: #0284c7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+[data-theme="dark"] .adm-job-item-dept,
+html.dark .adm-job-item-dept {
+  color: #38bdf8;
+}
+
+.adm-job-item-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+[data-theme="dark"] .adm-job-item-title,
+html.dark .adm-job-item-title {
+  color: #f1f5f9;
+}
+
+/* Status Badges */
+.adm-job-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.74rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.adm-job-status-badge.published {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+}
+
+.adm-job-status-badge.published .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+}
+
+.adm-job-status-badge.draft {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #b45309;
+}
+
+.adm-job-status-badge.draft .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f59e0b;
+}
+
+.adm-job-status-badge.expired {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+}
+
+.adm-job-chips-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.adm-job-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+[data-theme="dark"] .adm-job-chip,
+html.dark .adm-job-chip {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.adm-job-chip.salary {
+  background: #fef3c7;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+[data-theme="dark"] .adm-job-chip.salary,
+html.dark .adm-job-chip.salary {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+.adm-job-item-desc {
+  font-size: 0.84rem;
+  color: #64748b;
+  line-height: 1.45;
+  margin: 0 0 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .adm-job-item-desc,
+html.dark .adm-job-item-desc {
+  color: #94a3b8;
+}
+
+.adm-job-item-skills {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.adm-job-skill-pill {
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #0369a1;
+}
+
+[data-theme="dark"] .adm-job-skill-pill,
+html.dark .adm-job-skill-pill {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #7dd3fc;
+}
+
+.adm-job-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .adm-job-item-footer,
+html.dark .adm-job-item-footer {
+  border-top-color: #1e293b;
+}
+
+.adm-job-applicant-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.adm-job-applicant-link:hover {
+  background: #e0f2fe;
+  color: #0284c7;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .adm-job-applicant-link,
+html.dark .adm-job-applicant-link {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .adm-job-applicant-link:hover,
+html.dark .adm-job-applicant-link:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: #0284c7;
+}
+
+.adm-job-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.adm-job-action-btn {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 650;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+}
+
+.adm-job-action-btn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.adm-job-action-btn.edit:hover {
+  border-color: #0284c7;
+  color: #0284c7;
+  background: #f0f9ff;
+}
+
+.adm-job-action-btn.toggle:hover {
+  border-color: #d97706;
+  color: #d97706;
+  background: #fffbeb;
+}
+
+.adm-job-action-btn.delete {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.adm-job-action-btn.delete:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+[data-theme="dark"] .adm-job-action-btn,
+html.dark .adm-job-action-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .adm-job-action-btn:hover,
+html.dark .adm-job-action-btn:hover {
+  background: #334155;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .adm-job-action-btn.delete,
+html.dark .adm-job-action-btn.delete {
+  border-color: #7f1d1d;
+  color: #f87171;
+}

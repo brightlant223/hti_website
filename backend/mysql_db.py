@@ -691,3 +691,381 @@ def delete_user_enquiry(enquiry_id: int):
     sq_conn.close()
     return True
 
+
+
+# =========================================================================
+# JOB POSTINGS MANAGEMENT (Module 5C - MySQL / SQLite Dual-Engine)
+# =========================================================================
+
+SAMPLE_JOB_POSTINGS = [
+    (
+        "Full Stack Developer",
+        "Software Development",
+        "Full-time",
+        "Full-time",
+        "Navi Mumbai HQ / Hybrid",
+        2,
+        "0–2 Years",
+        "₹4,00,000 – ₹7,50,000 P.A.",
+        "React.js, JavaScript, Python, FastAPI, REST APIs, MySQL, HTML5/CSS3",
+        "Work on modern web applications, internal business systems, and automation platforms powering HTI's building management and cleanroom interlocking operations.",
+        "• Develop and optimize responsive frontend interfaces with React.js.\n• Integrate FastAPI backend endpoints with MySQL/SQLite databases.\n• Troubleshoot applications, maintain existing systems, and enhance security.\n• Collaborate with engineering teams to digitize hardware telemetry & BMS dashboards.",
+        "• B.E. / B.Tech / BCA / MCA in Computer Science, IT, or equivalent practical experience.\n• Hands-on familiarity with React.js, Python, and RESTful architectures.\n• Passion for building rock-solid, production-grade applications.",
+        "2026-12-31",
+        "Published"
+    ),
+    (
+        "Automation Engineer",
+        "Engineering",
+        "Full-time",
+        "Full-time",
+        "Navi Mumbai HQ + Field Deployments",
+        3,
+        "1–3 Years",
+        "₹3,50,000 – ₹6,00,000 P.A.",
+        "Industrial Automation, PLC Programming, Sensors, Control Systems, Relay Logic",
+        "Support the design, implementation, and maintenance of industrial automation solutions including cleanroom door interlocking, automatic sliding doors, and boom barrier security systems.",
+        "• Program, calibrate, and test PLC logic and sensor interlocks for pharmaceutical cleanrooms.\n• Perform field installation, wiring termination, and loop testing at client facilities.\n• Troubleshoot low-voltage electrical controls, actuators, and motorized gate operators.\n• Generate technical commissioning sign-offs and provide customer operator training.",
+        "• Diploma or B.E. in Electrical, Electronics, Instrumentation, or Mechatronics Engineering.\n• Practical exposure to relay logic, sensor calibration, and DC/AC motor controllers.\n• Willingness to travel to client industrial plants across Maharashtra & pan-India.",
+        "2026-12-31",
+        "Published"
+    )
+]
+
+def init_job_postings_db():
+    """Initializes job_postings table in MySQL or SQLite fallback with initial seed jobs."""
+    is_mysql_ok, err_msg = test_mysql_connectivity()
+    if is_mysql_ok:
+        try:
+            conn = get_mysql_connection()
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                CREATE TABLE IF NOT EXISTS job_postings (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    department VARCHAR(255) NOT NULL,
+                    job_category VARCHAR(100) DEFAULT 'Full-time',
+                    employment_type VARCHAR(100) DEFAULT 'Full-time',
+                    location VARCHAR(255) DEFAULT 'Navi Mumbai HQ',
+                    openings INT DEFAULT 1,
+                    experience VARCHAR(100) DEFAULT '0-2 Years',
+                    salary_range VARCHAR(100) DEFAULT '',
+                    skills TEXT,
+                    description TEXT,
+                    responsibilities TEXT,
+                    qualifications TEXT,
+                    deadline VARCHAR(100) DEFAULT '',
+                    status VARCHAR(50) DEFAULT 'Published',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX idx_job_status (status),
+                    INDEX idx_job_dept (department),
+                    INDEX idx_job_cat (job_category)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                """)
+                cursor.execute("SELECT COUNT(*) AS total FROM job_postings;")
+                res = cursor.fetchone()
+                if res and res.get("total", 0) == 0:
+                    seed_sql = """
+                    INSERT INTO job_postings 
+                    (title, department, job_category, employment_type, location, openings, experience, salary_range, skills, description, responsibilities, qualifications, deadline, status)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """
+                    for item in SAMPLE_JOB_POSTINGS:
+                        cursor.execute(seed_sql, item)
+            conn.close()
+            print(f"[OK] MySQL job_postings table verified in '{DB_NAME}' on {DB_HOST}:{DB_PORT}")
+            return {"engine": "mysql", "status": "connected", "database": DB_NAME}
+        except Exception as e:
+            print(f"[WARN] Error initializing MySQL job_postings table: {e}")
+
+    # Fallback to SQLite
+    try:
+        sq_conn = sqlite3.connect(SQLITE_FALLBACK_PATH)
+        sq_cursor = sq_conn.cursor()
+        sq_cursor.execute("""
+        CREATE TABLE IF NOT EXISTS job_postings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            department TEXT NOT NULL,
+            job_category TEXT DEFAULT 'Full-time',
+            employment_type TEXT DEFAULT 'Full-time',
+            location TEXT DEFAULT 'Navi Mumbai HQ',
+            openings INTEGER DEFAULT 1,
+            experience TEXT DEFAULT '0-2 Years',
+            salary_range TEXT DEFAULT '',
+            skills TEXT DEFAULT '',
+            description TEXT DEFAULT '',
+            responsibilities TEXT DEFAULT '',
+            qualifications TEXT DEFAULT '',
+            deadline TEXT DEFAULT '',
+            status TEXT DEFAULT 'Published',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+        sq_cursor.execute("SELECT COUNT(*) FROM job_postings;")
+        row_cnt = sq_cursor.fetchone()[0]
+        if row_cnt == 0:
+            seed_sql = """
+            INSERT INTO job_postings 
+            (title, department, job_category, employment_type, location, openings, experience, salary_range, skills, description, responsibilities, qualifications, deadline, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """
+            for item in SAMPLE_JOB_POSTINGS:
+                sq_cursor.execute(seed_sql, item)
+            sq_conn.commit()
+        sq_conn.close()
+        print("[OK] SQLite job_postings table verified in hti.db")
+        return {"engine": "sqlite_fallback", "status": "fallback"}
+    except Exception as sq_err:
+        print(f"[ERROR] Failed SQLite fallback init for job_postings: {sq_err}")
+        return {"engine": "none", "error": str(sq_err)}
+
+def insert_job_posting(data: dict):
+    """Inserts a new job posting into MySQL or SQLite fallback."""
+    title = data.get("title", "").strip()
+    department = data.get("department", "").strip()
+    job_category = data.get("job_category", "Full-time")
+    employment_type = data.get("employment_type", "Full-time")
+    location = data.get("location", "Navi Mumbai HQ")
+    openings = int(data.get("openings", 1) or 1)
+    experience = data.get("experience", "0–2 Years")
+    salary_range = data.get("salary_range", "")
+    skills = data.get("skills", "")
+    description = data.get("description", "")
+    responsibilities = data.get("responsibilities", "")
+    qualifications = data.get("qualifications", "")
+    deadline = data.get("deadline", "")
+    status = data.get("status", "Published")
+
+    params_tuple = (
+        title, department, job_category, employment_type, location,
+        openings, experience, salary_range, skills, description,
+        responsibilities, qualifications, deadline, status
+    )
+
+    is_mysql_ok, _ = test_mysql_connectivity()
+    if is_mysql_ok:
+        try:
+            conn = get_mysql_connection()
+            with conn.cursor() as cursor:
+                sql = """
+                INSERT INTO job_postings 
+                (title, department, job_category, employment_type, location, openings, experience, salary_range, skills, description, responsibilities, qualifications, deadline, status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                cursor.execute(sql, params_tuple)
+                new_id = cursor.lastrowid
+                cursor.execute("SELECT * FROM job_postings WHERE id = %s", (new_id,))
+                row = cursor.fetchone()
+            conn.close()
+            return {"data": row, "engine": "mysql"}
+        except Exception as e:
+            print(f"[WARN] MySQL insert job_posting failed, routing to SQLite: {e}")
+
+    # Fallback to SQLite
+    sq_conn = sqlite3.connect(SQLITE_FALLBACK_PATH)
+    sq_conn.row_factory = sqlite3.Row
+    sq_cursor = sq_conn.cursor()
+    sq_sql = """
+    INSERT INTO job_postings 
+    (title, department, job_category, employment_type, location, openings, experience, salary_range, skills, description, responsibilities, qualifications, deadline, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    sq_cursor.execute(sq_sql, params_tuple)
+    new_id = sq_cursor.lastrowid
+    sq_conn.commit()
+    sq_cursor.execute("SELECT * FROM job_postings WHERE id = ?", (new_id,))
+    row = dict(sq_cursor.fetchone())
+    sq_conn.close()
+    return {"data": row, "engine": "sqlite"}
+
+def fetch_job_postings(include_drafts=False, status_filter=None, department=None, search=None):
+    """Fetches job postings with applicant count from MySQL or SQLite fallback."""
+    is_mysql_ok, _ = test_mysql_connectivity()
+    if is_mysql_ok:
+        try:
+            conn = get_mysql_connection()
+            with conn.cursor() as cursor:
+                query = "SELECT j.*, (SELECT COUNT(*) FROM career_applications ca WHERE ca.position = j.title) AS applications_count FROM job_postings j WHERE 1=1"
+                params = []
+                if not include_drafts:
+                    query += " AND j.status = 'Published'"
+                elif status_filter and status_filter.lower() != "all":
+                    query += " AND LOWER(j.status) = LOWER(%s)"
+                    params.append(status_filter)
+
+                if department and department.lower() != "all":
+                    query += " AND LOWER(j.department) = LOWER(%s)"
+                    params.append(department)
+
+                if search and search.strip():
+                    pattern = f"%{search.strip()}%"
+                    query += " AND (j.title LIKE %s OR j.department LIKE %s OR j.skills LIKE %s OR j.location LIKE %s)"
+                    params.extend([pattern, pattern, pattern, pattern])
+
+                query += " ORDER BY j.id DESC"
+                cursor.execute(query, tuple(params))
+                rows = cursor.fetchall()
+            conn.close()
+            for r in rows:
+                if r.get("created_at"): r["created_at"] = str(r["created_at"])
+                if r.get("updated_at"): r["updated_at"] = str(r["updated_at"])
+            return {"items": rows, "engine": "mysql"}
+        except Exception as e:
+            print(f"[WARN] MySQL fetch job_postings failed: {e}")
+
+    # Fallback to SQLite
+    sq_conn = sqlite3.connect(SQLITE_FALLBACK_PATH)
+    sq_conn.row_factory = sqlite3.Row
+    sq_cursor = sq_conn.cursor()
+    query = "SELECT j.*, (SELECT COUNT(*) FROM career_applications ca WHERE ca.position = j.title) AS applications_count FROM job_postings j WHERE 1=1"
+    params = []
+    if not include_drafts:
+        query += " AND j.status = 'Published'"
+    elif status_filter and status_filter.lower() != "all":
+        query += " AND LOWER(j.status) = LOWER(?)"
+        params.append(status_filter)
+
+    if department and department.lower() != "all":
+        query += " AND LOWER(j.department) = LOWER(?)"
+        params.append(department)
+
+    if search and search.strip():
+        pattern = f"%{search.strip()}%"
+        query += " AND (j.title LIKE ? OR j.department LIKE ? OR j.skills LIKE ? OR j.location LIKE ?)"
+        params.extend([pattern, pattern, pattern, pattern])
+
+    query += " ORDER BY j.id DESC"
+    sq_cursor.execute(query, tuple(params))
+    rows = [dict(r) for r in sq_cursor.fetchall()]
+    sq_conn.close()
+    return {"items": rows, "engine": "sqlite"}
+
+def fetch_job_posting_by_id(job_id: int):
+    """Fetches single job posting by ID."""
+    is_mysql_ok, _ = test_mysql_connectivity()
+    if is_mysql_ok:
+        try:
+            conn = get_mysql_connection()
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT j.*, (SELECT COUNT(*) FROM career_applications ca WHERE ca.position = j.title) AS applications_count FROM job_postings j WHERE j.id = %s", (job_id,))
+                row = cursor.fetchone()
+            conn.close()
+            if row:
+                if row.get("created_at"): row["created_at"] = str(row["created_at"])
+                if row.get("updated_at"): row["updated_at"] = str(row["updated_at"])
+                return row
+        except Exception as e:
+            print(f"[WARN] MySQL fetch_job_posting_by_id failed: {e}")
+
+    sq_conn = sqlite3.connect(SQLITE_FALLBACK_PATH)
+    sq_conn.row_factory = sqlite3.Row
+    sq_cursor = sq_conn.cursor()
+    sq_cursor.execute("SELECT j.*, (SELECT COUNT(*) FROM career_applications ca WHERE ca.position = j.title) AS applications_count FROM job_postings j WHERE j.id = ?", (job_id,))
+    row = sq_cursor.fetchone()
+    sq_conn.close()
+    return dict(row) if row else None
+
+def update_job_posting(job_id: int, data: dict):
+    """Updates an existing job posting."""
+    title = data.get("title", "").strip()
+    department = data.get("department", "").strip()
+    job_category = data.get("job_category", "Full-time")
+    employment_type = data.get("employment_type", "Full-time")
+    location = data.get("location", "Navi Mumbai HQ")
+    openings = int(data.get("openings", 1) or 1)
+    experience = data.get("experience", "0–2 Years")
+    salary_range = data.get("salary_range", "")
+    skills = data.get("skills", "")
+    description = data.get("description", "")
+    responsibilities = data.get("responsibilities", "")
+    qualifications = data.get("qualifications", "")
+    deadline = data.get("deadline", "")
+    status = data.get("status", "Published")
+
+    params_tuple = (
+        title, department, job_category, employment_type, location,
+        openings, experience, salary_range, skills, description,
+        responsibilities, qualifications, deadline, status, job_id
+    )
+
+    is_mysql_ok, _ = test_mysql_connectivity()
+    if is_mysql_ok:
+        try:
+            conn = get_mysql_connection()
+            with conn.cursor() as cursor:
+                sql = """
+                UPDATE job_postings SET
+                    title = %s, department = %s, job_category = %s, employment_type = %s,
+                    location = %s, openings = %s, experience = %s, salary_range = %s,
+                    skills = %s, description = %s, responsibilities = %s, qualifications = %s,
+                    deadline = %s, status = %s
+                WHERE id = %s
+                """
+                cursor.execute(sql, params_tuple)
+                cursor.execute("SELECT * FROM job_postings WHERE id = %s", (job_id,))
+                row = cursor.fetchone()
+            conn.close()
+            return row
+        except Exception as e:
+            print(f"[WARN] MySQL update_job_posting failed: {e}")
+
+    sq_conn = sqlite3.connect(SQLITE_FALLBACK_PATH)
+    sq_conn.row_factory = sqlite3.Row
+    sq_cursor = sq_conn.cursor()
+    sq_sql = """
+    UPDATE job_postings SET
+        title = ?, department = ?, job_category = ?, employment_type = ?,
+        location = ?, openings = ?, experience = ?, salary_range = ?,
+        skills = ?, description = ?, responsibilities = ?, qualifications = ?,
+        deadline = ?, status = ?
+    WHERE id = ?
+    """
+    sq_cursor.execute(sq_sql, params_tuple)
+    sq_conn.commit()
+    sq_cursor.execute("SELECT * FROM job_postings WHERE id = ?", (job_id,))
+    row = dict(sq_cursor.fetchone())
+    sq_conn.close()
+    return row
+
+def update_job_posting_status(job_id: int, new_status: str):
+    """Updates only the status of a job posting (e.g. Published, Draft, Expired)."""
+    is_mysql_ok, _ = test_mysql_connectivity()
+    if is_mysql_ok:
+        try:
+            conn = get_mysql_connection()
+            with conn.cursor() as cursor:
+                cursor.execute("UPDATE job_postings SET status = %s WHERE id = %s", (new_status, job_id))
+            conn.close()
+            return True
+        except Exception as e:
+            print(f"[WARN] MySQL update job status failed: {e}")
+
+    sq_conn = sqlite3.connect(SQLITE_FALLBACK_PATH)
+    sq_cursor = sq_conn.cursor()
+    sq_cursor.execute("UPDATE job_postings SET status = ? WHERE id = ?", (new_status, job_id))
+    sq_conn.commit()
+    sq_conn.close()
+    return True
+
+def delete_job_posting(job_id: int):
+    """Deletes a job posting."""
+    is_mysql_ok, _ = test_mysql_connectivity()
+    if is_mysql_ok:
+        try:
+            conn = get_mysql_connection()
+            with conn.cursor() as cursor:
+                cursor.execute("DELETE FROM job_postings WHERE id = %s", (job_id,))
+            conn.close()
+            return True
+        except Exception as e:
+            print(f"[WARN] MySQL delete_job_posting failed: {e}")
+
+    sq_conn = sqlite3.connect(SQLITE_FALLBACK_PATH)
+    sq_cursor = sq_conn.cursor()
+    sq_cursor.execute("DELETE FROM job_postings WHERE id = ?", (job_id,))
+    sq_conn.commit()
+    sq_conn.close()
+    return True

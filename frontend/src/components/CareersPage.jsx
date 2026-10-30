@@ -10,6 +10,7 @@ import './Careers.css';
 import CareersHero from './CareersHero';
 import CareersApply from './CareersApply';
 import CareersProcess from './CareersProcess';
+import CareerJobPopup from './CareerJobPopup';
 
 const JOB_POSITIONS = [
   {
@@ -309,6 +310,36 @@ const BENEFITS = CAREER_ROLES;
 
 export default function CareersPage({ onNavigate }) {
   const [activeFilter, setActiveFilter] = useState('all');
+  const [liveJobs, setLiveJobs] = useState([]);
+  const [isOpportunitiesPopupOpen, setIsOpportunitiesPopupOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchLiveJobs = async () => {
+      try {
+        const res = await fetch('/api/jobs');
+        if (res.ok) {
+          const data = await res.json();
+          const pub = (data.jobs || []).filter((j) => (j.status || '').toLowerCase() === 'published');
+          setLiveJobs(pub);
+          if (pub.length > 0) {
+            const dismissed = sessionStorage.getItem('hti_career_popup_closed');
+            if (!dismissed) {
+              setTimeout(() => setIsOpportunitiesPopupOpen(true), 750);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load published jobs:', err);
+      }
+    };
+    fetchLiveJobs();
+  }, []);
+
+  const handleCloseOpportunitiesPopup = () => {
+    setIsOpportunitiesPopupOpen(false);
+    sessionStorage.setItem('hti_career_popup_closed', 'true');
+  };
+
   const [selectedRole, setSelectedRole] = useState(null);
 
   // Scroll-driven horizontal benefits section refs and state
@@ -1073,6 +1104,13 @@ export default function CareersPage({ onNavigate }) {
           </div>
         </div>
       )}
+      {/* ── JOB OPPORTUNITIES POPUP (Animated HTI Corporate Modal) ── */}
+      <CareerJobPopup
+        jobs={liveJobs}
+        isOpen={isOpportunitiesPopupOpen}
+        onClose={handleCloseOpportunitiesPopup}
+        onApplyJob={handleApplyForRole}
+      />
     </div>
   );
 }

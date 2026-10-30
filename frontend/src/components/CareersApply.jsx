@@ -150,6 +150,23 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
   // ── UI / Submission State ────────────────────────────────────────────────
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [availableRoles, setAvailableRoles] = useState(JOB_ROLES);
+
+  useEffect(() => {
+    fetch('/api/jobs')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.jobs && data.jobs.length > 0) {
+          const publishedTitles = data.jobs
+            .filter((j) => (j.status || '').toLowerCase() === 'published')
+            .map((j) => j.title);
+          const merged = Array.from(new Set([...publishedTitles, ...JOB_ROLES]));
+          setAvailableRoles(merged);
+        }
+      })
+      .catch((err) => console.log('Notice: using default job roles in apply form', err));
+  }, []);
+
   const [submissionResult, setSubmissionResult] = useState(null);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedRef, setCopiedRef] = useState(false);
@@ -947,7 +964,7 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
                                 aria-invalid={!!formErrors.position}
                               >
                                 <option value="">Select a role...</option>
-                                {JOB_ROLES.map((role) => (
+                                {availableRoles.map((role) => (
                                   <option key={role} value={role}>{role}</option>
                                 ))}
                               </select>

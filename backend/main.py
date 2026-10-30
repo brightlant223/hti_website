@@ -31,7 +31,14 @@ from mysql_db import (
     fetch_user_enquiries,
     update_user_enquiry_status,
     update_user_enquiry_notes,
-    delete_user_enquiry
+    delete_user_enquiry,
+    init_job_postings_db,
+    insert_job_posting,
+    fetch_job_postings,
+    fetch_job_posting_by_id,
+    update_job_posting,
+    update_job_posting_status,
+    delete_job_posting
 )
 
 SERVER_START_TIME = time.time()
@@ -52,6 +59,7 @@ async def lifespan(app: FastAPI):
     seed_db()
     init_careers_db()
     init_user_enquiries_db()
+    init_job_postings_db()
     yield
 
 app = FastAPI(
@@ -1781,6 +1789,115 @@ def export_career_applications_csv():
             "Content-Disposition": f"attachment; filename=hti_job_applications_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
         }
     )
+
+
+# =========================================================================
+# JOB POSTINGS MANAGEMENT (Module 5C - MySQL / SQLite Dual-Engine)
+# =========================================================================
+
+class JobPostingPayload(BaseModel):
+    title: str
+    department: str
+    job_category: Optional[str] = "Full-time"
+    employment_type: Optional[str] = "Full-time"
+    location: Optional[str] = "Navi Mumbai HQ"
+    openings: Optional[int] = 1
+    experience: Optional[str] = "0–2 Years"
+    salary_range: Optional[str] = ""
+    skills: Optional[str] = ""
+    description: Optional[str] = ""
+    responsibilities: Optional[str] = ""
+    qualifications: Optional[str] = ""
+    deadline: Optional[str] = ""
+    status: Optional[str] = "Published"
+
+class JobPostingStatusPayload(BaseModel):
+    status: str
+
+@app.get("/api/jobs")
+def get_jobs(
+    include_drafts: bool = Query(False),
+    status: Optional[str] = Query(None),
+    department: Optional[str] = Query(None),
+    search: Optional[str] = Query(None)
+):
+    result = fetch_job_postings(include_drafts=include_drafts, status_filter=status, department=department, search=search)
+    return {
+        "success": True,
+        "jobs": result.get("items", []),
+        "engine": result.get("engine", "sqlite"),
+        "total": len(result.get("items", []))
+    }
+
+@app.get("/api/jobs/{job_id}")
+def get_job_by_id(job_id: int):
+    job = fetch_job_posting_by_id(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail=f"Job posting #{job_id} not found")
+    return {"success": True, "job": job}
+
+@app.post("/api/jobs", status_code=status.HTTP_201_CREATED)
+def create_job(payload: JobPostingPayload, admin_user: Optional[str] = "admin"):
+    user_str = admin_user if isinstance(admin_user, str) else "admin"
+    if not payload.title or not payload.title.strip():
+        raise HTTPException(status_code=400, detail="Job title is required")
+    if not payload.department or not payload.department.strip():
+        raise HTTPException(status_code=400, detail="Department is required")
+    
+    data = payload.dict()
+    result = insert_job_posting(data)
+    created_job = result.get("data", {})
+    add_audit_log(user_str, "CREATE_JOB", "Careers", f"Created job #{created_job.get('id')} '{payload.title}' ({payload.status})")
+    return {
+        "success": True,
+        "message": f"Job '{payload.title}' successfully saved as {payload.status}.",
+        "job": created_job,
+        "engine": result.get("engine")
+    }
+
+@app.put("/api/jobs/{job_id}")
+def update_job(job_id: int, payload: JobPostingPayload, admin_user: Optional[str] = "admin"):
+    user_str = admin_user if isinstance(admin_user, str) else "admin"
+    existing = fetch_job_posting_by_id(job_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail=f"Job posting #{job_id} not found")
+    
+    data = payload.dict()
+    updated = update_job_posting(job_id, data)
+    add_audit_log(user_str, "UPDATE_JOB", "Careers", f"Updated job #{job_id} '{payload.title}' ({payload.status})")
+    return {
+        "success": True,
+        "message": f"Job #{job_id} updated successfully.",
+        "job": updated
+    }
+
+@app.patch("/api/jobs/{job_id}/status")
+def change_job_status(job_id: int, payload: JobPostingStatusPayload, admin_user: Optional[str] = "admin"):
+    user_str = admin_user if isinstance(admin_user, str) else "admin"
+    existing = fetch_job_posting_by_id(job_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail=f"Job posting #{job_id} not found")
+    
+    update_job_posting_status(job_id, payload.status)
+    add_audit_log(user_str, "UPDATE_JOB_STATUS", "Careers", f"Changed status of job #{job_id} to '{payload.status}'")
+    return {
+        "success": True,
+        "message": f"Job #{job_id} status updated to {payload.status}."
+    }
+
+@app.delete("/api/jobs/{job_id}")
+def remove_job(job_id: int, admin_user: Optional[str] = "admin"):
+    user_str = admin_user if isinstance(admin_user, str) else "admin"
+    existing = fetch_job_posting_by_id(job_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail=f"Job posting #{job_id} not found")
+    
+    delete_job_posting(job_id)
+    add_audit_log(user_str, "DELETE_JOB", "Careers", f"Deleted job #{job_id} '{existing.get('title')}'")
+    return {
+        "success": True,
+        "message": f"Job #{job_id} deleted successfully."
+    }
 
 # =========================================================================
 # PROJECTS & INSTALLATIONS (Module 6)
