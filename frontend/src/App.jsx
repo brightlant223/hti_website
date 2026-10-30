@@ -15,6 +15,7 @@ import ClientsPage from './components/ClientsPage';
 import AboutUs from './components/AboutUs';
 import ContactInquiry from './components/ContactInquiry';
 import AdminPanel from './components/AdminPanel';
+import AdminLogin from './components/AdminLogin';
 import Footer from './components/Footer';
 import WhatsAppAndChatbot from './components/WhatsAppAndChatbot';
 
@@ -236,22 +237,36 @@ const parseUrlRoute = () => {
     return { page: 'server-room-monitoring', param: null };
   }
 
-  // Check admin portal route (/admin, /admin-login, /login, /admin/login)
+  // Check admin portal routes
   const cleanPathLower = (path || '').toLowerCase().replace(/\/$/, '');
   const cleanHashLower = (hash || '').toLowerCase().replace(/\/$/, '');
+
+  // Dedicated Admin Login route (/admin-login, /login, /admin/login)
   if (
-    cleanPathLower === '/admin' ||
     cleanPathLower === '/admin-login' ||
     cleanPathLower === '/login' ||
     cleanPathLower === '/admin/login' ||
-    cleanHashLower === '#/admin' ||
-    cleanHashLower === '#admin' ||
     cleanHashLower === '#/admin-login' ||
     cleanHashLower === '#admin-login' ||
     cleanHashLower === '#/login' ||
     cleanHashLower === '#login'
   ) {
-    return { page: 'home', param: null, openAdmin: true };
+    return { page: 'admin-login', param: null };
+  }
+
+  // Admin Dashboard route (/admin, /admin/dashboard)
+  if (
+    cleanPathLower === '/admin' ||
+    cleanPathLower === '/admin/dashboard' ||
+    cleanHashLower === '#/admin' ||
+    cleanHashLower === '#admin'
+  ) {
+    const hasToken = typeof window !== 'undefined' && Boolean(localStorage.getItem('hti_admin_token'));
+    if (!hasToken) {
+      // Protected route: Redirect unauthenticated user to admin login
+      return { page: 'admin-login', param: null };
+    }
+    return { page: 'admin', param: null, openAdmin: true };
   }
 
   // Check dedicated company and client pages
@@ -403,7 +418,8 @@ export default function App() {
 
   const [isAdminOpen, setIsAdminOpen] = useState(() => {
     try {
-      return Boolean(parseUrlRoute().openAdmin);
+      const parsed = parseUrlRoute();
+      return Boolean(parsed.openAdmin) || parsed.page === 'admin';
     } catch {
       return false;
     }
@@ -639,15 +655,25 @@ export default function App() {
       const canonicalPage = page === 'access-automation' ? 'automation' : page;
       targetUrl = `/${canonicalPage}`;
       targetPage = canonicalPage;
-    } else if (page === 'admin' || page === 'admin-login' || page === 'login') {
-      targetUrl = '/admin';
-      targetPage = 'home';
-      setIsAdminOpen(true);
-      setRouteState({ page: 'home', param: null, openAdmin: true });
-      if (window.location.pathname !== '/admin') {
-        window.history.pushState({}, '', '/admin');
+    } else if (page === 'admin-login' || page === 'login') {
+      targetUrl = '/admin-login';
+      targetPage = 'admin-login';
+      targetParam = null;
+      setIsAdminOpen(false);
+    } else if (page === 'admin') {
+      const hasToken = typeof window !== 'undefined' && Boolean(localStorage.getItem('hti_admin_token'));
+      if (hasToken) {
+        targetUrl = '/admin';
+        targetPage = 'admin';
+        targetParam = null;
+        setIsAdminOpen(true);
+      } else {
+        // Protected route: redirect to admin login
+        targetUrl = '/admin-login';
+        targetPage = 'admin-login';
+        targetParam = null;
+        setIsAdminOpen(false);
       }
-      return;
     } else if (page === 'home') {
       targetUrl = '/';
     }
@@ -734,7 +760,10 @@ export default function App() {
       <Navbar
         currentPage={routeState.page}
         onNavigate={navigateTo}
-        onOpenAdmin={() => setIsAdminOpen(true)}
+        onOpenAdmin={() => {
+          const hasToken = typeof window !== 'undefined' && Boolean(localStorage.getItem('hti_admin_token'));
+          navigateTo(hasToken ? 'admin' : 'admin-login');
+        }}
         isAdminOpen={isAdminOpen}
         inquiryCount={inquiryCount}
         onSelectCategory={handleSelectSegment}
@@ -866,6 +895,18 @@ export default function App() {
           <CareersPage onNavigate={navigateTo} />
         )}
 
+        {/* ROUTE 8B: Dedicated Admin Login Page (/admin-login) */}
+        {routeState.page === 'admin-login' && (
+          <AdminLogin
+            theme={resolvedTheme}
+            onLoginSuccess={(authData) => {
+              setIsAdminOpen(true);
+              navigateTo('admin');
+            }}
+            onNavigate={navigateTo}
+          />
+        )}
+
         {/* ROUTE 9: Default Landing Home Page (/) */}
         {routeState.page === 'home' && (
           <>
@@ -913,9 +954,10 @@ export default function App() {
 
         {/* Fallback to Home if unknown route */}
         {![
-          'product', 'catalog', 'automation', 'security-systems', 'cleanroom-interlocks',
+          'product', 'catalog', 'automation', 'access-automation', 'security-systems', 'cleanroom-interlocks',
           'perimeter-defense', 'fire-protection', 'hygiene', 'server-room-monitoring',
-          'clients', 'about', 'contact', 'partners', 'blogs', 'careers', 'home',
+          'clients', 'about', 'company', 'contact', 'partners', 'blogs', 'careers', 'home',
+          'admin', 'admin-login', 'login',
           ...ALL_SERVICE_SLUGS
         ].includes(routeState.page) && (
           <Hero
@@ -939,19 +981,18 @@ export default function App() {
       {/* Admin Panel wrapped in ErrorBoundary to guarantee graceful recovery */}
       <ErrorBoundary
         fallbackTitle="Admin Console Initialization Notice"
-        onReset={() => setIsAdminOpen(false)}
+        onReset={() => {
+          setIsAdminOpen(false);
+          navigateTo('home');
+        }}
       >
         <AdminPanel
-          isOpen={isAdminOpen}
+          isOpen={isAdminOpen || routeState.page === 'admin'}
           theme={resolvedTheme}
           onThemeChange={setTheme}
           onClose={() => {
             setIsAdminOpen(false);
-            setRouteState({ page: 'home', param: null, openAdmin: false });
-            if (window.location.pathname !== '/' || window.location.hash) {
-              window.history.pushState({}, '', '/');
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            navigateTo('home');
           }}
           onNavigate={navigateTo}
           onProductsChanged={handleRefreshProducts}
