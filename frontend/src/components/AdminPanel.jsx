@@ -16,11 +16,11 @@ import {
   Check, Eye, EyeOff, ExternalLink, Calendar, Clock, Tag,
   LayoutDashboard, Users, Building2, Lock, LogOut, LogIn,
   TrendingUp, Layers, ChevronRight, CheckCircle2, Star,
-  Grid, List, Sparkles, Filter, SlidersHorizontal, Cpu,
+  Grid, List, Sparkles, Filter, SlidersHorizontal,
   Database, Activity, Copy, ArrowUpRight, Download, Upload,
   Briefcase, Globe, Settings, HardDrive, Phone, Mail,
   Send, AlertTriangle, ShieldCheck, UserCheck, Key, FileSpreadsheet,
-  ArrowRight, CheckSquare, MessageCircle, HeartHandshake,
+  ArrowRight, CheckSquare, MessageCircle,
   Server, Link, Image, Hash, Info, Sun, Moon, Save,
   Zap, User, HelpCircle, MapPin, Menu
 } from 'lucide-react';
@@ -242,19 +242,27 @@ export default function AdminPanel({
   }, [activeTab]);
 
   // Sub-tabs
-  const [clientPartnerSubTab, setClientPartnerSubTab] = useState('clients'); // 'clients' | 'partners' | 'reviews'
+  const [clientPartnerSubTab, setClientPartnerSubTab] = useState('clients'); // 'clients' | 'reviews'
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
-  // Automatically alias legacy tab IDs ('reviews' and 'clients_partners') to 'clients_reviews'
+  // Automatically alias legacy tab IDs ('reviews', 'clients_partners', and 'partners') to 'clients_reviews'
   useEffect(() => {
     if (activeTab === 'reviews') {
       setActiveTab('clients_reviews');
       setClientPartnerSubTab('reviews');
-    } else if (activeTab === 'clients_partners') {
+    } else if (activeTab === 'clients_partners' || activeTab === 'partners') {
       setActiveTab('clients_reviews');
       setClientPartnerSubTab('clients');
     }
   }, [activeTab]);
+
+  // Fallback if clientPartnerSubTab was set to legacy 'partners'
+  useEffect(() => {
+    if (clientPartnerSubTab === 'partners') {
+      setClientPartnerSubTab('clients');
+    }
+  }, [clientPartnerSubTab]);
+
   const [userSubTab, setUserSubTab] = useState('users'); // 'users' | 'audit_logs'
   const [contentSubTab, setContentSubTab] = useState('homepage_hero'); // 'homepage_hero' | 'company_profile' | 'contact_details' | 'testimonials'
 
@@ -294,10 +302,8 @@ export default function AdminPanel({
   const [blogViewMode, setBlogViewMode] = useState('grid');
 
   const [clientSearch, setClientSearch] = useState('');
-  const [partnerSearch, setPartnerSearch] = useState('');
   const [isSyncingClients, setIsSyncingClients] = useState(false);
   const [clientFilterStatus, setClientFilterStatus] = useState('all'); // 'all' | 'authorized' | 'visible'
-  const [partnerFilterStatus, setPartnerFilterStatus] = useState('all'); // 'all' | 'active' | 'hidden'
   const [inquiryStatusFilter, setInquiryStatusFilter] = useState('All');
   const [inquirySearch, setInquirySearch] = useState('');
 
@@ -335,18 +341,6 @@ export default function AdminPanel({
     is_authorized: true
   });
 
-  // Partner Add / Edit modal
-  const [editingPartner, setEditingPartner] = useState(null);
-  const [partnerForm, setPartnerForm] = useState({
-    name: '',
-    category: 'Fire & Automation',
-    tagline: '',
-    logo_url: '',
-    website_url: '',
-    is_active: true,
-    display_order: 0,
-    is_authorized: true
-  });
 
   // Admin User Add / Edit modal
   const [editingUser, setEditingUser] = useState(null);
@@ -752,14 +746,13 @@ export default function AdminPanel({
         if (selectedInquiry) setSelectedInquiry(null);
         else if (editingBlog) setEditingBlog(null);
         else if (editingClient) setEditingClient(null);
-        else if (editingPartner) setEditingPartner(null);
         else if (editingUser) setEditingUser(null);
         else if (onClose) onClose();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, selectedInquiry, editingBlog, editingClient, editingPartner, editingUser, onClose]);
+  }, [isOpen, selectedInquiry, editingBlog, editingClient, editingUser, onClose]);
 
   // ===================== AUTHENTICATION ACTIONS =====================
   const handleLoginSubmit = async (e) => {
@@ -1092,79 +1085,6 @@ export default function AdminPanel({
     }
   };
 
-  const handleOpenAddPartner = () => {
-    setPartnerForm({
-      name: '',
-      category: 'Fire & Automation',
-      tagline: 'Leading automation technology partner',
-      logo_url: '',
-      website_url: '',
-      is_active: true,
-      display_order: partners.length + 1,
-      is_authorized: true
-    });
-    setEditingPartner('new');
-  };
-
-  const handleOpenEditPartner = (p) => {
-    setPartnerForm({
-      name: p.name,
-      category: p.category,
-      tagline: p.tagline || '',
-      logo_url: p.logo_url || '',
-      website_url: p.website_url || '',
-      is_active: Boolean(p.is_active),
-      display_order: p.display_order || 0,
-      is_authorized: Boolean(p.is_authorized)
-    });
-    setEditingPartner(p);
-  };
-
-  const handleSavePartner = async (e) => {
-    e.preventDefault();
-    if (!partnerForm.name || !partnerForm.category) {
-      showFeedback('error', 'Please fill in Partner Name and Category.');
-      return;
-    }
-
-    try {
-      const url = editingPartner === 'new'
-        ? `/api/partners?admin_user=${encodeURIComponent(currentUser)}`
-        : `/api/partners/${editingPartner.id}?admin_user=${encodeURIComponent(currentUser)}`;
-      const method = editingPartner === 'new' ? 'POST' : 'PUT';
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(partnerForm)
-      });
-
-      if (res.ok) {
-        showFeedback('success', editingPartner === 'new' ? 'Technology partner added!' : 'Technology partner updated!');
-        setEditingPartner(null);
-        await fetchClientsAndPartners();
-      } else {
-        const err = await res.json();
-        showFeedback('error', err.detail || 'Failed to save partner.');
-      }
-    } catch (err) {
-      showFeedback('error', 'Network error saving partner.');
-    }
-  };
-
-  const handleDeletePartner = async (p) => {
-    if (!window.confirm(`Are you sure you want to remove partner "${p.name}"?`)) return;
-    try {
-      const res = await fetch(`/api/partners/${p.id}?admin_user=${encodeURIComponent(currentUser)}`, { method: 'DELETE' });
-      if (res.ok) {
-        showFeedback('success', `Partner "${p.name}" removed.`);
-        await fetchClientsAndPartners();
-      }
-    } catch (err) {
-      showFeedback('error', 'Network error deleting partner.');
-    }
-  };
-
   const handleSyncClientsPartners = async () => {
     setIsSyncingClients(true);
     await fetchClientsAndPartners();
@@ -1429,7 +1349,7 @@ export default function AdminPanel({
   if (!isOpen) return null;
 
   // =========================================================================
-// VIEW 1: ULTRA-PREMIUM ENTERPRISE LOGIN SCREEN
+  // VIEW 1: ULTRA-PREMIUM ENTERPRISE LOGIN SCREEN
   // =========================================================================
   if (!isAuthenticated) {
     return (
@@ -1681,7 +1601,7 @@ export default function AdminPanel({
     );
   }
 
-    // VIEW 2: AUTHENTICATED ADMIN DASHBOARD (9 Full Modules)
+  // VIEW 2: AUTHENTICATED ADMIN DASHBOARD (9 Full Modules)
   // =========================================================================
   // Safely computed filtered lists and quick counts for authenticated views
   const unansweredInquiries = (inquiries || []).filter(i => (i?.status || '').toLowerCase() === 'new');
@@ -1701,21 +1621,6 @@ export default function AdminPanel({
     return matchesSearch && matchesFilter;
   });
 
-  const filteredPartners = (partners || []).filter(p => {
-    if (!p) return false;
-    const name = (p.name || '').toLowerCase();
-    const category = (p.category || '').toLowerCase();
-    const tagline = (p.tagline || '').toLowerCase();
-    const web = (p.website_url || '').toLowerCase();
-    const search = (partnerSearch || '').toLowerCase();
-    const matchesSearch = search === '' || name.includes(search) || category.includes(search) || tagline.includes(search) || web.includes(search);
-
-    let matchesFilter = true;
-    if (partnerFilterStatus === 'active') matchesFilter = Boolean(p.is_active);
-    else if (partnerFilterStatus === 'hidden') matchesFilter = !p.is_active;
-
-    return matchesSearch && matchesFilter;
-  });
 
   return (
     <div className={`admin-overlay theme-${adminTheme}`} data-theme={adminTheme} onClick={onClose}>
@@ -1765,7 +1670,7 @@ export default function AdminPanel({
                 <h2 className="admin-topbar-title adm-topbar-title" style={{ margin: 0, fontSize: '1.22rem', fontWeight: 800 }}>
                   {activeTab === 'dashboard' && 'Executive Dashboard'}
                   {activeTab === 'user_enquiries' && 'Contact Us User Enquiries & Project Leads (MySQL Live)'}
-                  {(activeTab === 'clients_reviews' || activeTab === 'clients_partners' || activeTab === 'reviews') && 'Enterprise Clients, Technology Partners & Client Reviews'}
+                  {(activeTab === 'clients_reviews' || activeTab === 'clients_partners' || activeTab === 'reviews' || activeTab === 'partners') && 'Enterprise Clients & Client Reviews'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
                   {activeTab === 'inquiries' && 'Commercial Enquiries & Lead Pipeline Management'}
                   {activeTab === 'careers' && 'Careers & Talent Acquisition Pipeline'}
@@ -1937,7 +1842,7 @@ export default function AdminPanel({
               ========================================================================= */}
           {activeTab === 'dashboard' && (
             <div className="admin-body-content adm-body-content adm-dashboard-view">
-              
+
 
               {/* 2. Four Dashboard Summary Cards (Single Row) */}
               <div className="adm-summary-grid">
@@ -2134,9 +2039,9 @@ export default function AdminPanel({
                     <span>Publish Article</span>
                   </button>
 
-                  <button className="adm-btn-action neutral-white" onClick={() => { setActiveTab('clients_partners'); handleOpenAddClient(); }}>
+                  <button className="adm-btn-action neutral-white" onClick={() => { setActiveTab('clients_reviews'); handleOpenAddClient(); }}>
                     <Users size={14} />
-                    <span>Add Client / Partner</span>
+                    <span>Add Client</span>
                   </button>
 
                   <button className="adm-btn-action neutral-white" onClick={() => setActiveTab('reviews')}>
@@ -2419,11 +2324,11 @@ export default function AdminPanel({
                     <div className="adm-cp-title-wrap">
                       <div className="adm-cp-eyebrow">
                         <ShieldCheck size={13} />
-                        <span>Enterprise Directory, Partnerships &amp; Client Feedback</span>
+                        <span>ENTERPRISE DIRECTORY &amp; CLIENT FEEDBACK</span>
                       </div>
                       <h2 className="adm-cp-title">Clients &amp; Reviews</h2>
                       <p className="adm-cp-subtitle">
-                        Manage enterprise clients, technology partners and client reviews.
+                        Manage enterprise clients and client reviews.
                       </p>
                     </div>
 
@@ -2435,7 +2340,7 @@ export default function AdminPanel({
                       <button
                         className="adm-cp-sync-btn"
                         onClick={handleSyncClientsPartners}
-                        title="Sync clients and partners with live SQL database"
+                        title="Sync clients and reviews with live SQL database"
                         aria-label="Sync Directory"
                       >
                         <RefreshCw size={13} className={isSyncingClients ? 'adm-cp-spin' : ''} />
@@ -2444,7 +2349,7 @@ export default function AdminPanel({
                     </div>
                   </div>
 
-                  {/* Summary Metric Cards: 4 Cards */}
+                  {/* Summary Metric Cards: 3 Cards */}
                   <div className="adm-cp-stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))' }}>
                     <div className="adm-cp-stat-card">
                       <div className="adm-cp-stat-icon-box">
@@ -2461,20 +2366,7 @@ export default function AdminPanel({
                       </div>
                     </div>
 
-                    <div className="adm-cp-stat-card">
-                      <div className="adm-cp-stat-icon-box green">
-                        <HeartHandshake size={18} />
-                      </div>
-                      <div className="adm-cp-stat-content">
-                        <span className="adm-cp-stat-label">Technology Partners</span>
-                        <div className="adm-cp-stat-value">
-                          <AnimatedNumber value={partners.length} />
-                        </div>
-                        <span className="adm-cp-stat-sub">
-                          {partners.filter(p => p.is_active).length} active on live site
-                        </span>
-                      </div>
-                    </div>
+                    
 
                     <div className="adm-cp-stat-card">
                       <div className="adm-cp-stat-icon-box amber" style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#f59e0b' }}>
@@ -2498,7 +2390,7 @@ export default function AdminPanel({
                       <div className="adm-cp-stat-content">
                         <span className="adm-cp-stat-label">Total Records</span>
                         <div className="adm-cp-stat-value">
-                          <AnimatedNumber value={clients.length + partners.length + testimonialsList.length} />
+                          <AnimatedNumber value={clients.length + testimonialsList.length} />
                         </div>
                         <span className="adm-cp-stat-sub">Enterprise portfolio &amp; feedback</span>
                       </div>
@@ -2506,9 +2398,9 @@ export default function AdminPanel({
                   </div>
                 </div>
 
-                {/* 2. Refined Segmented Navigation Tabs: 3 Tabs */}
+                {/* 2. Refined Segmented Navigation Tabs: 2 Tabs */}
                 <div className="adm-cp-tabs-container">
-                  <div className="adm-cp-segmented-nav" role="tablist" aria-label="Clients, Partners, and Reviews Tabs">
+                  <div className="adm-cp-segmented-nav" role="tablist" aria-label="Clients and Reviews Tabs">
                     <button
                       className={`adm-cp-tab-btn ${clientPartnerSubTab === 'clients' ? 'active' : ''}`}
                       onClick={() => setClientPartnerSubTab('clients')}
@@ -2520,19 +2412,6 @@ export default function AdminPanel({
                       <span>Enterprise Clients</span>
                       <span className="adm-cp-tab-count">{clients.length}</span>
                     </button>
-
-                    <button
-                      className={`adm-cp-tab-btn ${clientPartnerSubTab === 'partners' ? 'active' : ''}`}
-                      onClick={() => setClientPartnerSubTab('partners')}
-                      role="tab"
-                      aria-selected={clientPartnerSubTab === 'partners'}
-                      tabIndex={0}
-                    >
-                      <HeartHandshake size={16} />
-                      <span>Technology Partners</span>
-                      <span className="adm-cp-tab-count">{partners.length}</span>
-                    </button>
-
                     <button
                       className={`adm-cp-tab-btn ${clientPartnerSubTab === 'reviews' ? 'active' : ''}`}
                       onClick={() => setClientPartnerSubTab('reviews')}
@@ -2548,7 +2427,7 @@ export default function AdminPanel({
                 </div>
 
                 {/* 3. Search and Action Toolbar (Per-tab search, filter chips, and dynamic Add button) */}
-                {clientPartnerSubTab !== 'reviews' ? (
+                {clientPartnerSubTab === 'clients' && (
                   <div className="adm-cp-toolbar">
                     <div className="adm-cp-toolbar-left">
                       <div className="adm-cp-search-wrap">
@@ -2556,25 +2435,15 @@ export default function AdminPanel({
                         <input
                           type="text"
                           className="adm-cp-search-input"
-                          placeholder={
-                            clientPartnerSubTab === 'clients'
-                              ? 'Search clients by company name or sector...'
-                              : 'Search partners by brand name, category, or engineering scope...'
-                          }
-                          value={clientPartnerSubTab === 'clients' ? clientSearch : partnerSearch}
-                          onChange={e => {
-                            if (clientPartnerSubTab === 'clients') setClientSearch(e.target.value);
-                            else setPartnerSearch(e.target.value);
-                          }}
+                          placeholder="Search clients by company name or sector..."
+                          value={clientSearch}
+                          onChange={e => setClientSearch(e.target.value)}
                         />
-                        {(clientPartnerSubTab === 'clients' ? clientSearch : partnerSearch) && (
+                        {clientSearch && (
                           <button
                             type="button"
                             className="adm-cp-search-clear"
-                            onClick={() => {
-                              if (clientPartnerSubTab === 'clients') setClientSearch('');
-                              else setPartnerSearch('');
-                            }}
+                            onClick={() => setClientSearch('')}
                             title="Clear search"
                             aria-label="Clear search"
                           >
@@ -2584,66 +2453,36 @@ export default function AdminPanel({
                       </div>
 
                       {/* Quick Filters */}
-                      {clientPartnerSubTab === 'clients' ? (
-                        <div className="adm-cp-filter-chips">
-                          <button
-                            className={`adm-cp-filter-chip ${clientFilterStatus === 'all' ? 'active' : ''}`}
-                            onClick={() => setClientFilterStatus('all')}
-                          >
-                            All ({clients.length})
-                          </button>
-                          <button
-                            className={`adm-cp-filter-chip ${clientFilterStatus === 'authorized' ? 'active' : ''}`}
-                            onClick={() => setClientFilterStatus('authorized')}
-                          >
-                            Authorized ({clients.filter(c => c.is_authorized).length})
-                          </button>
-                          <button
-                            className={`adm-cp-filter-chip ${clientFilterStatus === 'visible' ? 'active' : ''}`}
-                            onClick={() => setClientFilterStatus('visible')}
-                          >
-                            Visible on Web ({clients.filter(c => c.is_active).length})
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="adm-cp-filter-chips">
-                          <button
-                            className={`adm-cp-filter-chip ${partnerFilterStatus === 'all' ? 'active' : ''}`}
-                            onClick={() => setPartnerFilterStatus('all')}
-                          >
-                            All ({partners.length})
-                          </button>
-                          <button
-                            className={`adm-cp-filter-chip ${partnerFilterStatus === 'active' ? 'active' : ''}`}
-                            onClick={() => setPartnerFilterStatus('active')}
-                          >
-                            Active ({partners.filter(p => p.is_active).length})
-                          </button>
-                          <button
-                            className={`adm-cp-filter-chip ${partnerFilterStatus === 'hidden' ? 'active' : ''}`}
-                            onClick={() => setPartnerFilterStatus('hidden')}
-                          >
-                            Hidden ({partners.filter(p => !p.is_active).length})
-                          </button>
-                        </div>
-                      )}
+                      <div className="adm-cp-filter-chips">
+                        <button
+                          className={`adm-cp-filter-chip ${clientFilterStatus === 'all' ? 'active' : ''}`}
+                          onClick={() => setClientFilterStatus('all')}
+                        >
+                          All ({clients.length})
+                        </button>
+                        <button
+                          className={`adm-cp-filter-chip ${clientFilterStatus === 'authorized' ? 'active' : ''}`}
+                          onClick={() => setClientFilterStatus('authorized')}
+                        >
+                          Authorized ({clients.filter(c => c.is_authorized).length})
+                        </button>
+                        <button
+                          className={`adm-cp-filter-chip ${clientFilterStatus === 'visible' ? 'active' : ''}`}
+                          onClick={() => setClientFilterStatus('visible')}
+                        >
+                          Visible on Web ({clients.filter(c => c.is_active).length})
+                        </button>
+                      </div>
                     </div>
 
                     <div className="adm-cp-toolbar-right">
-                      {clientPartnerSubTab === 'clients' ? (
-                        <button className="adm-cp-add-btn" onClick={handleOpenAddClient}>
-                          <Plus size={16} />
-                          <span>Add Approved Client</span>
-                        </button>
-                      ) : (
-                        <button className="adm-cp-add-btn" onClick={handleOpenAddPartner}>
-                          <Plus size={16} />
-                          <span>Add Tech Partner</span>
-                        </button>
-                      )}
+                      <button className="adm-cp-add-btn" onClick={handleOpenAddClient}>
+                        <Plus size={16} />
+                        <span>Add Approved Client</span>
+                      </button>
                     </div>
                   </div>
-                ) : null}
+                )}
 
                 {/* 4. Data Table: Enterprise Clients Subview */}
                 {clientPartnerSubTab === 'clients' && (
@@ -2813,163 +2652,7 @@ export default function AdminPanel({
                   </div>
                 )}
 
-                {/* 5. Data Table: Technology Partners Subview */}
-                {clientPartnerSubTab === 'partners' && (
-                  <div className="adm-cp-table-card">
-                    {partners.length === 0 ? (
-                      <div className="adm-cp-empty-state">
-                        <div className="adm-cp-empty-icon-wrap">
-                          <HeartHandshake size={28} />
-                        </div>
-                        <h3 className="adm-cp-empty-title">No Technology Partners Registered</h3>
-                        <p className="adm-cp-empty-desc">
-                          Add certified technology brands, OEM suppliers, and integration partners that power HTI engineering solutions.
-                        </p>
-                        <div className="adm-cp-empty-action">
-                          <button className="adm-cp-add-btn" onClick={handleOpenAddPartner}>
-                            <Plus size={16} />
-                            <span>Add First Tech Partner</span>
-                          </button>
-                        </div>
-                      </div>
-                    ) : filteredPartners.length === 0 ? (
-                      <div className="adm-cp-empty-state">
-                        <div className="adm-cp-empty-icon-wrap">
-                          <Search size={28} />
-                        </div>
-                        <h3 className="adm-cp-empty-title">No Matching Partners Found</h3>
-                        <p className="adm-cp-empty-desc">
-                          No technology partners match your current query "{partnerSearch}". Try adjusting your keywords or clearing the filter.
-                        </p>
-                        <div className="adm-cp-empty-action">
-                          <button
-                            className="adm-cp-btn-secondary"
-                            onClick={() => {
-                              setPartnerSearch('');
-                              setPartnerFilterStatus('all');
-                            }}
-                          >
-                            Reset Filters &amp; Search
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="adm-cp-table-wrap">
-                          <table className="adm-cp-table">
-                            <thead>
-                              <tr>
-                                <th className="adm-cp-col-num">#</th>
-                                <th className="adm-cp-col-entity">Partner Brand</th>
-                                <th className="adm-cp-col-sector">Category</th>
-                                <th className="adm-cp-col-auth">Engineering Scope</th>
-                                <th className="adm-cp-col-vis">Web Status</th>
-                                <th className="adm-cp-col-web">Public Website</th>
-                                <th className="adm-cp-col-actions">Actions</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {filteredPartners.map((p, idx) => {
-                                const initial = (p.name || 'P').charAt(0).toUpperCase();
-                                return (
-                                  <tr key={p.id}>
-                                    <td className="adm-cp-col-num">{idx + 1}</td>
-                                    <td>
-                                      <div className="adm-cp-entity-cell">
-                                        <div className="adm-cp-avatar">
-                                          {p.logo_url ? (
-                                            <img
-                                              src={p.logo_url}
-                                              alt={p.name}
-                                              className="adm-cp-avatar-img"
-                                              onError={e => {
-                                                e.target.style.display = 'none';
-                                                if (e.target.nextSibling) e.target.nextSibling.style.display = 'block';
-                                              }}
-                                            />
-                                          ) : null}
-                                          <span
-                                            className="adm-cp-avatar-fallback"
-                                            style={{ display: p.logo_url ? 'none' : 'block' }}
-                                          >
-                                            {initial}
-                                          </span>
-                                        </div>
-                                        <div className="adm-cp-entity-info">
-                                          <div className="adm-cp-entity-name">{p.name}</div>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td className="adm-cp-col-sector">
-                                      <span className="adm-cp-category-badge">
-                                        <Cpu size={11} />
-                                        <span>{p.category}</span>
-                                      </span>
-                                    </td>
-                                    <td className="adm-cp-col-auth">
-                                      <div className="adm-cp-tagline-text">{p.tagline || '—'}</div>
-                                    </td>
-                                    <td className="adm-cp-col-vis">
-                                      <span className={`adm-cp-visibility-pill ${p.is_active ? 'visible' : 'hidden'}`}>
-                                        <span className="adm-cp-vis-dot" />
-                                        <span>{p.is_active ? 'Active' : 'Hidden'}</span>
-                                      </span>
-                                    </td>
-                                    <td className="adm-cp-col-web">
-                                      {p.website_url ? (
-                                        <a
-                                          href={p.website_url.startsWith('http') ? p.website_url : `https://${p.website_url}`}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                          className="adm-cp-website-link"
-                                          title={`Visit ${p.name} website`}
-                                        >
-                                          <span>{p.website_url.replace(/^https?:\/\/(www\.)?/, '')}</span>
-                                          <ExternalLink size={10} />
-                                        </a>
-                                      ) : (
-                                        <span className="adm-cp-no-url">—</span>
-                                      )}
-                                    </td>
-                                    <td className="adm-cp-col-actions">
-                                      <div className="adm-cp-action-group">
-                                        <button
-                                          className="adm-cp-btn-action"
-                                          onClick={() => handleOpenEditPartner(p)}
-                                          title={`Edit ${p.name}`}
-                                          aria-label={`Edit ${p.name}`}
-                                        >
-                                          <Edit3 size={15} />
-                                        </button>
-                                        <button
-                                          className="adm-cp-btn-action delete"
-                                          onClick={() => handleDeletePartner(p)}
-                                          title={`Delete ${p.name}`}
-                                          aria-label={`Delete ${p.name}`}
-                                        >
-                                          <Trash2 size={15} />
-                                        </button>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                        <div className="adm-cp-table-footer">
-                          <span>
-                            Showing <strong>{filteredPartners.length}</strong> of{' '}
-                            <strong>{partners.length}</strong> technology partners
-                          </span>
-                          <span>Certified OEM integration directory</span>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
-
-                {/* 5. Reviews Subview */}
+                {/* Reviews Subview */}
                 {clientPartnerSubTab === 'reviews' && (
                   <div className="adm-cp-reviews-subview" style={{ marginTop: 8 }}>
                     <AdminReviewsManager
@@ -3372,7 +3055,7 @@ export default function AdminPanel({
                     <div className="adm-cp-toggle-content">
                       <span className="adm-cp-toggle-title">Show on Public Website</span>
                       <span className="adm-cp-toggle-desc">
-                        Publish this client into the front-facing "Clients &amp; Partners" section.
+                        Publish this client into the front-facing "Clients" section.
                       </span>
                     </div>
                   </label>
@@ -3397,129 +3080,6 @@ export default function AdminPanel({
         </div>
       )}
 
-      {/* =========================================================================
-          MODAL 4: PARTNER ADD / EDIT MODAL
-          ========================================================================= */}
-      {editingPartner && (
-        <div className={`admin-modal-overlay theme-${adminTheme}`} data-theme={adminTheme} onClick={() => setEditingPartner(null)}>
-          <div className={`adm-cp-modal-dialog theme-${adminTheme}`} data-theme={adminTheme} onClick={e => e.stopPropagation()}>
-            <div className="adm-cp-modal-header">
-              <div className="adm-cp-modal-title-group">
-                <div className="adm-cp-modal-badge-icon">
-                  <HeartHandshake size={20} />
-                </div>
-                <div>
-                  <h3 className="adm-cp-modal-title">
-                    {editingPartner === 'new' ? 'Add Technology Partner' : `Edit Partner: ${editingPartner.name}`}
-                  </h3>
-                  <div className="adm-cp-modal-subtitle">
-                    Configure certified brand partnerships, OEM hardware suppliers, and engineering scope.
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                className="topbar-close-btn"
-                onClick={() => setEditingPartner(null)}
-                title="Close modal"
-                aria-label="Close modal"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <form onSubmit={handleSavePartner} style={{ display: 'flex', flexDirection: 'column' }}>
-              <div className="adm-cp-form-body">
-                <div className="adm-cp-form-group">
-                  <label className="adm-cp-form-label">
-                    <span>Partner Brand Name</span>
-                    <span className="adm-cp-req-star">*</span>
-                  </label>
-                  <input
-                    className="adm-cp-form-input"
-                    required
-                    value={partnerForm.name}
-                    onChange={e => setPartnerForm({ ...partnerForm, name: e.target.value })}
-                    placeholder="e.g. Honeywell / Bosch / Metaflex"
-                  />
-                </div>
-
-                <div className="adm-cp-form-group">
-                  <label className="adm-cp-form-label">
-                    <span>Partner Category</span>
-                    <span className="adm-cp-req-star">*</span>
-                  </label>
-                  <input
-                    className="adm-cp-form-input"
-                    required
-                    value={partnerForm.category}
-                    onChange={e => setPartnerForm({ ...partnerForm, category: e.target.value })}
-                    placeholder="e.g. Fire & Automation"
-                  />
-                </div>
-
-                <div className="adm-cp-form-group">
-                  <label className="adm-cp-form-label">Engineering Scope / Tagline</label>
-                  <input
-                    className="adm-cp-form-input"
-                    value={partnerForm.tagline}
-                    onChange={e => setPartnerForm({ ...partnerForm, tagline: e.target.value })}
-                    placeholder="e.g. Global leader in commercial building automation controls"
-                  />
-                </div>
-
-                <div className="adm-cp-form-group">
-                  <label className="adm-cp-form-label">Partner Logo URL</label>
-                  <input
-                    className="adm-cp-form-input"
-                    value={partnerForm.logo_url}
-                    onChange={e => setPartnerForm({ ...partnerForm, logo_url: e.target.value })}
-                    placeholder="e.g. /partners/honeywell.png or https://..."
-                  />
-                </div>
-
-                <div className="adm-cp-form-group">
-                  <label className="adm-cp-form-label">Partner Website URL</label>
-                  <input
-                    className="adm-cp-form-input"
-                    value={partnerForm.website_url}
-                    onChange={e => setPartnerForm({ ...partnerForm, website_url: e.target.value })}
-                    placeholder="e.g. https://www.honeywell.com"
-                  />
-                </div>
-
-                <label className={`adm-cp-toggle-card ${partnerForm.is_active ? 'checked' : ''}`}>
-                  <input
-                    type="checkbox"
-                    className="adm-cp-toggle-checkbox"
-                    checked={partnerForm.is_active}
-                    onChange={e => setPartnerForm({ ...partnerForm, is_active: e.target.checked })}
-                  />
-                  <div className="adm-cp-toggle-content">
-                    <span className="adm-cp-toggle-title">Active Partner on Website</span>
-                    <span className="adm-cp-toggle-desc">
-                      Display partner brand in the technology ecosystem and client trust strips.
-                    </span>
-                  </div>
-                </label>
-              </div>
-
-              <div className="adm-cp-modal-footer">
-                <button
-                  type="button"
-                  className="adm-cp-btn-secondary"
-                  onClick={() => setEditingPartner(null)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="adm-cp-btn-primary">
-                  <Save size={15} />
-                  <span>Save Partner</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* =========================================================================
           MODAL 6: INTERACTIVE INQUIRY DETAIL DRAWER

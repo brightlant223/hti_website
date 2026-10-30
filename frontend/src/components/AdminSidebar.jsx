@@ -116,7 +116,7 @@ export default function AdminSidebar({
     }
   };
 
-  const totalClientsAndPartners = clients.length + partners.length;
+  const totalClientsAndReviews = (clients ? clients.length : 0) + (Array.isArray(testimonials) ? testimonials.length : 0);
   const newUserEnquiriesCount = userEnquiries.filter(e => (e.status || '').toLowerCase() === 'new').length;
   const newInquiriesCount = unansweredInquiries.length > 0
     ? unansweredInquiries.length
@@ -170,7 +170,7 @@ export default function AdminSidebar({
           id: 'clients_reviews',
           label: 'Clients & Reviews',
           icon: Users,
-          badge: (totalClientsAndPartners + testimonialsCount) > 0 ? { text: `${totalClientsAndPartners + testimonialsCount}` } : null
+          badge: totalClientsAndReviews > 0 ? { text: `${totalClientsAndReviews}` } : null
         },
         {
           id: 'settings',
@@ -249,7 +249,7 @@ export default function AdminSidebar({
             <div className="adm-items-list">
               {sec.items.map((item) => {
                 const IconComponent = item.icon;
-                const isActive = activeTab === item.id || (item.id === 'clients_reviews' && (activeTab === 'clients_partners' || activeTab === 'reviews'));
+                const isActive = activeTab === item.id || (item.id === 'clients_reviews' && (activeTab === 'clients_partners' || activeTab === 'reviews' || activeTab === 'partners'));
                 const badgeText = item.badge?.text;
                 const isAttention = item.badge?.isAttention;
 
