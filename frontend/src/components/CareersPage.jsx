@@ -322,10 +322,7 @@ export default function CareersPage({ onNavigate }) {
           const pub = (data.jobs || []).filter((j) => (j.status || '').toLowerCase() === 'published');
           setLiveJobs(pub);
           if (pub.length > 0) {
-            const dismissed = sessionStorage.getItem('hti_career_popup_closed');
-            if (!dismissed) {
-              setTimeout(() => setIsOpportunitiesPopupOpen(true), 750);
-            }
+            setTimeout(() => setIsOpportunitiesPopupOpen(true), 600);
           }
         }
       } catch (err) {
@@ -337,7 +334,6 @@ export default function CareersPage({ onNavigate }) {
 
   const handleCloseOpportunitiesPopup = () => {
     setIsOpportunitiesPopupOpen(false);
-    sessionStorage.setItem('hti_career_popup_closed', 'true');
   };
 
   const [selectedRole, setSelectedRole] = useState(null);
@@ -763,13 +759,20 @@ export default function CareersPage({ onNavigate }) {
               <span>Careers</span>
             </div>
 
-            <div className="careers-hiring-badge" aria-label="Status: We're Hiring">
+            <button
+              type="button"
+              className="careers-hiring-badge"
+              style={{ cursor: 'pointer', background: 'none', border: 'none', padding: 0 }}
+              onClick={() => setIsOpportunitiesPopupOpen(true)}
+              aria-label="Status: We're Hiring - Click to view current openings"
+              title="Click to view all live HTI Job Openings in popup"
+            >
               <span className="careers-hiring-pulse" aria-hidden="true">
                 <span className="careers-pulse-dot" />
                 <span className="careers-pulse-ring" />
               </span>
-              <span>We're Hiring · 6 Roles</span>
-            </div>
+              <span>We're Hiring · {liveJobs.length > 0 ? `${liveJobs.length} Live Openings` : 'Explore Vacancies'}</span>
+            </button>
           </nav>
 
           <button
@@ -1104,7 +1107,21 @@ export default function CareersPage({ onNavigate }) {
           </div>
         </div>
       )}
-      {/* ── JOB OPPORTUNITIES POPUP (Animated HTI Corporate Modal) ── */}
+            {/* Floating Quick-Open Vacancies Pill */}
+      {liveJobs.length > 0 && !isOpportunitiesPopupOpen && (
+        <button
+          type="button"
+          className="careers-floating-vacancies-pill"
+          onClick={() => setIsOpportunitiesPopupOpen(true)}
+          title="Open Current Job Vacancies Popup"
+        >
+          <Briefcase size={16} />
+          <span>View Current Openings ({liveJobs.length})</span>
+          <span className="floating-pulse-badge" />
+        </button>
+      )}
+
+      {/* JOB OPPORTUNITIES POPUP (Animated HTI Corporate Modal) */}
       <CareerJobPopup
         jobs={liveJobs}
         isOpen={isOpportunitiesPopupOpen}

@@ -1609,6 +1609,8 @@ async def submit_career_application(
     notice_period: Optional[str] = Form(""),
     cover_letter: Optional[str] = Form(""),
     step_saved: Optional[int] = Form(3),
+    current_location: Optional[str] = Form(""),
+    job_id: Optional[int] = Form(None),
     resume: Optional[UploadFile] = File(None)
 ):
     # Field validations
@@ -1659,6 +1661,8 @@ async def submit_career_application(
         "position": position.strip(),
         "experience": experience.strip() if experience else "Not specified",
         "notice_period": notice_period.strip() if notice_period else "Immediate",
+        "current_location": current_location.strip() if current_location else "",
+        "job_id": job_id,
         "resume_filename": resume_filename,
         "resume_url": resume_url,
         "cover_letter": cover_letter.strip() if cover_letter else "",
@@ -1802,12 +1806,13 @@ class JobPostingPayload(BaseModel):
     employment_type: Optional[str] = "Full-time"
     location: Optional[str] = "Navi Mumbai HQ"
     openings: Optional[int] = 1
-    experience: Optional[str] = "0–2 Years"
+    experience: Optional[str] = "0–1 Years"
     salary_range: Optional[str] = ""
     skills: Optional[str] = ""
     description: Optional[str] = ""
     responsibilities: Optional[str] = ""
     qualifications: Optional[str] = ""
+    additional_requirements: Optional[str] = ""
     deadline: Optional[str] = ""
     status: Optional[str] = "Published"
 

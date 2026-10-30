@@ -135,6 +135,8 @@ def init_careers_db():
             step_saved INTEGER DEFAULT 3,
             status TEXT DEFAULT 'New',
             notes TEXT DEFAULT '',
+            current_location TEXT DEFAULT '',
+            job_id INTEGER DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
@@ -211,8 +213,8 @@ def insert_career_application(data: dict):
             with conn.cursor() as cursor:
                 sql = """
                 INSERT INTO career_applications 
-                (full_name, email, phone, position, experience, notice_period, resume_filename, resume_url, cover_letter, step_saved, status, notes)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                (full_name, email, phone, position, experience, notice_period, resume_filename, resume_url, cover_letter, step_saved, status, notes, current_location, job_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 cursor.execute(sql, (
                     data.get("full_name"),
@@ -226,7 +228,9 @@ def insert_career_application(data: dict):
                     data.get("cover_letter", ""),
                     data.get("step_saved", 3),
                     data.get("status", "New"),
-                    data.get("notes", "")
+                    data.get("notes", ""),
+                    data.get("current_location", ""),
+                    data.get("job_id", None)
                 ))
                 inserted_id = cursor.lastrowid
                 cursor.execute("SELECT * FROM career_applications WHERE id = %s", (inserted_id,))
@@ -242,8 +246,8 @@ def insert_career_application(data: dict):
     sq_cursor = sq_conn.cursor()
     sq_cursor.execute("""
     INSERT INTO career_applications 
-    (full_name, email, phone, position, experience, notice_period, resume_filename, resume_url, cover_letter, step_saved, status, notes)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (full_name, email, phone, position, experience, notice_period, resume_filename, resume_url, cover_letter, step_saved, status, notes, current_location, job_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         data.get("full_name"),
         data.get("email"),
@@ -256,7 +260,9 @@ def insert_career_application(data: dict):
         data.get("cover_letter", ""),
         data.get("step_saved", 3),
         data.get("status", "New"),
-        data.get("notes", "")
+        data.get("notes", ""),
+        data.get("current_location", ""),
+        data.get("job_id", None)
     ))
     sq_id = sq_cursor.lastrowid
     sq_conn.commit()
@@ -497,6 +503,8 @@ def init_user_enquiries_db():
             project_details TEXT NOT NULL,
             status TEXT DEFAULT 'New',
             notes TEXT DEFAULT '',
+            current_location TEXT DEFAULT '',
+            job_id INTEGER DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
@@ -836,13 +844,14 @@ def insert_job_posting(data: dict):
     description = data.get("description", "")
     responsibilities = data.get("responsibilities", "")
     qualifications = data.get("qualifications", "")
+    additional_requirements = data.get("additional_requirements", "")
     deadline = data.get("deadline", "")
     status = data.get("status", "Published")
 
     params_tuple = (
         title, department, job_category, employment_type, location,
         openings, experience, salary_range, skills, description,
-        responsibilities, qualifications, deadline, status
+        responsibilities, qualifications, additional_requirements, deadline, status
     )
 
     is_mysql_ok, _ = test_mysql_connectivity()
@@ -852,8 +861,8 @@ def insert_job_posting(data: dict):
             with conn.cursor() as cursor:
                 sql = """
                 INSERT INTO job_postings 
-                (title, department, job_category, employment_type, location, openings, experience, salary_range, skills, description, responsibilities, qualifications, deadline, status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                (title, department, job_category, employment_type, location, openings, experience, salary_range, skills, description, responsibilities, qualifications, additional_requirements, deadline, status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 cursor.execute(sql, params_tuple)
                 new_id = cursor.lastrowid
@@ -870,8 +879,8 @@ def insert_job_posting(data: dict):
     sq_cursor = sq_conn.cursor()
     sq_sql = """
     INSERT INTO job_postings 
-    (title, department, job_category, employment_type, location, openings, experience, salary_range, skills, description, responsibilities, qualifications, deadline, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (title, department, job_category, employment_type, location, openings, experience, salary_range, skills, description, responsibilities, qualifications, additional_requirements, deadline, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
     sq_cursor.execute(sq_sql, params_tuple)
     new_id = sq_cursor.lastrowid
@@ -891,7 +900,10 @@ def fetch_job_postings(include_drafts=False, status_filter=None, department=None
                 query = "SELECT j.*, (SELECT COUNT(*) FROM career_applications ca WHERE ca.position = j.title) AS applications_count FROM job_postings j WHERE 1=1"
                 params = []
                 if not include_drafts:
-                    query += " AND j.status = 'Published'"
+                    import datetime
+                    today_iso = datetime.date.today().isoformat()
+                    query += " AND j.status = 'Published' AND (j.deadline IS NULL OR j.deadline = '' OR j.deadline >= %s)"
+                    params.append(today_iso)
                 elif status_filter and status_filter.lower() != "all":
                     query += " AND LOWER(j.status) = LOWER(%s)"
                     params.append(status_filter)
@@ -923,7 +935,10 @@ def fetch_job_postings(include_drafts=False, status_filter=None, department=None
     query = "SELECT j.*, (SELECT COUNT(*) FROM career_applications ca WHERE ca.position = j.title) AS applications_count FROM job_postings j WHERE 1=1"
     params = []
     if not include_drafts:
-        query += " AND j.status = 'Published'"
+        import datetime
+        today_iso = datetime.date.today().isoformat()
+        query += " AND j.status = 'Published' AND (j.deadline IS NULL OR j.deadline = '' OR j.deadline >= ?)"
+        params.append(today_iso)
     elif status_filter and status_filter.lower() != "all":
         query += " AND LOWER(j.status) = LOWER(?)"
         params.append(status_filter)
@@ -982,13 +997,14 @@ def update_job_posting(job_id: int, data: dict):
     description = data.get("description", "")
     responsibilities = data.get("responsibilities", "")
     qualifications = data.get("qualifications", "")
+    additional_requirements = data.get("additional_requirements", "")
     deadline = data.get("deadline", "")
     status = data.get("status", "Published")
 
     params_tuple = (
         title, department, job_category, employment_type, location,
         openings, experience, salary_range, skills, description,
-        responsibilities, qualifications, deadline, status, job_id
+        responsibilities, qualifications, additional_requirements, deadline, status, job_id
     )
 
     is_mysql_ok, _ = test_mysql_connectivity()
@@ -1001,7 +1017,7 @@ def update_job_posting(job_id: int, data: dict):
                     title = %s, department = %s, job_category = %s, employment_type = %s,
                     location = %s, openings = %s, experience = %s, salary_range = %s,
                     skills = %s, description = %s, responsibilities = %s, qualifications = %s,
-                    deadline = %s, status = %s
+                    additional_requirements = %s, deadline = %s, status = %s
                 WHERE id = %s
                 """
                 cursor.execute(sql, params_tuple)
@@ -1020,7 +1036,7 @@ def update_job_posting(job_id: int, data: dict):
         title = ?, department = ?, job_category = ?, employment_type = ?,
         location = ?, openings = ?, experience = ?, salary_range = ?,
         skills = ?, description = ?, responsibilities = ?, qualifications = ?,
-        deadline = ?, status = ?
+        additional_requirements = ?, deadline = ?, status = ?
     WHERE id = ?
     """
     sq_cursor.execute(sq_sql, params_tuple)
