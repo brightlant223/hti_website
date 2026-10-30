@@ -1185,6 +1185,9 @@ export default function AdminPanel({
         showFeedback('success', `Content for section '${sectionKey}' published live!`);
         await fetchWebsiteContent();
         if (onContentChanged) onContentChanged();
+        try {
+          window.dispatchEvent(new CustomEvent('hti_content_updated', { detail: { sectionKey, data: sectionData } }));
+        } catch (e) {}
         return true;
       } else {
         const err = await res.json().catch(() => null);

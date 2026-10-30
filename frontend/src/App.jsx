@@ -10,7 +10,7 @@ import ProductModal from './components/ProductModal';
 import DoorInterlockSimulator from './components/DoorInterlockSimulator';
 import PartnersClients from './components/PartnersClients';
 import BlogsSection from './components/BlogsSection';
-import InsightsAndQuote from './components/InsightsAndQuote';
+import TestimonialsSection from './components/TestimonialsSection';
 import ClientsPage from './components/ClientsPage';
 import AboutUs from './components/AboutUs';
 import ContactInquiry from './components/ContactInquiry';
@@ -944,9 +944,8 @@ export default function App() {
               onNavigate={navigateTo}
             />
 
-            {/* Engineering Insights & Case Studies AND Request a Technical Proposal / Quote */}
-            <InsightsAndQuote
-              onInquirySubmitted={handleInquirySubmitted}
+            {/* Customer Reviews & Testimonials Section */}
+            <TestimonialsSection
               onNavigate={navigateTo}
             />
           </>

@@ -14,7 +14,8 @@ import {
   Award,
   Sparkles,
   Eye,
-  EyeOff
+  EyeOff,
+  Calendar
 } from 'lucide-react';
 
 export default function AdminReviewsManager({
@@ -43,6 +44,7 @@ export default function AdminReviewsManager({
     location: '',
     rating: 5,
     quote: '',
+    date: '',
     is_published: true,
     client_id: '',
     client_name: ''
@@ -98,6 +100,7 @@ export default function AdminReviewsManager({
       location: '',
       rating: 5,
       quote: '',
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       is_published: true,
       client_id: '',
       client_name: ''
@@ -113,6 +116,7 @@ export default function AdminReviewsManager({
       location: item.location || '',
       rating: Number(item.rating) || 5,
       quote: item.quote || '',
+      date: item.date || '',
       is_published: item.is_published !== false,
       client_id: item.client_id || '',
       client_name: item.client_name || ''
@@ -154,6 +158,7 @@ export default function AdminReviewsManager({
       location: formData.location.trim(),
       rating: Number(formData.rating) || 5,
       quote: formData.quote.trim(),
+      date: (formData.date || '').trim() || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       is_published: formData.is_published !== false,
       client_id: formData.client_id ? String(formData.client_id) : undefined,
       client_name: formData.client_name ? String(formData.client_name).trim() : undefined
@@ -358,6 +363,21 @@ export default function AdminReviewsManager({
                       ))}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {item.date && (
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          fontSize: '0.72rem',
+                          color: '#64748b',
+                          background: 'rgba(100, 116, 139, 0.1)',
+                          padding: '2px 8px',
+                          borderRadius: '6px'
+                        }}>
+                          <Calendar size={11} />
+                          {item.date}
+                        </span>
+                      )}
                       <button
                         type="button"
                         className={`adm-rev-status-pill ${isPub ? 'published' : 'hidden'}`}
@@ -498,6 +518,17 @@ export default function AdminReviewsManager({
                     placeholder="e.g. Navi Mumbai, Maharashtra"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  />
+                </div>
+
+                <div className="adm-rev-form-group">
+                  <label className="adm-rev-label">Review Date</label>
+                  <input
+                    type="text"
+                    className="adm-rev-input"
+                    placeholder="e.g. Oct 24, 2026 or October 2026"
+                    value={formData.date || ''}
+                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   />
                 </div>
 
