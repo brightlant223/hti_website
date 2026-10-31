@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import './AdminReviewsManager.css';
 import {
   Star,
@@ -14,7 +14,12 @@ import {
   Award,
   Sparkles,
   Eye,
-  EyeOff
+  EyeOff,
+  Calendar,
+  Clock,
+  Check,
+  Mail,
+  Database
 } from 'lucide-react';
 
 export default function AdminReviewsManager({
@@ -28,25 +33,56 @@ export default function AdminReviewsManager({
   onCloseExternalModal = () => {}
 }) {
   const rawTestimonials = websiteContent?.testimonials?.data;
-  const testimonialsList = useMemo(() => {
+  const initialTestimonials = useMemo(() => {
     return Array.isArray(rawTestimonials) ? rawTestimonials : [];
   }, [rawTestimonials]);
 
+  const [reviewsList, setReviewsList] = useState(initialTestimonials);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterMode, setFilterMode] = useState('all'); // 'all' | '5' | '4' | 'published' | 'hidden'
+  const [filterMode, setFilterMode] = useState('all'); // 'all' | 'pending' | 'published' | 'rejected' | '5' | '4'
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [isMongoConnected, setIsMongoConnected] = useState(true);
 
   const [formData, setFormData] = useState({
     author: '',
     company: '',
     location: '',
+    email: '',
     rating: 5,
     quote: '',
+    date: '',
+    status: 'Approved',
     is_published: true,
     client_id: '',
     client_name: ''
   });
+
+  // Fetch admin reviews from MongoDB + SQLite backend
+  const fetchAdminReviews = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/admin/reviews?_t=${Date.now()}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data?.reviews)) {
+          setReviewsList(data.reviews);
+          setIsMongoConnected(Boolean(data.mongodb_connected));
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('Note: Admin reviews fetched from props cache', e);
+    }
+
+    // Fallback to websiteContent props
+    if (Array.isArray(rawTestimonials) && rawTestimonials.length > 0) {
+      setReviewsList(rawTestimonials);
+    }
+  }, [rawTestimonials]);
+
+  useEffect(() => {
+    fetchAdminReviews();
+  }, [fetchAdminReviews]);
 
   // External open trigger from parent tab toolbar
   useEffect(() => {
@@ -57,38 +93,46 @@ export default function AdminReviewsManager({
   }, [externalModalOpen]);
 
   // Calculate metrics
-  const totalReviews = testimonialsList.length;
-  const avgRating = totalReviews > 0
-    ? (testimonialsList.reduce((acc, curr) => acc + (Number(curr.rating) || 5), 0) / totalReviews).toFixed(1)
-    : '5.0';
-  const fiveStarCount = testimonialsList.filter((item) => Number(item.rating || 5) === 5).length;
-  const publishedCount = testimonialsList.filter((item) => item.is_published !== false).length;
-  const hiddenCount = testimonialsList.filter((item) => item.is_published === false).length;
+  const totalReviews = reviewsList.length;
+  const pendingCount = reviewsList.filter((item) => item.status === 'Pending').length;
+  const publishedCount = reviewsList.filter(
+    (item) => item.status === 'Approved' || (item.is_published !== false && item.status !== 'Pending' && item.status !== 'Rejected')
+  ).length;
+  const rejectedCount = reviewsList.filter((item) => item.status === 'Rejected' || item.status === 'Hidden').length;
 
-  // Filtered reviews
+  const approvedList = reviewsList.filter((r) => r.status === 'Approved' || (r.is_published !== false && r.status !== 'Rejected'));
+  const avgRating = approvedList.length > 0
+    ? (approvedList.reduce((acc, curr) => acc + (Number(curr.rating) || 5), 0) / approvedList.length).toFixed(1)
+    : '5.0';
+  const fiveStarCount = reviewsList.filter((item) => Number(item.rating || 5) === 5).length;
+
+  // Filtered reviews list
   const filteredList = useMemo(() => {
-    return testimonialsList.filter((item) => {
+    return reviewsList.filter((item) => {
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch =
         !q ||
         (item.author || '').toLowerCase().includes(q) ||
         (item.company || '').toLowerCase().includes(q) ||
+        (item.email || '').toLowerCase().includes(q) ||
         (item.location || '').toLowerCase().includes(q) ||
         (item.quote || '').toLowerCase().includes(q) ||
         (item.client_name || '').toLowerCase().includes(q);
 
       let matchesFilter = true;
-      if (filterMode === '5' || filterMode === '4') {
-        matchesFilter = String(item.rating || 5) === filterMode;
+      if (filterMode === 'pending') {
+        matchesFilter = item.status === 'Pending';
       } else if (filterMode === 'published') {
-        matchesFilter = item.is_published !== false;
-      } else if (filterMode === 'hidden') {
-        matchesFilter = item.is_published === false;
+        matchesFilter = item.status === 'Approved' || (item.is_published !== false && item.status !== 'Pending' && item.status !== 'Rejected');
+      } else if (filterMode === 'rejected') {
+        matchesFilter = item.status === 'Rejected' || item.status === 'Hidden';
+      } else if (filterMode === '5' || filterMode === '4') {
+        matchesFilter = String(item.rating || 5) === filterMode;
       }
 
       return matchesSearch && matchesFilter;
     });
-  }, [testimonialsList, searchQuery, filterMode]);
+  }, [reviewsList, searchQuery, filterMode]);
 
   const handleOpenAdd = () => {
     setEditingIndex(null);
@@ -96,8 +140,11 @@ export default function AdminReviewsManager({
       author: '',
       company: '',
       location: '',
+      email: '',
       rating: 5,
       quote: '',
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      status: 'Approved',
       is_published: true,
       client_id: '',
       client_name: ''
@@ -111,8 +158,11 @@ export default function AdminReviewsManager({
       author: item.author || '',
       company: item.company || '',
       location: item.location || '',
+      email: item.email || '',
       rating: Number(item.rating) || 5,
       quote: item.quote || '',
+      date: item.date || '',
+      status: item.status || (item.is_published !== false ? 'Approved' : 'Rejected'),
       is_published: item.is_published !== false,
       client_id: item.client_id || '',
       client_name: item.client_name || ''
@@ -120,24 +170,47 @@ export default function AdminReviewsManager({
     setModalOpen(true);
   };
 
-  const handleTogglePublished = async (indexToToggle) => {
-    const updatedList = [...testimonialsList];
-    const current = updatedList[indexToToggle];
-    const newStatus = current.is_published === false ? true : false;
-    updatedList[indexToToggle] = {
-      ...current,
-      is_published: newStatus
-    };
+  // Direct status update handler (Approve / Reject)
+  const handleUpdateStatus = async (item, newStatus) => {
+    const targetId = item.id || item.author;
+    const isPub = (newStatus === 'Approved');
+
     try {
-      if (onSaveContent) {
-        const ok = await onSaveContent('testimonials', updatedList);
-        if (ok !== false) {
-          showFeedback('success', newStatus ? 'Review published live on website!' : 'Review hidden from public website.');
+      const res = await fetch(`/api/admin/reviews/${encodeURIComponent(targetId)}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      if (res.ok) {
+        showFeedback('success', newStatus === 'Approved'
+          ? `Review by "${item.author}" approved and published live on the homepage!`
+          : `Review by "${item.author}" has been rejected.`);
+      } else {
+        // Fallback sync via onSaveContent
+        const updatedList = reviewsList.map((t) => {
+          if ((t.id && t.id === item.id) || t.author === item.author) {
+            return { ...t, status: newStatus, is_published: isPub };
+          }
+          return t;
+        });
+        if (onSaveContent) {
+          await onSaveContent('testimonials', updatedList);
         }
+        showFeedback('success', `Review marked as ${newStatus}.`);
       }
+
+      await fetchAdminReviews();
+      window.dispatchEvent(new CustomEvent('hti_content_updated', { detail: { sectionKey: 'testimonials' } }));
     } catch (err) {
-      showFeedback('error', 'Failed to update review visibility: ' + (err.message || 'Unknown error'));
+      showFeedback('error', 'Failed to update review status: ' + (err.message || 'Unknown error'));
     }
+  };
+
+  const handleTogglePublished = async (item) => {
+    const isCurrentlyPublished = item.status === 'Approved' || (item.is_published !== false && item.status !== 'Rejected');
+    const newStatus = isCurrentlyPublished ? 'Rejected' : 'Approved';
+    await handleUpdateStatus(item, newStatus);
   };
 
   const handleSaveModal = async (e) => {
@@ -147,20 +220,23 @@ export default function AdminReviewsManager({
       return;
     }
 
-    const updatedList = [...testimonialsList];
+    const updatedList = [...reviewsList];
     const newEntry = {
       author: formData.author.trim(),
       company: formData.company.trim(),
       location: formData.location.trim(),
+      email: formData.email.trim(),
       rating: Number(formData.rating) || 5,
       quote: formData.quote.trim(),
-      is_published: formData.is_published !== false,
+      date: (formData.date || '').trim() || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      status: formData.status || (formData.is_published ? 'Approved' : 'Rejected'),
+      is_published: formData.is_published !== false && formData.status !== 'Rejected',
       client_id: formData.client_id ? String(formData.client_id) : undefined,
       client_name: formData.client_name ? String(formData.client_name).trim() : undefined
     };
 
     if (editingIndex !== null) {
-      updatedList[editingIndex] = newEntry;
+      updatedList[editingIndex] = { ...updatedList[editingIndex], ...newEntry };
     } else {
       updatedList.unshift(newEntry);
     }
@@ -171,6 +247,8 @@ export default function AdminReviewsManager({
         if (ok !== false) {
           showFeedback('success', editingIndex !== null ? 'Review updated successfully!' : 'New review added live to website!');
           setModalOpen(false);
+          await fetchAdminReviews();
+          window.dispatchEvent(new CustomEvent('hti_content_updated', { detail: { sectionKey: 'testimonials' } }));
         }
       }
     } catch (err) {
@@ -178,18 +256,23 @@ export default function AdminReviewsManager({
     }
   };
 
-  const handleDelete = async (indexToDelete) => {
-    const item = testimonialsList[indexToDelete];
-    if (!window.confirm(`Delete review from "${item.author || 'Reviewer'}"? This will remove it from the public website.`)) {
+  const handleDelete = async (itemToDelete) => {
+    if (!window.confirm(`Delete review from "${itemToDelete.author || 'Reviewer'}"? This will remove it from the system.`)) {
       return;
     }
 
-    const updatedList = testimonialsList.filter((_, idx) => idx !== indexToDelete);
+    const updatedList = reviewsList.filter((item) => {
+      if (item.id && itemToDelete.id) return item.id !== itemToDelete.id;
+      return item.author !== itemToDelete.author;
+    });
+
     try {
       if (onSaveContent) {
         await onSaveContent('testimonials', updatedList);
       }
-      showFeedback('success', 'Review deleted from public website.');
+      showFeedback('success', 'Review deleted from system.');
+      await fetchAdminReviews();
+      window.dispatchEvent(new CustomEvent('hti_content_updated', { detail: { sectionKey: 'testimonials' } }));
     } catch (err) {
       showFeedback('error', 'Failed to delete review: ' + (err.message || 'Unknown error'));
     }
@@ -215,7 +298,7 @@ export default function AdminReviewsManager({
             <div>
               <h2 className="adm-rev-title">Reviews &amp; Customer Testimonials</h2>
               <p className="adm-rev-subtitle">
-                Manage client endorsements, 5-star feedback, and verified recommendations shown across HTI website.
+                Manage client reviews, verify pending homepage submissions, and moderate 5-star endorsements.
               </p>
             </div>
           </div>
@@ -226,46 +309,58 @@ export default function AdminReviewsManager({
         </div>
       )}
 
-      {/* 2. Top 4 KPI Metrics (Only shown if not embedded) */}
-      {!embedded && (
-        <div className="adm-rev-kpi-grid">
-          <div className="adm-rev-kpi-card">
-            <span className="adm-rev-kpi-label">
-              <MessageSquare size={14} className="text-amber-400" />
-              Total Reviews
-            </span>
-            <span className="adm-rev-kpi-value">{totalReviews}</span>
-            <span className="adm-rev-kpi-sub">Verified customer submissions</span>
-          </div>
-
-          <div className="adm-rev-kpi-card">
-            <span className="adm-rev-kpi-label">
-              <Star size={14} className="text-amber-400" />
-              Average Rating
-            </span>
-            <span className="adm-rev-kpi-value">{avgRating} ★</span>
-            <span className="adm-rev-kpi-sub">Out of 5.0 satisfaction score</span>
-          </div>
-
-          <div className="adm-rev-kpi-card">
-            <span className="adm-rev-kpi-label">
-              <Award size={14} className="text-amber-400" />
-              5-Star Endorsements
-            </span>
-            <span className="adm-rev-kpi-value">{fiveStarCount}</span>
-            <span className="adm-rev-kpi-sub">{totalReviews > 0 ? Math.round((fiveStarCount / totalReviews) * 100) : 100}% top ratings</span>
-          </div>
-
-          <div className="adm-rev-kpi-card">
-            <span className="adm-rev-kpi-label">
-              <Sparkles size={14} className="text-emerald-400" />
-              Public Web Status
-            </span>
-            <span className="adm-rev-kpi-value" style={{ color: '#10b981' }}>Live</span>
-            <span className="adm-rev-kpi-sub">Synced with SQLite content store</span>
-          </div>
+      {/* 2. Top KPI Metrics */}
+      <div className="adm-rev-kpi-grid">
+        <div className="adm-rev-kpi-card">
+          <span className="adm-rev-kpi-label">
+            <MessageSquare size={14} className="text-amber-400" />
+            Total Reviews
+          </span>
+          <span className="adm-rev-kpi-value">{totalReviews}</span>
+          <span className="adm-rev-kpi-sub">Customer submissions</span>
         </div>
-      )}
+
+        {/* Highlighted Pending Review Metric */}
+        <div
+          className={`adm-rev-kpi-card ${pendingCount > 0 ? 'adm-rev-kpi-pending-card' : ''}`}
+          onClick={() => setFilterMode('pending')}
+          style={{ cursor: 'pointer' }}
+          title="Click to view reviews pending approval"
+        >
+          <span className="adm-rev-kpi-label">
+            <Clock size={14} className={pendingCount > 0 ? 'text-amber-500 animate-pulse' : 'text-slate-400'} />
+            Pending Approval
+          </span>
+          <span className="adm-rev-kpi-value" style={{ color: pendingCount > 0 ? '#d97706' : '#64748b' }}>
+            {pendingCount}
+          </span>
+          <span className="adm-rev-kpi-sub">
+            {pendingCount > 0 ? 'Action required: Review & approve' : 'All reviews reviewed'}
+          </span>
+        </div>
+
+        <div className="adm-rev-kpi-card">
+          <span className="adm-rev-kpi-label">
+            <CheckCircle size={14} className="text-emerald-400" />
+            Live on Website
+          </span>
+          <span className="adm-rev-kpi-value" style={{ color: '#10b981' }}>{publishedCount}</span>
+          <span className="adm-rev-kpi-sub">{avgRating} ★ satisfaction score</span>
+        </div>
+
+        <div className="adm-rev-kpi-card">
+          <span className="adm-rev-kpi-label">
+            <Database size={14} className="text-sky-400" />
+            MongoDB Storage
+          </span>
+          <span className="adm-rev-kpi-value" style={{ color: isMongoConnected ? '#0284c7' : '#f59e0b', fontSize: '1.25rem' }}>
+            {isMongoConnected ? 'Connected' : 'SQLite Sync'}
+          </span>
+          <span className="adm-rev-kpi-sub">
+            {isMongoConnected ? 'Live MongoDB collection' : 'SQLite fallback active'}
+          </span>
+        </div>
+      </div>
 
       {/* 3. Toolbar / Search & Filter */}
       <div className="adm-rev-toolbar">
@@ -274,7 +369,7 @@ export default function AdminReviewsManager({
           <input
             type="text"
             className="adm-rev-search-input"
-            placeholder="Search by reviewer, organization, location, quote or client..."
+            placeholder="Search by reviewer, email, organization, quote or client..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -286,35 +381,40 @@ export default function AdminReviewsManager({
             className={`adm-rev-filter-btn ${filterMode === 'all' ? 'active' : ''}`}
             onClick={() => setFilterMode('all')}
           >
-            All ({testimonialsList.length})
+            All ({totalReviews})
           </button>
+
+          <button
+            type="button"
+            className={`adm-rev-filter-btn adm-rev-filter-pending ${filterMode === 'pending' ? 'active' : ''} ${pendingCount > 0 ? 'has-pending' : ''}`}
+            onClick={() => setFilterMode('pending')}
+          >
+            <Clock size={12} />
+            <span>Pending ({pendingCount})</span>
+          </button>
+
           <button
             type="button"
             className={`adm-rev-filter-btn ${filterMode === 'published' ? 'active' : ''}`}
             onClick={() => setFilterMode('published')}
           >
-            Published ({publishedCount})
+            Live ({publishedCount})
           </button>
+
           <button
             type="button"
-            className={`adm-rev-filter-btn ${filterMode === 'hidden' ? 'active' : ''}`}
-            onClick={() => setFilterMode('hidden')}
+            className={`adm-rev-filter-btn ${filterMode === 'rejected' ? 'active' : ''}`}
+            onClick={() => setFilterMode('rejected')}
           >
-            Hidden ({hiddenCount})
+            Rejected ({rejectedCount})
           </button>
+
           <button
             type="button"
             className={`adm-rev-filter-btn ${filterMode === '5' ? 'active' : ''}`}
             onClick={() => setFilterMode('5')}
           >
             5 Stars ({fiveStarCount})
-          </button>
-          <button
-            type="button"
-            className={`adm-rev-filter-btn ${filterMode === '4' ? 'active' : ''}`}
-            onClick={() => setFilterMode('4')}
-          >
-            4 Stars ({testimonialsList.filter(t => Number(t.rating) === 4).length})
           </button>
         </div>
 
@@ -330,7 +430,9 @@ export default function AdminReviewsManager({
           <Star size={40} style={{ margin: '0 auto 12px', color: '#64748b' }} />
           <h4 style={{ color: '#94a3b8', margin: '0 0 6px' }}>No reviews found</h4>
           <p style={{ color: '#64748b', fontSize: '0.85rem', margin: '0 0 16px' }}>
-            {searchQuery || filterMode !== 'all' ? 'Try adjusting your search query or filter mode.' : 'Click "Add Review" to publish your first verified customer review.'}
+            {searchQuery || filterMode !== 'all'
+              ? 'Try adjusting your search query or filter mode.'
+              : 'Click "Add Review" to create your first customer review.'}
           </p>
           <button type="button" className="adm-rev-btn-add" onClick={handleOpenAdd}>
             <Plus size={16} />
@@ -340,11 +442,17 @@ export default function AdminReviewsManager({
       ) : (
         <div className="adm-rev-cards-grid">
           {filteredList.map((item) => {
-            const actualIndex = testimonialsList.indexOf(item);
+            const actualIndex = reviewsList.indexOf(item);
             const ratingNum = Math.min(5, Math.max(1, Number(item.rating) || 5));
-            const isPub = item.is_published !== false;
+            const isPending = item.status === 'Pending';
+            const isApproved = item.status === 'Approved' || (item.is_published !== false && !isPending && item.status !== 'Rejected');
+            const isRejected = item.status === 'Rejected' || item.status === 'Hidden';
+
             return (
-              <div key={actualIndex} className={`adm-rev-card ${!isPub ? 'is-hidden-card' : ''}`}>
+              <div
+                key={item.id || actualIndex}
+                className={`adm-rev-card ${isPending ? 'is-pending-card' : ''} ${isRejected ? 'is-hidden-card' : ''}`}
+              >
                 <div>
                   <div className="adm-rev-card-top">
                     <div className="adm-rev-stars">
@@ -357,22 +465,70 @@ export default function AdminReviewsManager({
                         />
                       ))}
                     </div>
+
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <button
-                        type="button"
-                        className={`adm-rev-status-pill ${isPub ? 'published' : 'hidden'}`}
-                        onClick={() => handleTogglePublished(actualIndex)}
-                        title={isPub ? 'Click to unpublish from website' : 'Click to publish on website'}
-                      >
-                        {isPub ? <Eye size={11} /> : <EyeOff size={11} />}
-                        <span>{isPub ? 'Live on Web' : 'Hidden'}</span>
-                      </button>
+                      {item.date && (
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          fontSize: '0.72rem',
+                          color: '#64748b',
+                          background: 'rgba(100, 116, 139, 0.1)',
+                          padding: '2px 8px',
+                          borderRadius: '6px'
+                        }}>
+                          <Calendar size={11} />
+                          {item.date}
+                        </span>
+                      )}
+
+                      {/* Status Badges */}
+                      {isPending && (
+                        <span className="adm-rev-status-pill pending" title="Submitted by customer; awaiting admin approval">
+                          <Clock size={11} />
+                          <span>Pending Approval</span>
+                        </span>
+                      )}
+
+                      {isApproved && (
+                        <button
+                          type="button"
+                          className="adm-rev-status-pill published"
+                          onClick={() => handleTogglePublished(item)}
+                          title="Published live on public website. Click to unpublish."
+                        >
+                          <Eye size={11} />
+                          <span>Live on Web</span>
+                        </button>
+                      )}
+
+                      {isRejected && (
+                        <button
+                          type="button"
+                          className="adm-rev-status-pill hidden"
+                          onClick={() => handleTogglePublished(item)}
+                          title="Rejected/Hidden. Click to approve and publish."
+                        >
+                          <EyeOff size={11} />
+                          <span>Rejected</span>
+                        </button>
+                      )}
+
                       <span className="adm-rev-verified-pill">
                         <CheckCircle size={11} />
                         Verified
                       </span>
                     </div>
                   </div>
+
+                  {/* Customer Email Row (especially helpful for verifying pending reviews) */}
+                  {item.email && (
+                    <div className="adm-rev-email-row" title={`Reviewer email: ${item.email}`}>
+                      <Mail size={12} className="text-sky-400" />
+                      <span>{item.email}</span>
+                    </div>
+                  )}
 
                   <p className="adm-rev-quote-text">"{item.quote}"</p>
 
@@ -382,6 +538,31 @@ export default function AdminReviewsManager({
                         <Building size={11} />
                         <span>Client: {item.client_name}</span>
                       </span>
+                    </div>
+                  )}
+
+                  {/* PROMINENT ACTION BUTTONS FOR PENDING REVIEWS */}
+                  {isPending && (
+                    <div className="adm-rev-pending-action-bar">
+                      <button
+                        type="button"
+                        className="adm-rev-btn-approve-action"
+                        onClick={() => handleUpdateStatus(item, 'Approved')}
+                        title="Approve this review and display it live on the homepage"
+                      >
+                        <Check size={14} />
+                        <span>Approve &amp; Publish Live</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        className="adm-rev-btn-reject-action"
+                        onClick={() => handleUpdateStatus(item, 'Rejected')}
+                        title="Reject this review"
+                      >
+                        <X size={14} />
+                        <span>Reject</span>
+                      </button>
                     </div>
                   )}
                 </div>
@@ -396,6 +577,7 @@ export default function AdminReviewsManager({
                         {item.location ? ` • ${item.location}` : ''}
                       </div>
                     </div>
+
                     <div className="adm-rev-card-actions">
                       <button
                         type="button"
@@ -409,7 +591,7 @@ export default function AdminReviewsManager({
                       <button
                         type="button"
                         className="adm-rev-icon-btn danger"
-                        onClick={() => handleDelete(actualIndex)}
+                        onClick={() => handleDelete(item)}
                         title="Delete Review"
                         aria-label="Delete review"
                       >
@@ -429,49 +611,112 @@ export default function AdminReviewsManager({
         <div className="adm-rev-modal-backdrop" onClick={() => setModalOpen(false)}>
           <div className="adm-rev-modal-box" onClick={(e) => e.stopPropagation()}>
             <div className="adm-rev-modal-header">
-              <h3 className="adm-rev-modal-title">
-                {editingIndex !== null ? 'Edit Customer Review' : 'Add New Customer Review'}
-              </h3>
-              <button type="button" className="adm-rev-modal-close" onClick={() => setModalOpen(false)}>
+              <div className="adm-rev-modal-header-info">
+                <span className="adm-rev-modal-tag">
+                  <Star size={12} fill="#f59e0b" color="#f59e0b" />
+                  {editingIndex !== null ? 'EDIT MODE' : 'NEW TESTIMONIAL'}
+                </span>
+                <h3 className="adm-rev-modal-title">
+                  {editingIndex !== null ? 'Edit Customer Review' : 'Add New Customer Review'}
+                </h3>
+              </div>
+              <button
+                type="button"
+                className="adm-rev-modal-close"
+                onClick={() => setModalOpen(false)}
+                title="Close dialog"
+                aria-label="Close"
+              >
                 <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSaveModal}>
+            <form onSubmit={handleSaveModal} className="adm-rev-modal-form">
               <div className="adm-rev-modal-body">
-                <div className="adm-rev-form-group">
-                  <label className="adm-rev-label">Client Name / Designation *</label>
-                  <input
-                    type="text"
-                    className="adm-rev-input"
-                    placeholder="e.g. Dr. Hiren Patel (VP Engineering)"
-                    value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="adm-rev-form-group">
-                  <label className="adm-rev-label">Organization / Company Name</label>
-                  <input
-                    type="text"
-                    className="adm-rev-input"
-                    placeholder="e.g. Sun Pharma Cleanroom Division"
-                    value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  />
-                </div>
-
-                {/* Optional Link to Enterprise Client */}
-                {clients.length > 0 && (
+                {/* Row 1: Client Name & Company Name */}
+                <div className="adm-rev-form-row">
                   <div className="adm-rev-form-group">
-                    <label className="adm-rev-label">Link to Enterprise Client (Optional)</label>
+                    <label className="adm-rev-label">Client Name / Designation *</label>
+                    <input
+                      type="text"
+                      className="adm-rev-input"
+                      placeholder="e.g. Mr. Kunal Deshmukh (VP Engg)"
+                      value={formData.author}
+                      onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Organization / Company Name</label>
+                    <input
+                      type="text"
+                      className="adm-rev-input"
+                      placeholder="e.g. Cipla Ltd."
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                {/* Row 2: Email & Location */}
+                <div className="adm-rev-form-row">
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Reviewer Email Address</label>
+                    <input
+                      type="email"
+                      className="adm-rev-input"
+                      placeholder="e.g. kunal.d@cipla.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">City / Location</label>
+                    <input
+                      type="text"
+                      className="adm-rev-input"
+                      placeholder="e.g. Mumbai, Maharashtra"
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                {/* Row 3: Rating & Linked Client */}
+                <div className="adm-rev-form-row">
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Rating (1 to 5 Stars)</label>
+                    <div className="adm-rev-star-selector">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          className={`adm-rev-star-btn ${s <= formData.rating ? 'filled' : ''}`}
+                          onClick={() => setFormData({ ...formData, rating: s })}
+                        >
+                          <Star
+                            size={18}
+                            fill={s <= formData.rating ? '#f59e0b' : 'transparent'}
+                            color={s <= formData.rating ? '#f59e0b' : '#94a3b8'}
+                          />
+                        </button>
+                      ))}
+                      <span className="adm-rev-rating-label">
+                        {formData.rating} Stars
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Link to Client (Optional)</label>
                     <select
                       className="adm-rev-input"
                       value={formData.client_id || ''}
                       onChange={(e) => {
                         const selId = e.target.value;
-                        const matched = clients.find(c => String(c.id) === String(selId));
+                        const matched = clients.find((c) => String(c.id) === String(selId));
                         setFormData({
                           ...formData,
                           client_id: selId,
@@ -480,50 +725,51 @@ export default function AdminReviewsManager({
                         });
                       }}
                     >
-                      <option value="">-- No linked client (General testimonial) --</option>
-                      {clients.map(c => (
+                      <option value="">-- No linked client --</option>
+                      {clients.map((c) => (
                         <option key={c.id} value={c.id}>
                           {c.name} {c.sector ? `(${c.sector})` : ''}
                         </option>
                       ))}
                     </select>
                   </div>
-                )}
-
-                <div className="adm-rev-form-group">
-                  <label className="adm-rev-label">City / Location</label>
-                  <input
-                    type="text"
-                    className="adm-rev-input"
-                    placeholder="e.g. Navi Mumbai, Maharashtra"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  />
                 </div>
 
-                <div className="adm-rev-form-group">
-                  <label className="adm-rev-label">Rating (1 to 5 Stars)</label>
-                  <div className="adm-rev-star-selector">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        className={`adm-rev-star-btn ${s <= formData.rating ? 'filled' : ''}`}
-                        onClick={() => setFormData({ ...formData, rating: s })}
-                      >
-                        <Star
-                          size={22}
-                          fill={s <= formData.rating ? '#f59e0b' : 'transparent'}
-                          color={s <= formData.rating ? '#f59e0b' : '#64748b'}
-                        />
-                      </button>
-                    ))}
-                    <span style={{ fontSize: '0.85rem', color: '#fbbf24', fontWeight: 600, marginLeft: '6px' }}>
-                      {formData.rating} Stars
-                    </span>
+                {/* Row 4: Review Date & Status */}
+                <div className="adm-rev-form-row">
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Review Date</label>
+                    <input
+                      type="text"
+                      className="adm-rev-input"
+                      placeholder="e.g. 10 Oct 2025"
+                      value={formData.date || ''}
+                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="adm-rev-form-group">
+                    <label className="adm-rev-label">Review Status</label>
+                    <select
+                      className="adm-rev-input"
+                      value={formData.status || 'Approved'}
+                      onChange={(e) => {
+                        const st = e.target.value;
+                        setFormData({
+                          ...formData,
+                          status: st,
+                          is_published: st === 'Approved'
+                        });
+                      }}
+                    >
+                      <option value="Approved">Approved (Live on Website)</option>
+                      <option value="Pending">Pending (Awaiting Approval)</option>
+                      <option value="Rejected">Rejected (Hidden from Website)</option>
+                    </select>
                   </div>
                 </div>
 
+                {/* Row 5: Review Quote Content */}
                 <div className="adm-rev-form-group">
                   <label className="adm-rev-label">Review / Testimonial Quote *</label>
                   <textarea
@@ -531,23 +777,29 @@ export default function AdminReviewsManager({
                     placeholder="Enter the customer's verified feedback regarding HTI products or service..."
                     value={formData.quote}
                     onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
+                    rows={3}
                     required
                   />
                 </div>
 
-                {/* Visibility Toggle */}
-                <div className="adm-rev-form-group adm-rev-checkbox-group">
+                {/* Row 6: Visibility Toggle */}
+                <div className="adm-rev-checkbox-wrap">
                   <label className="adm-rev-checkbox-label">
                     <input
                       type="checkbox"
-                      checked={formData.is_published !== false}
-                      onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
+                      checked={formData.is_published !== false && formData.status !== 'Rejected'}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        is_published: e.target.checked,
+                        status: e.target.checked ? 'Approved' : 'Rejected'
+                      })}
                     />
-                    <span>Publish live on public website (Visible on public Clients page)</span>
+                    <span>Publish live on public website (Visible on Homepage &amp; Clients page)</span>
                   </label>
                 </div>
               </div>
 
+              {/* Modal Footer */}
               <div className="adm-rev-modal-footer">
                 <button
                   type="button"
@@ -556,7 +808,7 @@ export default function AdminReviewsManager({
                 >
                   Cancel
                 </button>
-                <button type="submit" className="adm-rev-btn-add">
+                <button type="submit" className="adm-rev-btn-publish">
                   <CheckCircle size={15} />
                   <span>{editingIndex !== null ? 'Save Changes' : 'Publish Review'}</span>
                 </button>

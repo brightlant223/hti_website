@@ -1399,7 +1399,7 @@
 }
 
 .careers-why-section.why-section-flow-mode {
-  padding: 56px 0 72px;
+  padding: 48px 0 24px;
 }
 
 /* Sticky Viewport Container */
@@ -1411,10 +1411,8 @@
 .why-section-pinned-mode .why-sticky-viewport {
   position: sticky;
   top: var(--hti-navbar-height, 96px);
-  height: calc(100vh - var(--hti-navbar-height, 96px));
-  height: calc(100svh - var(--hti-navbar-height, 96px));
+  height: clamp(450px, 56vh, 520px);
   max-height: calc(100vh - var(--hti-navbar-height, 96px));
-  max-height: calc(100svh - var(--hti-navbar-height, 96px));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4408,7 +4406,7 @@ html.dark .why-benefit-card:hover .card-role-category-tag,
 
   /* Section 3 Tablet */
   .careers-why-section.why-section-flow-mode {
-    padding: 56px 0 68px;
+    padding: 40px 0 20px;
   }
 
   .why-horizontal-grid {
@@ -4673,7 +4671,7 @@ html.dark .why-benefit-card:hover .card-role-category-tag,
 
   /* Section 3 Mobile */
   .careers-why-section.why-section-flow-mode {
-    padding: 40px 0 52px;
+    padding: 32px 0 16px;
   }
 
   .why-layout-container {

@@ -41,6 +41,8 @@ from mysql_db import (
     delete_job_posting
 )
 
+import mongo_db
+
 SERVER_START_TIME = time.time()
 
 # Media and uploads directories
@@ -60,6 +62,17 @@ async def lifespan(app: FastAPI):
     init_careers_db()
     init_user_enquiries_db()
     init_job_postings_db()
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT data_json FROM website_content WHERE section_key = 'testimonials'")
+        row = cur.fetchone()
+        conn.close()
+        if row:
+            raw_revs = json.loads(row["data_json"])
+            mongo_db.init_default_reviews_if_empty(raw_revs)
+    except Exception as e:
+        print(f"Startup MongoDB sync note: {e}")
     yield
 
 app = FastAPI(
@@ -223,6 +236,18 @@ class AdminUserUpdate(BaseModel):
 
 class WebsiteContentUpdate(BaseModel):
     data: Union[Dict[str, Any], List[Any]]
+
+class ReviewSubmission(BaseModel):
+    author: str = Field(..., min_length=2, max_length=120)
+    company: str = Field(..., min_length=2, max_length=150)
+    email: str = Field(..., min_length=5, max_length=120)
+    rating: int = Field(5, ge=1, le=5)
+    quote: str = Field(..., min_length=10, max_length=3000)
+    location: Optional[str] = ""
+    client_name: Optional[str] = ""
+
+class ReviewStatusUpdate(BaseModel):
+    status: str = Field(..., pattern="^(Approved|Rejected|Pending)$")
 
 class SystemSettingsUpdate(BaseModel):
     settings: Dict[str, str]
@@ -2142,6 +2167,18 @@ def update_website_content_section(section_key: str, payload: WebsiteContentUpda
     conn.commit()
     conn.close()
 
+    # Sync with MongoDB if section is testimonials
+    if section_key == "testimonials" and isinstance(payload.data, list):
+        try:
+            mongo_db.init_default_reviews_if_empty(payload.data)
+            for r in payload.data:
+                target = r.get("id") or r.get("author")
+                st = r.get("status") or ("Approved" if r.get("is_published", True) is not False else "Rejected")
+                if target:
+                    mongo_db.update_review_status_in_mongo(str(target), st)
+        except Exception as e:
+            print(f"MongoDB review sync notice: {e}")
+
     add_audit_log(admin_user, "UPDATE_CONTENT", "Website Content", f"Updated live content section '{section_key}'")
 
     return {
@@ -2154,9 +2191,15 @@ def update_website_content_section(section_key: str, payload: WebsiteContentUpda
 @app.get("/api/reviews")
 def get_public_reviews():
     """
-    Public API endpoint returning published client reviews and testimonials.
-    Existing reviews without an explicit is_published flag default to True (visible).
+    Public API endpoint returning ONLY approved/published client reviews and testimonials.
+    Reviews with Pending or Rejected status are never shown publicly.
     """
+    # 1. Try fetching approved reviews from MongoDB first
+    mongo_approved = mongo_db.get_approved_reviews_from_mongo()
+    if mongo_approved is not None and len(mongo_approved) > 0:
+        return mongo_approved
+
+    # 2. Fallback to SQLite website_content store
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT data_json, updated_at FROM website_content WHERE section_key = 'testimonials'")
@@ -2167,10 +2210,197 @@ def get_public_reviews():
     try:
         data = json.loads(row["data_json"])
         if isinstance(data, list):
-            return [r for r in data if r.get("is_published", True) is not False]
+            # Only return reviews that are published and not Pending or Rejected
+            return [
+                r for r in data
+                if (r.get("is_published", True) is not False) and (r.get("status", "Approved") not in ["Pending", "Rejected"])
+            ]
         return []
     except Exception:
         return []
+
+@app.post("/api/reviews/submit")
+def submit_customer_review(payload: ReviewSubmission):
+    """
+    Public endpoint for clients to submit a review from the homepage.
+    Saves in MongoDB with 'Pending' status (and syncs with SQLite).
+    Requires admin approval before appearing on the public website.
+    """
+    # Email format validation
+    email_clean = payload.email.strip().lower()
+    if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email_clean):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Please provide a valid corporate or professional email address."
+        )
+
+    # 1. Save in MongoDB with Pending status
+    new_review_doc = mongo_db.insert_customer_review({
+        "author": payload.author.strip(),
+        "company": payload.company.strip(),
+        "location": (payload.location or "").strip(),
+        "email": email_clean,
+        "rating": int(payload.rating),
+        "quote": payload.quote.strip(),
+        "client_name": (payload.client_name or payload.company).strip()
+    })
+
+    # 2. Also sync to SQLite website_content for unified admin management and fallback
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT data_json FROM website_content WHERE section_key = 'testimonials'")
+        row = cursor.fetchone()
+        existing = json.loads(row["data_json"]) if row else []
+        if not isinstance(existing, list):
+            existing = []
+
+        sqlite_entry = {
+            "id": new_review_doc.get("id"),
+            "author": payload.author.strip(),
+            "company": payload.company.strip(),
+            "location": (payload.location or "").strip(),
+            "email": email_clean,
+            "rating": int(payload.rating),
+            "quote": payload.quote.strip(),
+            "date": new_review_doc.get("date"),
+            "status": "Pending",
+            "is_published": False,
+            "client_name": (payload.client_name or payload.company).strip()
+        }
+
+        # Add to beginning of list
+        existing.insert(0, sqlite_entry)
+        now_iso = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        cursor.execute("""
+        INSERT INTO website_content (section_key, data_json, updated_at)
+        VALUES ('testimonials', ?, ?)
+        ON CONFLICT(section_key) DO UPDATE SET data_json = excluded.data_json, updated_at = excluded.updated_at
+        """, (json.dumps(existing), now_iso))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error syncing submitted review to SQLite: {e}")
+
+    add_audit_log(
+        "Website Visitor",
+        "SUBMIT_REVIEW",
+        "Reviews",
+        f"New review submitted by {payload.author} ({payload.company}) - Status: Pending Approval"
+    )
+
+    return {
+        "success": True,
+        "message": "Thank you! Your review has been submitted successfully and is pending administrative verification. Once approved, it will be published on our homepage.",
+        "review": new_review_doc
+    }
+
+@app.get("/api/admin/reviews")
+def get_admin_reviews_list():
+    """
+    Admin endpoint returning all customer reviews (Pending, Approved, Rejected)
+    with total counts and breakdown.
+    """
+    mongo_reviews = mongo_db.get_all_reviews_from_mongo()
+
+    # Also load SQLite reviews
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT data_json FROM website_content WHERE section_key = 'testimonials'")
+    row = cursor.fetchone()
+    conn.close()
+
+    sqlite_reviews = []
+    if row:
+        try:
+            sqlite_reviews = json.loads(row["data_json"])
+        except Exception:
+            sqlite_reviews = []
+
+    # Choose source or merge seamlessly
+    if mongo_reviews is not None and len(mongo_reviews) > 0:
+        reviews = mongo_reviews
+    else:
+        reviews = sqlite_reviews
+
+    # Normalize fields
+    for r in reviews:
+        if "status" not in r:
+            r["status"] = "Approved" if r.get("is_published", True) is not False else "Rejected"
+        if "is_published" not in r:
+            r["is_published"] = (r.get("status") == "Approved")
+
+    pending_count = sum(1 for r in reviews if r.get("status") == "Pending")
+    approved_count = sum(1 for r in reviews if r.get("status") == "Approved" or (r.get("is_published") is True and r.get("status") != "Rejected"))
+    rejected_count = sum(1 for r in reviews if r.get("status") in ["Rejected", "Hidden"])
+
+    return {
+        "total": len(reviews),
+        "pending_count": pending_count,
+        "approved_count": approved_count,
+        "rejected_count": rejected_count,
+        "reviews": reviews,
+        "mongodb_connected": mongo_db.is_mongodb_online()
+    }
+
+@app.put("/api/admin/reviews/{review_id}/status")
+def update_admin_review_status(review_id: str, payload: ReviewStatusUpdate, admin_user: Optional[str] = Query("admin")):
+    """
+    Admin action to Approve, Reject, or set status of a customer review.
+    """
+    new_status = payload.status
+    is_pub = (new_status == "Approved")
+
+    # 1. Update in MongoDB
+    mongo_db.update_review_status_in_mongo(review_id, new_status)
+
+    # 2. Update in SQLite website_content
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT data_json FROM website_content WHERE section_key = 'testimonials'")
+    row = cursor.fetchone()
+    if row:
+        try:
+            items = json.loads(row["data_json"])
+            matched = False
+            for item in items:
+                if str(item.get("id", "")) == str(review_id) or str(item.get("author", "")) == str(review_id):
+                    item["status"] = new_status
+                    item["is_published"] = is_pub
+                    matched = True
+                    break
+
+            if not matched and review_id.isdigit():
+                idx = int(review_id)
+                if 0 <= idx < len(items):
+                    items[idx]["status"] = new_status
+                    items[idx]["is_published"] = is_pub
+                    matched = True
+
+            if matched:
+                now_iso = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                cursor.execute("""
+                UPDATE website_content SET data_json = ?, updated_at = ? WHERE section_key = 'testimonials'
+                """, (json.dumps(items), now_iso))
+                conn.commit()
+        except Exception as e:
+            print(f"Error syncing SQLite status update: {e}")
+    conn.close()
+
+    add_audit_log(
+        admin_user,
+        "UPDATE_REVIEW_STATUS",
+        "Reviews",
+        f"Review '{review_id}' marked as {new_status} (Live={is_pub})"
+    )
+
+    return {
+        "success": True,
+        "message": f"Review marked as {new_status} successfully.",
+        "status": new_status,
+        "is_published": is_pub
+    }
 
 # =========================================================================
 # ADMIN USERS, PERMISSIONS & AUDIT LOGS (Module 8)
