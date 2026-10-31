@@ -874,7 +874,7 @@ export default function CareersPage({ onNavigate }) {
         ref={whySectionRef}
         style={
           isPinnedEnabled && pinnedScrollDistance > 0
-            ? { height: `calc(100vh - ${navHeight}px + ${pinnedScrollDistance}px)` }
+            ? { height: `calc(clamp(450px, 56vh, 520px) + ${pinnedScrollDistance}px)` }
             : undefined
         }
       >
