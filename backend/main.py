@@ -1,6 +1,6 @@
-from fastapi import FastAPI, HTTPException, Query, status, Header, Response, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, Query, status, Header, Response, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any, Union
@@ -13,8 +13,13 @@ import shutil
 import sqlite3
 import datetime
 import subprocess
+import base64
+import hashlib
+import hmac
+import secrets
 from pathlib import Path
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
 
 from database import (
     init_db, seed_db, get_connection, add_audit_log, DB_PATH,
@@ -46,6 +51,7 @@ from database import (
 )
 
 SERVER_START_TIME = time.time()
+load_dotenv(Path(__file__).resolve().parent / ".env")
 
 # Media and uploads directories
 BACKEND_UPLOAD_DIR = Path(__file__).resolve().parent / "uploads"
@@ -70,6 +76,97 @@ configured_cors_origins = {
 }
 CORS_ORIGINS = sorted(configured_cors_origins or DEFAULT_CORS_ORIGINS)
 
+APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
+ADMIN_TOKEN_SECRET = os.getenv("ADMIN_TOKEN_SECRET")
+if APP_ENV in {"production", "prod"} and not ADMIN_TOKEN_SECRET:
+    raise RuntimeError("ADMIN_TOKEN_SECRET must be set in production")
+ADMIN_TOKEN_SECRET = ADMIN_TOKEN_SECRET or secrets.token_urlsafe(32)
+ADMIN_TOKEN_TTL_SECONDS = int(os.getenv("ADMIN_TOKEN_TTL_SECONDS", "28800"))
+PASSWORD_HASH_ITERATIONS = 310_000
+
+PUBLIC_MUTATING_PATHS = {
+    "/api/inquiries",
+    "/api/careers/apply",
+    "/api/careers/draft",
+    "/api/user-enquiries",
+    "/api/reviews/submit",
+}
+
+def hash_password(password: str) -> str:
+    salt = secrets.token_bytes(16)
+    derived = hashlib.pbkdf2_hmac(
+        "sha256", password.encode("utf-8"), salt, PASSWORD_HASH_ITERATIONS
+    )
+    return f"pbkdf2_sha256${PASSWORD_HASH_ITERATIONS}${base64.urlsafe_b64encode(salt).decode()}${base64.urlsafe_b64encode(derived).decode()}"
+
+def verify_password(password: str, stored_hash: str) -> bool:
+    if not stored_hash.startswith("pbkdf2_sha256$"):
+        return hmac.compare_digest(stored_hash, password)
+    try:
+        _, iterations, encoded_salt, encoded_digest = stored_hash.split("$", 3)
+        salt = base64.urlsafe_b64decode(encoded_salt.encode())
+        expected = base64.urlsafe_b64decode(encoded_digest.encode())
+        actual = hashlib.pbkdf2_hmac(
+            "sha256", password.encode("utf-8"), salt, int(iterations)
+        )
+        return hmac.compare_digest(actual, expected)
+    except (ValueError, TypeError):
+        return False
+
+def create_admin_token(username: str, role: str) -> str:
+    expires_at = int(time.time()) + ADMIN_TOKEN_TTL_SECONDS
+    payload = f"{username}|{role}|{expires_at}"
+    signature = hmac.new(
+        ADMIN_TOKEN_SECRET.encode("utf-8"), payload.encode("utf-8"), hashlib.sha256
+    ).hexdigest()
+    encoded_payload = base64.urlsafe_b64encode(payload.encode("utf-8")).decode()
+    return f"{encoded_payload}.{signature}"
+
+def decode_admin_token(token: str) -> Dict[str, Any]:
+    try:
+        encoded_payload, signature = token.split(".", 1)
+        payload = base64.urlsafe_b64decode(encoded_payload.encode()).decode("utf-8")
+        expected_signature = hmac.new(
+            ADMIN_TOKEN_SECRET.encode("utf-8"), payload.encode("utf-8"), hashlib.sha256
+        ).hexdigest()
+        if not hmac.compare_digest(signature, expected_signature):
+            raise ValueError("Invalid token signature")
+        username, role, expires_at = payload.split("|", 2)
+        if int(expires_at) <= int(time.time()):
+            raise ValueError("Token expired")
+        return {"username": username, "role": role}
+    except (ValueError, TypeError, UnicodeDecodeError):
+        raise HTTPException(status_code=401, detail="Invalid or expired administrator session")
+
+def is_protected_request(path: str, method: str) -> bool:
+    if path == "/api/admin/login":
+        return False
+    if path.startswith("/api/admin/"):
+        return True
+    if path in {
+        "/api/system/health",
+        "/api/settings",
+        "/api/system/backups",
+        "/api/system/backup",
+        "/api/upload",
+        "/api/inquiries/export",
+        "/api/user-enquiries/export",
+        "/api/careers/applications/export",
+    }:
+        return True
+    if method == "GET" and path in {
+        "/api/inquiries",
+        "/api/user-enquiries",
+        "/api/careers/applications",
+    }:
+        return True
+    if method in {"POST", "PUT", "PATCH", "DELETE"}:
+        return path not in PUBLIC_MUTATING_PATHS
+    return False
+
+def role_allows(path: str, method: str, role: str) -> bool:
+    return role == "Administrator"
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
@@ -93,6 +190,51 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def require_admin_session(request: Request, call_next):
+    path = request.url.path
+    method = request.method.upper()
+    protected = is_protected_request(path, method)
+    if (
+        path in {"/api/products", "/api/blogs", "/api/projects", "/api/jobs"}
+        and request.query_params.get("include_drafts", "").lower() == "true"
+    ):
+        protected = True
+    if not protected:
+        return await call_next(request)
+
+    authorization = request.headers.get("Authorization", "")
+    if not authorization.startswith("Bearer "):
+        return JSONResponse(
+            status_code=401,
+            content={"detail": "Administrator authentication is required"},
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    try:
+        session = decode_admin_token(authorization[7:].strip())
+    except HTTPException as exc:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={"detail": exc.detail},
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    requested_admin = request.query_params.get("admin_user")
+    if requested_admin and requested_admin != session["username"]:
+        return JSONResponse(
+            status_code=403,
+            content={"detail": "The administrator identity does not match the authenticated session"},
+        )
+    if not role_allows(path, method, session["role"]):
+        return JSONResponse(
+            status_code=403,
+            content={"detail": "Your administrator role cannot perform this action"},
+        )
+
+    request.state.admin_user = session["username"]
+    request.state.admin_role = session["role"]
+    return await call_next(request)
 
 # Serve uploaded static media
 app.mount("/uploads", StaticFiles(directory=str(BACKEND_UPLOAD_DIR)), name="uploads")
@@ -228,13 +370,13 @@ class AdminUserCreate(BaseModel):
     password: str = Field(..., min_length=4, max_length=100)
     full_name: str = Field(..., min_length=2, max_length=100)
     email: str = Field(..., max_length=120)
-    role: str = Field("Editor", pattern="^(Administrator|Editor|Viewer)$")
+    role: str = Field("Administrator", pattern="^Administrator$")
     is_active: Optional[bool] = True
 
 class AdminUserUpdate(BaseModel):
     full_name: Optional[str] = None
     email: Optional[str] = None
-    role: Optional[str] = Field(None, pattern="^(Administrator|Editor|Viewer)$")
+    role: Optional[str] = Field(None, pattern="^Administrator$")
     is_active: Optional[bool] = None
     password: Optional[str] = None
 
@@ -489,10 +631,7 @@ def get_system_health():
 
 @app.get("/api/system/backups")
 def list_backups():
-    backups_dir = DB_PATH.parent.parent.parent / "backups"
-    if not backups_dir.exists():
-        # check parent
-        backups_dir = DB_PATH.parent.parent / "backups"
+    backups_dir = DB_PATH.parent.parent / "backups"
     
     backup_list = []
     if backups_dir.exists():
@@ -512,9 +651,8 @@ def list_backups():
 @app.post("/api/system/backup")
 def trigger_backup(admin_user: Optional[str] = Query("admin")):
     timestamp_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    backups_dir = DB_PATH.parent.parent.parent / "backups"
-    if not backups_dir.exists():
-        backups_dir.mkdir(parents=True, exist_ok=True)
+    backups_dir = DB_PATH.parent.parent / "backups"
+    backups_dir.mkdir(parents=True, exist_ok=True)
     
     backup_filename = f"hti_db_snapshot_{timestamp_str}.sqlite"
     target_path = backups_dir / backup_filename
@@ -669,7 +807,7 @@ def get_categories():
 async def upload_media(file: UploadFile = File(...), admin_user: Optional[str] = Query("admin")):
     safe_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', file.filename or "upload.jpg")
     timestamp = int(time.time())
-    unique_filename = f"{timestamp}_{safe_name}"
+    unique_filename = f"{timestamp}_{secrets.token_hex(4)}_{safe_name}"
 
     content = await file.read()
     if len(content) > MAX_UPLOAD_SIZE:
@@ -2281,36 +2419,28 @@ def admin_login(creds: AdminLoginRequest):
 
     cursor.execute("SELECT * FROM admin_users WHERE LOWER(username) = ? AND is_active = 1", (username,))
     user = cursor.fetchone()
-    conn.close()
 
-    # Fallback to default hardcoded credentials if user table empty or for emergency break-glass
-    if not user and username in ["admin", "htiadmin"]:
-        if (username == "admin" and creds.password == "admin123") or (username == "htiadmin" and creds.password == "hti@2026"):
-            token = f"hti_sec_token_{username}_{int(time.time())}"
-            add_audit_log(username, "ADMIN_LOGIN", "Security", f"User '{username}' logged in successfully via super-admin credential.")
-            return {
-                "success": True,
-                "token": token,
-                "username": username,
-                "full_name": "Chief Administrator",
-                "role": "Administrator",
-                "permissions": ["all"],
-                "message": "Authentication successful"
-            }
-
-    if not user or user["password_hash"] != creds.password:
+    if not user or user["role"] != "Administrator" or not verify_password(creds.password, user["password_hash"]):
+        conn.close()
         add_audit_log(username, "FAILED_LOGIN", "Security", f"Failed login attempt for username '{username}'")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials. Please verify your administrative username and security key."
         )
 
-    token = f"hti_sec_token_{user['username']}_{int(time.time())}"
+    # Upgrade legacy plaintext records after a successful login without invalidating them.
+    if not user["password_hash"].startswith("pbkdf2_sha256$"):
+        cursor.execute(
+            "UPDATE admin_users SET password_hash = ? WHERE id = ?",
+            (hash_password(creds.password), user["id"]),
+        )
+        conn.commit()
+    conn.close()
+
+    token = create_admin_token(user["username"], user["role"])
     add_audit_log(user["username"], "ADMIN_LOGIN", "Security", f"User '{user['username']}' ({user['role']}) logged in.")
 
-    permissions = ["all"] if user["role"] == "Administrator" else (
-        ["products", "blogs", "clients", "partners", "projects", "content"] if user["role"] == "Editor" else ["inquiries", "read_only"]
-    )
+    permissions = ["all"]
 
     return {
         "success": True,
@@ -2347,10 +2477,10 @@ def create_admin_user(payload: AdminUserCreate, admin_user: Optional[str] = Quer
     VALUES (?, ?, ?, ?, ?, ?)
     """, (
         username,
-        payload.password,
+        hash_password(payload.password),
         payload.full_name,
         payload.email,
-        payload.role,
+        "Administrator",
         1 if payload.is_active else 0
     ))
     new_id = cursor.lastrowid
@@ -2381,9 +2511,13 @@ def update_admin_user(user_id: int, payload: AdminUserUpdate, admin_user: Option
 
     full_name = payload.full_name if payload.full_name is not None else existing["full_name"]
     email = payload.email if payload.email is not None else existing["email"]
-    role = payload.role if payload.role is not None else existing["role"]
+    role = "Administrator"
     is_active = (1 if payload.is_active else 0) if payload.is_active is not None else existing["is_active"]
-    password_hash = payload.password if (payload.password and len(payload.password) >= 3) else existing["password_hash"]
+    password_hash = (
+        hash_password(payload.password)
+        if payload.password and len(payload.password) >= 4
+        else existing["password_hash"]
+    )
 
     cursor.execute("""
     UPDATE admin_users

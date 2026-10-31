@@ -36,5 +36,8 @@ backend/uploads/resumes/*
 frontend/public/uploads/resumes/*
 !frontend/public/uploads/resumes/.gitkeep
 
+# Local database snapshots
+backups/
+
 # Scratch
 scratch/

@@ -147,7 +147,7 @@ function getAuditVisualInfo(action = '', module = '') {
 }
 
 /**
- * Avatar class helper based on role/username
+ * Avatar class helper for administrator accounts
  */
 function getUserAvatarInfo(user) {
   const role = (user.role || '').toLowerCase();
@@ -165,10 +165,7 @@ function getUserAvatarInfo(user) {
   if (role === 'administrator' || username === 'admin') {
     return { initials, avatarClass: 'avatar-admin' };
   }
-  if (role === 'editor' || username === 'editor') {
-    return { initials, avatarClass: 'avatar-editor' };
-  }
-  return { initials, avatarClass: 'avatar-viewer' };
+  return { initials, avatarClass: 'avatar-admin' };
 }
 
 export default function AdminUsersSecurityManager({
@@ -204,7 +201,7 @@ export default function AdminUsersSecurityManager({
     password: '',
     full_name: '',
     email: '',
-    role: 'Editor',
+    role: 'Administrator',
     is_active: true
   });
   const [deleteConfirmUser, setDeleteConfirmUser] = useState(null);
@@ -295,7 +292,7 @@ export default function AdminUsersSecurityManager({
       password: '',
       full_name: '',
       email: '',
-      role: 'Editor',
+      role: 'Administrator',
       is_active: true
     });
     setEditingUser('new');
@@ -307,7 +304,7 @@ export default function AdminUsersSecurityManager({
       password: '',
       full_name: u.full_name || '',
       email: u.email || '',
-      role: u.role || 'Editor',
+      role: 'Administrator',
       is_active: Boolean(u.is_active)
     });
     setEditingUser(u);
@@ -406,7 +403,7 @@ export default function AdminUsersSecurityManager({
               <div className="adm-sec-header-text">
                 <h3 className="adm-sec-header-title">Users &amp; Security</h3>
                 <p className="adm-sec-header-sub">
-                  Manage administrative access, user roles, and system activity.
+                Manage administrator accounts and system activity.
                 </p>
               </div>
             </div>
@@ -553,7 +550,7 @@ export default function AdminUsersSecurityManager({
                   <input
                     type="text"
                     className="adm-sec-search-input"
-                    placeholder="Search by username, full name, email or role..."
+                    placeholder="Search by username, full name, or email..."
                     value={userSearch}
                     onChange={e => {
                       setUserSearch(e.target.value);
@@ -564,7 +561,7 @@ export default function AdminUsersSecurityManager({
                 </div>
 
                 <div className="adm-sec-filters-wrap">
-                  {/* Role Dropdown Filter */}
+                  {/* The console has one role: Administrator. */}
                   <div className="adm-sec-filter-pill">
                     <Filter size={14} className="filter-icon" />
                     <select
@@ -573,12 +570,10 @@ export default function AdminUsersSecurityManager({
                         setRoleFilter(e.target.value);
                         setUserPage(1);
                       }}
-                      aria-label="Filter by assigned role"
+                      aria-label="Administrator role"
                     >
                       <option value="All">All Roles</option>
                       <option value="Administrator">Administrator</option>
-                      <option value="Editor">Editor</option>
-                      <option value="Viewer">Viewer</option>
                     </select>
                     <ChevronDown size={13} className="chevron-icon" />
                   </div>
@@ -1152,8 +1147,6 @@ export default function AdminUsersSecurityManager({
                     onChange={e => setUserForm(prev => ({ ...prev, role: e.target.value }))}
                   >
                     <option value="Administrator">Administrator (Complete System Access)</option>
-                    <option value="Editor">Editor (Catalog, Content & Blogs)</option>
-                    <option value="Viewer">Viewer / Sales (Leads & Overview)</option>
                   </select>
                 </div>
 

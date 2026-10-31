@@ -1,9 +1,24 @@
 import sqlite3
 import json
 import os
+import base64
+import hashlib
+import secrets
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "hti.db"
+PASSWORD_HASH_ITERATIONS = 310_000
+
+def hash_password(password: str) -> str:
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac(
+        "sha256", password.encode("utf-8"), salt, PASSWORD_HASH_ITERATIONS
+    )
+    return (
+        f"pbkdf2_sha256${PASSWORD_HASH_ITERATIONS}$"
+        f"{base64.urlsafe_b64encode(salt).decode()}$"
+        f"{base64.urlsafe_b64encode(digest).decode()}"
+    )
 
 def get_connection():
     conn = sqlite3.connect(DB_PATH, timeout=20.0)
@@ -206,7 +221,7 @@ def init_db():
         password_hash TEXT NOT NULL,
         full_name TEXT NOT NULL,
         email TEXT NOT NULL,
-        role TEXT NOT NULL DEFAULT 'Administrator', -- Administrator | Editor | Viewer
+        role TEXT NOT NULL DEFAULT 'Administrator',
         is_active INTEGER DEFAULT 1,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -1371,16 +1386,33 @@ def seed_db():
     # Admin Users (Module 8: Admin Users & Roles)
     cursor.execute("SELECT COUNT(*) as count FROM admin_users")
     if cursor.fetchone()["count"] == 0:
+        initial_password = os.getenv("HTI_ADMIN_INITIAL_PASSWORD")
+        if not initial_password:
+            raise RuntimeError(
+                "HTI_ADMIN_INITIAL_PASSWORD must be set before initializing administrator accounts"
+            )
         users = [
-            ("admin", "admin123", "Chief Administrator", "admin@htisystems.in", "Administrator", 1),
-            ("editor", "editor123", "Technical Content Lead", "editor@htisystems.in", "Editor", 1),
-            ("sales", "sales123", "Commercial Sales Officer", "sales@htisystems.in", "Viewer", 1)
+            ("admin", hash_password(initial_password), "Chief Administrator", "admin@htisystems.in", "Administrator", 1)
         ]
         for u in users:
             cursor.execute("""
             INSERT INTO admin_users (username, password_hash, full_name, email, role, is_active)
             VALUES (?, ?, ?, ?, ?, ?)
             """, u)
+    else:
+        # Convert legacy plaintext records once while preserving existing passwords.
+        cursor.execute(
+            "SELECT id, password_hash FROM admin_users WHERE password_hash NOT LIKE 'pbkdf2_sha256$%'"
+        )
+        for legacy_user in cursor.fetchall():
+            cursor.execute(
+                "UPDATE admin_users SET password_hash = ? WHERE id = ?",
+                (hash_password(legacy_user["password_hash"]), legacy_user["id"]),
+            )
+        # Keep the administrator table aligned with the single-role model.
+        cursor.execute(
+            "DELETE FROM admin_users WHERE username IN ('editor', 'sales') OR role != 'Administrator'"
+        )
 
     # Initial Audit Log entry
     cursor.execute("SELECT COUNT(*) as count FROM audit_logs")

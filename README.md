@@ -89,7 +89,6 @@ hti_website/
 │           ├── ContactInquiry.jsx       # Quote inquiry form linked to SQLite
 │           ├── AdminInquiryDrawer.jsx   # Inquiries portal for reviewing submissions
 │           └── Footer.jsx               # Mumbai office details, links & copyright
-├── run.bat                  # One-click Windows launcher for both servers
 ├── .gitignore
 └── README.md
 ```
@@ -104,16 +103,7 @@ hti_website/
 
 ---
 
-### Option A: One-Click Launch (Windows)
-Double-click `run.bat` in the root folder, or execute:
-```powershell
-.\run.bat
-```
-This automatically launches both the FastAPI backend on port `8000` and the Vite React frontend on port `3000`.
-
----
-
-### Option B: Manual Launch
+### Manual Launch
 
 #### 1. Start the Python SQLite Backend
 ```powershell
@@ -133,6 +123,49 @@ media and resumes are stored persistently in `backend/uploads/`. Configure
 allowed browser origins with `CORS_ORIGINS` as a comma-separated environment
 variable. If unset, the API allows the HTI production domains and local
 development origins.
+
+Admin authentication requires these environment variables in production:
+
+```bash
+export ADMIN_TOKEN_SECRET='use-a-long-random-secret'
+export HTI_ADMIN_INITIAL_PASSWORD='set-before-first-database-initialization'
+```
+
+`ADMIN_TOKEN_SECRET` signs expiring bearer tokens. On an existing database,
+legacy administrator passwords are upgraded to PBKDF2 hashes during startup.
+The initial password is only required when `admin_users` is empty; it is never
+stored in source code. The admin console has one role: `Administrator`.
+
+### VPS deployment
+
+Deployment templates are in [`deploy/`](./deploy). Copy
+[`backend/.env.example`](./backend/.env.example) to `backend/.env`, replace all
+placeholder values, and keep that file outside Git. From the repository root:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r backend/requirements.txt
+cd backend && python database.py
+cd ../frontend && npm ci && npm run build
+```
+
+Install `deploy/hti-backend.service` as a systemd unit after changing its
+repository path and Linux user. Install
+`deploy/nginx-htisystems.conf` as the Nginx server block, configure HTTPS, then
+run `nginx -t` before reloading Nginx.
+
+Verify after deployment:
+
+```bash
+curl -fsS https://htisystems.in/api/health
+curl -fsS https://htisystems.in/api/products
+systemctl is-active hti-backend
+```
+
+The backend creates SQLite snapshots in `backups/` at the repository root.
+Back up both `backend/hti.db` and `backend/uploads/`; database snapshots alone
+do not include uploaded media or resumes.
 
 #### 2. Start the React Frontend
 In a separate terminal window:

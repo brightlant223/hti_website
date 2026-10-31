@@ -5,14 +5,11 @@ import {
   Eye,
   EyeOff,
   ShieldCheck,
-  Zap,
   ArrowRight,
   Database,
   LockKeyhole,
   AlertCircle,
   ArrowLeft,
-  Check,
-  Copy,
   Server
 } from 'lucide-react';
 import './AdminLogin.css';
@@ -22,30 +19,16 @@ export default function AdminLogin({
   onNavigate,
   theme = 'light'
 }) {
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin123');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [capsLockActive, setCapsLockActive] = useState(false);
-  const [demoCopied, setDemoCopied] = useState(false);
 
   // Check if user is already authenticated
   const existingToken = typeof window !== 'undefined' ? localStorage.getItem('hti_admin_token') : null;
   const existingUser = typeof window !== 'undefined' ? localStorage.getItem('hti_admin_user') : null;
-
-  const handleQuickFill = (role = 'admin') => {
-    setErrorMsg('');
-    if (role === 'admin') {
-      setUsername('admin');
-      setPassword('admin123');
-    } else {
-      setUsername('editor');
-      setPassword('editor123');
-    }
-    setDemoCopied(true);
-    setTimeout(() => setDemoCopied(false), 2500);
-  };
 
   const handleSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
@@ -75,7 +58,7 @@ export default function AdminLogin({
 
       if (response.ok) {
         const data = await response.json();
-        const token = data.token || `hti_sec_token_${uname}_${Date.now()}`;
+        const token = data.token;
         const user = data.username || uname;
         const role = data.role || 'Administrator';
 
@@ -102,24 +85,7 @@ export default function AdminLogin({
         setErrorMsg(errData.detail || 'Authentication server error. Please try again.');
       }
     } catch (err) {
-      console.warn('Backend login connection note:', err);
-      // Fail-safe check for verified credentials if offline
-      if (
-        (uname === 'admin' && pwd === 'admin123') ||
-        (uname === 'htiadmin' && pwd === 'hti@2026')
-      ) {
-        const token = `hti_sec_token_${uname}_${Date.now()}`;
-        localStorage.setItem('hti_admin_token', token);
-        localStorage.setItem('hti_admin_user', uname);
-        localStorage.setItem('hti_admin_role', 'Administrator');
-
-        if (onLoginSuccess) {
-          onLoginSuccess({ username: uname, role: 'Administrator', token });
-        } else if (onNavigate) {
-          onNavigate('admin');
-        }
-        return;
-      }
+      console.error('Admin authentication request failed:', err);
       setErrorMsg('Cannot connect to authentication service. Please ensure backend is running.');
     } finally {
       setLoading(false);
@@ -262,7 +228,7 @@ export default function AdminLogin({
                 <label htmlFor="admin-username-input" className="hti-login-label">
                   Administrator ID
                 </label>
-                <span className="hti-login-role-tag">SuperAdmin / Editor</span>
+                <span className="hti-login-role-tag">Administrator</span>
               </div>
               <div className="hti-login-input-wrap">
                 <User size={18} className="hti-login-input-icon icon-blue" />
@@ -316,44 +282,6 @@ export default function AdminLogin({
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Quick Demo Fill Helper */}
-            <div className="hti-login-demo-box">
-              <div
-                className="hti-demo-left"
-                onClick={() => handleQuickFill('admin')}
-                title="Click to auto-fill verified administrator credentials"
-              >
-                <div className="demo-lightning-icon">
-                  <Zap size={14} />
-                </div>
-                <div className="demo-text-col">
-                  <span className="demo-headline">Quick Demo Fill</span>
-                  <span className="demo-sub">Click to fill verified credentials</span>
-                </div>
-              </div>
-
-              <div className="hti-demo-pills">
-                <button
-                  type="button"
-                  className={`demo-fill-pill ${demoCopied ? 'is-applied' : ''}`}
-                  onClick={() => handleQuickFill('admin')}
-                  title="Fill admin / admin123"
-                >
-                  {demoCopied ? (
-                    <>
-                      <Check size={13} className="text-emerald-500" />
-                      <span>Filled!</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>admin / admin123</span>
-                      <Copy size={12} />
-                    </>
-                  )}
                 </button>
               </div>
             </div>

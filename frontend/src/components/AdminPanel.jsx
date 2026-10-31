@@ -160,12 +160,10 @@ export default function AdminPanel({
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return Boolean(localStorage.getItem('hti_admin_token'));
   });
-  const [loginForm, setLoginForm] = useState({ username: 'admin', password: 'admin123' });
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [autoLoginChecked, setAutoLoginChecked] = useState(true);
-  const [copiedDemo, setCopiedDemo] = useState(false);
   const [capsLockActive, setCapsLockActive] = useState(false);
   const [currentUser, setCurrentUser] = useState(() => {
     return localStorage.getItem('hti_admin_user') || 'admin';
@@ -173,6 +171,45 @@ export default function AdminPanel({
   const [userRole, setUserRole] = useState(() => {
     return localStorage.getItem('hti_admin_role') || 'Administrator';
   });
+
+  useEffect(() => {
+    if (!isAuthenticated) return undefined;
+    const originalFetch = window.fetch;
+    window.fetch = (input, init = {}) => {
+      const requestUrl = typeof input === 'string' ? input : input?.url || '';
+      const token = localStorage.getItem('hti_admin_token');
+      if (!token || !requestUrl.startsWith('/api/') || requestUrl === '/api/admin/login') {
+        return originalFetch(input, init);
+      }
+      const headers = new Headers(init.headers || (input instanceof Request ? input.headers : undefined));
+      if (!headers.has('Authorization')) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return originalFetch(input, { ...init, headers }).then((response) => {
+        if (response.status === 401) {
+          localStorage.removeItem('hti_admin_token');
+          localStorage.removeItem('hti_admin_user');
+          localStorage.removeItem('hti_admin_role');
+          setIsAuthenticated(false);
+          setLoginError('Your administrator session has expired. Please sign in again.');
+        }
+        return response;
+      });
+    };
+    return () => {
+      window.fetch = originalFetch;
+    };
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const token = localStorage.getItem('hti_admin_token');
+    if (token) {
+      setIsAuthenticated(true);
+      setCurrentUser(localStorage.getItem('hti_admin_user') || '');
+      setUserRole(localStorage.getItem('hti_admin_role') || 'Administrator');
+    }
+  }, [isOpen]);
 
   // Active navigation tab
   // 'dashboard' | 'products' | 'blogs' | 'clients_partners' | 'inquiries' | 'projects' | 'content' | 'users' | 'settings'
@@ -349,7 +386,7 @@ export default function AdminPanel({
     password: '',
     full_name: '',
     email: '',
-    role: 'Editor',
+    role: 'Administrator',
     is_active: true
   });
 
@@ -763,17 +800,11 @@ export default function AdminPanel({
     const uname = (loginForm.username || '').trim().toLowerCase();
     const pwd = (loginForm.password || '').trim();
 
-    // Recognized admin and demo accounts
-    const isMasterAdmin = (uname === 'admin' && pwd === 'admin123') || (uname === 'htiadmin' && pwd === 'hti@2026');
-    const isEditor = uname === 'editor' && pwd === 'editor123';
-    const isSales = uname === 'sales' && pwd === 'sales123';
-    const isDemoMatch = isMasterAdmin || isEditor || isSales || autoLoginChecked;
-
     const commitLogin = (username, role, fullName, token) => {
-      const finalUser = username || 'admin';
+      const finalUser = username;
       const finalRole = role || 'Administrator';
       const finalName = fullName || 'Chief Administrator';
-      const finalToken = token || `hti_sec_token_${finalUser}_${Date.now()}`;
+      const finalToken = token;
 
       localStorage.setItem('hti_admin_token', finalToken);
       localStorage.setItem('hti_admin_user', finalUser);
@@ -781,7 +812,7 @@ export default function AdminPanel({
       setCurrentUser(finalUser);
       setUserRole(finalRole);
       setIsAuthenticated(true);
-      setLoginForm({ username: 'admin', password: 'admin123' });
+      setLoginForm({ username: '', password: '' });
       setLoginError('');
       showFeedback('success', `Authenticated successfully as ${finalName} (${finalRole}).`);
       setLoginPopup({
@@ -800,8 +831,8 @@ export default function AdminPanel({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: uname || 'admin',
-          password: pwd || 'admin123'
+          username: uname,
+          password: pwd
         }),
         signal: controller.signal
       });
@@ -817,55 +848,8 @@ export default function AdminPanel({
       console.warn('Backend login connection note:', err);
     }
 
-    // Fail-safe guarantee: Verified master admin and demo credentials ALWAYS succeed and NEVER show error
-    if (isDemoMatch) {
-      const role = isEditor ? 'Editor' : (isSales ? 'Viewer' : 'Administrator');
-      const fullName = isEditor ? 'Technical Content Lead' : (isSales ? 'Commercial Sales Officer' : 'Chief Administrator');
-      commitLogin(uname || 'admin', role, fullName);
-    } else {
-      setLoginError('Invalid credentials. Please use admin / admin123.');
-    }
+    setLoginError('Invalid credentials or authentication service unavailable.');
     setLoginLoading(false);
-  };
-
-  const handleQuickDemoFill = (autoSubmit = false) => {
-    setLoginForm({ username: 'admin', password: 'admin123' });
-    setAutoLoginChecked(true);
-    setLoginError('');
-    setCopiedDemo(true);
-    setTimeout(() => setCopiedDemo(false), 2200);
-
-    if (autoSubmit) {
-      setTimeout(() => {
-        const formEl = document.getElementById('hti-admin-login-form');
-        if (formEl) {
-          if (typeof formEl.requestSubmit === 'function') {
-            formEl.requestSubmit();
-          } else {
-            formEl.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-          }
-        }
-      }, 60);
-    }
-  };
-
-  const handleCopyDemo = (e) => {
-    if (e && e.stopPropagation) e.stopPropagation();
-    try {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText('admin / admin123');
-      }
-    } catch (err) { }
-    handleQuickDemoFill(false);
-  };
-
-  const handleAutoLoginToggle = (e) => {
-    const checked = e.target.checked;
-    setAutoLoginChecked(checked);
-    if (checked) {
-      setLoginForm({ username: 'admin', password: 'admin123' });
-      setLoginError('');
-    }
   };
 
   const handleLogout = () => {
@@ -1207,7 +1191,7 @@ export default function AdminPanel({
       password: '',
       full_name: '',
       email: '',
-      role: 'Editor',
+      role: 'Administrator',
       is_active: true
     });
     setEditingUser('new');
@@ -1219,7 +1203,7 @@ export default function AdminPanel({
       password: '', // blank unless changing
       full_name: u.full_name,
       email: u.email,
-      role: u.role,
+      role: 'Administrator',
       is_active: Boolean(u.is_active)
     });
     setEditingUser(u);
@@ -1422,7 +1406,7 @@ export default function AdminPanel({
                 <label htmlFor="hti-admin-id" className="hti-login-label">
                   Administrator ID
                 </label>
-                <span className="hti-login-role-tag">SuperAdmin / Editor</span>
+                <span className="hti-login-role-tag">Administrator</span>
               </div>
               <div className="hti-login-input-box">
                 <User size={18} className="hti-login-input-icon text-blue" />
@@ -1479,67 +1463,6 @@ export default function AdminPanel({
                   {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                 </button>
               </div>
-            </div>
-
-            {/* Quick Demo Fill Panel */}
-            <div className="hti-login-demo-panel">
-              <div
-                className="hti-demo-panel-left"
-                onClick={() => handleQuickDemoFill(false)}
-                title="Click to fill demo credentials"
-              >
-                <div className="hti-demo-bolt-circle">
-                  <Zap size={14} className="hti-demo-bolt" />
-                </div>
-                <div className="hti-demo-panel-text">
-                  <div className="hti-demo-title">Quick Demo Fill</div>
-                  <div className="hti-demo-sub">Auto-fill verified admin credentials</div>
-                </div>
-              </div>
-
-              <div className="hti-demo-actions">
-                <button
-                  type="button"
-                  className={`hti-demo-badge-btn ${copiedDemo ? 'hti-demo-applied' : ''}`}
-                  onClick={handleCopyDemo}
-                  title="Click to fill admin credentials"
-                >
-                  {copiedDemo ? (
-                    <>
-                      <Check size={13} className="text-emerald-500" />
-                      <span>Filled &amp; Ready!</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>admin / admin123</span>
-                      <Copy size={12} className="hti-demo-copy-icon" />
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Options Row: Auto Login & 1-Click Access */}
-            <div className="hti-login-options-row">
-              <label htmlFor="hti-auto-login" className="hti-login-auto-label">
-                <input
-                  type="checkbox"
-                  id="hti-auto-login"
-                  checked={autoLoginChecked}
-                  onChange={handleAutoLoginToggle}
-                  className="hti-login-checkbox"
-                />
-                <span>Auto login (use demo credentials)</span>
-              </label>
-
-              <button
-                type="button"
-                className="hti-instant-demo-btn"
-                onClick={() => handleQuickDemoFill(true)}
-                title="Fill credentials and sign in immediately"
-              >
-                1-Click Sign In &rarr;
-              </button>
             </div>
 
             {/* Submit Button */}
@@ -3270,8 +3193,6 @@ export default function AdminPanel({
                   onChange={e => setUserForm({ ...userForm, role: e.target.value })}
                 >
                   <option value="Administrator">Administrator (Full Access)</option>
-                  <option value="Editor">Editor (Catalog & Content Access)</option>
-                  <option value="Viewer">Viewer / Sales (Leads & Catalog View)</option>
                 </select>
               </div>
 
