@@ -2150,13 +2150,16 @@
 }
 
 .hti-login-input-icon.text-blue {
-  color: #075be8;
+  color: #64748b;
+  background: transparent;
+  border: 0;
 }
 
 .hti-login-input-icon.text-muted {
   color: #64748b;
 }
 
+.hti-login-input-box:focus-within .hti-login-input-icon.text-blue,
 .hti-login-input-box:focus-within .hti-login-input-icon.text-muted {
   color: #075be8;
 }
@@ -2473,6 +2476,104 @@
 
   .hti-sec-desc {
     display: none;
+  }
+}
+
+/* Login modal responsive polish */
+.hti-login-close-circle:focus-visible,
+.hti-login-eye-toggle:focus-visible,
+.hti-login-submit-btn:focus-visible,
+.hti-instant-demo-btn:focus-visible {
+  outline: 3px solid rgba(7, 91, 232, 0.3);
+  outline-offset: 3px;
+}
+
+.hti-login-input-box {
+  min-height: 48px;
+}
+
+.hti-login-eye-toggle {
+  min-width: 36px;
+  min-height: 36px;
+}
+
+@media (max-width: 640px) {
+  .hti-admin-modal-overlay {
+    align-items: flex-start;
+    padding: max(12px, env(safe-area-inset-top)) 10px 12px;
+  }
+
+  .hti-admin-login-modal {
+    max-height: calc(100svh - 24px);
+    overflow-y: auto;
+    border-radius: 18px;
+    padding: 22px 18px 18px;
+  }
+
+  .hti-login-close-circle {
+    top: 10px;
+    right: 10px;
+  }
+
+  .hti-login-brand-header {
+    margin-bottom: 14px;
+    padding: 0 1.5rem;
+  }
+
+  .hti-login-title {
+    font-size: 1.5rem;
+  }
+
+  .hti-login-subtitle {
+    font-size: 0.78rem;
+  }
+
+  .hti-login-label-row {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .hti-login-role-tag,
+  .hti-login-crypto-tag {
+    font-size: 0.64rem;
+    text-align: right;
+  }
+
+  .hti-login-security-footer {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 14px;
+  }
+
+  .hti-security-divider {
+    display: none;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 641px) {
+  .hti-admin-login-modal {
+    max-height: 96vh;
+    overflow-y: auto;
+    padding-top: 18px;
+    padding-bottom: 14px;
+  }
+
+  .hti-login-brand-header {
+    margin-bottom: 10px;
+  }
+
+  .hti-login-security-footer {
+    margin-top: 10px;
+    padding-top: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hti-admin-modal-overlay,
+  .hti-admin-login-modal,
+  .hti-login-error-alert,
+  .hti-gateway-pulse-dot {
+    animation: none;
   }
 }
 
@@ -5836,4 +5937,3 @@ html.dark .hti-sec-desc,
 .theme-dark .hti-sec-desc {
   color: #64748b !important;
 }
-

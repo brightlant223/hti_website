@@ -13,6 +13,7 @@ import {
   Server
 } from 'lucide-react';
 import './AdminLogin.css';
+import { authenticateAdmin, clearAdminSession } from '../utils/adminAuth';
 
 export default function AdminLogin({
   onLoginSuccess,
@@ -26,9 +27,41 @@ export default function AdminLogin({
   const [errorMsg, setErrorMsg] = useState('');
   const [capsLockActive, setCapsLockActive] = useState(false);
 
-  // Check if user is already authenticated
-  const existingToken = typeof window !== 'undefined' ? localStorage.getItem('hti_admin_token') : null;
-  const existingUser = typeof window !== 'undefined' ? localStorage.getItem('hti_admin_user') : null;
+  const [existingSession, setExistingSession] = useState(null);
+
+  useEffect(() => {
+    const token = typeof window !== 'undefined'
+      ? localStorage.getItem('hti_admin_token')
+      : null;
+    if (!token) return undefined;
+
+    let active = true;
+    fetch('/api/admin/session', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(async (response) => {
+        if (!active) return;
+        if (response.ok) {
+          const data = await response.json();
+          setExistingSession({
+            username: data.username || localStorage.getItem('hti_admin_user') || 'Administrator',
+            role: data.role || 'Administrator',
+          });
+          return;
+        }
+        if (response.status === 401) {
+          clearAdminSession();
+          setExistingSession(null);
+        }
+      })
+      .catch(() => {
+        if (active) setExistingSession(null);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
@@ -36,7 +69,7 @@ export default function AdminLogin({
     setLoading(true);
 
     const uname = (username || '').trim().toLowerCase();
-    const pwd = (password || '').trim();
+    const pwd = password || '';
 
     if (!uname) {
       setErrorMsg('Please enter your Administrator ID.');
@@ -44,49 +77,29 @@ export default function AdminLogin({
       return;
     }
     if (!pwd) {
-      setErrorMsg('Please enter your Security Token / Password.');
+      setErrorMsg('Please enter your password.');
       setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: uname, password: pwd }),
-      });
+      const data = await authenticateAdmin(uname, pwd);
+      const token = data.token;
+      const user = data.username || uname;
+      const role = data.role || 'Administrator';
 
-      if (response.ok) {
-        const data = await response.json();
-        const token = data.token;
-        const user = data.username || uname;
-        const role = data.role || 'Administrator';
+      localStorage.setItem('hti_admin_token', token);
+      localStorage.setItem('hti_admin_user', user);
+      localStorage.setItem('hti_admin_role', role);
 
-        localStorage.setItem('hti_admin_token', token);
-        localStorage.setItem('hti_admin_user', user);
-        localStorage.setItem('hti_admin_role', role);
-
-        if (onLoginSuccess) {
-          onLoginSuccess({ username: user, role, token });
-        } else if (onNavigate) {
-          onNavigate('admin');
-        }
-        return;
-      }
-
-      if (response.status === 401) {
-        const errData = await response.json().catch(() => ({}));
-        setErrorMsg(
-          errData.detail ||
-          'Invalid credentials. Please verify your administrative username and security key.'
-        );
-      } else {
-        const errData = await response.json().catch(() => ({}));
-        setErrorMsg(errData.detail || 'Authentication server error. Please try again.');
+      if (onLoginSuccess) {
+        onLoginSuccess({ username: user, role, token });
+      } else if (onNavigate) {
+        onNavigate('admin');
       }
     } catch (err) {
       console.error('Admin authentication request failed:', err);
-      setErrorMsg('Cannot connect to authentication service. Please ensure backend is running.');
+      setErrorMsg(err.message);
     } finally {
       setLoading(false);
     }
@@ -109,9 +122,7 @@ export default function AdminLogin({
   };
 
   const handleLogoutExisting = () => {
-    localStorage.removeItem('hti_admin_token');
-    localStorage.removeItem('hti_admin_user');
-    localStorage.removeItem('hti_admin_role');
+    clearAdminSession();
     setUsername('');
     setPassword('');
     window.location.reload();
@@ -145,11 +156,11 @@ export default function AdminLogin({
       {/* Main Login Card */}
       <div className="hti-admin-login-card-container">
         {/* Already logged in banner if applicable */}
-        {existingToken && (
+        {existingSession && (
           <div className="hti-already-logged-in-banner">
             <div className="banner-left">
               <ShieldCheck size={18} className="banner-icon" />
-              <span>You have an active session as <strong>{existingUser || 'Administrator'}</strong></span>
+              <span>You have an active session as <strong>{existingSession.username}</strong></span>
             </div>
             <div className="banner-actions">
               <button
@@ -204,7 +215,7 @@ export default function AdminLogin({
 
           {/* Error Message Alert */}
           {errorMsg && (
-            <div className="hti-login-error-alert" role="alert">
+            <div id="admin-login-error" className="hti-login-error-alert" role="alert">
               <AlertCircle size={16} className="error-icon" />
               <div className="error-text">
                 <span>{errorMsg}</span>
@@ -221,7 +232,11 @@ export default function AdminLogin({
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="hti-login-form">
+          <form
+            onSubmit={handleSubmit}
+            className="hti-login-form"
+            aria-busy={loading}
+          >
             {/* Field 1: Administrator ID */}
             <div className="hti-login-field-group">
               <div className="hti-login-label-row">
@@ -241,6 +256,8 @@ export default function AdminLogin({
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   autoComplete="username"
+                  aria-invalid={Boolean(errorMsg)}
+                  aria-describedby={errorMsg ? 'admin-login-error' : undefined}
                   className="hti-login-input"
                 />
               </div>
@@ -250,13 +267,13 @@ export default function AdminLogin({
             <div className="hti-login-field-group">
               <div className="hti-login-label-row">
                 <label htmlFor="admin-password-input" className="hti-login-label">
-                  Security Token / Password
+                  Password
                 </label>
                 <div className="hti-login-label-right">
                   {capsLockActive && (
                     <span className="hti-caps-indicator">Caps Lock ON</span>
                   )}
-                  <span className="hti-crypto-tag">AES-256 Protected</span>
+                  <span className="hti-crypto-tag">Administrator Access</span>
                 </div>
               </div>
               <div className="hti-login-input-wrap">
@@ -272,6 +289,8 @@ export default function AdminLogin({
                   onKeyDown={(e) => setCapsLockActive(Boolean(e.getModifierState && e.getModifierState('CapsLock')))}
                   onKeyUp={(e) => setCapsLockActive(Boolean(e.getModifierState && e.getModifierState('CapsLock')))}
                   autoComplete="current-password"
+                  aria-invalid={Boolean(errorMsg)}
+                  aria-describedby={errorMsg ? 'admin-login-error' : undefined}
                   className="hti-login-input has-eye"
                 />
                 <button
@@ -306,19 +325,19 @@ export default function AdminLogin({
             </button>
           </form>
 
-          {/* Footer Security Badges */}
+          {/* Footer access information */}
           <div className="hti-login-footer-security">
             <span className="sec-badge">
               <LockKeyhole size={12} className="text-emerald-500" />
-              <span>TLS 1.3 256-bit</span>
+              <span>Authorized Access</span>
             </span>
             <span className="sec-badge">
               <Database size={12} className="text-blue-500" />
-              <span>SQLite Database</span>
+              <span>Administration Portal</span>
             </span>
             <span className="sec-badge">
               <ShieldCheck size={12} className="text-indigo-500" />
-              <span>Zero-Trust RBAC</span>
+              <span>HTI Console</span>
             </span>
           </div>
         </div>

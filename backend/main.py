@@ -236,6 +236,14 @@ async def require_admin_session(request: Request, call_next):
     request.state.admin_role = session["role"]
     return await call_next(request)
 
+@app.get("/api/admin/session")
+def get_admin_session(request: Request):
+    return {
+        "authenticated": True,
+        "username": request.state.admin_user,
+        "role": request.state.admin_role,
+    }
+
 # Serve uploaded static media
 app.mount("/uploads", StaticFiles(directory=str(BACKEND_UPLOAD_DIR)), name="uploads")
 

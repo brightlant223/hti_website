@@ -10,6 +10,7 @@ import AdminJobModal from './AdminJobModal';
 import AdminUserEnquiriesManager from './AdminUserEnquiriesManager';
 import AdminSidebar from './AdminSidebar';
 import AdminReviewsManager from './AdminReviewsManager';
+import { authenticateAdmin, clearAdminSession } from '../utils/adminAuth';
 import {
   X, Shield, RefreshCw, Plus, Edit3, Trash2, CheckCircle,
   FileText, Package, MessageSquare, Search, AlertCircle,
@@ -798,7 +799,7 @@ export default function AdminPanel({
     setLoginLoading(true);
 
     const uname = (loginForm.username || '').trim().toLowerCase();
-    const pwd = (loginForm.password || '').trim();
+    const pwd = loginForm.password || '';
 
     const commitLogin = (username, role, fullName, token) => {
       const finalUser = username;
@@ -824,38 +825,17 @@ export default function AdminPanel({
     };
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
-
-      const res = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: uname,
-          password: pwd
-        }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-
-      if (res.ok) {
-        const data = await res.json();
-        commitLogin(data.username, data.role, data.full_name, data.token);
-        setLoginLoading(false);
-        return;
-      }
+      const data = await authenticateAdmin(uname, pwd);
+      commitLogin(data.username, data.role, data.full_name, data.token);
     } catch (err) {
-      console.warn('Backend login connection note:', err);
+      console.error('Admin authentication request failed:', err);
+      setLoginError(err.message);
     }
-
-    setLoginError('Invalid credentials or authentication service unavailable.');
     setLoginLoading(false);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('hti_admin_token');
-    localStorage.removeItem('hti_admin_user');
-    localStorage.removeItem('hti_admin_role');
+    clearAdminSession();
     setIsAuthenticated(false);
     setActiveTab('dashboard');
     showFeedback('success', 'Logged out safely. Returning to home page...');
@@ -1392,14 +1372,19 @@ export default function AdminPanel({
 
           {/* Login Error Notification */}
           {loginError && (
-            <div className="hti-login-error-alert" role="alert">
+            <div id="admin-panel-login-error" className="hti-login-error-alert" role="alert">
               <AlertCircle size={15} className="flex-shrink-0" />
               <span>{loginError}</span>
             </div>
           )}
 
           {/* Login Form */}
-          <form id="hti-admin-login-form" onSubmit={handleLoginSubmit} className="hti-login-form">
+          <form
+            id="hti-admin-login-form"
+            onSubmit={handleLoginSubmit}
+            className="hti-login-form"
+            aria-busy={loginLoading}
+          >
             {/* Field 1: Administrator ID */}
             <div className="hti-login-field-group">
               <div className="hti-login-label-row">
@@ -1420,15 +1405,17 @@ export default function AdminPanel({
                   onChange={e => setLoginForm({ ...loginForm, username: e.target.value })}
                   autoComplete="username"
                   autoFocus
+                  aria-invalid={Boolean(loginError)}
+                  aria-describedby={loginError ? 'admin-panel-login-error' : undefined}
                 />
               </div>
             </div>
 
-            {/* Field 2: Security Token / Password */}
+            {/* Field 2: Password */}
             <div className="hti-login-field-group">
               <div className="hti-login-label-row">
                 <label htmlFor="hti-admin-password" className="hti-login-label">
-                  Security Token / Password
+                  Password
                 </label>
                 <div className="hti-login-label-right">
                   {capsLockActive && (
@@ -1436,7 +1423,7 @@ export default function AdminPanel({
                       <AlertTriangle size={11} /> Caps Lock ON
                     </span>
                   )}
-                  <span className="hti-login-crypto-tag">AES-256 Protected</span>
+                  <span className="hti-login-crypto-tag">Administrator Access</span>
                 </div>
               </div>
               <div className="hti-login-input-box">
@@ -1452,6 +1439,8 @@ export default function AdminPanel({
                   onKeyDown={e => setCapsLockActive(Boolean(e.getModifierState && e.getModifierState('CapsLock')))}
                   onKeyUp={e => setCapsLockActive(Boolean(e.getModifierState && e.getModifierState('CapsLock')))}
                   autoComplete="current-password"
+                  aria-invalid={Boolean(loginError)}
+                  aria-describedby={loginError ? 'admin-panel-login-error' : undefined}
                 />
                 <button
                   type="button"
@@ -1486,15 +1475,15 @@ export default function AdminPanel({
             </button>
           </form>
 
-          {/* Security Footer with 3 Indicators */}
+          {/* Footer access information */}
           <div className="hti-login-security-footer">
             <div className="hti-security-col">
               <div className="hti-sec-icon-wrap blue">
                 <ShieldCheck size={14} />
               </div>
               <div className="hti-sec-info">
-                <div className="hti-sec-title">256-Bit SSL</div>
-                <div className="hti-sec-desc">End-to-End TLS</div>
+                <div className="hti-sec-title">Authorized Access</div>
+                <div className="hti-sec-desc">Administrator Only</div>
               </div>
             </div>
 
@@ -1505,8 +1494,8 @@ export default function AdminPanel({
                 <Database size={14} />
               </div>
               <div className="hti-sec-info">
-                <div className="hti-sec-title">SQLite Live</div>
-                <div className="hti-sec-desc">Encrypted v3.42</div>
+                <div className="hti-sec-title">Administration Portal</div>
+                <div className="hti-sec-desc">HTI Console</div>
               </div>
             </div>
 
@@ -1517,8 +1506,8 @@ export default function AdminPanel({
                 <Lock size={14} />
               </div>
               <div className="hti-sec-info">
-                <div className="hti-sec-title">Zero Trust</div>
-                <div className="hti-sec-desc">Enterprise RBAC</div>
+                <div className="hti-sec-title">Authorized Users</div>
+                <div className="hti-sec-desc">Managed Access</div>
               </div>
             </div>
           </div>
@@ -1733,7 +1722,7 @@ export default function AdminPanel({
                   Welcome back, <strong>{loginPopup.user}</strong> ({loginPopup.role})!
                 </p>
                 <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                  Authenticated via Zero-Trust RBAC • {loginPopup.time}
+                  Administrator session started • {loginPopup.time}
                 </span>
               </div>
               <button
