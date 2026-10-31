@@ -76,7 +76,7 @@ export default function AdminInquiryDrawer({ isOpen, onClose, onCountUpdate }) {
             </div>
             <div>
               <h3 className="drawer-title">Commercial Inquiries Portal</h3>
-              <p className="drawer-sub">Stored in SQLite backend: <code className="text-cyan font-mono">backend/hti.db</code></p>
+              <p className="drawer-sub">Stored in the primary application data service</p>
             </div>
           </div>
 
@@ -117,7 +117,7 @@ export default function AdminInquiryDrawer({ isOpen, onClose, onCountUpdate }) {
           {loading ? (
             <div className="loading-state">
               <div className="loading-spinner"></div>
-              <p>Fetching inquiries from SQLite database...</p>
+              <p>Fetching inquiries from the application data service...</p>
             </div>
           ) : inquiries.length === 0 ? (
             <div className="drawer-empty-state">
@@ -207,7 +207,7 @@ export default function AdminInquiryDrawer({ isOpen, onClose, onCountUpdate }) {
         {/* Drawer Footer */}
         <div className="drawer-footer">
           <div className="footer-tip">
-            SQLite Database File Location: <code>hti_website/backend/hti.db</code>
+            Inquiry data is managed by the application data service.
           </div>
           <button className="btn-secondary" onClick={onClose}>
             Close Portal

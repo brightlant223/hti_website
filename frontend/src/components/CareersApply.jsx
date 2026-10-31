@@ -470,7 +470,6 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
           notice_period: formData.noticePeriod,
           resume_filename: resumeFile?.name || ''
         },
-        engine: 'email_client'
       });
       setStepDirection('forward');
       setSubmitted(true);
@@ -670,9 +669,7 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
 
                   <div className="apply-success-pill" aria-hidden="true">
                     <span>
-                      {submissionResult?.engine === 'sqlite'
-                        ? 'VERIFIED · SQLITE DATABASE'
-                        : 'DIRECT CANDIDATE TRANSMISSION'}
+                      APPLICATION RECEIVED
                     </span>
                   </div>
 

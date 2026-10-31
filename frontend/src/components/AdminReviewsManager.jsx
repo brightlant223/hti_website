@@ -42,7 +42,7 @@ export default function AdminReviewsManager({
   const [filterMode, setFilterMode] = useState('all'); // 'all' | 'pending' | 'published' | 'rejected' | '5' | '4'
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
-  const [isSQLiteConnected, setIsSQLiteConnected] = useState(true);
+  const [isDataServiceConnected, setIsDataServiceConnected] = useState(true);
 
   const [formData, setFormData] = useState({
     author: '',
@@ -58,7 +58,7 @@ export default function AdminReviewsManager({
     client_name: ''
   });
 
-  // Fetch admin reviews from the SQLite backend
+  // Fetch administrator reviews from the data service
   const fetchAdminReviews = useCallback(async () => {
     try {
       const res = await fetch(`/api/admin/reviews?_t=${Date.now()}`);
@@ -66,7 +66,7 @@ export default function AdminReviewsManager({
         const data = await res.json();
         if (Array.isArray(data?.reviews)) {
           setReviewsList(data.reviews);
-          setIsSQLiteConnected(data.database === 'sqlite');
+          setIsDataServiceConnected(data.database === 'sqlite');
           return;
         }
       }
@@ -351,13 +351,13 @@ export default function AdminReviewsManager({
         <div className="adm-rev-kpi-card">
           <span className="adm-rev-kpi-label">
             <Database size={14} className="text-sky-400" />
-            SQLite Storage
+            Data Service
           </span>
-          <span className="adm-rev-kpi-value" style={{ color: isSQLiteConnected ? '#0284c7' : '#f59e0b', fontSize: '1.25rem' }}>
-            {isSQLiteConnected ? 'Connected' : 'Unavailable'}
+          <span className="adm-rev-kpi-value" style={{ color: isDataServiceConnected ? '#0284c7' : '#f59e0b', fontSize: '1.25rem' }}>
+            {isDataServiceConnected ? 'Connected' : 'Unavailable'}
           </span>
           <span className="adm-rev-kpi-sub">
-            {isSQLiteConnected ? 'Primary SQLite database' : 'Database unavailable'}
+            {isDataServiceConnected ? 'Ready for review management' : 'Service unavailable'}
           </span>
         </div>
       </div>

@@ -7,9 +7,7 @@ from typing import Optional, List, Dict, Any, Union
 import json
 import re
 import os
-import sys
 import time
-import shutil
 import sqlite3
 import datetime
 import subprocess
@@ -572,20 +570,6 @@ def get_system_health():
     conn = get_connection()
     cursor = conn.cursor()
 
-    # Table counts
-    counts = {}
-    tables = ["products", "inquiries", "partners", "clients", "blogs", "projects", "admin_users", "audit_logs"]
-    for t in tables:
-        try:
-            cursor.execute(f"SELECT COUNT(*) as count FROM {t}")
-            counts[t] = cursor.fetchone()["count"]
-        except Exception:
-            counts[t] = 0
-
-    # Unanswered / New inquiries
-    cursor.execute("SELECT COUNT(*) as count FROM inquiries WHERE LOWER(status) = 'new'")
-    counts["new_inquiries"] = cursor.fetchone()["count"]
-
     # System settings lookup
     settings = {}
     try:
@@ -597,39 +581,17 @@ def get_system_health():
 
     conn.close()
 
-    # SQLite file telemetry
-    db_size = os.path.getsize(DB_PATH) if os.path.exists(DB_PATH) else 0
-
-    # Drive space telemetry
-    try:
-        total, used, free = shutil.disk_usage(str(DB_PATH.parent))
-        disk_info = {
-            "total_gb": round(total / (1024**3), 2),
-            "free_gb": round(free / (1024**3), 2),
-            "used_gb": round(used / (1024**3), 2)
-        }
-    except Exception:
-        disk_info = {"total_gb": 0, "free_gb": 0, "used_gb": 0}
-
     uptime_sec = int(time.time() - SERVER_START_TIME)
 
     return {
         "status": "healthy",
         "database": {
-            "engine": "SQLite 3",
-            "path": str(DB_PATH),
-            "file_size_bytes": db_size,
-            "file_size_mb": round(db_size / (1024*1024), 2),
             "connection_status": "Connected & Operational"
         },
-        "disk": disk_info,
         "runtime": {
             "uptime_seconds": uptime_sec,
-            "uptime_formatted": f"{uptime_sec // 3600}h {(uptime_sec % 3600) // 60}m {uptime_sec % 60}s",
-            "python_version": sys.version.split()[0],
-            "os": sys.platform
+            "uptime_formatted": f"{uptime_sec // 3600}h {(uptime_sec % 3600) // 60}m {uptime_sec % 60}s"
         },
-        "table_counts": counts,
         "last_backup": {
             "timestamp": settings.get("last_backup_time", "2026-10-17 13:53:00"),
             "file": settings.get("last_backup_file", "hti_website_git_bundle_20261017.bundle"),
@@ -693,7 +655,6 @@ def trigger_backup(admin_user: Optional[str] = Query("admin")):
             "message": f"Verified database snapshot created successfully: {backup_filename}",
             "backup": {
                 "name": backup_filename,
-                "path": str(target_path),
                 "size_mb": round(file_size / (1024*1024), 3),
                 "timestamp": readable_time
             }
@@ -1669,8 +1630,7 @@ def create_user_enquiry_endpoint(payload: UserEnquiryCreate):
     return {
         "success": True,
         "message": "Thank you for contacting HTI Automation & Security Systems. Our team will review your project details and get back to you shortly.",
-        "enquiry": format_user_enquiry_row(row),
-        "engine": result.get("engine", "sqlite")
+        "enquiry": format_user_enquiry_row(row)
     }
 
 @app.get("/api/user-enquiries")
@@ -1845,20 +1805,17 @@ async def submit_career_application(
 
     result = insert_career_application(app_data)
     created_record = result.get("data", {})
-    engine_used = result.get("engine", "sqlite")
-
     add_audit_log(
         "system",
         "CAREER_APPLICATION_SUBMITTED",
         "Careers",
-        f"New application received from {full_name} for position '{position}' [DB: {engine_used}]"
+        f"New application received from {full_name} for position '{position}'"
     )
 
     return {
         "success": True,
         "message": "Thank you! Your career application has been securely submitted to HTI Talent Acquisition.",
-        "application": created_record,
-        "engine": engine_used
+        "application": created_record
     }
 
 @app.post("/api/careers/draft")
@@ -1886,7 +1843,7 @@ async def save_career_draft(payload: Dict[str, Any]):
     }
 
     result = insert_career_application(app_data)
-    return {"success": True, "draft_id": result.get("data", {}).get("id"), "engine": result.get("engine")}
+    return {"success": True, "draft_id": result.get("data", {}).get("id")}
 
 @app.get("/api/careers/applications")
 def get_career_applications(
@@ -1898,7 +1855,6 @@ def get_career_applications(
     return {
         "success": True,
         "applications": result.get("items", []),
-        "engine": result.get("engine", "sqlite"),
         "total": len(result.get("items", []))
     }
 
@@ -2002,7 +1958,6 @@ def get_jobs(
     return {
         "success": True,
         "jobs": result.get("items", []),
-        "engine": result.get("engine", "sqlite"),
         "total": len(result.get("items", []))
     }
 
@@ -2028,8 +1983,7 @@ def create_job(payload: JobPostingPayload, admin_user: Optional[str] = "admin"):
     return {
         "success": True,
         "message": f"Job '{payload.title}' successfully saved as {payload.status}.",
-        "job": created_job,
-        "engine": result.get("engine")
+        "job": created_job
     }
 
 @app.put("/api/jobs/{job_id}")

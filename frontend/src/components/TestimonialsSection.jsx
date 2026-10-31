@@ -524,7 +524,7 @@ export default function TestimonialsSection() {
                 </div>
                 <h4 className="tmn-success-title">Review Submitted Successfully!</h4>
                 <p className="tmn-success-desc">
-                  Thank you for submitting your feedback. Your review has been saved in our database with a <strong>Pending</strong> status. Once verified and approved by the HTI administration team, it will automatically appear on our homepage.
+                  Thank you for submitting your feedback. Your review is now awaiting <strong>Pending</strong> administrative approval and will appear on our homepage once verified.
                 </p>
                 <div className="tmn-success-status-pill">
                   <ShieldCheck size={14} />
@@ -663,7 +663,7 @@ export default function TestimonialsSection() {
                 <div className="tmn-pending-notice">
                   <ShieldCheck size={15} className="tmn-notice-icon" />
                   <span>
-                    Submitted reviews are saved in the SQLite database with <strong>Pending</strong> status and will be published to the homepage once verified and approved by HTI administrators.
+                    Submitted reviews remain <strong>Pending</strong> until verified and approved by HTI administrators, then they will be published to the homepage.
                   </span>
                 </div>
 

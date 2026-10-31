@@ -1108,35 +1108,35 @@ export default function AdminCareersManager({
                   />
                   <span>
                     {dbStatus?.status === 'connected'
-                      ? 'SQLite Primary Database Connected'
-                      : 'SQLite Database Unavailable'}
+                      ? 'Primary Data Service Connected'
+                      : 'Primary Data Service Unavailable'}
                   </span>
                 </div>
                 <p style={{ fontSize: '0.78rem', margin: '6px 0 0', color: '#64748b' }}>
                   {dbStatus?.message ||
-                    'Candidate data is recorded directly in the primary SQLite database.'}
+                    'Candidate data is recorded directly in the primary application data service.'}
                 </p>
               </div>
 
               <div className="adm-dossier-grid" style={{ gridTemplateColumns: '1fr' }}>
                 <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Database Engine</span>
+                  <span className="adm-dossier-label">Data Service</span>
                   <span className="adm-dossier-val">
-                    SQLite
+                    Operational
                   </span>
                 </div>
                 <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Database File</span>
-                  <span className="adm-dossier-val">backend/hti.db</span>
+                  <span className="adm-dossier-label">Storage Status</span>
+                  <span className="adm-dossier-val">Primary</span>
                 </div>
                 <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Table</span>
-                  <span className="adm-dossier-val">career_applications</span>
+                  <span className="adm-dossier-label">Record Type</span>
+                  <span className="adm-dossier-val">Career Applications</span>
                 </div>
                 <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Fallback Storage Path</span>
+                  <span className="adm-dossier-label">Storage Mode</span>
                   <span className="adm-dossier-val" style={{ fontFamily: 'monospace', fontSize: '0.78rem' }}>
-                    backend/hti.db [Table: career_applications]
+                    Managed by application service
                   </span>
                 </div>
               </div>

@@ -1688,7 +1688,7 @@ def insert_career_application(data):
     cursor.execute("SELECT * FROM career_applications WHERE id = ?", (row_id,))
     row = _row_dict(cursor.fetchone())
     conn.close()
-    return {"data": row, "engine": "sqlite"}
+    return {"data": row}
 
 
 def fetch_career_applications(status_filter=None, search=None, position=None):
@@ -1708,7 +1708,7 @@ def fetch_career_applications(status_filter=None, search=None, position=None):
     query += " ORDER BY id DESC"
     rows = [_row_dict(row) for row in conn.execute(query, params).fetchall()]
     conn.close()
-    return {"items": rows, "engine": "sqlite"}
+    return {"items": rows}
 
 
 def update_application_status(app_id, new_status):
@@ -1752,7 +1752,7 @@ def insert_user_enquiry(data):
     cursor.execute("SELECT * FROM user_enquiries WHERE id = ?", (row_id,))
     row = _row_dict(cursor.fetchone())
     conn.close()
-    return {"data": row, "engine": "sqlite"}
+    return {"data": row}
 
 
 def fetch_user_enquiries(status_filter=None, search=None, area_of_interest=None):
@@ -1774,7 +1774,7 @@ def fetch_user_enquiries(status_filter=None, search=None, area_of_interest=None)
     query += " ORDER BY id DESC"
     rows = [_row_dict(row) for row in conn.execute(query, params).fetchall()]
     conn.close()
-    return {"items": rows, "engine": "sqlite"}
+    return {"items": rows}
 
 
 def update_user_enquiry_status(enquiry_id, new_status):
@@ -1814,7 +1814,7 @@ def insert_job_posting(data):
     cursor.execute("SELECT * FROM job_postings WHERE id = ?", (row_id,))
     row = _row_dict(cursor.fetchone())
     conn.close()
-    return {"data": row, "engine": "sqlite"}
+    return {"data": row}
 
 
 def fetch_job_postings(include_drafts=False, status_filter=None, department=None, search=None):
@@ -1838,7 +1838,7 @@ def fetch_job_postings(include_drafts=False, status_filter=None, department=None
     query += " ORDER BY j.id DESC"
     rows = [_row_dict(row) for row in conn.execute(query, params).fetchall()]
     conn.close()
-    return {"items": rows, "engine": "sqlite"}
+    return {"items": rows}
 
 
 def fetch_job_posting_by_id(job_id):

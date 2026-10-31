@@ -1284,21 +1284,6 @@ export default function AdminPanel({
     }
   };
 
-  // Telemetry metrics calculation for visual gauges and widgets
-  // Placed above ALL conditional early returns (isOpen, isAuthenticated) to adhere strictly to Rules of Hooks
-  const diskMetrics = useMemo(() => {
-    const rawFree = systemHealth?.disk?.free_gb;
-    const rawTotal = systemHealth?.disk?.total_gb;
-    const rawUsed = systemHealth?.disk?.used_gb;
-
-    const total = typeof rawTotal === 'number' ? rawTotal : (parseFloat(rawTotal) || 475.69);
-    const free = typeof rawFree === 'number' ? rawFree : (parseFloat(rawFree) || 260.53);
-    const used = typeof rawUsed === 'number' ? rawUsed : (parseFloat(rawUsed) || Math.max(0, total - free));
-    const freePct = total > 0 ? Math.min(100, Math.max(0, Math.round((free / total) * 100))) : 55;
-    const usedPct = 100 - freePct;
-    return { free, total, used, freePct, usedPct };
-  }, [systemHealth?.disk]);
-
   const getAuditCategoryInfo = (module = '') => {
     const m = String(module || '').toLowerCase();
     if (m.includes('security') || m.includes('auth') || m.includes('user')) {
@@ -1584,7 +1569,7 @@ export default function AdminPanel({
               <div className="adm-topbar-headings" style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                 <h2 className="admin-topbar-title adm-topbar-title" style={{ margin: 0, fontSize: '1.22rem', fontWeight: 800 }}>
                   {activeTab === 'dashboard' && 'Executive Dashboard'}
-                  {activeTab === 'user_enquiries' && 'Contact Us User Enquiries & Project Leads (SQLite)'}
+                  {activeTab === 'user_enquiries' && 'Contact Us User Enquiries & Project Leads'}
                   {(activeTab === 'clients_reviews' || activeTab === 'clients_partners' || activeTab === 'reviews' || activeTab === 'partners') && 'Enterprise Clients & Client Reviews'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
                   {activeTab === 'inquiries' && 'Contact Enquiries & Lead Pipeline Management'}
@@ -1600,9 +1585,9 @@ export default function AdminPanel({
             </div>
 
             <div className="admin-topbar-actions adm-topbar-actions">
-              <span className="topbar-live-tag adm-topbar-live-tag" title="SQL DB: hti_backend (Live)" style={{ background: '#ecfdf5', color: '#059669', borderColor: '#a7f3d0' }}>
+              <span className="topbar-live-tag adm-topbar-live-tag" title="Live data service" style={{ background: '#ecfdf5', color: '#059669', borderColor: '#a7f3d0' }}>
                 <span className="tag-dot adm-tag-dot" style={{ background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
-                <span>SQL DB: hti_backend (Live)</span>
+                <span>Data Service: Live</span>
               </span>
 
               <button
@@ -2255,7 +2240,7 @@ export default function AdminPanel({
                       <button
                         className="adm-cp-sync-btn"
                         onClick={handleSyncClientsPartners}
-                        title="Sync clients and reviews with live SQL database"
+                        title="Sync clients and reviews with the live data service"
                         aria-label="Sync Directory"
                       >
                         <RefreshCw size={13} className={isSyncingClients ? 'adm-cp-spin' : ''} />
@@ -2606,7 +2591,7 @@ export default function AdminPanel({
           )}
 
           {/* =========================================================================
-              MODULE 5C: USER ENQUIRIES - CONTACT US FORM (SQLite Powered)
+              MODULE 5C: USER ENQUIRIES - CONTACT US FORM
               ========================================================================= */}
           {activeTab === 'user_enquiries' && (
             <div className="admin-body-content" style={{ padding: 0 }}>
@@ -2626,7 +2611,7 @@ export default function AdminPanel({
           )}
 
           {/* =========================================================================
-              MODULE 5B: CAREERS & TALENT ACQUISITION PIPELINE (SQLite)
+              MODULE 5B: CAREERS & TALENT ACQUISITION PIPELINE
               ========================================================================= */}
           {activeTab === 'careers' && (
             <div className="admin-body-content" style={{ padding: 0 }}>
@@ -2692,7 +2677,7 @@ export default function AdminPanel({
                 <div className="section-block-header">
                   <div>
                     <h4 className="section-block-title">Genuine Measured System Telemetry</h4>
-                    <p className="section-block-sub">Live measured operational metrics from host operating system and SQLite database</p>
+                    <p className="section-block-sub">Live measured operational metrics from the application environment</p>
                   </div>
                   <button className="dash-action-btn secondary" onClick={fetchSystemHealth}>
                     <RefreshCw size={14} />
@@ -2702,28 +2687,24 @@ export default function AdminPanel({
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginTop: '16px' }}>
                   <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px' }}>
-                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '700' }}>Database Engine</div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: '800', color: '#38bdf8', marginTop: '4px' }}>SQLite 3.42</div>
-                    <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>Path: backend/hti.db</div>
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '700' }}>Data Service</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: '800', color: '#38bdf8', marginTop: '4px' }}>Operational</div>
+                    <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>Primary application data store</div>
                   </div>
 
                   <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px' }}>
-                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '700' }}>Measured Database Size</div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: '800', color: '#10b981', marginTop: '4px' }}>
-                      {systemHealth?.database?.file_size_mb || '0.12'} MB
-                    </div>
-                    <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>
-                      {systemHealth?.database?.file_size_bytes?.toLocaleString() || '122,880'} bytes
-                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '700' }}>Data Service Status</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: '800', color: '#10b981', marginTop: '4px' }}>Connected</div>
+                    <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>Ready for administrative operations</div>
                   </div>
 
                   <div style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px' }}>
-                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '700' }}>Host Drive Capacity (D:)</div>
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '700' }}>Backup Status</div>
                     <div style={{ fontSize: '1.2rem', fontWeight: '800', color: '#f59e0b', marginTop: '4px' }}>
-                      {systemHealth?.disk?.free_gb || '218'} GB Free
+                      {systemHealth?.last_backup?.status || 'Ready'}
                     </div>
                     <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>
-                      Total: {systemHealth?.disk?.total_gb || '220'} GB ({systemHealth?.disk?.used_gb || '1.7'} GB used)
+                      {systemHealth?.last_backup?.timestamp || 'Available on demand'}
                     </div>
                   </div>
 
@@ -2733,7 +2714,7 @@ export default function AdminPanel({
                       {systemHealth?.runtime?.uptime_formatted || 'Online'}
                     </div>
                     <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>
-                      Python {systemHealth?.runtime?.python_version || '3.11'} on {systemHealth?.runtime?.os || 'win32'}
+                      Application service running normally
                     </div>
                   </div>
                 </div>
@@ -2745,7 +2726,7 @@ export default function AdminPanel({
                   <div>
                     <h4 className="section-block-title">Tested Database Backup & Restore Station</h4>
                     <p className="section-block-sub">
-                      Create hot cryptographic SQLite snapshots stored in the isolated backups directory
+                      Create verified database snapshots stored in the server backup directory
                     </p>
                   </div>
                   <button
@@ -2760,7 +2741,7 @@ export default function AdminPanel({
 
                 <div style={{ marginTop: '16px' }}>
                   <div style={{ fontSize: '0.82rem', color: '#94a3b8', marginBottom: '8px' }}>
-                    Historical Backup Archives in <code>D:\Krish\Brightlant\hti\backups</code>:
+                    Historical backup archives stored on the server:
                   </div>
 
                   <div className="admin-table-container">

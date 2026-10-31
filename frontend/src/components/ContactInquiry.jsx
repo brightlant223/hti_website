@@ -84,7 +84,7 @@ export default function ContactInquiry({
         message: ''
       });
     } catch (err) {
-      setErrorMsg(err.message || 'Network error occurred while connecting to HTI SQLite backend.');
+      setErrorMsg(err.message || 'Network error occurred while submitting your enquiry.');
     } finally {
       setLoading(false);
     }
@@ -193,7 +193,7 @@ export default function ContactInquiry({
           <div className="glass-card contact-form-card">
             <h3 className="form-card-title">Commercial & Project Inquiry Form</h3>
             <p className="form-card-sub">
-              All inquiries are logged directly into the HTI engineering database for rapid review.
+              Share your requirements with our team and we will review them promptly.
             </p>
 
             {successResponse ? (

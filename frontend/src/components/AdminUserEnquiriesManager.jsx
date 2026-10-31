@@ -246,7 +246,7 @@ export default function AdminUserEnquiriesManager({
         await onSaveNotes(selectedEnquiry.id, enquiryNotes);
       }
       setSelectedEnquiry((prev) => (prev ? { ...prev, notes: enquiryNotes } : null));
-      if (showFeedback) showFeedback('Follow-up notes saved to SQLite successfully!', 'success');
+      if (showFeedback) showFeedback('Follow-up notes saved successfully!', 'success');
     } catch (err) {
       if (showFeedback) showFeedback('Failed to save notes to database', 'error');
     } finally {
@@ -280,7 +280,7 @@ export default function AdminUserEnquiriesManager({
         setSelectedEnquiry(null);
       }
       setEnquiryToDelete(null);
-      if (showFeedback) showFeedback('User enquiry deleted from SQLite database', 'info');
+      if (showFeedback) showFeedback('User enquiry deleted', 'info');
     } catch (err) {
       if (showFeedback) showFeedback('Failed to delete enquiry', 'error');
     }
@@ -920,11 +920,11 @@ export default function AdminUserEnquiriesManager({
                 </a>
               </div>
 
-              {/* Internal Follow-up Notes (SQLite Stored) */}
+              {/* Internal Follow-up Notes */}
               <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 18 }}>
                 <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
                   <Pencil size={14} style={{ color: '#0284c7' }} />
-                  Administrative Follow-up Notes (Saved to SQLite):
+                  Administrative Follow-up Notes:
                 </span>
                 <textarea
                   className="adm-notes-textarea"
@@ -965,7 +965,7 @@ export default function AdminUserEnquiriesManager({
                     }}
                   >
                     <Save size={15} />
-                    <span>{isSavingNotes ? 'Saving to SQLite...' : 'Save Notes'}</span>
+                    <span>{isSavingNotes ? 'Saving...' : 'Save Notes'}</span>
                   </button>
                 </div>
               </div>
@@ -989,7 +989,7 @@ export default function AdminUserEnquiriesManager({
                   Delete User Enquiry?
                 </h4>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  This will permanently delete this enquiry from the SQLite database.
+                  This will permanently delete this enquiry.
                 </span>
               </div>
             </div>
@@ -1014,7 +1014,7 @@ export default function AdminUserEnquiriesManager({
                 onClick={handleConfirmDelete}
                 style={{ padding: '8px 16px', borderRadius: 6, background: '#dc2626', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 600 }}
               >
-                Delete from SQLite
+                Delete Enquiry
               </button>
             </div>
           </div>

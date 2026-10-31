@@ -1053,7 +1053,7 @@ export default function AdminUsersSecurityManager({
               </div>
               <div className="adm-sec-guideline-item">
                 <CheckCircle2 size={14} className="adm-sec-guideline-icon" />
-                <span>Grant minimum required permissions</span>
+                <span>Review administrator access regularly</span>
               </div>
               <div className="adm-sec-guideline-item">
                 <CheckCircle2 size={14} className="adm-sec-guideline-icon" />
@@ -1088,7 +1088,7 @@ export default function AdminUsersSecurityManager({
                       {editingUser === 'new' ? 'Create Administrative Account' : `Edit Account: ${editingUser.username}`}
                     </h3>
                     <p className="adm-sec-modal-subtitle">
-                      Configure enterprise credentials, permissions, and security role.
+                      Configure administrator account details and access.
                     </p>
                   </div>
                 </div>
@@ -1103,7 +1103,7 @@ export default function AdminUsersSecurityManager({
 
               <div className="adm-sec-modal-body">
                 <div className="adm-sec-form-group">
-                  <label className="adm-sec-form-label">Username (System Identifier) *</label>
+                  <label className="adm-sec-form-label">Username *</label>
                   <input
                     type="text"
                     className="adm-sec-form-input"
@@ -1140,13 +1140,13 @@ export default function AdminUsersSecurityManager({
                 </div>
 
                 <div className="adm-sec-form-group">
-                  <label className="adm-sec-form-label">Role Clearance *</label>
+                  <label className="adm-sec-form-label">Account Type *</label>
                   <select
                     className="adm-sec-form-select"
                     value={userForm.role}
                     onChange={e => setUserForm(prev => ({ ...prev, role: e.target.value }))}
                   >
-                    <option value="Administrator">Administrator (Complete System Access)</option>
+                    <option value="Administrator">Administrator</option>
                   </select>
                 </div>
 
@@ -1175,7 +1175,7 @@ export default function AdminUsersSecurityManager({
                       Account Active & Authorized
                     </strong>
                     <span style={{ fontSize: '0.74rem', color: 'var(--hti-muted)' }}>
-                      When checked, user can authenticate and access authorized administrative modules.
+                      When checked, the administrator can sign in to the management portal.
                     </span>
                   </div>
                 </label>
