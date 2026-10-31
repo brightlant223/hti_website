@@ -386,7 +386,7 @@ export default function AdminLogin({
             </span>
             <span className="sec-badge">
               <Database size={12} className="text-blue-500" />
-              <span>SQLite / MySQL Dual Engine</span>
+              <span>SQLite Database</span>
             </span>
             <span className="sec-badge">
               <ShieldCheck size={12} className="text-indigo-500" />

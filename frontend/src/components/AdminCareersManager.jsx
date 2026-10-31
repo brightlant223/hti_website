@@ -1097,41 +1097,41 @@ export default function AdminCareersManager({
                 style={{
                   padding: '14px',
                   borderRadius: '10px',
-                  background: dbStatus?.is_connected ? 'rgba(16, 185, 129, 0.1)' : 'rgba(2, 132, 199, 0.08)',
-                  border: `1px solid ${dbStatus?.is_connected ? 'rgba(16, 185, 129, 0.3)' : 'rgba(2, 132, 199, 0.2)'}`
+                  background: dbStatus?.status === 'connected' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(2, 132, 199, 0.08)',
+                  border: `1px solid ${dbStatus?.status === 'connected' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(2, 132, 199, 0.2)'}`
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800' }}>
                   <span
                     className="adm-careers-db-dot"
-                    style={{ background: dbStatus?.is_connected ? '#10b981' : '#0284c7' }}
+                    style={{ background: dbStatus?.status === 'connected' ? '#10b981' : '#0284c7' }}
                   />
                   <span>
-                    {dbStatus?.is_connected
-                      ? 'MySQL 8.0 Primary Engine Connected'
-                      : 'Dual-Engine Protection: SQLite Local DB Active'}
+                    {dbStatus?.status === 'connected'
+                      ? 'SQLite Primary Database Connected'
+                      : 'SQLite Database Unavailable'}
                   </span>
                 </div>
                 <p style={{ fontSize: '0.78rem', margin: '6px 0 0', color: '#64748b' }}>
                   {dbStatus?.message ||
-                    'Candidate data is immediately recorded and secured. Dual-engine architecture guarantees zero application data loss.'}
+                    'Candidate data is recorded directly in the primary SQLite database.'}
                 </p>
               </div>
 
               <div className="adm-dossier-grid" style={{ gridTemplateColumns: '1fr' }}>
                 <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Configured Host &amp; Port</span>
+                  <span className="adm-dossier-label">Database Engine</span>
                   <span className="adm-dossier-val">
-                    {dbStatus?.host || 'localhost'}:{dbStatus?.port || '3306'}
+                    SQLite
                   </span>
                 </div>
                 <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">Database Name</span>
-                  <span className="adm-dossier-val">{dbStatus?.database || 'hti_careers_db'}</span>
+                  <span className="adm-dossier-label">Database File</span>
+                  <span className="adm-dossier-val">backend/hti.db</span>
                 </div>
                 <div className="adm-dossier-item">
-                  <span className="adm-dossier-label">MySQL User</span>
-                  <span className="adm-dossier-val">{dbStatus?.user || 'root'}</span>
+                  <span className="adm-dossier-label">Table</span>
+                  <span className="adm-dossier-val">career_applications</span>
                 </div>
                 <div className="adm-dossier-item">
                   <span className="adm-dossier-label">Fallback Storage Path</span>

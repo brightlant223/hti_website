@@ -663,7 +663,7 @@ export default function TestimonialsSection() {
                 <div className="tmn-pending-notice">
                   <ShieldCheck size={15} className="tmn-notice-icon" />
                   <span>
-                    Submitted reviews are saved in MongoDB with <strong>Pending</strong> status and will be published to the homepage once verified and approved by HTI administrators.
+                    Submitted reviews are saved in the SQLite database with <strong>Pending</strong> status and will be published to the homepage once verified and approved by HTI administrators.
                   </span>
                 </div>
 

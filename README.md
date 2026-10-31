@@ -125,6 +125,15 @@ python -m uvicorn main:app --reload --port 8000
 Backend API will be running at: `http://127.0.0.1:8000`  
 Interactive Swagger API Docs: `http://127.0.0.1:8000/docs`
 
+### Production proxy and uploads
+
+The production frontend should be served from `frontend/dist` by Nginx. Proxy
+`/api/` and `/uploads/` to the Uvicorn process on `127.0.0.1:8000`; runtime
+media and resumes are stored persistently in `backend/uploads/`. Configure
+allowed browser origins with `CORS_ORIGINS` as a comma-separated environment
+variable. If unset, the API allows the HTI production domains and local
+development origins.
+
 #### 2. Start the React Frontend
 In a separate terminal window:
 ```powershell

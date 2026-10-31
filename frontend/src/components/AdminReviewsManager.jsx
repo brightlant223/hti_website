@@ -42,7 +42,7 @@ export default function AdminReviewsManager({
   const [filterMode, setFilterMode] = useState('all'); // 'all' | 'pending' | 'published' | 'rejected' | '5' | '4'
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
-  const [isMongoConnected, setIsMongoConnected] = useState(true);
+  const [isSQLiteConnected, setIsSQLiteConnected] = useState(true);
 
   const [formData, setFormData] = useState({
     author: '',
@@ -58,7 +58,7 @@ export default function AdminReviewsManager({
     client_name: ''
   });
 
-  // Fetch admin reviews from MongoDB + SQLite backend
+  // Fetch admin reviews from the SQLite backend
   const fetchAdminReviews = useCallback(async () => {
     try {
       const res = await fetch(`/api/admin/reviews?_t=${Date.now()}`);
@@ -66,7 +66,7 @@ export default function AdminReviewsManager({
         const data = await res.json();
         if (Array.isArray(data?.reviews)) {
           setReviewsList(data.reviews);
-          setIsMongoConnected(Boolean(data.mongodb_connected));
+          setIsSQLiteConnected(data.database === 'sqlite');
           return;
         }
       }
@@ -351,13 +351,13 @@ export default function AdminReviewsManager({
         <div className="adm-rev-kpi-card">
           <span className="adm-rev-kpi-label">
             <Database size={14} className="text-sky-400" />
-            MongoDB Storage
+            SQLite Storage
           </span>
-          <span className="adm-rev-kpi-value" style={{ color: isMongoConnected ? '#0284c7' : '#f59e0b', fontSize: '1.25rem' }}>
-            {isMongoConnected ? 'Connected' : 'SQLite Sync'}
+          <span className="adm-rev-kpi-value" style={{ color: isSQLiteConnected ? '#0284c7' : '#f59e0b', fontSize: '1.25rem' }}>
+            {isSQLiteConnected ? 'Connected' : 'Unavailable'}
           </span>
           <span className="adm-rev-kpi-sub">
-            {isMongoConnected ? 'Live MongoDB collection' : 'SQLite fallback active'}
+            {isSQLiteConnected ? 'Primary SQLite database' : 'Database unavailable'}
           </span>
         </div>
       </div>

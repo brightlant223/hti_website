@@ -1672,7 +1672,7 @@ export default function AdminPanel({
               <div className="adm-topbar-headings" style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                 <h2 className="admin-topbar-title adm-topbar-title" style={{ margin: 0, fontSize: '1.22rem', fontWeight: 800 }}>
                   {activeTab === 'dashboard' && 'Executive Dashboard'}
-                  {activeTab === 'user_enquiries' && 'Contact Us User Enquiries & Project Leads (MySQL Live)'}
+                  {activeTab === 'user_enquiries' && 'Contact Us User Enquiries & Project Leads (SQLite)'}
                   {(activeTab === 'clients_reviews' || activeTab === 'clients_partners' || activeTab === 'reviews' || activeTab === 'partners') && 'Enterprise Clients & Client Reviews'}
                   {activeTab === 'blogs' && 'Articles & Technical Engineering Publications'}
                   {activeTab === 'inquiries' && 'Contact Enquiries & Lead Pipeline Management'}
@@ -2694,7 +2694,7 @@ export default function AdminPanel({
           )}
 
           {/* =========================================================================
-              MODULE 5C: USER ENQUIRIES - CONTACT US FORM (MySQL Powered)
+              MODULE 5C: USER ENQUIRIES - CONTACT US FORM (SQLite Powered)
               ========================================================================= */}
           {activeTab === 'user_enquiries' && (
             <div className="admin-body-content" style={{ padding: 0 }}>
@@ -2714,7 +2714,7 @@ export default function AdminPanel({
           )}
 
           {/* =========================================================================
-              MODULE 5B: CAREERS & TALENT ACQUISITION PIPELINE (MySQL / SQLite Dual-Engine)
+              MODULE 5B: CAREERS & TALENT ACQUISITION PIPELINE (SQLite)
               ========================================================================= */}
           {activeTab === 'careers' && (
             <div className="admin-body-content" style={{ padding: 0 }}>

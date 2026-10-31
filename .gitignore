@@ -29,6 +29,8 @@ Thumbs.db
 backend/.env
 
 # Uploaded Files & Resumes
+backend/uploads/*
+!backend/uploads/resumes/
 backend/uploads/resumes/*
 !backend/uploads/resumes/.gitkeep
 frontend/public/uploads/resumes/*
@@ -36,4 +38,3 @@ frontend/public/uploads/resumes/*
 
 # Scratch
 scratch/
-

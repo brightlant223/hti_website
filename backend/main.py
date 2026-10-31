@@ -16,8 +16,8 @@ import subprocess
 from pathlib import Path
 from contextlib import asynccontextmanager
 
-from database import init_db, seed_db, get_connection, add_audit_log, DB_PATH
-from mysql_db import (
+from database import (
+    init_db, seed_db, get_connection, add_audit_log, DB_PATH,
     init_careers_db,
     get_careers_db_status,
     insert_career_application,
@@ -38,22 +38,37 @@ from mysql_db import (
     fetch_job_posting_by_id,
     update_job_posting,
     update_job_posting_status,
-    delete_job_posting
+    delete_job_posting,
+    insert_customer_review,
+    get_approved_reviews,
+    get_all_reviews,
+    update_review_status,
 )
-
-import mongo_db
 
 SERVER_START_TIME = time.time()
 
 # Media and uploads directories
-FRONTEND_UPLOAD_DIR = Path(__file__).resolve().parent.parent / "frontend" / "public" / "uploads"
-FRONTEND_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 BACKEND_UPLOAD_DIR = Path(__file__).resolve().parent / "uploads"
 BACKEND_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-RESUME_UPLOAD_DIR = FRONTEND_UPLOAD_DIR / "resumes"
-RESUME_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 BACKEND_RESUME_DIR = BACKEND_UPLOAD_DIR / "resumes"
 BACKEND_RESUME_DIR.mkdir(parents=True, exist_ok=True)
+MAX_UPLOAD_SIZE = 5 * 1024 * 1024
+ALLOWED_RESUME_EXTENSIONS = {".pdf", ".doc", ".docx"}
+
+DEFAULT_CORS_ORIGINS = {
+    "https://htisystems.in",
+    "https://www.htisystems.in",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+}
+
+configured_cors_origins = {
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "").split(",")
+    if origin.strip()
+}
+CORS_ORIGINS = sorted(configured_cors_origins or DEFAULT_CORS_ORIGINS)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -62,17 +77,6 @@ async def lifespan(app: FastAPI):
     init_careers_db()
     init_user_enquiries_db()
     init_job_postings_db()
-    try:
-        conn = get_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT data_json FROM website_content WHERE section_key = 'testimonials'")
-        row = cur.fetchone()
-        conn.close()
-        if row:
-            raw_revs = json.loads(row["data_json"])
-            mongo_db.init_default_reviews_if_empty(raw_revs)
-    except Exception as e:
-        print(f"Startup MongoDB sync note: {e}")
     yield
 
 app = FastAPI(
@@ -84,14 +88,14 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Serve uploaded static media
-app.mount("/uploads", StaticFiles(directory=str(FRONTEND_UPLOAD_DIR)), name="uploads")
+app.mount("/uploads", StaticFiles(directory=str(BACKEND_UPLOAD_DIR)), name="uploads")
 
 def slugify(text: str) -> str:
     text = text.lower().strip()
@@ -666,18 +670,14 @@ async def upload_media(file: UploadFile = File(...), admin_user: Optional[str] =
     safe_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', file.filename or "upload.jpg")
     timestamp = int(time.time())
     unique_filename = f"{timestamp}_{safe_name}"
-    
-    frontend_target = FRONTEND_UPLOAD_DIR / unique_filename
-    backend_target = BACKEND_UPLOAD_DIR / unique_filename
-    
+
     content = await file.read()
-    with open(frontend_target, "wb") as f:
+    if len(content) > MAX_UPLOAD_SIZE:
+        raise HTTPException(status_code=413, detail="Upload exceeds the 5 MB limit.")
+
+    backend_target = BACKEND_UPLOAD_DIR / unique_filename
+    with open(backend_target, "wb") as f:
         f.write(content)
-    try:
-        with open(backend_target, "wb") as f:
-            f.write(content)
-    except Exception:
-        pass
         
     add_audit_log(admin_user, "UPLOAD_MEDIA", "Products", f"Uploaded media asset '{unique_filename}' ({len(content)} bytes)")
     
@@ -1319,7 +1319,7 @@ def create_inquiry(inquiry: InquiryCreate):
     row = cursor.fetchone()
     conn.close()
 
-    # Automatically save to MySQL user_enquiries so both sections stay in sync
+    # Also retain a normalized contact-desk copy for the user-enquiries view.
     try:
         insert_user_enquiry({
             "full_name": inquiry.full_name,
@@ -1506,17 +1506,17 @@ def delete_inquiry(inquiry_id: int, admin_user: Optional[str] = Query("admin")):
     return {"success": True, "message": f"Inquiry #{inquiry_id} removed"}
 
 # =========================================================================
-# USER ENQUIRIES & CONTACT US LEADS (Module 5C - MySQL Connected)
+# USER ENQUIRIES & CONTACT US LEADS (Module 5C - SQLite)
 # =========================================================================
 
 @app.get("/api/user-enquiries/db-status")
 def get_user_enquiry_database_status():
-    """Returns the live connection status of MySQL for user enquiries."""
+    """Returns the SQLite connection status for user enquiries."""
     return get_user_enquiries_db_status()
 
 @app.post("/api/user-enquiries", status_code=status.HTTP_201_CREATED)
 def create_user_enquiry_endpoint(payload: UserEnquiryCreate):
-    """Stores enquiries submitted through the Contact Us form into MySQL."""
+    """Stores enquiries submitted through the Contact Us form in SQLite."""
     data = payload.dict()
     result = insert_user_enquiry(data)
     row = result.get("data")
@@ -1524,7 +1524,7 @@ def create_user_enquiry_endpoint(payload: UserEnquiryCreate):
         "success": True,
         "message": "Thank you for contacting HTI Automation & Security Systems. Our team will review your project details and get back to you shortly.",
         "enquiry": format_user_enquiry_row(row),
-        "engine": result.get("engine", "mysql")
+        "engine": result.get("engine", "sqlite")
     }
 
 @app.get("/api/user-enquiries")
@@ -1533,7 +1533,7 @@ def get_user_enquiries_endpoint(
     search: Optional[str] = Query(None),
     area_of_interest: Optional[str] = Query(None)
 ):
-    """Fetches Contact Us user enquiries from MySQL with filters and search."""
+    """Fetches Contact Us user enquiries from SQLite with filters and search."""
     res = fetch_user_enquiries(status_filter=status_filter, search=search, area_of_interest=area_of_interest)
     items = res.get("items", [])
     return [format_user_enquiry_row(r) for r in items]
@@ -1544,7 +1544,7 @@ def update_user_enquiry_status_endpoint(
     payload: UserEnquiryStatusUpdate,
     admin_user: Optional[str] = Query("admin")
 ):
-    """Updates the status of a user enquiry in MySQL."""
+    """Updates the status of a user enquiry in SQLite."""
     success = update_user_enquiry_status(enquiry_id, payload.status)
     if not success:
         raise HTTPException(status_code=404, detail="Enquiry not found")
@@ -1557,7 +1557,7 @@ def update_user_enquiry_notes_endpoint(
     payload: UserEnquiryNotesUpdate,
     admin_user: Optional[str] = Query("admin")
 ):
-    """Updates administrative notes for a user enquiry in MySQL."""
+    """Updates administrative notes for a user enquiry in SQLite."""
     success = update_user_enquiry_notes(enquiry_id, payload.notes)
     if not success:
         raise HTTPException(status_code=404, detail="Enquiry not found")
@@ -1569,7 +1569,7 @@ def delete_user_enquiry_endpoint(
     enquiry_id: int,
     admin_user: Optional[str] = Query("admin")
 ):
-    """Deletes a user enquiry from MySQL."""
+    """Deletes a user enquiry from SQLite."""
     success = delete_user_enquiry(enquiry_id)
     if not success:
         raise HTTPException(status_code=404, detail="Enquiry not found")
@@ -1578,7 +1578,7 @@ def delete_user_enquiry_endpoint(
 
 @app.get("/api/user-enquiries/export")
 def export_user_enquiries_csv():
-    """Exports all user enquiries from MySQL as a CSV file."""
+    """Exports all user enquiries from SQLite as a CSV file."""
     res = fetch_user_enquiries()
     rows = res.get("items", [])
 
@@ -1610,7 +1610,7 @@ def export_user_enquiries_csv():
     )
 
 # =========================================================================
-# CAREERS & TALENT ACQUISITION (Module 5B - MySQL Connected)
+# CAREERS & TALENT ACQUISITION (Module 5B - SQLite)
 # =========================================================================
 
 class CareerStatusPayload(BaseModel):
@@ -1621,7 +1621,7 @@ class CareerNotesPayload(BaseModel):
 
 @app.get("/api/careers/db-status")
 def get_career_database_status():
-    """Returns the live connection status of the MySQL database used for careers."""
+    """Returns the SQLite connection status for careers."""
     return get_careers_db_status()
 
 @app.post("/api/careers/apply", status_code=status.HTTP_201_CREATED)
@@ -1655,7 +1655,7 @@ async def submit_career_application(
     if resume and resume.filename:
         original_name = resume.filename
         ext = os.path.splitext(original_name)[1].lower()
-        if ext not in [".pdf", ".doc", ".docx"]:
+        if ext not in ALLOWED_RESUME_EXTENSIONS:
             raise HTTPException(status_code=400, detail="Invalid file format. Only PDF, DOC, or DOCX files are allowed.")
         
         # Safe unique filename
@@ -1663,18 +1663,19 @@ async def submit_career_application(
         timestamp = int(time.time())
         saved_filename = f"{safe_base}_{timestamp}{ext}"
 
-        dest_frontend = RESUME_UPLOAD_DIR / saved_filename
         dest_backend = BACKEND_RESUME_DIR / saved_filename
 
         try:
             content = await resume.read()
-            with open(dest_frontend, "wb") as f_out:
-                f_out.write(content)
+            if len(content) > MAX_UPLOAD_SIZE:
+                raise HTTPException(status_code=413, detail="Resume exceeds the 5 MB limit.")
             with open(dest_backend, "wb") as f_out:
                 f_out.write(content)
 
             resume_filename = original_name
             resume_url = f"/uploads/resumes/{saved_filename}"
+        except HTTPException:
+            raise
         except Exception as e:
             print(f"Error saving uploaded resume: {e}")
             raise HTTPException(status_code=500, detail=f"Failed to process and store resume file: {e}")
@@ -1698,7 +1699,7 @@ async def submit_career_application(
 
     result = insert_career_application(app_data)
     created_record = result.get("data", {})
-    engine_used = result.get("engine", "mysql")
+    engine_used = result.get("engine", "sqlite")
 
     add_audit_log(
         "system",
@@ -1751,7 +1752,7 @@ def get_career_applications(
     return {
         "success": True,
         "applications": result.get("items", []),
-        "engine": result.get("engine", "mysql"),
+        "engine": result.get("engine", "sqlite"),
         "total": len(result.get("items", []))
     }
 
@@ -1821,7 +1822,7 @@ def export_career_applications_csv():
 
 
 # =========================================================================
-# JOB POSTINGS MANAGEMENT (Module 5C - MySQL / SQLite Dual-Engine)
+# JOB POSTINGS MANAGEMENT (Module 5C - SQLite)
 # =========================================================================
 
 class JobPostingPayload(BaseModel):
@@ -2167,18 +2168,6 @@ def update_website_content_section(section_key: str, payload: WebsiteContentUpda
     conn.commit()
     conn.close()
 
-    # Sync with MongoDB if section is testimonials
-    if section_key == "testimonials" and isinstance(payload.data, list):
-        try:
-            mongo_db.init_default_reviews_if_empty(payload.data)
-            for r in payload.data:
-                target = r.get("id") or r.get("author")
-                st = r.get("status") or ("Approved" if r.get("is_published", True) is not False else "Rejected")
-                if target:
-                    mongo_db.update_review_status_in_mongo(str(target), st)
-        except Exception as e:
-            print(f"MongoDB review sync notice: {e}")
-
     add_audit_log(admin_user, "UPDATE_CONTENT", "Website Content", f"Updated live content section '{section_key}'")
 
     return {
@@ -2194,36 +2183,13 @@ def get_public_reviews():
     Public API endpoint returning ONLY approved/published client reviews and testimonials.
     Reviews with Pending or Rejected status are never shown publicly.
     """
-    # 1. Try fetching approved reviews from MongoDB first
-    mongo_approved = mongo_db.get_approved_reviews_from_mongo()
-    if mongo_approved is not None and len(mongo_approved) > 0:
-        return mongo_approved
-
-    # 2. Fallback to SQLite website_content store
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT data_json, updated_at FROM website_content WHERE section_key = 'testimonials'")
-    row = cursor.fetchone()
-    conn.close()
-    if not row:
-        return []
-    try:
-        data = json.loads(row["data_json"])
-        if isinstance(data, list):
-            # Only return reviews that are published and not Pending or Rejected
-            return [
-                r for r in data
-                if (r.get("is_published", True) is not False) and (r.get("status", "Approved") not in ["Pending", "Rejected"])
-            ]
-        return []
-    except Exception:
-        return []
+    return get_approved_reviews()
 
 @app.post("/api/reviews/submit")
 def submit_customer_review(payload: ReviewSubmission):
     """
     Public endpoint for clients to submit a review from the homepage.
-    Saves in MongoDB with 'Pending' status (and syncs with SQLite).
+    Saves in SQLite with 'Pending' status.
     Requires admin approval before appearing on the public website.
     """
     # Email format validation
@@ -2234,8 +2200,7 @@ def submit_customer_review(payload: ReviewSubmission):
             detail="Please provide a valid corporate or professional email address."
         )
 
-    # 1. Save in MongoDB with Pending status
-    new_review_doc = mongo_db.insert_customer_review({
+    new_review_doc = insert_customer_review({
         "author": payload.author.strip(),
         "company": payload.company.strip(),
         "location": (payload.location or "").strip(),
@@ -2244,44 +2209,6 @@ def submit_customer_review(payload: ReviewSubmission):
         "quote": payload.quote.strip(),
         "client_name": (payload.client_name or payload.company).strip()
     })
-
-    # 2. Also sync to SQLite website_content for unified admin management and fallback
-    try:
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT data_json FROM website_content WHERE section_key = 'testimonials'")
-        row = cursor.fetchone()
-        existing = json.loads(row["data_json"]) if row else []
-        if not isinstance(existing, list):
-            existing = []
-
-        sqlite_entry = {
-            "id": new_review_doc.get("id"),
-            "author": payload.author.strip(),
-            "company": payload.company.strip(),
-            "location": (payload.location or "").strip(),
-            "email": email_clean,
-            "rating": int(payload.rating),
-            "quote": payload.quote.strip(),
-            "date": new_review_doc.get("date"),
-            "status": "Pending",
-            "is_published": False,
-            "client_name": (payload.client_name or payload.company).strip()
-        }
-
-        # Add to beginning of list
-        existing.insert(0, sqlite_entry)
-        now_iso = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        cursor.execute("""
-        INSERT INTO website_content (section_key, data_json, updated_at)
-        VALUES ('testimonials', ?, ?)
-        ON CONFLICT(section_key) DO UPDATE SET data_json = excluded.data_json, updated_at = excluded.updated_at
-        """, (json.dumps(existing), now_iso))
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        print(f"Error syncing submitted review to SQLite: {e}")
 
     add_audit_log(
         "Website Visitor",
@@ -2302,34 +2229,7 @@ def get_admin_reviews_list():
     Admin endpoint returning all customer reviews (Pending, Approved, Rejected)
     with total counts and breakdown.
     """
-    mongo_reviews = mongo_db.get_all_reviews_from_mongo()
-
-    # Also load SQLite reviews
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT data_json FROM website_content WHERE section_key = 'testimonials'")
-    row = cursor.fetchone()
-    conn.close()
-
-    sqlite_reviews = []
-    if row:
-        try:
-            sqlite_reviews = json.loads(row["data_json"])
-        except Exception:
-            sqlite_reviews = []
-
-    # Choose source or merge seamlessly
-    if mongo_reviews is not None and len(mongo_reviews) > 0:
-        reviews = mongo_reviews
-    else:
-        reviews = sqlite_reviews
-
-    # Normalize fields
-    for r in reviews:
-        if "status" not in r:
-            r["status"] = "Approved" if r.get("is_published", True) is not False else "Rejected"
-        if "is_published" not in r:
-            r["is_published"] = (r.get("status") == "Approved")
+    reviews = get_all_reviews()
 
     pending_count = sum(1 for r in reviews if r.get("status") == "Pending")
     approved_count = sum(1 for r in reviews if r.get("status") == "Approved" or (r.get("is_published") is True and r.get("status") != "Rejected"))
@@ -2341,7 +2241,7 @@ def get_admin_reviews_list():
         "approved_count": approved_count,
         "rejected_count": rejected_count,
         "reviews": reviews,
-        "mongodb_connected": mongo_db.is_mongodb_online()
+        "database": "sqlite"
     }
 
 @app.put("/api/admin/reviews/{review_id}/status")
@@ -2352,41 +2252,8 @@ def update_admin_review_status(review_id: str, payload: ReviewStatusUpdate, admi
     new_status = payload.status
     is_pub = (new_status == "Approved")
 
-    # 1. Update in MongoDB
-    mongo_db.update_review_status_in_mongo(review_id, new_status)
-
-    # 2. Update in SQLite website_content
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT data_json FROM website_content WHERE section_key = 'testimonials'")
-    row = cursor.fetchone()
-    if row:
-        try:
-            items = json.loads(row["data_json"])
-            matched = False
-            for item in items:
-                if str(item.get("id", "")) == str(review_id) or str(item.get("author", "")) == str(review_id):
-                    item["status"] = new_status
-                    item["is_published"] = is_pub
-                    matched = True
-                    break
-
-            if not matched and review_id.isdigit():
-                idx = int(review_id)
-                if 0 <= idx < len(items):
-                    items[idx]["status"] = new_status
-                    items[idx]["is_published"] = is_pub
-                    matched = True
-
-            if matched:
-                now_iso = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                cursor.execute("""
-                UPDATE website_content SET data_json = ?, updated_at = ? WHERE section_key = 'testimonials'
-                """, (json.dumps(items), now_iso))
-                conn.commit()
-        except Exception as e:
-            print(f"Error syncing SQLite status update: {e}")
-    conn.close()
+    if not update_review_status(review_id, new_status):
+        raise HTTPException(status_code=404, detail="Review not found")
 
     add_audit_log(
         admin_user,

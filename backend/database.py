@@ -232,9 +232,94 @@ def init_db():
     );
     """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS career_applications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        full_name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        position TEXT NOT NULL,
+        experience TEXT DEFAULT '',
+        notice_period TEXT DEFAULT '',
+        resume_filename TEXT DEFAULT '',
+        resume_url TEXT DEFAULT '',
+        cover_letter TEXT DEFAULT '',
+        step_saved INTEGER DEFAULT 3,
+        status TEXT DEFAULT 'New',
+        notes TEXT DEFAULT '',
+        current_location TEXT DEFAULT '',
+        job_id INTEGER,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS job_postings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        department TEXT NOT NULL,
+        job_category TEXT DEFAULT 'Full-time',
+        employment_type TEXT DEFAULT 'Full-time',
+        location TEXT DEFAULT 'Navi Mumbai HQ',
+        openings INTEGER DEFAULT 1,
+        experience TEXT DEFAULT '0-2 Years',
+        salary_range TEXT DEFAULT '',
+        skills TEXT DEFAULT '',
+        description TEXT DEFAULT '',
+        responsibilities TEXT DEFAULT '',
+        qualifications TEXT DEFAULT '',
+        additional_requirements TEXT DEFAULT '',
+        deadline TEXT DEFAULT '',
+        status TEXT DEFAULT 'Published',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS user_enquiries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        full_name TEXT NOT NULL,
+        company TEXT DEFAULT 'Not Specified',
+        email TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        area_of_interest TEXT DEFAULT 'General Enquiry',
+        project_details TEXT NOT NULL,
+        message TEXT DEFAULT '',
+        status TEXT DEFAULT 'New',
+        notes TEXT DEFAULT '',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS customer_reviews (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        customer_name TEXT NOT NULL,
+        company TEXT DEFAULT '',
+        location TEXT DEFAULT '',
+        email TEXT DEFAULT '',
+        rating INTEGER NOT NULL DEFAULT 5 CHECK (rating BETWEEN 1 AND 5),
+        review_text TEXT NOT NULL,
+        client_id TEXT DEFAULT '',
+        client_name TEXT DEFAULT '',
+        status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Approved', 'Rejected')),
+        is_published INTEGER NOT NULL DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
     # Run safe column migration for any existing tables
     migrate_columns(cursor)
 
+    # Complete schemas for tables introduced by earlier database adapters.
+    migrate_columns_for_unified_tables(cursor)
+
+    conn.commit()
+    migrate_legacy_testimonials(conn)
     conn.commit()
     conn.close()
 
@@ -1459,6 +1544,392 @@ def seed_db():
 
     conn.commit()
     conn.close()
+
+
+def migrate_columns_for_unified_tables(cursor):
+    tables = {
+        "career_applications": [
+            ("resume_filename", "TEXT DEFAULT ''"),
+            ("resume_url", "TEXT DEFAULT ''"),
+            ("cover_letter", "TEXT DEFAULT ''"),
+            ("step_saved", "INTEGER DEFAULT 3"),
+            ("status", "TEXT DEFAULT 'New'"),
+            ("notes", "TEXT DEFAULT ''"),
+            ("current_location", "TEXT DEFAULT ''"),
+            ("job_id", "INTEGER"),
+            ("created_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
+            ("updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
+        ],
+        "job_postings": [
+            ("additional_requirements", "TEXT DEFAULT ''"),
+            ("created_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
+            ("updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
+        ],
+        "user_enquiries": [
+            ("message", "TEXT DEFAULT ''"),
+            ("notes", "TEXT DEFAULT ''"),
+            ("created_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
+            ("updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
+        ],
+    }
+    for table, columns in tables.items():
+        cursor.execute(f"PRAGMA table_info({table})")
+        existing = {row[1] for row in cursor.fetchall()}
+        for name, definition in columns:
+            if name not in existing:
+                cursor.execute(f"ALTER TABLE {table} ADD COLUMN {name} {definition}")
+
+
+def migrate_legacy_testimonials(conn):
+    """Copy legacy JSON testimonials into the normalized reviews table once."""
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) AS count FROM customer_reviews")
+    if cursor.fetchone()["count"]:
+        return
+    cursor.execute("SELECT data_json FROM website_content WHERE section_key = 'testimonials'")
+    row = cursor.fetchone()
+    if not row:
+        return
+    try:
+        testimonials = json.loads(row["data_json"])
+    except (TypeError, json.JSONDecodeError):
+        return
+    if not isinstance(testimonials, list):
+        return
+    for item in testimonials:
+        status = item.get("status")
+        if status not in {"Pending", "Approved", "Rejected"}:
+            status = "Approved" if item.get("is_published", True) is not False else "Rejected"
+        cursor.execute("""
+            INSERT INTO customer_reviews
+            (customer_name, company, location, email, rating, review_text,
+             client_id, client_name, status, is_published, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, CURRENT_TIMESTAMP), CURRENT_TIMESTAMP)
+        """, (
+            item.get("author") or item.get("customer_name") or "Verified Client",
+            item.get("company", ""),
+            item.get("location", ""),
+            item.get("email", ""),
+            max(1, min(5, int(item.get("rating", 5) or 5))),
+            item.get("quote") or item.get("review_text") or "",
+            str(item.get("client_id", "")),
+            item.get("client_name", ""),
+            status,
+            1 if status == "Approved" else 0,
+            item.get("date"),
+        ))
+
+
+def _row_dict(row):
+    return dict(row) if row else None
+
+
+def init_careers_db():
+    init_db()
+    return {"database": "sqlite", "status": "connected"}
+
+
+def get_careers_db_status():
+    return {"database": "sqlite", "status": "connected"}
+
+
+def insert_career_application(data):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO career_applications
+        (full_name, email, phone, position, experience, notice_period,
+         resume_filename, resume_url, cover_letter, step_saved, status, notes,
+         current_location, job_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        data.get("full_name", ""), data.get("email", ""), data.get("phone", ""),
+        data.get("position", ""), data.get("experience", ""),
+        data.get("notice_period", ""), data.get("resume_filename", ""),
+        data.get("resume_url", ""), data.get("cover_letter", ""),
+        data.get("step_saved", 3), data.get("status", "New"),
+        data.get("notes", ""), data.get("current_location", ""),
+        data.get("job_id"),
+    ))
+    row_id = cursor.lastrowid
+    conn.commit()
+    cursor.execute("SELECT * FROM career_applications WHERE id = ?", (row_id,))
+    row = _row_dict(cursor.fetchone())
+    conn.close()
+    return {"data": row, "engine": "sqlite"}
+
+
+def fetch_career_applications(status_filter=None, search=None, position=None):
+    conn = get_connection()
+    query = "SELECT * FROM career_applications WHERE 1=1"
+    params = []
+    if status_filter and status_filter.lower() != "all":
+        query += " AND LOWER(status) = LOWER(?)"
+        params.append(status_filter)
+    if position and position.lower() != "all":
+        query += " AND position = ?"
+        params.append(position)
+    if search and search.strip():
+        pattern = f"%{search.strip()}%"
+        query += " AND (full_name LIKE ? OR email LIKE ? OR phone LIKE ? OR position LIKE ?)"
+        params.extend([pattern] * 4)
+    query += " ORDER BY id DESC"
+    rows = [_row_dict(row) for row in conn.execute(query, params).fetchall()]
+    conn.close()
+    return {"items": rows, "engine": "sqlite"}
+
+
+def update_application_status(app_id, new_status):
+    return _update_by_id("career_applications", app_id, "status", new_status)
+
+
+def update_application_notes(app_id, notes):
+    return _update_by_id("career_applications", app_id, "notes", notes)
+
+
+def delete_career_application(app_id):
+    return _delete_by_id("career_applications", app_id)
+
+
+def init_user_enquiries_db():
+    init_db()
+    return {"database": "sqlite", "status": "connected"}
+
+
+def get_user_enquiries_db_status():
+    return {"database": "sqlite", "status": "connected"}
+
+
+def insert_user_enquiry(data):
+    message = data.get("message") or data.get("project_details") or ""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO user_enquiries
+        (full_name, company, email, phone, area_of_interest, project_details, message, status, notes)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        data.get("full_name") or data.get("fullName") or "",
+        data.get("company") or "Not Specified", data.get("email") or "",
+        data.get("phone") or "",
+        data.get("area_of_interest") or data.get("category") or "General Enquiry",
+        message, message, data.get("status", "New"), data.get("notes", ""),
+    ))
+    row_id = cursor.lastrowid
+    conn.commit()
+    cursor.execute("SELECT * FROM user_enquiries WHERE id = ?", (row_id,))
+    row = _row_dict(cursor.fetchone())
+    conn.close()
+    return {"data": row, "engine": "sqlite"}
+
+
+def fetch_user_enquiries(status_filter=None, search=None, area_of_interest=None):
+    conn = get_connection()
+    query = "SELECT * FROM user_enquiries WHERE 1=1"
+    params = []
+    if status_filter and status_filter.lower() != "all":
+        query += " AND LOWER(status) = LOWER(?)"
+        params.append(status_filter)
+    if area_of_interest and area_of_interest.lower() != "all":
+        query += " AND area_of_interest = ?"
+        params.append(area_of_interest)
+    if search and search.strip():
+        pattern = f"%{search.strip()}%"
+        query += """ AND (full_name LIKE ? OR company LIKE ? OR email LIKE ?
+                         OR phone LIKE ? OR area_of_interest LIKE ?
+                         OR project_details LIKE ? OR message LIKE ?)"""
+        params.extend([pattern] * 7)
+    query += " ORDER BY id DESC"
+    rows = [_row_dict(row) for row in conn.execute(query, params).fetchall()]
+    conn.close()
+    return {"items": rows, "engine": "sqlite"}
+
+
+def update_user_enquiry_status(enquiry_id, new_status):
+    return _update_by_id("user_enquiries", enquiry_id, "status", new_status)
+
+
+def update_user_enquiry_notes(enquiry_id, notes):
+    return _update_by_id("user_enquiries", enquiry_id, "notes", notes)
+
+
+def delete_user_enquiry(enquiry_id):
+    return _delete_by_id("user_enquiries", enquiry_id)
+
+
+def init_job_postings_db():
+    init_db()
+    return {"database": "sqlite", "status": "connected"}
+
+
+def insert_job_posting(data):
+    fields = (
+        "title", "department", "job_category", "employment_type", "location",
+        "openings", "experience", "salary_range", "skills", "description",
+        "responsibilities", "qualifications", "additional_requirements",
+        "deadline", "status",
+    )
+    values = [data.get(field, "") for field in fields]
+    values[5] = int(values[5] or 1)
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        f"INSERT INTO job_postings ({', '.join(fields)}) VALUES ({', '.join('?' for _ in fields)})",
+        values,
+    )
+    row_id = cursor.lastrowid
+    conn.commit()
+    cursor.execute("SELECT * FROM job_postings WHERE id = ?", (row_id,))
+    row = _row_dict(cursor.fetchone())
+    conn.close()
+    return {"data": row, "engine": "sqlite"}
+
+
+def fetch_job_postings(include_drafts=False, status_filter=None, department=None, search=None):
+    conn = get_connection()
+    query = """SELECT j.*, (SELECT COUNT(*) FROM career_applications ca
+              WHERE ca.position = j.title) AS applications_count
+              FROM job_postings j WHERE 1=1"""
+    params = []
+    if not include_drafts and not status_filter:
+        query += " AND j.status = 'Published' AND (j.deadline IS NULL OR j.deadline = '' OR j.deadline >= date('now'))"
+    elif status_filter and status_filter.lower() != "all":
+        query += " AND LOWER(j.status) = LOWER(?)"
+        params.append(status_filter)
+    if department and department.lower() != "all":
+        query += " AND LOWER(j.department) = LOWER(?)"
+        params.append(department)
+    if search and search.strip():
+        pattern = f"%{search.strip()}%"
+        query += " AND (j.title LIKE ? OR j.department LIKE ? OR j.skills LIKE ? OR j.location LIKE ?)"
+        params.extend([pattern] * 4)
+    query += " ORDER BY j.id DESC"
+    rows = [_row_dict(row) for row in conn.execute(query, params).fetchall()]
+    conn.close()
+    return {"items": rows, "engine": "sqlite"}
+
+
+def fetch_job_posting_by_id(job_id):
+    conn = get_connection()
+    row = conn.execute("""SELECT j.*, (SELECT COUNT(*) FROM career_applications ca
+                         WHERE ca.position = j.title) AS applications_count
+                         FROM job_postings j WHERE j.id = ?""", (job_id,)).fetchone()
+    conn.close()
+    return _row_dict(row)
+
+
+def update_job_posting(job_id, data):
+    fields = (
+        "title", "department", "job_category", "employment_type", "location",
+        "openings", "experience", "salary_range", "skills", "description",
+        "responsibilities", "qualifications", "additional_requirements",
+        "deadline", "status",
+    )
+    values = [data.get(field, "") for field in fields]
+    values[5] = int(values[5] or 1)
+    conn = get_connection()
+    conn.execute(
+        f"UPDATE job_postings SET {', '.join(f'{field} = ?' for field in fields)}, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        values + [job_id],
+    )
+    conn.commit()
+    row = conn.execute("SELECT * FROM job_postings WHERE id = ?", (job_id,)).fetchone()
+    conn.close()
+    return _row_dict(row)
+
+
+def update_job_posting_status(job_id, new_status):
+    return _update_by_id("job_postings", job_id, "status", new_status)
+
+
+def delete_job_posting(job_id):
+    return _delete_by_id("job_postings", job_id)
+
+
+def _update_by_id(table, row_id, column, value):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(f"UPDATE {table} SET {column} = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", (value, row_id))
+    changed = cursor.rowcount > 0
+    conn.commit()
+    conn.close()
+    return changed
+
+
+def _delete_by_id(table, row_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(f"DELETE FROM {table} WHERE id = ?", (row_id,))
+    deleted = cursor.rowcount > 0
+    conn.commit()
+    conn.close()
+    return deleted
+
+
+def format_review_row(row):
+    item = _row_dict(row)
+    if not item:
+        return {}
+    item["author"] = item["customer_name"]
+    item["quote"] = item["review_text"]
+    item["is_published"] = bool(item["is_published"])
+    item["date"] = item["created_at"]
+    return item
+
+
+def insert_customer_review(data):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO customer_reviews
+        (customer_name, company, location, email, rating, review_text,
+         client_id, client_name, status, is_published)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending', 0)
+    """, (
+        data.get("author", "").strip(), data.get("company", "").strip(),
+        data.get("location", "").strip(), data.get("email", "").strip().lower(),
+        int(data.get("rating", 5)), data.get("quote", "").strip(),
+        data.get("client_id", ""), data.get("client_name", ""),
+    ))
+    row_id = cursor.lastrowid
+    conn.commit()
+    row = conn.execute("SELECT * FROM customer_reviews WHERE id = ?", (row_id,)).fetchone()
+    conn.close()
+    return format_review_row(row)
+
+
+def get_approved_reviews():
+    conn = get_connection()
+    rows = [format_review_row(row) for row in conn.execute(
+        "SELECT * FROM customer_reviews WHERE status = 'Approved' ORDER BY created_at DESC, id DESC"
+    ).fetchall()]
+    conn.close()
+    return rows
+
+
+def get_all_reviews():
+    conn = get_connection()
+    rows = [format_review_row(row) for row in conn.execute(
+        "SELECT * FROM customer_reviews ORDER BY created_at DESC, id DESC"
+    ).fetchall()]
+    conn.close()
+    return rows
+
+
+def update_review_status(review_id, new_status):
+    if new_status not in {"Pending", "Approved", "Rejected"}:
+        return False
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE customer_reviews
+        SET status = ?, is_published = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+    """, (new_status, 1 if new_status == "Approved" else 0, review_id))
+    changed = cursor.rowcount > 0
+    conn.commit()
+    conn.close()
+    return changed
 
 if __name__ == "__main__":
     init_db()

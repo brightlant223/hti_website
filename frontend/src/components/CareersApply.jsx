@@ -670,10 +670,8 @@ export default function CareersApply({ selectedPosition, onNavigate }) {
 
                   <div className="apply-success-pill" aria-hidden="true">
                     <span>
-                      {submissionResult?.engine === 'mysql'
-                        ? 'VERIFIED · MYSQL 8.0 CLOUD ARCHIVE'
-                        : submissionResult?.engine === 'sqlite'
-                        ? 'VERIFIED · HTI ENTERPRISE SECURE DB'
+                      {submissionResult?.engine === 'sqlite'
+                        ? 'VERIFIED · SQLITE DATABASE'
                         : 'DIRECT CANDIDATE TRANSMISSION'}
                     </span>
                   </div>
